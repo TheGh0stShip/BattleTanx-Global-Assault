@@ -36,9 +36,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_80078CD8_to_8007A710.s.o .text 0x1a38 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8007A720_to_8007AC34.s.o asm/us/main_8007A720_to_8007AC34.s
+    -o build/us/asm/us/main_8007A75C_to_8007AC34.s.o asm/us/main_8007A75C_to_8007AC34.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8007A720_to_8007AC34.s.o .text 0x514 --alignment 4
+    build/us/asm/us/main_8007A75C_to_8007AC34.s.o .text 0x4d8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8007AD40_to_8007AD94.s.o asm/us/main_8007AD40_to_8007AD94.s
 python3 tools/trim_elf32_section.py \
@@ -196,9 +196,13 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800A18D0_to_800A1A28.s.o .text 0x158 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800A1B44_to_800A2DFC.s.o asm/us/main_800A1B44_to_800A2DFC.s
+    -o build/us/asm/us/main_800A1B44_to_800A2B74.s.o asm/us/main_800A1B44_to_800A2B74.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800A1B44_to_800A2DFC.s.o .text 0x12b8 --alignment 4
+    build/us/asm/us/main_800A1B44_to_800A2B74.s.o .text 0x1030 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A2B9C_to_800A2DFC.s.o asm/us/main_800A2B9C_to_800A2DFC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A2B9C_to_800A2DFC.s.o .text 0x260 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800A2E5C_to_800A4098.s.o asm/us/main_800A2E5C_to_800A4098.s
 python3 tools/trim_elf32_section.py \
@@ -284,9 +288,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800C0A6C_to_800C0C18.s.o .text 0x1ac --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C0C38_to_800C1124.s.o asm/us/main_800C0C38_to_800C1124.s
+    -o build/us/asm/us/main_800C0C38_to_800C1094.s.o asm/us/main_800C0C38_to_800C1094.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C0C38_to_800C1124.s.o .text 0x4ec --alignment 4
+    build/us/asm/us/main_800C0C38_to_800C1094.s.o .text 0x45c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800C11B8_to_800C1468.s.o asm/us/main_800C11B8_to_800C1468.s
 python3 tools/trim_elf32_section.py \
@@ -374,7 +378,7 @@ python3 tools/normalize_kmc_gcc_asm.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/render_queue.c.o .text 0x46c --alignment 4
 for unit in early_hw early_memory_read early_memory_write early_remote_copy \
-            early_commands early_command_status mapped_record display_buffer \
+            early_commands early_command_status display_slot mapped_record display_buffer \
             display_buffer_select controller_state mode_range angle_subtract \
             angle_between angle_distance angle_fold angle_direction \
             render_submit asset_load video_mode texture_tile small_state \
@@ -387,7 +391,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             matrix_basic matrix_state \
             matrix_transform vector2_rotate matrix_vector matrix_multiply \
             scheduler_context scheduler_state scheduler_events \
-            scheduler_queue scheduler_misc object_timing object_setters \
+            scheduler_queue scheduler_misc object_range object_timing object_setters \
             object_init object_reset object_flags object_limit \
             object_table_color object_table_reset object_table_lookup \
             gameplay_stub turn_adjust hud_state hud_modes hud_stub \
@@ -397,7 +401,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             hud_root_callback hud_layout hud_list_trigger \
             hud_entry_values hud_list_reset hud_selection_apply \
             hud_primary_trigger display_registry display_color display_commands \
-            menu_state; do
+            menu_state menu_toggle; do
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
         -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
@@ -426,6 +430,12 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/controller_state.c.o .text 0x30 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/mapped_record.c.o .text 0x58 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/display_slot.c.o .text 0x3c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_range.c.o .text 0x28 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/menu_toggle.c.o .text 0x90 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/game_queue.c.o .text 0x38 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -656,7 +666,8 @@ mkdir -p build/us/src/libultra
     build/us/src/code/early_command_status.c.o \
     build/us/asm/us/main_80078CD8_to_8007A710.s.o \
     build/us/src/code/unknown_8007A710.c.o \
-    build/us/asm/us/main_8007A720_to_8007AC34.s.o \
+    build/us/src/code/display_slot.c.o \
+    build/us/asm/us/main_8007A75C_to_8007AC34.s.o \
     build/us/src/code/display_buffer.c.o \
     build/us/asm/us/main_8007AD40_to_8007AD94.s.o \
     build/us/src/code/display_buffer_select.c.o \
@@ -745,7 +756,9 @@ mkdir -p build/us/src/libultra
     build/us/src/code/scheduler_events.c.o \
     build/us/asm/us/main_800A18D0_to_800A1A28.s.o \
     build/us/src/code/scheduler_queue.c.o \
-    build/us/asm/us/main_800A1B44_to_800A2DFC.s.o \
+    build/us/asm/us/main_800A1B44_to_800A2B74.s.o \
+    build/us/src/code/object_range.c.o \
+    build/us/asm/us/main_800A2B9C_to_800A2DFC.s.o \
     build/us/src/code/scheduler_misc.c.o \
     build/us/asm/us/main_800A2E5C_to_800A4098.s.o \
     build/us/src/code/object_timing.c.o \
@@ -791,7 +804,8 @@ mkdir -p build/us/src/libultra
     build/us/src/code/hud_stub.c.o \
     build/us/asm/us/main_800C0A6C_to_800C0C18.s.o \
     build/us/src/code/hud_layout.c.o \
-    build/us/asm/us/main_800C0C38_to_800C1124.s.o \
+    build/us/asm/us/main_800C0C38_to_800C1094.s.o \
+    build/us/src/code/menu_toggle.c.o \
     build/us/src/code/hud_secondary.c.o \
     build/us/src/code/hud_callbacks.c.o \
     build/us/src/code/hud_primary_modes.c.o \
