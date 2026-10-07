@@ -68,9 +68,21 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8009F8A0_to_8009FF1C.s.o .text 0x67c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8009FFB8_to_801029D0.s.o asm/us/main_8009FFB8_to_801029D0.s
+    -o build/us/asm/us/main_8009FFB8_to_800A1280.s.o asm/us/main_8009FFB8_to_800A1280.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8009FFB8_to_801029D0.s.o .text 0x62a18 --alignment 4
+    build/us/asm/us/main_8009FFB8_to_800A1280.s.o .text 0x12c8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A1290_to_800A134C.s.o asm/us/main_800A1290_to_800A134C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A1290_to_800A134C.s.o .text 0xbc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A1384_to_800A179C.s.o asm/us/main_800A1384_to_800A179C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A1384_to_800A179C.s.o .text 0x418 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A1858_to_801029D0.s.o asm/us/main_800A1858_to_801029D0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A1858_to_801029D0.s.o .text 0x61178 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_801029F0_to_80103160.s.o asm/us/main_801029F0_to_80103160.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -131,7 +143,8 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/render_queue.c.o .text 0x46c --alignment 4
 for unit in render_submit asset_load video_mode texture_tile session_queries \
             random_integer vector2 vector2_motion matrix_basic \
-            matrix_transform vector2_rotate matrix_vector matrix_multiply; do
+            matrix_transform vector2_rotate matrix_vector matrix_multiply \
+            scheduler_context scheduler_state scheduler_events; do
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
         -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
@@ -166,6 +179,12 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/matrix_vector.c.o .text 0x140 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/matrix_multiply.c.o .text 0xf8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/scheduler_context.c.o .text 0x10 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/scheduler_state.c.o .text 0x38 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/scheduler_events.c.o .text 0xbc --alignment 4
 mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_device_busy.c.o src/libultra/os_ai_device_busy.c
@@ -256,7 +275,13 @@ mkdir -p build/us/src/libultra
     build/us/src/code/matrix_transform.c.o \
     build/us/asm/us/main_8009F8A0_to_8009FF1C.s.o \
     build/us/src/code/vector2_rotate.c.o \
-    build/us/asm/us/main_8009FFB8_to_801029D0.s.o \
+    build/us/asm/us/main_8009FFB8_to_800A1280.s.o \
+    build/us/src/code/scheduler_context.c.o \
+    build/us/asm/us/main_800A1290_to_800A134C.s.o \
+    build/us/src/code/scheduler_state.c.o \
+    build/us/asm/us/main_800A1384_to_800A179C.s.o \
+    build/us/src/code/scheduler_events.c.o \
+    build/us/asm/us/main_800A1858_to_801029D0.s.o \
     build/us/src/libultra/os_ai_get_length.c.o \
     build/us/src/libultra/os_ai_get_status.c.o \
     build/us/asm/us/main_801029F0_to_80103160.s.o \

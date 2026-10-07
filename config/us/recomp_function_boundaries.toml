@@ -630,14 +630,10 @@ functions = [
     # func_800A1150 with no overlap.
     { name = "func_800A10E0", vram = 0x800a10e0, size = 0x64 },
     { name = "func_800A1150", vram = 0x800a1150, size = 0x130 },
-    # Round 46 (STATUS.md): same class of bug as rounds 39/41/42/44/45 --
-    # __CallBackDmaNew (declared size 0xcc) is actually two: itself, a tiny
-    # 4-instruction trampoline returning a constant address (lui/addiu/jr/
-    # nop), and a separate jump-table dispatcher function right after it
-    # (called indirectly via that returned address, hence the runtime
-    # lookup failure). 0x10 + 0xbc = 0xcc, matching the original total
-    # exactly.
-    { name = "__CallBackDmaNew", vram = 0x800a1280, size = 0x10 },
+    # The symbol formerly imported as __CallBackDmaNew is a four-instruction
+    # scheduler-context getter. A separate jump-table dispatcher follows it;
+    # 0x10 + 0xbc accounts for the original aggregate exactly.
+    { name = "func_800A1280", vram = 0x800a1280, size = 0x10 },
     { name = "func_800A1290", vram = 0x800a1290, size = 0xbc },
     { name = "func_800A134C", vram = 0x800a134c, size = 0x38 },
     { name = "func_800A1384", vram = 0x800a1384, size = 0x88 },
