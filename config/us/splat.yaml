@@ -46,7 +46,9 @@ segments:
       - [0x93830, c, libultra/os_create_mesg_queue]
       - [0x93860, asm, main_80103860_to_801059B0]
       - [0x959B0, c, libultra/al_filter_new]
-      - [0x959D0, asm, main_after_801059B0]
+      - [0x959D0, asm, main_801059D0_to_8010D660]
+      - [0x9D660, c, libultra/os_get_thread_pri]
+      - [0x9D680, asm, main_after_8010D660]
 
   # The first automatically loaded MiB contains the known executable code.
   # The remaining ROM is kept opaque until its asset/archive formats are mapped.
