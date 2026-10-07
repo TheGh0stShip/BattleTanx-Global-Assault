@@ -2006,66 +2006,10 @@ functions = [
     # isn't claimed by any symbol; left unclaimed since nothing currently
     # known calls into it.
     { name = "func_80114470", vram = 0x80114470, size = 0x28 },
-    # func_80119628 (was here, vram 0x80119628 size 0x1c) removed round 21:
-    # entirely data, not code -- same neighborhood as the round-15 dispatch
-    # table (0x8011a8xx) and the round-21 ASCII-string deletions nearby.
-    # Every "instruction" here is a raw address value or table entry that
-    # happens to decode as something syntactically valid but nonsensical
-    # (an `lb` loading from a huge negative offset off $zero that is really
-    # just this function's own address reinterpreted, then a `dmtc0` that
-    # N64Recomp doesn't support -- "Unhandled instruction: dmtc0").
-    # func_80119668/80119678/801196A8/801196C8/801196E8 (were here) removed
-    # round 22: same pure-data pattern as the other round-21/22 deletions in
-    # this exact 0x8011axxx-0x8011bxxx neighborhood -- each one's very
-    # first "instruction" is already a degenerate `sll $zero, $reg, 0`
-    # (writes to $zero, which real code never does -- caught by
-    # rabbitizer's `outputsToGprZero()`), immediately followed by more
-    # raw-address-as-instruction garbage, not real code at all.
-    { name = "func_8011A3E0", vram = 0x8011a3e0, size = 0x10 },
-    { name = "func_8011A4E0", vram = 0x8011a4e0, size = 0xc },
-    # func_8011A5F0 (was here, vram 0x8011a5f0 size 0xac) removed round 21:
-    # same story as func_80119628 above -- a pointer/dispatch data table in
-    # the same 0x8011axxx-0x8011bxxx neighborhood misdecoding as a handful
-    # of syntactically-valid-but-nonsensical instructions ("mfc0 $zero,
-    # Random" reading a table pointer, then a `b` branching clean out to
-    # 0x8011B600 -- "Unhandled branch"), not real code.
-    { name = "func_8011AB6C", vram = 0x8011ab6c, size = 0x10 },
-    { name = "func_8011AD2C", vram = 0x8011ad2c, size = 0x10 },
-    { name = "func_8011AEEC", vram = 0x8011aeec, size = 0x10 },
-    { name = "func_8011B0AC", vram = 0x8011b0ac, size = 0x10 },
-    { name = "func_8011DBC8", vram = 0x8011dbc8, size = 0x10 },
-    { name = "func_8011DC38", vram = 0x8011dc38, size = 0x10 },
-    { name = "func_8011E710", vram = 0x8011e710, size = 0x10 },
-    { name = "func_8011E720", vram = 0x8011e720, size = 0x10 },
-    { name = "func_8011FA5C", vram = 0x8011fa5c, size = 0x10 },
-    { name = "func_8011FA6C", vram = 0x8011fa6c, size = 0x10 },
-    { name = "func_8011FA7C", vram = 0x8011fa7c, size = 0x10 },
-    { name = "n_alGlobals", vram = 0x80126b30, size = 0x4 },
-    { name = "alGlobals", vram = 0x80126b34, size = 0xc },
-    { name = "__osContinitialized", vram = 0x80126b50, size = 0x10 },
-    { name = "__osHwIntTable", vram = 0x80126e30, size = 0x24 },
-    { name = "__osShutdown", vram = 0x80126e5c, size = 0x4 },
-    { name = "__osPiDevMgr", vram = 0x80126e70, size = 0x8 },
-    { name = "__osPiTable", vram = 0x80126e8c, size = 0x4 },
-    { name = "__osCurrentHandle", vram = 0x80126e90, size = 0x10 },
-    { name = "alGlobals_80126ED0", vram = 0x80126ed0, size = 0x18 },
-    { name = "__osRunQueue", vram = 0x80126ee8, size = 0x4 },
-    { name = "__osActiveQueue", vram = 0x80126eec, size = 0x4 },
-    { name = "__osRunningThread", vram = 0x80126ef0, size = 0x4 },
-    { name = "__osFaultedThread", vram = 0x80126ef4, size = 0xc },
-    { name = "__osTimerList", vram = 0x80126f00, size = 0x10 },
-    { name = "__osViCurr", vram = 0x80126f70, size = 0x4 },
-    { name = "__osViNext", vram = 0x80126f74, size = 0x2c },
-    { name = "__osViCurr_8012DEE0", vram = 0x8012dee0, size = 0x8 },
-    # func_8014749C and func_80147740 (were here) removed round 22: round
-    # 21's truncation heuristic (cut at the last confirmed jr $ra before the
-    # first outright-invalid word) mistakenly treated these as real code,
-    # since every word in both is a *syntactically valid* but nonsensical
-    # decode (`beql $s4, $s4, ...` repeated over and over -- the same
-    # repeating word pattern, 0x52945294, that round 16 already identified
-    # as texture/palette data elsewhere). Neither has a real jr $ra
-    # anywhere; both are pure data. Found via a full-corpus sweep for
-    # branches whose target lands somewhere with no known function AND
-    # isn't the source function's own range -- both branch out to
-    # 0x8015bxxx/0x8015cxxx/0x8012a8e0, addresses with no code nearby.
+    # High-address audit: every imported candidate after 0x80114498 was
+    # rejected. The 0x8011Axxx-0x8011FAxx candidates are pointer tables,
+    # zero-filled records, or other data. The 0x80126xxx names are libultra
+    # data symbols, not functions, and 0x8012DEE0 begins an ASCII string.
+    # Keep any names independently useful for navigation in the symbol seed;
+    # this table is restricted to boundaries supported as executable code.
 ]

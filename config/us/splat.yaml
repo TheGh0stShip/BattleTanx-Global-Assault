@@ -36,7 +36,9 @@ segments:
     subsegments:
       - [0x1000, asm, main_before_8007ADB0]
       - [0xADB0, c, code/unknown_8007ADB0]
-      - [0xADC0, asm, main_after_8007ADB0]
+      - [0xADC0, asm, main_8007ADC0_to_8007B020]
+      - [0xB020, c, code/unknown_8007B020]
+      - [0xB030, asm, main_after_8007B020]
 
   # The first automatically loaded MiB contains the known executable code.
   # The remaining ROM is kept opaque until its asset/archive formats are mapped.
