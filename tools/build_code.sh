@@ -80,9 +80,21 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_80082D98_to_80082FE0.s.o .text 0x248 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_80083028_to_8009C284.s.o asm/us/main_80083028_to_8009C284.s
+    -o build/us/asm/us/main_80083028_to_80083FCC.s.o asm/us/main_80083028_to_80083FCC.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_80083028_to_8009C284.s.o .text 0x1925c --alignment 4
+    build/us/asm/us/main_80083028_to_80083FCC.s.o .text 0xfa4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80083FF8_to_80084C50.s.o asm/us/main_80083FF8_to_80084C50.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80083FF8_to_80084C50.s.o .text 0xc58 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80084CC8_to_800859A8.s.o asm/us/main_80084CC8_to_800859A8.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80084CC8_to_800859A8.s.o .text 0xce0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800859E4_to_8009C284.s.o asm/us/main_800859E4_to_8009C284.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800859E4_to_8009C284.s.o .text 0x168a0 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8009C31C_to_8009D914.s.o asm/us/main_8009C31C_to_8009D914.s
 python3 tools/trim_elf32_section.py \
@@ -313,6 +325,7 @@ for unit in render_submit asset_load video_mode texture_tile small_state \
             small_state_copy collision_noop state_noop state_modes \
             collision_fields object_query pair_queue \
             object_defaults mode_owner mode_transition object_disable \
+            object_predicates object_direction object_action \
             session_queries \
             random_integer vector2 vector2_motion matrix_basic \
             matrix_transform vector2_rotate matrix_vector matrix_multiply \
@@ -367,6 +380,12 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/pair_queue.c.o .text 0x38 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/object_disable.c.o .text 0x48 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_predicates.c.o .text 0x2c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_direction.c.o .text 0x78 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_action.c.o .text 0x3c --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/session_queries.c.o .text 0x98 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -565,7 +584,13 @@ mkdir -p build/us/src/libultra
     build/us/src/code/pair_queue.c.o \
     build/us/asm/us/main_80082D98_to_80082FE0.s.o \
     build/us/src/code/object_disable.c.o \
-    build/us/asm/us/main_80083028_to_8009C284.s.o \
+    build/us/asm/us/main_80083028_to_80083FCC.s.o \
+    build/us/src/code/object_predicates.c.o \
+    build/us/asm/us/main_80083FF8_to_80084C50.s.o \
+    build/us/src/code/object_direction.c.o \
+    build/us/asm/us/main_80084CC8_to_800859A8.s.o \
+    build/us/src/code/object_action.c.o \
+    build/us/asm/us/main_800859E4_to_8009C284.s.o \
     build/us/src/code/session_queries.c.o \
     build/us/asm/us/main_8009C31C_to_8009D914.s.o \
     build/us/src/code/random_integer.c.o \
