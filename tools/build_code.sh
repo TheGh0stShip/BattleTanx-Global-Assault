@@ -22,7 +22,11 @@ mkdir -p build/us/asm/us build/us/assets/extracted/us
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8007ADC0_to_8007B020.s.o asm/us/main_8007ADC0_to_8007B020.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_after_8007B020.s.o asm/us/main_after_8007B020.s
+    -o build/us/asm/us/main_8007B030_to_801037B0.s.o asm/us/main_8007B030_to_801037B0.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80103860_to_801059B0.s.o asm/us/main_80103860_to_801059B0.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_after_801059B0.s.o asm/us/main_after_801059B0.s
 
 tools/bootstrap_ido.sh
 mkdir -p build/us/src/code
@@ -30,6 +34,13 @@ mkdir -p build/us/src/code
     -o build/us/src/code/unknown_8007ADB0.c.o src/code/unknown_8007ADB0.c
 .toolchain/ido5.3/cc -c -O2 -g3 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/code/unknown_8007B020.c.o src/code/unknown_8007B020.c
+mkdir -p build/us/src/libultra
+.toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/al_copy.c.o src/libultra/al_copy.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_create_mesg_queue.c.o src/libultra/os_create_mesg_queue.c
+.toolchain/ido5.3/cc -c -O3 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/al_filter_new.c.o src/libultra/al_filter_new.c
 
 "${tool_prefix}objcopy" -I binary -O elf32-tradbigmips -B mips \
     assets/extracted/us/ipl3.bin build/us/assets/extracted/us/ipl3.bin.o
@@ -39,7 +50,12 @@ mkdir -p build/us/src/code
     build/us/src/code/unknown_8007ADB0.c.o \
     build/us/asm/us/main_8007ADC0_to_8007B020.s.o \
     build/us/src/code/unknown_8007B020.c.o \
-    build/us/asm/us/main_after_8007B020.s.o \
+    build/us/asm/us/main_8007B030_to_801037B0.s.o \
+    build/us/src/libultra/al_copy.c.o \
+    build/us/src/libultra/os_create_mesg_queue.c.o \
+    build/us/asm/us/main_80103860_to_801059B0.s.o \
+    build/us/src/libultra/al_filter_new.c.o \
+    build/us/asm/us/main_after_801059B0.s.o \
     > build/us/undefined_object_symbols.txt
 python3 tools/generate_linker_symbols.py build/us/symbols.ld \
     config/us/symbol_addrs.txt \
