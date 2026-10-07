@@ -52,9 +52,21 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8007D718_to_8007D720.s.o .text 0x8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8007D7C4_to_8009C284.s.o asm/us/main_8007D7C4_to_8009C284.s
+    -o build/us/asm/us/main_8007D7C4_to_8007E1FC.s.o asm/us/main_8007D7C4_to_8007E1FC.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8007D7C4_to_8009C284.s.o .text 0x1eac0 --alignment 4
+    build/us/asm/us/main_8007D7C4_to_8007E1FC.s.o .text 0xa38 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007E210_to_8007E778.s.o asm/us/main_8007E210_to_8007E778.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007E210_to_8007E778.s.o .text 0x568 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007E7A8_to_80082D60.s.o asm/us/main_8007E7A8_to_80082D60.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007E7A8_to_80082D60.s.o .text 0x45b8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80082D98_to_8009C284.s.o asm/us/main_80082D98_to_8009C284.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80082D98_to_8009C284.s.o .text 0x194ec --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8009C31C_to_8009D914.s.o asm/us/main_8009C31C_to_8009D914.s
 python3 tools/trim_elf32_section.py \
@@ -282,7 +294,9 @@ python3 tools/normalize_kmc_gcc_asm.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/render_queue.c.o .text 0x46c --alignment 4
 for unit in render_submit asset_load video_mode texture_tile small_state \
-            small_state_copy collision_noop state_noop state_modes session_queries \
+            small_state_copy collision_noop state_noop state_modes \
+            collision_fields object_query pair_queue \
+            session_queries \
             random_integer vector2 vector2_motion matrix_basic \
             matrix_transform vector2_rotate matrix_vector matrix_multiply \
             scheduler_context scheduler_state scheduler_events \
@@ -322,6 +336,12 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/state_noop.c.o .text 0x8 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/state_modes.c.o .text 0xa4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/collision_fields.c.o .text 0x14 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_query.c.o .text 0x30 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/pair_queue.c.o .text 0x38 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/session_queries.c.o .text 0x98 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -506,7 +526,13 @@ mkdir -p build/us/src/libultra
     build/us/src/code/state_noop.c.o \
     build/us/asm/us/main_8007D718_to_8007D720.s.o \
     build/us/src/code/state_modes.c.o \
-    build/us/asm/us/main_8007D7C4_to_8009C284.s.o \
+    build/us/asm/us/main_8007D7C4_to_8007E1FC.s.o \
+    build/us/src/code/collision_fields.c.o \
+    build/us/asm/us/main_8007E210_to_8007E778.s.o \
+    build/us/src/code/object_query.c.o \
+    build/us/asm/us/main_8007E7A8_to_80082D60.s.o \
+    build/us/src/code/pair_queue.c.o \
+    build/us/asm/us/main_80082D98_to_8009C284.s.o \
     build/us/src/code/session_queries.c.o \
     build/us/asm/us/main_8009C31C_to_8009D914.s.o \
     build/us/src/code/random_integer.c.o \
