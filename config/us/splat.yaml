@@ -54,7 +54,11 @@ segments:
       - [0x9F6A0, c, libultra/os_dp_device_busy]
       - [0x9F6D0, asm, main_8010F6D0_to_8010FE90]
       - [0x9FE90, c, libultra/os_si_device_busy]
-      - [0x9FEC0, asm, main_after_8010FE90]
+      - [0x9FEC0, asm, main_8010FEC0_to_80110490]
+      - [0xA0490, c, libultra/os_sp_set_status]
+      - [0xA04A0, asm, main_801104A0_to_80110540]
+      - [0xA0540, c, libultra/os_sp_get_status]
+      - [0xA0550, asm, main_after_80110540]
 
   # The first automatically loaded MiB contains the known executable code.
   # The remaining ROM is kept opaque until its asset/archive formats are mapped.
