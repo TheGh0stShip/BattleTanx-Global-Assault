@@ -156,9 +156,21 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800C11B8_to_800C1468.s.o .text 0x2b0 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C1484_to_801029D0.s.o asm/us/main_800C1484_to_801029D0.s
+    -o build/us/asm/us/main_800C1484_to_800C17C8.s.o asm/us/main_800C1484_to_800C17C8.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C1484_to_801029D0.s.o .text 0x4154c --alignment 4
+    build/us/asm/us/main_800C1484_to_800C17C8.s.o .text 0x344 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C180C_to_800C247C.s.o asm/us/main_800C180C_to_800C247C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C180C_to_800C247C.s.o .text 0xc70 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C24FC_to_800C27EC.s.o asm/us/main_800C24FC_to_800C27EC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C24FC_to_800C27EC.s.o .text 0x2f0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C290C_to_801029D0.s.o asm/us/main_800C290C_to_801029D0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C290C_to_801029D0.s.o .text 0x400c4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_801029F0_to_80103160.s.o asm/us/main_801029F0_to_80103160.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -225,7 +237,8 @@ for unit in render_submit asset_load video_mode texture_tile session_queries \
             object_init object_reset object_flags object_limit \
             object_table_color object_table_reset object_table_lookup \
             gameplay_stub turn_adjust hud_state hud_modes hud_stub \
-            hud_secondary hud_primary_modes hud_transition; do
+            hud_secondary hud_primary_modes hud_transition registry_lookup \
+            hud_ready hud_clear hud_navigation; do
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
         -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
@@ -304,6 +317,14 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_primary_modes.c.o .text 0x28 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_transition.c.o .text 0x1c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/registry_lookup.c.o .text 0x44 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_ready.c.o .text 0x28 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_clear.c.o .text 0x58 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_navigation.c.o .text 0x120 --alignment 4
 mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_device_busy.c.o src/libultra/os_ai_device_busy.c
@@ -438,7 +459,14 @@ mkdir -p build/us/src/libultra
     build/us/src/code/hud_primary_modes.c.o \
     build/us/asm/us/main_800C11B8_to_800C1468.s.o \
     build/us/src/code/hud_transition.c.o \
-    build/us/asm/us/main_800C1484_to_801029D0.s.o \
+    build/us/asm/us/main_800C1484_to_800C17C8.s.o \
+    build/us/src/code/registry_lookup.c.o \
+    build/us/asm/us/main_800C180C_to_800C247C.s.o \
+    build/us/src/code/hud_ready.c.o \
+    build/us/src/code/hud_clear.c.o \
+    build/us/asm/us/main_800C24FC_to_800C27EC.s.o \
+    build/us/src/code/hud_navigation.c.o \
+    build/us/asm/us/main_800C290C_to_801029D0.s.o \
     build/us/src/libultra/os_ai_get_length.c.o \
     build/us/src/libultra/os_ai_get_status.c.o \
     build/us/asm/us/main_801029F0_to_80103160.s.o \
