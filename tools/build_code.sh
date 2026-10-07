@@ -26,25 +26,31 @@ mkdir -p build/us/asm/us build/us/assets/extracted/us
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8007B030_to_801029D0.s.o asm/us/main_8007B030_to_801029D0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_801029F0_to_801037B0.s.o asm/us/main_801029F0_to_801037B0.s
+    -o build/us/asm/us/main_801029F0_to_80103160.s.o asm/us/main_801029F0_to_80103160.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80103190_to_801037B0.s.o asm/us/main_80103190_to_801037B0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_80103860_to_801059B0.s.o asm/us/main_80103860_to_801059B0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_801059D0_to_80105A70.s.o asm/us/main_801059D0_to_80105A70.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_80105B10_to_8010D660.s.o asm/us/main_80105B10_to_8010D660.s
+    -o build/us/asm/us/main_80105B10_to_8010CF70.s.o asm/us/main_80105B10_to_8010CF70.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8010CFA0_to_8010D660.s.o asm/us/main_8010CFA0_to_8010D660.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8010D680_to_8010F6A0.s.o asm/us/main_8010D680_to_8010F6A0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8010F6D0_to_8010FE90.s.o asm/us/main_8010F6D0_to_8010FE90.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8010FEC0_to_801103D0.s.o asm/us/main_8010FEC0_to_801103D0.s
+    -o build/us/asm/us/main_8010FF60_to_801100A0.s.o asm/us/main_8010FF60_to_801100A0.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_801100E0_to_801103D0.s.o asm/us/main_801100E0_to_801103D0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_80110400_to_80110490.s.o asm/us/main_80110400_to_80110490.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_801104C0_to_80110540.s.o asm/us/main_801104C0_to_80110540.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_80110550_to_80110750.s.o asm/us/main_80110550_to_80110750.s
+    -o build/us/asm/us/main_80110550_to_801106B0.s.o asm/us/main_80110550_to_801106B0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_80110760_to_801118C0.s.o asm/us/main_80110760_to_801118C0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -60,6 +66,8 @@ mkdir -p build/us/src/code
     -o build/us/src/code/unknown_8007B020.c.o src/code/unknown_8007B020.c
 mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_ai_device_busy.c.o src/libultra/os_ai_device_busy.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_get_length.c.o src/libultra/os_ai_get_length.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_get_status.c.o src/libultra/os_ai_get_status.c
@@ -74,11 +82,19 @@ mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O3 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/al_heap_init.c.o src/libultra/al_heap_init.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_pi_get_cmd_queue.c.o src/libultra/os_pi_get_cmd_queue.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_get_thread_pri.c.o src/libultra/os_get_thread_pri.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_dp_device_busy.c.o src/libultra/os_dp_device_busy.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_si_device_busy.c.o src/libultra/os_si_device_busy.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_si_raw_read_io.c.o src/libultra/os_si_raw_read_io.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_si_raw_write_io.c.o src/libultra/os_si_raw_write_io.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_sp_set_pc.c.o src/libultra/os_sp_set_pc.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_sp_device_busy.c.o src/libultra/os_sp_device_busy.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
@@ -87,6 +103,8 @@ mkdir -p build/us/src/libultra
     -o build/us/src/libultra/os_sp_task_yield.c.o src/libultra/os_sp_task_yield.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_sp_get_status.c.o src/libultra/os_sp_get_status.c
+.toolchain/ido5.3/cc -c -O2 -Wo,-loopunroll,0 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/string.c.o src/libultra/string.c
 .toolchain/ido5.3/cc -c -O3 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/al_syn_delete.c.o src/libultra/al_syn_delete.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
@@ -105,7 +123,9 @@ mkdir -p build/us/src/libultra
     build/us/asm/us/main_8007B030_to_801029D0.s.o \
     build/us/src/libultra/os_ai_get_length.c.o \
     build/us/src/libultra/os_ai_get_status.c.o \
-    build/us/asm/us/main_801029F0_to_801037B0.s.o \
+    build/us/asm/us/main_801029F0_to_80103160.s.o \
+    build/us/src/libultra/os_ai_device_busy.c.o \
+    build/us/asm/us/main_80103190_to_801037B0.s.o \
     build/us/src/libultra/al_copy.c.o \
     build/us/src/libultra/os_create_mesg_queue.c.o \
     build/us/asm/us/main_80103860_to_801059B0.s.o \
@@ -113,20 +133,27 @@ mkdir -p build/us/src/libultra
     build/us/asm/us/main_801059D0_to_80105A70.s.o \
     build/us/src/libultra/al_heap_alloc.c.o \
     build/us/src/libultra/al_heap_init.c.o \
-    build/us/asm/us/main_80105B10_to_8010D660.s.o \
+    build/us/asm/us/main_80105B10_to_8010CF70.s.o \
+    build/us/src/libultra/os_pi_get_cmd_queue.c.o \
+    build/us/asm/us/main_8010CFA0_to_8010D660.s.o \
     build/us/src/libultra/os_get_thread_pri.c.o \
     build/us/asm/us/main_8010D680_to_8010F6A0.s.o \
     build/us/src/libultra/os_dp_device_busy.c.o \
     build/us/asm/us/main_8010F6D0_to_8010FE90.s.o \
     build/us/src/libultra/os_si_device_busy.c.o \
-    build/us/asm/us/main_8010FEC0_to_801103D0.s.o \
+    build/us/src/libultra/os_si_raw_read_io.c.o \
+    build/us/src/libultra/os_si_raw_write_io.c.o \
+    build/us/asm/us/main_8010FF60_to_801100A0.s.o \
+    build/us/src/libultra/os_sp_set_pc.c.o \
+    build/us/asm/us/main_801100E0_to_801103D0.s.o \
     build/us/src/libultra/os_sp_device_busy.c.o \
     build/us/asm/us/main_80110400_to_80110490.s.o \
     build/us/src/libultra/os_sp_set_status.c.o \
     build/us/src/libultra/os_sp_task_yield.c.o \
     build/us/asm/us/main_801104C0_to_80110540.s.o \
     build/us/src/libultra/os_sp_get_status.c.o \
-    build/us/asm/us/main_80110550_to_80110750.s.o \
+    build/us/asm/us/main_80110550_to_801106B0.s.o \
+    build/us/src/libultra/string.c.o \
     build/us/src/libultra/al_syn_delete.c.o \
     build/us/asm/us/main_80110760_to_801118C0.s.o \
     build/us/src/libultra/os_vi_get_current_context.c.o \

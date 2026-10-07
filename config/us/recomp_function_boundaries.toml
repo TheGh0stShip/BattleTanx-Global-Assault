@@ -124,8 +124,10 @@ functions = [
     { name = "func_8007D628", vram = 0x8007d628, size = 0x6c },
     { name = "__dummy", vram = 0x8007d694, size = 0x8 },
     { name = "func_8007D69C", vram = 0x8007d69c, size = 0x68 },
-    { name = "func_8007D704", vram = 0x8007d704, size = 0x14 },
-    { name = "func_8007D718", vram = 0x8007d718, size = 0x20 },
+    # Audited split: D704-D70F and D718-D71F are embedded ASCII/metadata.
+    # The actual prologueless leaf functions begin at D710 and D720.
+    { name = "func_8007D710", vram = 0x8007d710, size = 0x8 },
+    { name = "func_8007D720", vram = 0x8007d720, size = 0x18 },
     { name = "func_8007D738", vram = 0x8007d738, size = 0x28 },
     { name = "func_8007D760", vram = 0x8007d760, size = 0x4c },
     { name = "func_8007D7AC", vram = 0x8007d7ac, size = 0x18 },
@@ -145,12 +147,13 @@ functions = [
     # only because N64Recomp's own analysis followed a `jal 0x8007e118` from
     # elsewhere, auto-generated a "static_0_8007E118" for the unnamed target,
     # and walked straight off the end of its real body (this one's own
-    # clean jr $ra return at 0x8007e15c) into 4 words of data, hitting a
+    # clean jr $ra return at 0x8007e15c, whose delay slot is at E160) into
+    # three words of data, hitting a
     # `j 0x8C000000` -- an address far outside any valid N64 RAM range,
     # confirming it's a data misdecode, not a tail call ("Unhandled branch
     # in static_0_8007E118"). Real function confirmed by direct disassembly:
     # proper prologue, two real jal calls, clean return.
-    { name = "func_8007E118", vram = 0x8007e118, size = 0x48 },
+    { name = "func_8007E118", vram = 0x8007e118, size = 0x4c },
     { name = "func_8007E170", vram = 0x8007e170, size = 0x8c },
     { name = "func_8007E1FC", vram = 0x8007e1fc, size = 0x14 },
     { name = "func_8007E210", vram = 0x8007e210, size = 0x58 },
