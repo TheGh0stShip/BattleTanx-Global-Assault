@@ -1,0 +1,39 @@
+name: BattleTanx Global Assault (USA)
+sha1: 805248fb0a0ee694cad8d7dc927b631d860dd8cf
+
+options:
+  base_path: ../..
+  target_path: baseroms/us/baserom.z64
+  platform: n64
+  compiler: IDO
+  basename: battletanx_ga
+  build_path: build/us
+  asm_path: asm/us
+  src_path: src
+  asset_path: assets/extracted/us
+  cache_path: .splache/us
+  symbol_addrs_path: config/us/symbol_addrs.txt
+  undefined_funcs_auto_path: build/us/undefined_funcs_auto.txt
+  undefined_syms_auto_path: build/us/undefined_syms_auto.txt
+  create_asm_dependencies: true
+  disassemble_all: true
+
+segments:
+  - name: header
+    type: header
+    start: 0x0
+
+  - name: ipl3
+    type: bin
+    start: 0x40
+
+  - name: main
+    type: code
+    start: 0x1000
+    vram: 0x80071000
+    subsegments:
+      - [0x1000, asm, main]
+
+  # The first automatically loaded MiB contains the known executable code.
+  # The remaining ROM is kept opaque until its asset/archive formats are mapped.
+  - [0x101000]
