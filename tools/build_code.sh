@@ -30,7 +30,7 @@ mkdir -p build/us/asm/us build/us/assets/extracted/us
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_80103860_to_801059B0.s.o asm/us/main_80103860_to_801059B0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_801059D0_to_80105AD0.s.o asm/us/main_801059D0_to_80105AD0.s
+    -o build/us/asm/us/main_801059D0_to_80105A70.s.o asm/us/main_801059D0_to_80105A70.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_80105B10_to_8010D660.s.o asm/us/main_80105B10_to_8010D660.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -70,6 +70,8 @@ mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O3 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/al_filter_new.c.o src/libultra/al_filter_new.c
 .toolchain/ido5.3/cc -c -O3 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/al_heap_alloc.c.o src/libultra/al_heap_alloc.c
+.toolchain/ido5.3/cc -c -O3 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/al_heap_init.c.o src/libultra/al_heap_init.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_get_thread_pri.c.o src/libultra/os_get_thread_pri.c
@@ -108,7 +110,8 @@ mkdir -p build/us/src/libultra
     build/us/src/libultra/os_create_mesg_queue.c.o \
     build/us/asm/us/main_80103860_to_801059B0.s.o \
     build/us/src/libultra/al_filter_new.c.o \
-    build/us/asm/us/main_801059D0_to_80105AD0.s.o \
+    build/us/asm/us/main_801059D0_to_80105A70.s.o \
+    build/us/src/libultra/al_heap_alloc.c.o \
     build/us/src/libultra/al_heap_init.c.o \
     build/us/asm/us/main_80105B10_to_8010D660.s.o \
     build/us/src/libultra/os_get_thread_pri.c.o \
