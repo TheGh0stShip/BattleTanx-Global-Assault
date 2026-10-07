@@ -23,7 +23,9 @@ TRANSFER = re.compile(
 
 
 def normalize(source: str) -> str:
-    output: list[str] = []
+    # GNU as starts in reorder mode. Merely adding an explicit NOP does not
+    # prevent it from moving an earlier instruction into that slot.
+    output: list[str] = ["\t.set\tnoreorder\n"]
     compiler_reorder = True
 
     for line in source.splitlines(keepends=True):

@@ -32,9 +32,21 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8007B8EC_to_8007BCF0.s.o .text 0x404 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8007C364_to_801029D0.s.o asm/us/main_8007C364_to_801029D0.s
+    -o build/us/asm/us/main_8007C364_to_8009C284.s.o asm/us/main_8007C364_to_8009C284.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8007C364_to_801029D0.s.o .text 0x8666c --alignment 4
+    build/us/asm/us/main_8007C364_to_8009C284.s.o .text 0x1ff20 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009C31C_to_8009D914.s.o asm/us/main_8009C31C_to_8009D914.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009C31C_to_8009D914.s.o .text 0x15f8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009D960_to_8009DA34.s.o asm/us/main_8009D960_to_8009DA34.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009D960_to_8009DA34.s.o .text 0xd4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009DAB0_to_801029D0.s.o asm/us/main_8009DAB0_to_801029D0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009DAB0_to_801029D0.s.o .text 0x64f20 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_801029F0_to_80103160.s.o asm/us/main_801029F0_to_80103160.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -93,7 +105,8 @@ python3 tools/normalize_kmc_gcc_asm.py \
     -o build/us/src/code/render_queue.c.o build/us/src/code/render_queue.s
 python3 tools/trim_elf32_section.py \
     build/us/src/code/render_queue.c.o .text 0x46c --alignment 4
-for unit in render_submit asset_load video_mode texture_tile; do
+for unit in render_submit asset_load video_mode texture_tile session_queries \
+            random_integer vector2; do
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
         -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
@@ -110,6 +123,12 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/video_mode.c.o .text 0xf4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/texture_tile.c.o .text 0x474 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/session_queries.c.o .text 0x98 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/random_integer.c.o .text 0x4c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/vector2.c.o .text 0x7c --alignment 4
 mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_device_busy.c.o src/libultra/os_ai_device_busy.c
@@ -182,7 +201,13 @@ mkdir -p build/us/src/libultra
     build/us/src/code/asset_load.c.o \
     build/us/src/code/video_mode.c.o \
     build/us/src/code/texture_tile.c.o \
-    build/us/asm/us/main_8007C364_to_801029D0.s.o \
+    build/us/asm/us/main_8007C364_to_8009C284.s.o \
+    build/us/src/code/session_queries.c.o \
+    build/us/asm/us/main_8009C31C_to_8009D914.s.o \
+    build/us/src/code/random_integer.c.o \
+    build/us/asm/us/main_8009D960_to_8009DA34.s.o \
+    build/us/src/code/vector2.c.o \
+    build/us/asm/us/main_8009DAB0_to_801029D0.s.o \
     build/us/src/libultra/os_ai_get_length.c.o \
     build/us/src/libultra/os_ai_get_status.c.o \
     build/us/asm/us/main_801029F0_to_80103160.s.o \

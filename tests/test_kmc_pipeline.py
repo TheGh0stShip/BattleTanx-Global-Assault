@@ -22,6 +22,7 @@ class KmcPipelineTests(unittest.TestCase):
         self.assertEqual(
             (
                 "\t.set\tnoreorder\n"
+                "\t.set\tnoreorder\n"
                 "\tjal\t_bzero\n"
                 "\tli\t$5,0x300\n"
                 "\t.set\tnoreorder\n"
@@ -32,7 +33,15 @@ class KmcPipelineTests(unittest.TestCase):
     def test_adds_nop_to_unfilled_reorder_transfer(self) -> None:
         source = "\tsb\t$4,D_80114512\n\tjal\tfunc_800A9F10\n\tlw\t$31,20($sp)\n"
         self.assertEqual(
-            "\tsb\t$4,D_80114512\n\tjal\tfunc_800A9F10\n\tnop\n\tlw\t$31,20($sp)\n",
+            "\t.set\tnoreorder\n\tsb\t$4,D_80114512\n"
+            "\tjal\tfunc_800A9F10\n\tnop\n\tlw\t$31,20($sp)\n",
+            MODULE.normalize(source),
+        )
+
+    def test_global_noreorder_prevents_store_scheduling(self) -> None:
+        source = "\tsw\t$4,D_80114C80\n\tj\t$31\n"
+        self.assertEqual(
+            "\t.set\tnoreorder\n\tsw\t$4,D_80114C80\n\tj\t$31\n\tnop\n",
             MODULE.normalize(source),
         )
 
