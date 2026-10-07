@@ -60,10 +60,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8007C364_to_8007D470.s.o .text 0x110c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8007D500_to_8007D558.s.o asm/us/main_8007D500_to_8007D558.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8007D500_to_8007D558.s.o .text 0x58 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8007D5B0_to_8007D694.s.o asm/us/main_8007D5B0_to_8007D694.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8007D5B0_to_8007D694.s.o .text 0xe4 --alignment 4
@@ -156,13 +152,21 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8009DB2C_to_8009E044.s.o .text 0x518 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8009E0E8_to_8009EEE0.s.o asm/us/main_8009E0E8_to_8009EEE0.s
+    -o build/us/asm/us/main_8009E0E8_to_8009EEA0.s.o asm/us/main_8009E0E8_to_8009EEA0.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8009E0E8_to_8009EEE0.s.o .text 0xdf8 --alignment 4
+    build/us/asm/us/main_8009E0E8_to_8009EEA0.s.o .text 0xdb8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8009EF4C_to_8009F1F4.s.o asm/us/main_8009EF4C_to_8009F1F4.s
+    -o build/us/asm/us/main_8009EED8_to_8009EEE0.s.o asm/us/main_8009EED8_to_8009EEE0.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8009EF4C_to_8009F1F4.s.o .text 0x2a8 --alignment 4
+    build/us/asm/us/main_8009EED8_to_8009EEE0.s.o .text 0x8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009EF4C_to_8009F064.s.o asm/us/main_8009EF4C_to_8009F064.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009EF4C_to_8009F064.s.o .text 0x118 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009F090_to_8009F1F4.s.o asm/us/main_8009F090_to_8009F1F4.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009F090_to_8009F1F4.s.o .text 0x164 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8009F334_to_8009F4B4.s.o asm/us/main_8009F334_to_8009F4B4.s
 python3 tools/trim_elf32_section.py \
@@ -272,9 +276,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800C041C_to_800C0800.s.o .text 0x3e4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C0850_to_800C0A64.s.o asm/us/main_800C0850_to_800C0A64.s
+    -o build/us/asm/us/main_800C08E0_to_800C0A64.s.o asm/us/main_800C08E0_to_800C0A64.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C0850_to_800C0A64.s.o .text 0x214 --alignment 4
+    build/us/asm/us/main_800C08E0_to_800C0A64.s.o .text 0x184 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800C0A6C_to_800C0C18.s.o asm/us/main_800C0A6C_to_800C0C18.s
 python3 tools/trim_elf32_section.py \
@@ -370,7 +374,7 @@ python3 tools/normalize_kmc_gcc_asm.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/render_queue.c.o .text 0x46c --alignment 4
 for unit in early_hw early_memory_read early_memory_write early_remote_copy \
-            early_commands early_command_status display_buffer \
+            early_commands early_command_status mapped_record display_buffer \
             display_buffer_select controller_state mode_range angle_subtract \
             angle_between angle_distance angle_fold angle_direction \
             render_submit asset_load video_mode texture_tile small_state \
@@ -379,7 +383,8 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             object_defaults mode_owner mode_transition object_disable \
             object_predicates object_direction object_action \
             session_queries \
-            random_integer vector2 vector2_scale vector2_motion matrix_basic \
+            random_integer vector2 vector2_scale vector2_motion game_queue \
+            matrix_basic matrix_state \
             matrix_transform vector2_rotate matrix_vector matrix_multiply \
             scheduler_context scheduler_state scheduler_events \
             scheduler_queue scheduler_misc object_timing object_setters \
@@ -391,7 +396,8 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             entry_flags hud_callbacks hud_panel_callback hud_list_callback \
             hud_root_callback hud_layout hud_list_trigger \
             hud_entry_values hud_list_reset hud_selection_apply \
-            hud_primary_trigger display_registry display_color display_commands; do
+            hud_primary_trigger display_registry display_color display_commands \
+            menu_state; do
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
         -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
@@ -418,6 +424,14 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/display_buffer_select.c.o .text 0x1c --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/controller_state.c.o .text 0x30 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mapped_record.c.o .text 0x58 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/game_queue.c.o .text 0x38 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/matrix_state.c.o .text 0x2c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/menu_state.c.o .text 0x90 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/mode_range.c.o .text 0x24 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -660,7 +674,7 @@ mkdir -p build/us/src/libultra
     build/us/src/code/texture_tile.c.o \
     build/us/asm/us/main_8007C364_to_8007D470.s.o \
     build/us/src/code/small_state.c.o \
-    build/us/asm/us/main_8007D500_to_8007D558.s.o \
+    build/us/src/code/mapped_record.c.o \
     build/us/src/code/small_state_copy.c.o \
     build/us/asm/us/main_8007D5B0_to_8007D694.s.o \
     build/us/src/code/collision_noop.c.o \
@@ -709,9 +723,13 @@ mkdir -p build/us/src/libultra
     build/us/src/code/vector2_scale.c.o \
     build/us/asm/us/main_8009DB2C_to_8009E044.s.o \
     build/us/src/code/vector2_motion.c.o \
-    build/us/asm/us/main_8009E0E8_to_8009EEE0.s.o \
+    build/us/asm/us/main_8009E0E8_to_8009EEA0.s.o \
+    build/us/src/code/game_queue.c.o \
+    build/us/asm/us/main_8009EED8_to_8009EEE0.s.o \
     build/us/src/code/matrix_basic.c.o \
-    build/us/asm/us/main_8009EF4C_to_8009F1F4.s.o \
+    build/us/asm/us/main_8009EF4C_to_8009F064.s.o \
+    build/us/src/code/matrix_state.c.o \
+    build/us/asm/us/main_8009F090_to_8009F1F4.s.o \
     build/us/src/code/matrix_vector.c.o \
     build/us/asm/us/main_8009F334_to_8009F4B4.s.o \
     build/us/src/code/matrix_multiply.c.o \
@@ -768,7 +786,8 @@ mkdir -p build/us/src/libultra
     build/us/src/code/hud_root_callback.c.o \
     build/us/asm/us/main_800C041C_to_800C0800.s.o \
     build/us/src/code/hud_modes.c.o \
-    build/us/asm/us/main_800C0850_to_800C0A64.s.o \
+    build/us/src/code/menu_state.c.o \
+    build/us/asm/us/main_800C08E0_to_800C0A64.s.o \
     build/us/src/code/hud_stub.c.o \
     build/us/asm/us/main_800C0A6C_to_800C0C18.s.o \
     build/us/src/code/hud_layout.c.o \
