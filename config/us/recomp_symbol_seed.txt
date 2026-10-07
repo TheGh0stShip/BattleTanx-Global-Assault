@@ -551,6 +551,7 @@ func_800A19DC = 0x800a19dc;
 func_800A1A28 = 0x800a1a28;
 func_800A1A80 = 0x800a1a80;
 func_800A1AFC = 0x800a1afc;
+func_800A1B44 = 0x800a1b44;
 func_800A1BE0 = 0x800a1be0;
 func_800A1D24 = 0x800a1d24;
 func_800A1FDC = 0x800a1fdc;
