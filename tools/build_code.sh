@@ -116,9 +116,13 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8009C31C_to_8009D144.s.o .text 0xe28 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8009D168_to_8009D6DC.s.o asm/us/main_8009D168_to_8009D6DC.s
+    -o build/us/asm/us/main_8009D168_to_8009D578.s.o asm/us/main_8009D168_to_8009D578.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8009D168_to_8009D6DC.s.o .text 0x574 --alignment 4
+    build/us/asm/us/main_8009D168_to_8009D578.s.o .text 0x410 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009D5B4_to_8009D6DC.s.o asm/us/main_8009D5B4_to_8009D6DC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009D5B4_to_8009D6DC.s.o .text 0x128 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8009D6F8_to_8009D72C.s.o asm/us/main_8009D6F8_to_8009D72C.s
 python3 tools/trim_elf32_section.py \
@@ -128,17 +132,21 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8009D75C_to_8009D81C.s.o .text 0xc0 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8009D850_to_8009D914.s.o asm/us/main_8009D850_to_8009D914.s
+    -o build/us/asm/us/main_8009D8A0_to_8009D914.s.o asm/us/main_8009D8A0_to_8009D914.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8009D850_to_8009D914.s.o .text 0xc4 --alignment 4
+    build/us/asm/us/main_8009D8A0_to_8009D914.s.o .text 0x74 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8009D960_to_8009DA34.s.o asm/us/main_8009D960_to_8009DA34.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8009D960_to_8009DA34.s.o .text 0xd4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8009DAB0_to_8009E044.s.o asm/us/main_8009DAB0_to_8009E044.s
+    -o build/us/asm/us/main_8009DAB0_to_8009DB0C.s.o asm/us/main_8009DAB0_to_8009DB0C.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8009DAB0_to_8009E044.s.o .text 0x594 --alignment 4
+    build/us/asm/us/main_8009DAB0_to_8009DB0C.s.o .text 0x5c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009DB2C_to_8009E044.s.o asm/us/main_8009DB2C_to_8009E044.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009DB2C_to_8009E044.s.o .text 0x518 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8009E0E8_to_8009EEE0.s.o asm/us/main_8009E0E8_to_8009EEE0.s
 python3 tools/trim_elf32_section.py \
@@ -355,14 +363,14 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/render_queue.c.o .text 0x46c --alignment 4
 for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             early_commands early_command_status mode_range angle_subtract \
-            angle_between angle_distance \
+            angle_between angle_distance angle_fold angle_direction \
             render_submit asset_load video_mode texture_tile small_state \
             small_state_copy collision_noop state_noop state_modes \
             collision_fields object_query pair_queue \
             object_defaults mode_owner mode_transition object_disable \
             object_predicates object_direction object_action \
             session_queries \
-            random_integer vector2 vector2_motion matrix_basic \
+            random_integer vector2 vector2_scale vector2_motion matrix_basic \
             matrix_transform vector2_rotate matrix_vector matrix_multiply \
             scheduler_context scheduler_state scheduler_events \
             scheduler_queue scheduler_misc object_timing object_setters \
@@ -403,6 +411,12 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/angle_between.c.o .text 0x30 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/angle_distance.c.o .text 0x34 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/angle_fold.c.o .text 0x3c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/angle_direction.c.o .text 0x50 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/vector2_scale.c.o .text 0x20 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/render_submit.c.o .text 0x290 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -659,17 +673,22 @@ mkdir -p build/us/src/libultra
     build/us/src/code/session_queries.c.o \
     build/us/asm/us/main_8009C31C_to_8009D144.s.o \
     build/us/src/code/mode_range.c.o \
-    build/us/asm/us/main_8009D168_to_8009D6DC.s.o \
+    build/us/asm/us/main_8009D168_to_8009D578.s.o \
+    build/us/src/code/angle_fold.c.o \
+    build/us/asm/us/main_8009D5B4_to_8009D6DC.s.o \
     build/us/src/code/angle_subtract.c.o \
     build/us/asm/us/main_8009D6F8_to_8009D72C.s.o \
     build/us/src/code/angle_between.c.o \
     build/us/asm/us/main_8009D75C_to_8009D81C.s.o \
     build/us/src/code/angle_distance.c.o \
-    build/us/asm/us/main_8009D850_to_8009D914.s.o \
+    build/us/src/code/angle_direction.c.o \
+    build/us/asm/us/main_8009D8A0_to_8009D914.s.o \
     build/us/src/code/random_integer.c.o \
     build/us/asm/us/main_8009D960_to_8009DA34.s.o \
     build/us/src/code/vector2.c.o \
-    build/us/asm/us/main_8009DAB0_to_8009E044.s.o \
+    build/us/asm/us/main_8009DAB0_to_8009DB0C.s.o \
+    build/us/src/code/vector2_scale.c.o \
+    build/us/asm/us/main_8009DB2C_to_8009E044.s.o \
     build/us/src/code/vector2_motion.c.o \
     build/us/asm/us/main_8009E0E8_to_8009EEE0.s.o \
     build/us/src/code/matrix_basic.c.o \
