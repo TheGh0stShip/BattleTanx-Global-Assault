@@ -157,6 +157,48 @@ class FunctionBoundaryTests(unittest.TestCase):
         self.assertNotIn(0x8011446C, covered_words)
         self.assertIn(0x80114498, covered_words)
 
+    def test_game_code_merged_boundaries_are_split(self) -> None:
+        functions = self.load_functions()
+        by_address = {function["vram"]: function for function in functions}
+
+        expected = {
+            0x8007A720: 0x3C, 0x8007A75C: 0x58, 0x8007A7B4: 0x64,
+            0x8007A8F0: 0xFC, 0x8007A9EC: 0xBC, 0x8007AAA8: 0xBC,
+            0x8007AC34: 0x38, 0x8007AC6C: 0x38, 0x8007ACA4: 0x54,
+            0x8007ADC0: 0x20, 0x8007ADE0: 0x10,
+            0x8007C364: 0x3B4, 0x8007C718: 0x2A0,
+            0x8007D4A0: 0x1C, 0x8007D4BC: 0x44,
+            0x8007D69C: 0x68, 0x8007D704: 0x14, 0x8007D718: 0x20,
+            0x8007D738: 0x28, 0x8007D760: 0x4C, 0x8007D7AC: 0x18,
+            0x8007D7C4: 0xC0,
+            0x8007DBE0: 0x174, 0x8007DD54: 0xE8,
+            0x8007E210: 0x58, 0x8007E268: 0x6C,
+            0x8007E64C: 0x12C, 0x8007E778: 0xC,
+        }
+        for address, size in expected.items():
+            self.assertEqual(size, by_address[address]["size"])
+            self.assertEqual(f"func_{address:08X}", by_address[address]["name"])
+
+    def test_game_code_trailing_data_is_not_function_coverage(self) -> None:
+        functions = self.load_functions()
+        by_address = {function["vram"]: function for function in functions}
+        self.assertEqual(0x98, by_address[0x8007AF84]["size"])
+        self.assertEqual(0xCC, by_address[0x8007D39C]["size"])
+        self.assertEqual(0x14, by_address[0x8007D484]["size"])
+
+        covered_words = {
+            address
+            for function in functions
+            for address in range(
+                int(function["vram"]),
+                int(function["vram"]) + int(function["size"]),
+                4,
+            )
+        }
+        for address in (0x8007B01C, 0x8007D468, 0x8007D46C,
+                        0x8007D498, 0x8007D49C):
+            self.assertNotIn(address, covered_words)
+
 
 if __name__ == "__main__":
     unittest.main()

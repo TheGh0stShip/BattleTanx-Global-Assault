@@ -18,7 +18,9 @@ mkdir -p build/us/asm/us build/us/assets/extracted/us
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/header.s.o asm/us/header.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_before_8007ADB0.s.o asm/us/main_before_8007ADB0.s
+    -o build/us/asm/us/main_before_8007A710.s.o asm/us/main_before_8007A710.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007A720_to_8007ADB0.s.o asm/us/main_8007A720_to_8007ADB0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8007ADC0_to_8007B020.s.o asm/us/main_8007ADC0_to_8007B020.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -50,6 +52,8 @@ mkdir -p build/us/asm/us build/us/assets/extracted/us
 
 tools/bootstrap_ido.sh
 mkdir -p build/us/src/code
+.toolchain/ido5.3/cc -c -O2 -g3 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/code/unknown_8007A710.c.o src/code/unknown_8007A710.c
 .toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/code/unknown_8007ADB0.c.o src/code/unknown_8007ADB0.c
 .toolchain/ido5.3/cc -c -O2 -g3 -mips2 -non_shared -G 0 -Iinclude \
@@ -90,7 +94,9 @@ mkdir -p build/us/src/libultra
     assets/extracted/us/ipl3.bin build/us/assets/extracted/us/ipl3.bin.o
 
 "${tool_prefix}nm" -u \
-    build/us/asm/us/main_before_8007ADB0.s.o \
+    build/us/asm/us/main_before_8007A710.s.o \
+    build/us/src/code/unknown_8007A710.c.o \
+    build/us/asm/us/main_8007A720_to_8007ADB0.s.o \
     build/us/src/code/unknown_8007ADB0.c.o \
     build/us/asm/us/main_8007ADC0_to_8007B020.s.o \
     build/us/src/code/unknown_8007B020.c.o \

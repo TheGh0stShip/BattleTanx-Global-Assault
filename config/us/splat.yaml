@@ -34,7 +34,9 @@ segments:
     start: 0x1000
     vram: 0x80071000
     subsegments:
-      - [0x1000, asm, main_before_8007ADB0]
+      - [0x1000, asm, main_before_8007A710]
+      - [0xA710, c, code/unknown_8007A710]
+      - [0xA720, asm, main_8007A720_to_8007ADB0]
       - [0xADB0, c, code/unknown_8007ADB0]
       - [0xADC0, asm, main_8007ADC0_to_8007B020]
       - [0xB020, c, code/unknown_8007B020]
