@@ -40,7 +40,9 @@ mkdir -p build/us/asm/us build/us/assets/extracted/us
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_801104C0_to_80110540.s.o asm/us/main_801104C0_to_80110540.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_80110550_to_801118C0.s.o asm/us/main_80110550_to_801118C0.s
+    -o build/us/asm/us/main_80110550_to_80110750.s.o asm/us/main_80110550_to_80110750.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80110760_to_801118C0.s.o asm/us/main_80110760_to_801118C0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_after_801118C0.s.o asm/us/main_after_801118C0.s
 
@@ -75,6 +77,8 @@ mkdir -p build/us/src/libultra
     -o build/us/src/libultra/os_sp_task_yield.c.o src/libultra/os_sp_task_yield.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_sp_get_status.c.o src/libultra/os_sp_get_status.c
+.toolchain/ido5.3/cc -c -O3 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/al_syn_delete.c.o src/libultra/al_syn_delete.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_vi_get_current_context.c.o src/libultra/os_vi_get_current_context.c
 
@@ -107,7 +111,9 @@ mkdir -p build/us/src/libultra
     build/us/src/libultra/os_sp_task_yield.c.o \
     build/us/asm/us/main_801104C0_to_80110540.s.o \
     build/us/src/libultra/os_sp_get_status.c.o \
-    build/us/asm/us/main_80110550_to_801118C0.s.o \
+    build/us/asm/us/main_80110550_to_80110750.s.o \
+    build/us/src/libultra/al_syn_delete.c.o \
+    build/us/asm/us/main_80110760_to_801118C0.s.o \
     build/us/src/libultra/os_vi_get_current_context.c.o \
     build/us/asm/us/main_after_801118C0.s.o \
     > build/us/undefined_object_symbols.txt

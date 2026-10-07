@@ -59,7 +59,9 @@ segments:
       - [0xA04A0, c, libultra/os_sp_task_yield]
       - [0xA04C0, asm, main_801104C0_to_80110540]
       - [0xA0540, c, libultra/os_sp_get_status]
-      - [0xA0550, asm, main_80110550_to_801118C0]
+      - [0xA0550, asm, main_80110550_to_80110750]
+      - [0xA0750, c, libultra/al_syn_delete]
+      - [0xA0760, asm, main_80110760_to_801118C0]
       - [0xA18C0, c, libultra/os_vi_get_current_context]
       - [0xA18D0, asm, main_after_801118C0]
 

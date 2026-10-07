@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 BOUNDARIES = Path("config/us/recomp_function_boundaries.toml")
-LAST_VERIFIED_CODE_END = 0x80114498
+LAST_VERIFIED_CODE_END = 0x8011449C
 
 
 class FunctionBoundaryTests(unittest.TestCase):
@@ -110,6 +110,52 @@ class FunctionBoundaryTests(unittest.TestCase):
                 {"name": name, "vram": address, "size": size},
                 by_address[address],
             )
+
+    def test_formatted_io_static_boundaries(self) -> None:
+        functions = self.load_functions()
+        by_address = {function["vram"]: function for function in functions}
+
+        expected = {
+            0x80112110: ("_Putfld", 0x670),
+            0x80112DD0: ("_Genld", 0x568),
+            0x80113338: ("func_80113338", 0x8),
+            0x80113340: ("_Ldtob", 0x550),
+        }
+        for address, (name, size) in expected.items():
+            self.assertEqual(
+                {"name": name, "vram": address, "size": size},
+                by_address[address],
+            )
+
+    def test_final_libgcc_helpers_exclude_embedded_data(self) -> None:
+        functions = self.load_functions()
+        by_address = {function["vram"]: function for function in functions}
+
+        expected = {
+            0x80113D10: ("__cmpdi2", 0x40),
+            0x80113D50: ("__floatdisf", 0xBC),
+            0x80113E10: ("__udivdi3", 0x20),
+            0x80113E30: ("__udivmoddi4", 0x63C),
+            0x80114470: ("__umoddi3", 0x2C),
+        }
+        for address, (name, size) in expected.items():
+            self.assertEqual(
+                {"name": name, "vram": address, "size": size},
+                by_address[address],
+            )
+
+        covered_words = {
+            address
+            for function in functions
+            for address in range(
+                int(function["vram"]),
+                int(function["vram"]) + int(function["size"]),
+                4,
+            )
+        }
+        self.assertNotIn(0x80113E0C, covered_words)
+        self.assertNotIn(0x8011446C, covered_words)
+        self.assertIn(0x80114498, covered_words)
 
 
 if __name__ == "__main__":

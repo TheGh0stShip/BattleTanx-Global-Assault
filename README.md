@@ -27,10 +27,10 @@ make check
 ## Current status
 
 - ROM identity and the unusual `0x80071000` load address are verified.
-- A GPL-compatible seed map currently contains 1,553 supported candidate function boundaries after correcting false splits and aggregations, with provenance.
+- A GPL-compatible seed map currently contains 1,554 supported candidate function boundaries after correcting false splits and aggregations, with provenance.
 - Reproducible splat extraction and repository safety gates are in place.
 - The header, IPL3, and known first-MiB code region reconstruct byte-for-byte.
-- Fifteen functions (two game helpers and thirteen independently reconstructed SDK routines) are reconstructed in C and pass the full byte-exact region gate.
+- Sixteen functions (two game helpers and fourteen independently reconstructed SDK routines) are reconstructed in C and pass the full byte-exact region gate.
 - Matching C reconstruction, compiler identification, linker layout, asset format mapping, and ROM rebuild are not complete.
 - The Vita port has not begun; N64 source recovery comes first.
 

@@ -1498,7 +1498,7 @@ functions = [
     # (0x800f809c, raw bytes spell "num", part of a string) that decodes as
     # a fully plausible `bne`; only surfaced because its computed branch
     # target (0x80115654) landed in the ~24KB unclaimed data gap after
-    # func_80114470 (confirmed pure data by direct inspection: IEEE-754
+    # __umoddi3 (confirmed pure data by direct inspection: IEEE-754
     # floats, movz/movn, far-out-of-segment jump targets -- not more code).
     # Real code resumes cleanly at 0x800f80a0 and runs to this entry's
     # original declared end.
@@ -1997,27 +1997,24 @@ functions = [
     { name = "__osViSwapContext", vram = 0x80111d00, size = 0x360 },
     { name = "osWritebackDCache", vram = 0x80112060, size = 0x80 },
     { name = "osWritebackDCacheAll", vram = 0x801120e0, size = 0x30 },
-    { name = "xprintf_text_0000", vram = 0x80112110, size = 0x670 },
+    { name = "_Putfld", vram = 0x80112110, size = 0x670 },
     { name = "_Printf", vram = 0x80112780, size = 0x650 },
-    { name = "xldtob_text_0000", vram = 0x80112dd0, size = 0x570 },
+    { name = "_Genld", vram = 0x80112dd0, size = 0x568 },
+    { name = "func_80113338", vram = 0x80113338, size = 0x8 },
     { name = "_Ldtob", vram = 0x80113340, size = 0x550 },
     { name = "lldiv", vram = 0x80113890, size = 0x100 },
     { name = "ldiv", vram = 0x80113990, size = 0x90 },
     { name = "_Litob", vram = 0x80113a20, size = 0x2a0 },
     { name = "osYieldThread", vram = 0x80113cc0, size = 0x50 },
-    { name = "func_80113D10", vram = 0x80113d10, size = 0x40 },
-    { name = "func_80113D50", vram = 0x80113d50, size = 0xc0 },
-    { name = "func_80113E10", vram = 0x80113e10, size = 0x20 },
-    { name = "func_80113E30", vram = 0x80113e30, size = 0x63c },
-    # round 21: another missing function found via N64Recomp's jal-following
-    # ("No function found for jal target: 0x84000000" while analyzing
-    # "static_0_80114470"). Real, clean function -- calls func_80113E30
-    # above and returns -- followed immediately by what looks like a string/
-    # data blob (a `jal 0x84000000` and other clearly-garbage decodes) that
-    # isn't claimed by any symbol; left unclaimed since nothing currently
-    # known calls into it.
-    { name = "func_80114470", vram = 0x80114470, size = 0x28 },
-    # High-address audit: every imported candidate after 0x80114498 was
+    { name = "__cmpdi2", vram = 0x80113d10, size = 0x40 },
+    # 0x80113E0C is a four-byte data fragment between runtime helpers.
+    { name = "__floatdisf", vram = 0x80113d50, size = 0xbc },
+    { name = "__udivdi3", vram = 0x80113e10, size = 0x20 },
+    { name = "__udivmoddi4", vram = 0x80113e30, size = 0x63c },
+    # 0x8011446C is another four-byte data fragment. The nop at 0x80114498
+    # is the architectural delay slot of the return at 0x80114494.
+    { name = "__umoddi3", vram = 0x80114470, size = 0x2c },
+    # High-address audit: every imported candidate after 0x8011449C was
     # rejected. The 0x8011Axxx-0x8011FAxx candidates are pointer tables,
     # zero-filled records, or other data. The 0x80126xxx names are libultra
     # data symbols, not functions, and 0x8012DEE0 begins an ASCII string.

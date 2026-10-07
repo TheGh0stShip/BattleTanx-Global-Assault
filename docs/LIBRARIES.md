@@ -57,7 +57,7 @@ These are research and future split boundaries, not yet linker-layout claims:
 The earlier exception and OS fragments around `0x80078CE4` are a separate
 linked group and should not be merged into the late SDK/archive region merely
 because their symbols are also libultra-derived. The final verified executable
-boundary currently ends at `0x80114498`.
+boundary currently ends at `0x8011449C`.
 
 ## Controller object layout caveats
 
@@ -124,3 +124,25 @@ routine at offset `0x140`; `alAudioFrame` begins at offset `0x148`. Thus the
 ROM boundaries are `0x80110870`-`0x8011089F`, `0x801108A0`-`0x801108A7`, and
 `0x801108A8` onward respectively. The stripped static names of the two no-op
 routines remain unproven, so they retain address-derived names.
+
+## Formatted I/O and compiler-runtime tail
+
+The `libc/xprintf.o` static routine at `0x80112110` is `_Putfld`, followed by
+`_Printf` at object offset `0x670`. In `libc/xldtob.o`, `_Genld` occupies
+`0x80112DD0`-`0x80113337`; the independently emitted eight-byte static no-op
+at `0x80113338` remains address-named, and `_Ldtob` begins at object offset
+`0x570`. These layouts match the rebuilt 2.0I objects. The libc units use the
+SDK I IDO `-O3 -mips2 -o32 -non_shared -G 0` configuration.
+
+The executable tail after `osYieldThread` consists of GNU libgcc ABI helpers:
+`__cmpdi2`, `__floatdisf`, `__udivdi3`, `__udivmoddi4`, and `__umoddi3`.
+Their exact compiler-runtime release is not yet proven, so the names identify
+their stable ABI behavior rather than a claimed GCC version. Two four-byte
+data fragments interrupt the code: `0x80113E0C` lies between `__floatdisf`
+and `__udivdi3`, while `0x8011446C` lies between `__udivmoddi4` and
+`__umoddi3`. Neither is part of a function.
+
+The final `__umoddi3` return is at `0x80114494`, with its architectural `nop`
+delay slot at `0x80114498`. Consequently its size is `0x2C` and the exclusive
+verified executable endpoint is `0x8011449C`; treating `0x80114498` as the
+start of data would omit an executed instruction.
