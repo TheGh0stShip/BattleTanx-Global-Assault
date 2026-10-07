@@ -22,7 +22,9 @@ mkdir -p build/us/asm/us build/us/assets/extracted/us
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8007ADC0_to_8007B020.s.o asm/us/main_8007ADC0_to_8007B020.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8007B030_to_801037B0.s.o asm/us/main_8007B030_to_801037B0.s
+    -o build/us/asm/us/main_8007B030_to_801029D0.s.o asm/us/main_8007B030_to_801029D0.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_801029F0_to_801037B0.s.o asm/us/main_801029F0_to_801037B0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_80103860_to_801059B0.s.o asm/us/main_80103860_to_801059B0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -35,6 +37,10 @@ mkdir -p build/us/src/code
 .toolchain/ido5.3/cc -c -O2 -g3 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/code/unknown_8007B020.c.o src/code/unknown_8007B020.c
 mkdir -p build/us/src/libultra
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_ai_get_length.c.o src/libultra/os_ai_get_length.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_ai_get_status.c.o src/libultra/os_ai_get_status.c
 .toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/al_copy.c.o src/libultra/al_copy.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
@@ -50,7 +56,10 @@ mkdir -p build/us/src/libultra
     build/us/src/code/unknown_8007ADB0.c.o \
     build/us/asm/us/main_8007ADC0_to_8007B020.s.o \
     build/us/src/code/unknown_8007B020.c.o \
-    build/us/asm/us/main_8007B030_to_801037B0.s.o \
+    build/us/asm/us/main_8007B030_to_801029D0.s.o \
+    build/us/src/libultra/os_ai_get_length.c.o \
+    build/us/src/libultra/os_ai_get_status.c.o \
+    build/us/asm/us/main_801029F0_to_801037B0.s.o \
     build/us/src/libultra/al_copy.c.o \
     build/us/src/libultra/os_create_mesg_queue.c.o \
     build/us/asm/us/main_80103860_to_801059B0.s.o \

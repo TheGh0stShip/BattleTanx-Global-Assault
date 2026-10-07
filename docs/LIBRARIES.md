@@ -58,3 +58,30 @@ The earlier exception and OS fragments around `0x80078CE4` are a separate
 linked group and should not be merged into the late SDK/archive region merely
 because their symbols are also libultra-derived. The final verified executable
 boundary currently ends at `0x80114498`.
+
+## Controller object layout caveats
+
+The `contquery.o` layout agrees exactly with the 2.0I reference: its
+`osContStartQuery` body occupies `0x801030B0`-`0x80103133`, and
+`osContGetQuery` begins at object offset `0x84`. The imported
+`__osCleanupThread` name at `0x801030D4` is therefore an interior signature
+false-positive, not a callable boundary. It remains an untyped seed symbol for
+navigation only.
+
+Do not force the adjacent controller objects to stock offsets. The ROM's
+`contreaddata` unit spans `0x80103190`-`0x801033EF`; its read-start, read-result,
+and command-packing routines begin at local offsets `0`, `0xC4`, and `0x16C`.
+The imported `contreaddata_text_017C` label at `0x801032FC` marks the last of
+those routines but does not carry a trustworthy SDK name. Likewise, the ROM's
+`controller` unit places `osContInit` at `0x801033F0` and
+`__osContGetInitData` at `0x801035E8`, which differs from both stock IDO and
+GCC 2.0I layouts. Preserve these ROM-derived boundaries until their local
+compiler or source variation is established.
+
+The imported `MusPtrBankGetCurrent` boundary at `0x8010CF88` is another
+interior signature false-positive. The branch at `0x8010CF78` reaches that
+address when the PI device manager is active, where the code loads its command
+queue and returns. Consequently `osPiGetCmdQueue` occupies
+`0x8010CF70`-`0x8010CF97` (`0x28` bytes), matching its SDK behavior of returning
+the command queue only for an active manager. The old music-library name is
+retained as an untyped seed alias for navigation, not as a function.

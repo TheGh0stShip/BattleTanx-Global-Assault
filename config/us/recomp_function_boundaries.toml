@@ -1754,8 +1754,9 @@ functions = [
     { name = "_bcopy", vram = 0x80102c00, size = 0x310 },
     { name = "_bzero", vram = 0x80102f10, size = 0xa0 },
     { name = "osCartRomInit", vram = 0x80102fb0, size = 0x100 },
-    { name = "osContStartQuery", vram = 0x801030b0, size = 0x24 },
-    { name = "__osCleanupThread", vram = 0x801030d4, size = 0x60 },
+    # The 2.0I contquery.o object proves this is one 0x84-byte function.
+    # The seed name at 0x801030D4 is an interior signature false-positive.
+    { name = "osContStartQuery", vram = 0x801030b0, size = 0x84 },
     { name = "osContGetQuery", vram = 0x80103134, size = 0x2c },
     { name = "__osAiDeviceBusy", vram = 0x80103160, size = 0x30 },
     { name = "osContStartReadData", vram = 0x80103190, size = 0xc4 },
@@ -1876,8 +1877,9 @@ functions = [
     { name = "func_8010CA40", vram = 0x8010ca40, size = 0x260 },
     { name = "osPfsFindFile", vram = 0x8010cca0, size = 0x1c0 },
     { name = "osPiStartDma", vram = 0x8010ce60, size = 0x110 },
-    { name = "osPiGetCmdQueue", vram = 0x8010cf70, size = 0x18 },
-    { name = "MusPtrBankGetCurrent", vram = 0x8010cf88, size = 0x18 },
+    # The branch at 0x8010CF78 enters 0x8010CF88 when the PI manager is
+    # active; that address is the second half of this SDK function.
+    { name = "osPiGetCmdQueue", vram = 0x8010cf70, size = 0x28 },
     { name = "osCreatePiManager", vram = 0x8010cfa0, size = 0x190 },
     { name = "__osDevMgrMain", vram = 0x8010d130, size = 0x490 },
     { name = "osEPiRawReadIo", vram = 0x8010d5c0, size = 0x50 },
