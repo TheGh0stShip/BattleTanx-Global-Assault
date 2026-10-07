@@ -32,9 +32,13 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8007B8EC_to_8007BCF0.s.o .text 0x404 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8007C364_to_8009C284.s.o asm/us/main_8007C364_to_8009C284.s
+    -o build/us/asm/us/main_8007C364_to_8007D470.s.o asm/us/main_8007C364_to_8007D470.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8007C364_to_8009C284.s.o .text 0x1ff20 --alignment 4
+    build/us/asm/us/main_8007C364_to_8007D470.s.o .text 0x110c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007D4BC_to_8009C284.s.o asm/us/main_8007D4BC_to_8009C284.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007D4BC_to_8009C284.s.o .text 0x1edc8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8009C31C_to_8009D914.s.o asm/us/main_8009C31C_to_8009D914.s
 python3 tools/trim_elf32_section.py \
@@ -140,9 +144,13 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800B5F70_to_800B99C0.s.o .text 0x3a50 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800B99F8_to_800B9C68.s.o asm/us/main_800B99F8_to_800B9C68.s
+    -o build/us/asm/us/main_800B99F8_to_800B9A4C.s.o asm/us/main_800B99F8_to_800B9A4C.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800B99F8_to_800B9C68.s.o .text 0x270 --alignment 4
+    build/us/asm/us/main_800B99F8_to_800B9A4C.s.o .text 0x54 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800B9AB0_to_800B9C68.s.o asm/us/main_800B9AB0_to_800B9C68.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800B9AB0_to_800B9C68.s.o .text 0x1b8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800B9CAC_to_800BD880.s.o asm/us/main_800B9CAC_to_800BD880.s
 python3 tools/trim_elf32_section.py \
@@ -257,7 +265,7 @@ python3 tools/normalize_kmc_gcc_asm.py \
     -o build/us/src/code/render_queue.c.o build/us/src/code/render_queue.s
 python3 tools/trim_elf32_section.py \
     build/us/src/code/render_queue.c.o .text 0x46c --alignment 4
-for unit in render_submit asset_load video_mode texture_tile session_queries \
+for unit in render_submit asset_load video_mode texture_tile small_state session_queries \
             random_integer vector2 vector2_motion matrix_basic \
             matrix_transform vector2_rotate matrix_vector matrix_multiply \
             scheduler_context scheduler_state scheduler_events \
@@ -270,7 +278,7 @@ for unit in render_submit asset_load video_mode texture_tile session_queries \
             entry_flags hud_callbacks hud_panel_callback hud_list_callback \
             hud_root_callback hud_layout hud_list_trigger \
             hud_entry_values hud_list_reset hud_selection_apply \
-            hud_primary_trigger display_registry display_commands; do
+            hud_primary_trigger display_registry display_color display_commands; do
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
         -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
@@ -287,6 +295,8 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/video_mode.c.o .text 0xf4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/texture_tile.c.o .text 0x474 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/small_state.c.o .text 0x4c --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/session_queries.c.o .text 0x98 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -386,6 +396,8 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/display_registry.c.o .text 0x38 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/display_color.c.o .text 0x64 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/display_commands.c.o .text 0x44 --alignment 4
 mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
@@ -459,7 +471,9 @@ mkdir -p build/us/src/libultra
     build/us/src/code/asset_load.c.o \
     build/us/src/code/video_mode.c.o \
     build/us/src/code/texture_tile.c.o \
-    build/us/asm/us/main_8007C364_to_8009C284.s.o \
+    build/us/asm/us/main_8007C364_to_8007D470.s.o \
+    build/us/src/code/small_state.c.o \
+    build/us/asm/us/main_8007D4BC_to_8009C284.s.o \
     build/us/src/code/session_queries.c.o \
     build/us/asm/us/main_8009C31C_to_8009D914.s.o \
     build/us/src/code/random_integer.c.o \
@@ -513,7 +527,9 @@ mkdir -p build/us/src/libultra
     build/us/src/code/turn_adjust.c.o \
     build/us/asm/us/main_800B5F70_to_800B99C0.s.o \
     build/us/src/code/display_registry.c.o \
-    build/us/asm/us/main_800B99F8_to_800B9C68.s.o \
+    build/us/asm/us/main_800B99F8_to_800B9A4C.s.o \
+    build/us/src/code/display_color.c.o \
+    build/us/asm/us/main_800B9AB0_to_800B9C68.s.o \
     build/us/src/code/display_commands.c.o \
     build/us/asm/us/main_800B9CAC_to_800BD880.s.o \
     build/us/src/code/entry_scan.c.o \
