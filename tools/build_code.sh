@@ -124,9 +124,41 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800A9D78_to_800AA598.s.o .text 0x820 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800AA5C4_to_801029D0.s.o asm/us/main_800AA5C4_to_801029D0.s
+    -o build/us/asm/us/main_800AA5C4_to_800B0444.s.o asm/us/main_800AA5C4_to_800B0444.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800AA5C4_to_801029D0.s.o .text 0x5840c --alignment 4
+    build/us/asm/us/main_800AA5C4_to_800B0444.s.o .text 0x5e80 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800B044C_to_800B5F30.s.o asm/us/main_800B044C_to_800B5F30.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800B044C_to_800B5F30.s.o .text 0x5ae4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800B5F70_to_800BFD40.s.o asm/us/main_800B5F70_to_800BFD40.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800B5F70_to_800BFD40.s.o .text 0x9dd0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800BFDA4_to_800C0800.s.o asm/us/main_800BFDA4_to_800C0800.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800BFDA4_to_800C0800.s.o .text 0xa5c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C0850_to_800C0A64.s.o asm/us/main_800C0850_to_800C0A64.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C0850_to_800C0A64.s.o .text 0x214 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C0A6C_to_800C1124.s.o asm/us/main_800C0A6C_to_800C1124.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C0A6C_to_800C1124.s.o .text 0x6b8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C1138_to_800C1190.s.o asm/us/main_800C1138_to_800C1190.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C1138_to_800C1190.s.o .text 0x58 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C11B8_to_800C1468.s.o asm/us/main_800C11B8_to_800C1468.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C11B8_to_800C1468.s.o .text 0x2b0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C1484_to_801029D0.s.o asm/us/main_800C1484_to_801029D0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C1484_to_801029D0.s.o .text 0x4154c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_801029F0_to_80103160.s.o asm/us/main_801029F0_to_80103160.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -191,7 +223,9 @@ for unit in render_submit asset_load video_mode texture_tile session_queries \
             scheduler_context scheduler_state scheduler_events \
             scheduler_queue scheduler_misc object_timing object_setters \
             object_init object_reset object_flags object_limit \
-            object_table_color object_table_reset object_table_lookup; do
+            object_table_color object_table_reset object_table_lookup \
+            gameplay_stub turn_adjust hud_state hud_modes hud_stub \
+            hud_secondary hud_primary_modes hud_transition; do
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
         -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
@@ -254,6 +288,22 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/object_table_reset.c.o .text 0x28 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/object_table_lookup.c.o .text 0x2c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/gameplay_stub.c.o .text 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/turn_adjust.c.o .text 0x40 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_state.c.o .text 0x64 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_modes.c.o .text 0x50 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_stub.c.o .text 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_secondary.c.o .text 0x14 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_primary_modes.c.o .text 0x28 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_transition.c.o .text 0x1c --alignment 4
 mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_device_busy.c.o src/libultra/os_ai_device_busy.c
@@ -372,7 +422,23 @@ mkdir -p build/us/src/libultra
     build/us/src/code/object_table_reset.c.o \
     build/us/asm/us/main_800A9D78_to_800AA598.s.o \
     build/us/src/code/object_table_lookup.c.o \
-    build/us/asm/us/main_800AA5C4_to_801029D0.s.o \
+    build/us/asm/us/main_800AA5C4_to_800B0444.s.o \
+    build/us/src/code/gameplay_stub.c.o \
+    build/us/asm/us/main_800B044C_to_800B5F30.s.o \
+    build/us/src/code/turn_adjust.c.o \
+    build/us/asm/us/main_800B5F70_to_800BFD40.s.o \
+    build/us/src/code/hud_state.c.o \
+    build/us/asm/us/main_800BFDA4_to_800C0800.s.o \
+    build/us/src/code/hud_modes.c.o \
+    build/us/asm/us/main_800C0850_to_800C0A64.s.o \
+    build/us/src/code/hud_stub.c.o \
+    build/us/asm/us/main_800C0A6C_to_800C1124.s.o \
+    build/us/src/code/hud_secondary.c.o \
+    build/us/asm/us/main_800C1138_to_800C1190.s.o \
+    build/us/src/code/hud_primary_modes.c.o \
+    build/us/asm/us/main_800C11B8_to_800C1468.s.o \
+    build/us/src/code/hud_transition.c.o \
+    build/us/asm/us/main_800C1484_to_801029D0.s.o \
     build/us/src/libultra/os_ai_get_length.c.o \
     build/us/src/libultra/os_ai_get_status.c.o \
     build/us/asm/us/main_801029F0_to_80103160.s.o \
