@@ -6,6 +6,9 @@ typedef struct {
     u8 state;
 } SmallState;
 
+extern u8 D_80114670[];
+extern u8 D_80114678[];
+
 void func_8007D470(SmallState* state) {
     state->value = 0;
     state->type = 0xFFFF;
@@ -28,4 +31,11 @@ void func_8007D4A0(SmallState* source, SmallState* destination) {
     destination->value = value;
     destination->type = type;
     destination->state = state;
+}
+
+u8 func_8007D4BC(u8 state, s32 mode) {
+    if (mode == 2 || mode == 0x12) {
+        return D_80114670[state];
+    }
+    return D_80114678[state];
 }

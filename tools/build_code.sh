@@ -36,9 +36,25 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8007C364_to_8007D470.s.o .text 0x110c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8007D4BC_to_8009C284.s.o asm/us/main_8007D4BC_to_8009C284.s
+    -o build/us/asm/us/main_8007D500_to_8007D558.s.o asm/us/main_8007D500_to_8007D558.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8007D4BC_to_8009C284.s.o .text 0x1edc8 --alignment 4
+    build/us/asm/us/main_8007D500_to_8007D558.s.o .text 0x58 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007D5B0_to_8007D694.s.o asm/us/main_8007D5B0_to_8007D694.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007D5B0_to_8007D694.s.o .text 0xe4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007D69C_to_8007D710.s.o asm/us/main_8007D69C_to_8007D710.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007D69C_to_8007D710.s.o .text 0x74 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007D718_to_8007D720.s.o asm/us/main_8007D718_to_8007D720.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007D718_to_8007D720.s.o .text 0x8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007D7C4_to_8009C284.s.o asm/us/main_8007D7C4_to_8009C284.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007D7C4_to_8009C284.s.o .text 0x1eac0 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8009C31C_to_8009D914.s.o asm/us/main_8009C31C_to_8009D914.s
 python3 tools/trim_elf32_section.py \
@@ -265,7 +281,8 @@ python3 tools/normalize_kmc_gcc_asm.py \
     -o build/us/src/code/render_queue.c.o build/us/src/code/render_queue.s
 python3 tools/trim_elf32_section.py \
     build/us/src/code/render_queue.c.o .text 0x46c --alignment 4
-for unit in render_submit asset_load video_mode texture_tile small_state session_queries \
+for unit in render_submit asset_load video_mode texture_tile small_state \
+            small_state_copy collision_noop state_noop state_modes session_queries \
             random_integer vector2 vector2_motion matrix_basic \
             matrix_transform vector2_rotate matrix_vector matrix_multiply \
             scheduler_context scheduler_state scheduler_events \
@@ -296,7 +313,15 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/texture_tile.c.o .text 0x474 --alignment 4
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/small_state.c.o .text 0x4c --alignment 4
+    build/us/src/code/small_state.c.o .text 0x90 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/small_state_copy.c.o .text 0x58 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/collision_noop.c.o .text 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/state_noop.c.o .text 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/state_modes.c.o .text 0xa4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/session_queries.c.o .text 0x98 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -473,7 +498,15 @@ mkdir -p build/us/src/libultra
     build/us/src/code/texture_tile.c.o \
     build/us/asm/us/main_8007C364_to_8007D470.s.o \
     build/us/src/code/small_state.c.o \
-    build/us/asm/us/main_8007D4BC_to_8009C284.s.o \
+    build/us/asm/us/main_8007D500_to_8007D558.s.o \
+    build/us/src/code/small_state_copy.c.o \
+    build/us/asm/us/main_8007D5B0_to_8007D694.s.o \
+    build/us/src/code/collision_noop.c.o \
+    build/us/asm/us/main_8007D69C_to_8007D710.s.o \
+    build/us/src/code/state_noop.c.o \
+    build/us/asm/us/main_8007D718_to_8007D720.s.o \
+    build/us/src/code/state_modes.c.o \
+    build/us/asm/us/main_8007D7C4_to_8009C284.s.o \
     build/us/src/code/session_queries.c.o \
     build/us/asm/us/main_8009C31C_to_8009D914.s.o \
     build/us/src/code/random_integer.c.o \
