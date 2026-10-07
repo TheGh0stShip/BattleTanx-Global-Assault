@@ -52,9 +52,17 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8009E0E8_to_8009EEE0.s.o .text 0xdf8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8009EF4C_to_8009F768.s.o asm/us/main_8009EF4C_to_8009F768.s
+    -o build/us/asm/us/main_8009EF4C_to_8009F1F4.s.o asm/us/main_8009EF4C_to_8009F1F4.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8009EF4C_to_8009F768.s.o .text 0x81c --alignment 4
+    build/us/asm/us/main_8009EF4C_to_8009F1F4.s.o .text 0x2a8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009F334_to_8009F4B4.s.o asm/us/main_8009F334_to_8009F4B4.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009F334_to_8009F4B4.s.o .text 0x180 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009F5AC_to_8009F768.s.o asm/us/main_8009F5AC_to_8009F768.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009F5AC_to_8009F768.s.o .text 0x1bc --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8009F8A0_to_8009FF1C.s.o asm/us/main_8009F8A0_to_8009FF1C.s
 python3 tools/trim_elf32_section.py \
@@ -123,7 +131,7 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/render_queue.c.o .text 0x46c --alignment 4
 for unit in render_submit asset_load video_mode texture_tile session_queries \
             random_integer vector2 vector2_motion matrix_basic \
-            matrix_transform vector2_rotate; do
+            matrix_transform vector2_rotate matrix_vector matrix_multiply; do
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
         -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
@@ -154,6 +162,10 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/matrix_transform.c.o .text 0x138 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/vector2_rotate.c.o .text 0x9c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/matrix_vector.c.o .text 0x140 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/matrix_multiply.c.o .text 0xf8 --alignment 4
 mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_device_busy.c.o src/libultra/os_ai_device_busy.c
@@ -236,7 +248,11 @@ mkdir -p build/us/src/libultra
     build/us/src/code/vector2_motion.c.o \
     build/us/asm/us/main_8009E0E8_to_8009EEE0.s.o \
     build/us/src/code/matrix_basic.c.o \
-    build/us/asm/us/main_8009EF4C_to_8009F768.s.o \
+    build/us/asm/us/main_8009EF4C_to_8009F1F4.s.o \
+    build/us/src/code/matrix_vector.c.o \
+    build/us/asm/us/main_8009F334_to_8009F4B4.s.o \
+    build/us/src/code/matrix_multiply.c.o \
+    build/us/asm/us/main_8009F5AC_to_8009F768.s.o \
     build/us/src/code/matrix_transform.c.o \
     build/us/asm/us/main_8009F8A0_to_8009FF1C.s.o \
     build/us/src/code/vector2_rotate.c.o \
