@@ -103,3 +103,24 @@ is exactly `jr $ra; nop`. The imported `ptstart` label incorrectly aggregated
 all four; `ptstart` belongs to the SDK initialization unit, not the scheduler.
 Until the stripped static names are proven, keep address-derived names for
 these four boundaries.
+
+## Late SDK object and static-function corrections
+
+The `libc/sprintf.o` unit spans `0x80110020`-`0x8011009F`; its static output
+callback is `proutSprintf` at offset `0`, followed by `sprintf` at offset
+`0x24`. The `io/sptask.o` unit spans `0x801100E0`-`0x801103CF`; its static
+`_VirtualToPhysicalTask` helper occupies the first `0x11C` bytes. Likewise,
+the second routine in `io/vimgr.o` at `0x801116E8` is its static `viMgrMain`,
+and the standalone `io/vigetcurrcontext.o` routine at `0x801118C0` is
+`__osViGetCurrentContext`.
+
+Two imported audio boundaries previously crossed independently linked or
+emitted routines. `audio/syndelete.o` is exactly
+`0x80110750`-`0x8011075F`; `audio/synthesizer.o` begins at `0x80110760` with
+an independent eight-byte no-op static routine before `_timeToSamples`.
+Within `synthesizer.o`, `__allocParam` occupies object offsets
+`0x110`-`0x13F`, followed by another independent eight-byte no-op static
+routine at offset `0x140`; `alAudioFrame` begins at offset `0x148`. Thus the
+ROM boundaries are `0x80110870`-`0x8011089F`, `0x801108A0`-`0x801108A7`, and
+`0x801108A8` onward respectively. The stripped static names of the two no-op
+routines remain unproven, so they retain address-derived names.

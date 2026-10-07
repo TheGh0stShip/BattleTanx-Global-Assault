@@ -78,6 +78,39 @@ class FunctionBoundaryTests(unittest.TestCase):
             )
         self.assertNotIn("ptstart", {function["name"] for function in functions})
 
+    def test_synthesizer_object_stubs_are_independent_functions(self) -> None:
+        functions = self.load_functions()
+        by_address = {function["vram"]: function for function in functions}
+
+        expected = {
+            0x80110750: ("alSynDelete_80110750", 0x10),
+            0x80110760: ("func_80110760", 0x8),
+            0x80110870: ("__allocParam_80110870", 0x30),
+            0x801108A0: ("func_801108A0", 0x8),
+            0x801108A8: ("alAudioFrame", 0x298),
+        }
+        for address, (name, size) in expected.items():
+            self.assertEqual(
+                {"name": name, "vram": address, "size": size},
+                by_address[address],
+            )
+
+    def test_late_sdk_static_symbols_use_source_backed_names(self) -> None:
+        functions = self.load_functions()
+        by_address = {function["vram"]: function for function in functions}
+
+        expected = {
+            0x80110020: ("proutSprintf", 0x24),
+            0x801100E0: ("_VirtualToPhysicalTask", 0x11C),
+            0x801116E8: ("viMgrMain", 0x1D8),
+            0x801118C0: ("__osViGetCurrentContext", 0x10),
+        }
+        for address, (name, size) in expected.items():
+            self.assertEqual(
+                {"name": name, "vram": address, "size": size},
+                by_address[address],
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
