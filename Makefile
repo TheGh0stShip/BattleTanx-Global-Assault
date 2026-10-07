@@ -20,6 +20,7 @@ setup: $(VENV_STAMP)
 toolchain:
 	tools/bootstrap_mips_binutils.sh
 	tools/bootstrap_ido.sh
+	tools/bootstrap_kmc_gcc.sh
 
 verify:
 	$(PYTHON) tools/verify_rom.py $(ROM)

@@ -24,7 +24,13 @@ mkdir -p build/us/asm/us build/us/assets/extracted/us
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8007ADC0_to_8007B020.s.o asm/us/main_8007ADC0_to_8007B020.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8007B030_to_801029D0.s.o asm/us/main_8007B030_to_801029D0.s
+    -o build/us/asm/us/main_8007B0E4_to_8007B1F0.s.o asm/us/main_8007B0E4_to_8007B1F0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007B0E4_to_8007B1F0.s.o .text 0x10c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007B65C_to_801029D0.s.o asm/us/main_8007B65C_to_801029D0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007B65C_to_801029D0.s.o .text 0x87374 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_801029F0_to_80103160.s.o asm/us/main_801029F0_to_80103160.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -57,6 +63,7 @@ mkdir -p build/us/asm/us build/us/assets/extracted/us
     -o build/us/asm/us/main_after_801118C0.s.o asm/us/main_after_801118C0.s
 
 tools/bootstrap_ido.sh
+tools/bootstrap_kmc_gcc.sh
 mkdir -p build/us/src/code
 .toolchain/ido5.3/cc -c -O2 -g3 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/code/unknown_8007A710.c.o src/code/unknown_8007A710.c
@@ -64,6 +71,24 @@ mkdir -p build/us/src/code
     -o build/us/src/code/unknown_8007ADB0.c.o src/code/unknown_8007ADB0.c
 .toolchain/ido5.3/cc -c -O2 -g3 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/code/unknown_8007B020.c.o src/code/unknown_8007B020.c
+.toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+    -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
+    -o build/us/src/code/gfx_pool.raw.s src/code/gfx_pool.c
+python3 tools/normalize_kmc_gcc_asm.py \
+    build/us/src/code/gfx_pool.raw.s build/us/src/code/gfx_pool.s
+.toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+    -o build/us/src/code/gfx_pool.c.o build/us/src/code/gfx_pool.s
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/gfx_pool.c.o .text 0xb4 --alignment 4
+.toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+    -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
+    -o build/us/src/code/render_queue.raw.s src/code/render_queue.c
+python3 tools/normalize_kmc_gcc_asm.py \
+    build/us/src/code/render_queue.raw.s build/us/src/code/render_queue.s
+.toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+    -o build/us/src/code/render_queue.c.o build/us/src/code/render_queue.s
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/render_queue.c.o .text 0x46c --alignment 4
 mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_device_busy.c.o src/libultra/os_ai_device_busy.c
@@ -128,7 +153,10 @@ mkdir -p build/us/src/libultra
     build/us/src/code/unknown_8007ADB0.c.o \
     build/us/asm/us/main_8007ADC0_to_8007B020.s.o \
     build/us/src/code/unknown_8007B020.c.o \
-    build/us/asm/us/main_8007B030_to_801029D0.s.o \
+    build/us/src/code/gfx_pool.c.o \
+    build/us/asm/us/main_8007B0E4_to_8007B1F0.s.o \
+    build/us/src/code/render_queue.c.o \
+    build/us/asm/us/main_8007B65C_to_801029D0.s.o \
     build/us/src/libultra/os_ai_get_length.c.o \
     build/us/src/libultra/os_ai_get_status.c.o \
     build/us/asm/us/main_801029F0_to_80103160.s.o \

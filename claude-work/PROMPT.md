@@ -7,8 +7,8 @@ Before doing anything, read:
 1. `../AGENTS.md`
 2. `AGENTS.md`
 
-Your exclusive assignment is the game-code interval **0x8007B020 through
-0x8007C000** (start inclusive, end exclusive). Other workers own all ranges
+Your exclusive assignment is the game-code interval **0x8007B65C through
+0x8007C364** (start inclusive, end exclusive). Other workers own all ranges
 outside it. Do not analyze or change their implementations except for read-only
 context needed to understand callers, callees, types, and conventions.
 
@@ -23,38 +23,29 @@ introduce Vita portability changes into matching source.
 
 ## Current recovery point
 
-The comparison harness now has two trustworthy properties that must not regress:
+The compiler and assembler problem is solved in production. Do not spend more
+time redesigning or debugging the old `cmpfunc.py` harness. The parent repository
+now contains the authoritative pipeline:
 
-- it measures one ELF symbol through the next text symbol rather than the rest of
-  the combined `.text` section;
-- it resolves relocations to their final addresses and compares every emitted word
-  without masking relocated fields.
+- `../tools/normalize_kmc_gcc_asm.py` preserves GCC-owned delay slots and inserts
+  NOPs only for transfers emitted in reorder mode;
+- `../tools/trim_elf32_section.py` removes translation-unit tail padding;
+- `../tools/build_code.sh` compiles and links each accepted unit; and
+- `make clean-generated && make verify-code && make check` is the acceptance gate.
 
-`func_8007B030` is the baseline exact match (0xC emitted and target bytes).
-`func_8007B03C` compiles to the correct instructions but raw KMC assembler reorder
-mode emits 0xA0 instead of the retail 0xA8. The seven reported word differences
-are one scheduling issue, not seven independent C problems: KMC `as` moves the
-`sb` into the final `jal` delay slot and moves `addiu sp,sp,24` into the `jr` delay
-slot. Retail keeps both instructions before their transfers and has a NOP in each
-delay slot.
+The parent has independently integrated and byte-verified `func_8007B030`,
+`func_8007B03C`, `func_8007B1F0`, and `func_8007B498`. Do not revisit them.
+Begin at `func_8007B65C` and proceed in address order through `0x8007C364`.
 
-Next, make a separate, deterministic assembly-normalization stage and test only
-these two functions:
+For scratch iteration, copy the three relevant parent tools into a temporary
+directory outside the repository or invoke them read-only. Compile one proposed
+translation unit at a time, trim it to the exact target interval, link it at its
+retail address with symbols from `../config/us/symbol_addrs.txt`, and compare the
+entire interval byte-for-byte. A result is invalid if emitted and target sizes
+differ; in particular, never report `MATCH` alongside different sizes. If a
+candidate repeatedly fails, preserve the best C and mismatch evidence and move
+to the next function instead of altering the established compiler pipeline.
 
-1. Preserve GCC's existing explicit `.set noreorder` / `.set reorder` regions;
-   those contain intentionally filled delay slots and already match.
-2. For code GCC emits in reorder mode, prevent assembler scheduling and add an
-   explicit `nop` after an otherwise unfilled `jal`, `j`, or `jr`.
-3. Assemble the normalized file with KMC GNU `as` 2.6, never the repository's
-   modern GNU assembler.
-4. Require `func_8007B030` to remain a 0xC exact match and
-   `func_8007B03C` to become a 0xA8 exact match before iterating on any later C.
-5. Record both raw GCC assembly and normalized assembly in the report. The
-   transformation must be syntax-aware/stateful; do not blindly insert NOPs after
-   transfers already inside GCC's noreorder blocks.
-
-Do not delegate or fan out more functions until that two-function regression gate
-passes. Once it passes, use the same fixed pipeline for the remaining functions.
 Do not count a function merely because its structure looks right.
 
 Strict isolation requirements:
