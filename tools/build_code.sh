@@ -36,7 +36,9 @@ mkdir -p build/us/asm/us build/us/assets/extracted/us
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8010F6D0_to_8010FE90.s.o asm/us/main_8010F6D0_to_8010FE90.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8010FEC0_to_80110490.s.o asm/us/main_8010FEC0_to_80110490.s
+    -o build/us/asm/us/main_8010FEC0_to_801103D0.s.o asm/us/main_8010FEC0_to_801103D0.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80110400_to_80110490.s.o asm/us/main_80110400_to_80110490.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_801104C0_to_80110540.s.o asm/us/main_801104C0_to_80110540.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -72,6 +74,8 @@ mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_si_device_busy.c.o src/libultra/os_si_device_busy.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_sp_device_busy.c.o src/libultra/os_sp_device_busy.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_sp_set_status.c.o src/libultra/os_sp_set_status.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_sp_task_yield.c.o src/libultra/os_sp_task_yield.c
@@ -106,7 +110,9 @@ mkdir -p build/us/src/libultra
     build/us/src/libultra/os_dp_device_busy.c.o \
     build/us/asm/us/main_8010F6D0_to_8010FE90.s.o \
     build/us/src/libultra/os_si_device_busy.c.o \
-    build/us/asm/us/main_8010FEC0_to_80110490.s.o \
+    build/us/asm/us/main_8010FEC0_to_801103D0.s.o \
+    build/us/src/libultra/os_sp_device_busy.c.o \
+    build/us/asm/us/main_80110400_to_80110490.s.o \
     build/us/src/libultra/os_sp_set_status.c.o \
     build/us/src/libultra/os_sp_task_yield.c.o \
     build/us/asm/us/main_801104C0_to_80110540.s.o \
