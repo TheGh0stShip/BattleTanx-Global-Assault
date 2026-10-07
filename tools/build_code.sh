@@ -88,9 +88,17 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800A1B44_to_800A2DFC.s.o .text 0x12b8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800A2E5C_to_801029D0.s.o asm/us/main_800A2E5C_to_801029D0.s
+    -o build/us/asm/us/main_800A2E5C_to_800A6ABC.s.o asm/us/main_800A2E5C_to_800A6ABC.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800A2E5C_to_801029D0.s.o .text 0x5fb74 --alignment 4
+    build/us/asm/us/main_800A2E5C_to_800A6ABC.s.o .text 0x3c60 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A6B7C_to_800A7290.s.o asm/us/main_800A6B7C_to_800A7290.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A6B7C_to_800A7290.s.o .text 0x714 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A72C0_to_801029D0.s.o asm/us/main_800A72C0_to_801029D0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A72C0_to_801029D0.s.o .text 0x5b710 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_801029F0_to_80103160.s.o asm/us/main_801029F0_to_80103160.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -153,7 +161,7 @@ for unit in render_submit asset_load video_mode texture_tile session_queries \
             random_integer vector2 vector2_motion matrix_basic \
             matrix_transform vector2_rotate matrix_vector matrix_multiply \
             scheduler_context scheduler_state scheduler_events \
-            scheduler_queue scheduler_misc; do
+            scheduler_queue scheduler_misc object_setters object_init; do
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
         -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
@@ -198,6 +206,10 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/scheduler_queue.c.o .text 0x11c --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/scheduler_misc.c.o .text 0x60 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_setters.c.o .text 0xc0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_init.c.o .text 0x30 --alignment 4
 mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_device_busy.c.o src/libultra/os_ai_device_busy.c
@@ -298,7 +310,11 @@ mkdir -p build/us/src/libultra
     build/us/src/code/scheduler_queue.c.o \
     build/us/asm/us/main_800A1B44_to_800A2DFC.s.o \
     build/us/src/code/scheduler_misc.c.o \
-    build/us/asm/us/main_800A2E5C_to_801029D0.s.o \
+    build/us/asm/us/main_800A2E5C_to_800A6ABC.s.o \
+    build/us/src/code/object_setters.c.o \
+    build/us/asm/us/main_800A6B7C_to_800A7290.s.o \
+    build/us/src/code/object_init.c.o \
+    build/us/asm/us/main_800A72C0_to_801029D0.s.o \
     build/us/src/libultra/os_ai_get_length.c.o \
     build/us/src/libultra/os_ai_get_status.c.o \
     build/us/asm/us/main_801029F0_to_80103160.s.o \
