@@ -34,7 +34,7 @@ make check
 - Matching C reconstruction, compiler identification, linker layout, asset format mapping, and ROM rebuild are not complete.
 - The Vita port has not begun; N64 source recovery comes first.
 
-See [architecture and portability contract](docs/ARCHITECTURE.md) and [research provenance](docs/PROVENANCE.md).
+See the [architecture and portability contract](docs/ARCHITECTURE.md), [library fingerprints](docs/LIBRARIES.md), and [research provenance](docs/PROVENANCE.md).
 
 ## License
 
