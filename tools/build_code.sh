@@ -36,9 +36,17 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_80078CD8_to_8007A710.s.o .text 0x1a38 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8007A720_to_8007ADB0.s.o asm/us/main_8007A720_to_8007ADB0.s
+    -o build/us/asm/us/main_8007A720_to_8007AC34.s.o asm/us/main_8007A720_to_8007AC34.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007A720_to_8007AC34.s.o .text 0x514 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8007ADC0_to_8007B020.s.o asm/us/main_8007ADC0_to_8007B020.s
+    -o build/us/asm/us/main_8007AD40_to_8007AD94.s.o asm/us/main_8007AD40_to_8007AD94.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007AD40_to_8007AD94.s.o .text 0x54 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007ADF0_to_8007B020.s.o asm/us/main_8007ADF0_to_8007B020.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007ADF0_to_8007B020.s.o .text 0x230 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8007B0E4_to_8007B1F0.s.o asm/us/main_8007B0E4_to_8007B1F0.s
 python3 tools/trim_elf32_section.py \
@@ -362,7 +370,8 @@ python3 tools/normalize_kmc_gcc_asm.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/render_queue.c.o .text 0x46c --alignment 4
 for unit in early_hw early_memory_read early_memory_write early_remote_copy \
-            early_commands early_command_status mode_range angle_subtract \
+            early_commands early_command_status display_buffer \
+            display_buffer_select controller_state mode_range angle_subtract \
             angle_between angle_distance angle_fold angle_direction \
             render_submit asset_load video_mode texture_tile small_state \
             small_state_copy collision_noop state_noop state_modes \
@@ -403,6 +412,12 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/early_commands.c.o .text 0x1d4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/early_command_status.c.o .text 0x70 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/display_buffer.c.o .text 0x10c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/display_buffer_select.c.o .text 0x1c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controller_state.c.o .text 0x30 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/mode_range.c.o .text 0x24 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -627,9 +642,13 @@ mkdir -p build/us/src/libultra
     build/us/src/code/early_command_status.c.o \
     build/us/asm/us/main_80078CD8_to_8007A710.s.o \
     build/us/src/code/unknown_8007A710.c.o \
-    build/us/asm/us/main_8007A720_to_8007ADB0.s.o \
+    build/us/asm/us/main_8007A720_to_8007AC34.s.o \
+    build/us/src/code/display_buffer.c.o \
+    build/us/asm/us/main_8007AD40_to_8007AD94.s.o \
+    build/us/src/code/display_buffer_select.c.o \
     build/us/src/code/unknown_8007ADB0.c.o \
-    build/us/asm/us/main_8007ADC0_to_8007B020.s.o \
+    build/us/src/code/controller_state.c.o \
+    build/us/asm/us/main_8007ADF0_to_8007B020.s.o \
     build/us/src/code/unknown_8007B020.c.o \
     build/us/src/code/gfx_pool.c.o \
     build/us/asm/us/main_8007B0E4_to_8007B1F0.s.o \
