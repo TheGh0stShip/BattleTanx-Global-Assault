@@ -46,6 +46,38 @@ class FunctionBoundaryTests(unittest.TestCase):
             by_address[0x8010CF70],
         )
 
+    def test_pi_access_queue_object_uses_pi_symbols(self) -> None:
+        functions = self.load_functions()
+        by_address = {function["vram"]: function for function in functions}
+
+        expected = {
+            0x8010D680: ("__osPiCreateAccessQueue", 0x50),
+            0x8010D6D0: ("__osPiGetAccess", 0x44),
+            0x8010D714: ("__osPiRelAccess", 0x2C),
+        }
+        for address, (name, size) in expected.items():
+            self.assertEqual(
+                {"name": name, "vram": address, "size": size},
+                by_address[address],
+            )
+
+    def test_scheduler_noop_stubs_are_independent_functions(self) -> None:
+        functions = self.load_functions()
+        by_address = {function["vram"]: function for function in functions}
+
+        expected = {
+            0x8010F014: "func_8010F014",
+            0x8010F01C: "func_8010F01C",
+            0x8010F024: "func_8010F024",
+            0x8010F02C: "func_8010F02C",
+        }
+        for address, name in expected.items():
+            self.assertEqual(
+                {"name": name, "vram": address, "size": 0x8},
+                by_address[address],
+            )
+        self.assertNotIn("ptstart", {function["name"] for function in functions})
+
 
 if __name__ == "__main__":
     unittest.main()

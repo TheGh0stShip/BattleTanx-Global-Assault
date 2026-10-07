@@ -85,3 +85,21 @@ queue and returns. Consequently `osPiGetCmdQueue` occupies
 `0x8010CF70`-`0x8010CF97` (`0x28` bytes), matching its SDK behavior of returning
 the command queue only for an active manager. The old music-library name is
 retained as an untyped seed alias for navigation, not as a function.
+
+## PI access and scheduler boundary corrections
+
+The contiguous unit at `0x8010D680`-`0x8010D73F` is `io/piacs.o`, not a
+mixture of PI and SI access helpers. Its three routines are
+`__osPiCreateAccessQueue`, `__osPiGetAccess`, and `__osPiRelAccess`, beginning
+at object offsets `0`, `0x50`, and `0x94`. The latter two operate on the same
+PI access-queue state initialized by the first routine. The independent
+`io/siacs.o` copy is at `0x8010FB60`-`0x8010FC1F`.
+
+The 2.0I `sched/sched.o` text occupies `0x8010ECB0`-`0x8010F5EF`. Both the
+reference object and ROM contain four consecutive, independently emitted
+eight-byte no-op static routines at object offsets `0x364`, `0x36C`, `0x374`,
+and `0x37C` (`0x8010F014`, `0x8010F01C`, `0x8010F024`, and `0x8010F02C`). Each
+is exactly `jr $ra; nop`. The imported `ptstart` label incorrectly aggregated
+all four; `ptstart` belongs to the SDK initialization unit, not the scheduler.
+Until the stripped static names are proven, keep address-derived names for
+these four boundaries.
