@@ -4,7 +4,7 @@ This directory is an isolated scratch area for a second decompilation assistant.
 
 ## Hard boundaries
 
-- Treat `/home/steve/projects/VitaTanxGA` outside `claude-work/` as read-only.
+- Treat the repository root outside `claude-work/` as read-only.
 - Create, edit, or delete files only below `claude-work/`.
 - Do not run `git add`, `git commit`, `git checkout`, `git switch`, `git reset`,
   `git clean`, `git stash`, `git rebase`, or any command that changes Git state.
@@ -27,4 +27,3 @@ This directory is an isolated scratch area for a second decompilation assistant.
   comparison result. Clearly label candidates that do not match.
 - Keep one cumulative `output/HANDOFF.md` with completed, matching, partial, and
   untouched function counts for the assigned range.
-

@@ -1,13 +1,11 @@
 # BattleTanx: Global Assault parallel decompilation assignment
 
-You are assisting a matching N64 decompilation in:
-
-`/home/steve/projects/VitaTanxGA`
+You are assisting the matching N64 decompilation in the parent repository.
 
 Before doing anything, read:
 
-1. `/home/steve/projects/VitaTanxGA/AGENTS.md`
-2. `/home/steve/projects/VitaTanxGA/claude-work/AGENTS.md`
+1. `../AGENTS.md`
+2. `AGENTS.md`
 
 Your exclusive assignment is the game-code interval **0x8007B020 through
 0x8007C000** (start inclusive, end exclusive). Other workers own all ranges
@@ -23,8 +21,7 @@ Vita portability changes into matching source.
 
 Strict isolation requirements:
 
-- The parent repository is read-only. Write only under
-  `/home/steve/projects/VitaTanxGA/claude-work/`.
+- The parent repository is read-only. Write only under `claude-work/`.
 - Do not use any Git command that changes state, and do not commit anything.
 - Do not edit production source, build scripts, configuration, generated assembly,
   extracted assets, ROMs, or toolchains.
@@ -49,4 +46,3 @@ Required output:
 Do not claim a match unless the emitted text bytes were compared against the ROM
 or canonical extracted text and are identical. Group results into a useful chunk;
 do not make one-function commits (and in fact do not commit at all).
-

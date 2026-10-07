@@ -173,7 +173,11 @@ functions = [
     { name = "func_80080110", vram = 0x80080110, size = 0x708 },
     { name = "func_80080818", vram = 0x80080818, size = 0x9c },
     { name = "func_800808B4", vram = 0x800808b4, size = 0x6c },
-    { name = "func_80080920", vram = 0x80080920, size = 0x29c },
+    # Audited split: two complete leaf functions were hidden inside the old
+    # 0x29c aggregate. The word at 80080BBC is embedded data, not code.
+    { name = "func_80080920", vram = 0x80080920, size = 0x1d4 },
+    { name = "func_80080AF4", vram = 0x80080af4, size = 0x64 },
+    { name = "func_80080B58", vram = 0x80080b58, size = 0x64 },
     { name = "func_80080BC0", vram = 0x80080bc0, size = 0x44 },
     { name = "func_80080C04", vram = 0x80080c04, size = 0xc4 },
     { name = "func_80080CC8", vram = 0x80080cc8, size = 0xb1c },
@@ -181,18 +185,30 @@ functions = [
     { name = "func_80081834", vram = 0x80081834, size = 0x444 },
     { name = "func_80081C78", vram = 0x80081c78, size = 0x22c },
     { name = "func_80081EA4", vram = 0x80081ea4, size = 0x134 },
-    { name = "func_80081FD8", vram = 0x80081fd8, size = 0x98 },
+    # Audited split: 81FD8 returns at 81FFFC with its mandatory delay-slot
+    # store at 82000. The following initializer is a separate function.
+    { name = "func_80081FD8", vram = 0x80081fd8, size = 0x2c },
+    { name = "func_80082004", vram = 0x80082004, size = 0x6c },
     { name = "func_80082070", vram = 0x80082070, size = 0x128 },
     { name = "func_80082198", vram = 0x80082198, size = 0x3c8 },
-    { name = "func_80082560", vram = 0x80082560, size = 0x12c },
+    # Audited split: 82560 has its own return; 825A4 begins with a fresh
+    # stack-frame prologue and is independently reachable behavior.
+    { name = "func_80082560", vram = 0x80082560, size = 0x44 },
+    { name = "func_800825A4", vram = 0x800825a4, size = 0xe8 },
     { name = "func_8008268C", vram = 0x8008268c, size = 0x1a8 },
     { name = "func_80082834", vram = 0x80082834, size = 0x3c },
     { name = "func_80082870", vram = 0x80082870, size = 0x214 },
-    { name = "func_80082A90", vram = 0x80082a90, size = 0xb0 },
-    { name = "func_80082B40", vram = 0x80082b40, size = 0x94 },
-    { name = "func_80082BD4", vram = 0x80082bd4, size = 0x134 },
+    { name = "func_80082A90", vram = 0x80082a90, size = 0xac },
+    # B3C is embedded data. The old B40 aggregate contained two additional
+    # complete functions, and the old BD4 aggregate contained another one.
+    { name = "func_80082B40", vram = 0x80082b40, size = 0x20 },
+    { name = "func_80082B60", vram = 0x80082b60, size = 0x8 },
+    { name = "func_80082B68", vram = 0x80082b68, size = 0x6c },
+    { name = "func_80082BD4", vram = 0x80082bd4, size = 0x48 },
+    { name = "func_80082C1C", vram = 0x80082c1c, size = 0xec },
     { name = "func_80082D10", vram = 0x80082d10, size = 0x50 },
-    { name = "func_80082D60", vram = 0x80082d60, size = 0x38 },
+    { name = "func_80082D60", vram = 0x80082d60, size = 0x8 },
+    { name = "func_80082D68", vram = 0x80082d68, size = 0x30 },
     { name = "func_80082D98", vram = 0x80082d98, size = 0x184 },
     { name = "func_80082F1C", vram = 0x80082f1c, size = 0x7c },
     { name = "func_80082F98", vram = 0x80082f98, size = 0x48 },
@@ -212,10 +228,16 @@ functions = [
     { name = "func_80083C70", vram = 0x80083c70, size = 0x50 },
     { name = "func_80083CC0", vram = 0x80083cc0, size = 0xe8 },
     { name = "func_80083DA8", vram = 0x80083da8, size = 0x48 },
-    { name = "func_80083DF0", vram = 0x80083df0, size = 0x1dc },
+    # Audited split: two complete object-search helpers followed the original
+    # 83DF0 return inside the imported aggregate.
+    { name = "func_80083DF0", vram = 0x80083df0, size = 0xcc },
+    { name = "func_80083EBC", vram = 0x80083ebc, size = 0xb8 },
+    { name = "func_80083F74", vram = 0x80083f74, size = 0x58 },
     { name = "func_80083FCC", vram = 0x80083fcc, size = 0x18 },
     { name = "func_80083FE4", vram = 0x80083fe4, size = 0x14 },
-    { name = "func_80083FF8", vram = 0x80083ff8, size = 0x22c },
+    # Audited split: 83FF8 returns at 841CC/841D0; 841D4 starts a new frame.
+    { name = "func_80083FF8", vram = 0x80083ff8, size = 0x1dc },
+    { name = "func_800841D4", vram = 0x800841d4, size = 0x50 },
     { name = "func_80084224", vram = 0x80084224, size = 0x54 },
     { name = "func_80084278", vram = 0x80084278, size = 0x48c },
     { name = "func_80084704", vram = 0x80084704, size = 0x48 },
