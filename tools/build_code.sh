@@ -88,17 +88,45 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800A1B44_to_800A2DFC.s.o .text 0x12b8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800A2E5C_to_800A6ABC.s.o asm/us/main_800A2E5C_to_800A6ABC.s
+    -o build/us/asm/us/main_800A2E5C_to_800A4098.s.o asm/us/main_800A2E5C_to_800A4098.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800A2E5C_to_800A6ABC.s.o .text 0x3c60 --alignment 4
+    build/us/asm/us/main_800A2E5C_to_800A4098.s.o .text 0x123c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A40CC_to_800A6ABC.s.o asm/us/main_800A40CC_to_800A6ABC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A40CC_to_800A6ABC.s.o .text 0x29f0 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800A6B7C_to_800A7290.s.o asm/us/main_800A6B7C_to_800A7290.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800A6B7C_to_800A7290.s.o .text 0x714 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800A72C0_to_801029D0.s.o asm/us/main_800A72C0_to_801029D0.s
+    -o build/us/asm/us/main_800A72C0_to_800A8B14.s.o asm/us/main_800A72C0_to_800A8B14.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800A72C0_to_801029D0.s.o .text 0x5b710 --alignment 4
+    build/us/asm/us/main_800A72C0_to_800A8B14.s.o .text 0x1854 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A8B38_to_800A9054.s.o asm/us/main_800A8B38_to_800A9054.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A8B38_to_800A9054.s.o .text 0x51c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A9080_to_800A974C.s.o asm/us/main_800A9080_to_800A974C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A9080_to_800A974C.s.o .text 0x6cc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A977C_to_800A9BF0.s.o asm/us/main_800A977C_to_800A9BF0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A977C_to_800A9BF0.s.o .text 0x474 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A9C24_to_800A9D50.s.o asm/us/main_800A9C24_to_800A9D50.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A9C24_to_800A9D50.s.o .text 0x12c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A9D78_to_800AA598.s.o asm/us/main_800A9D78_to_800AA598.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A9D78_to_800AA598.s.o .text 0x820 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800AA5C4_to_801029D0.s.o asm/us/main_800AA5C4_to_801029D0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800AA5C4_to_801029D0.s.o .text 0x5840c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_801029F0_to_80103160.s.o asm/us/main_801029F0_to_80103160.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -161,7 +189,9 @@ for unit in render_submit asset_load video_mode texture_tile session_queries \
             random_integer vector2 vector2_motion matrix_basic \
             matrix_transform vector2_rotate matrix_vector matrix_multiply \
             scheduler_context scheduler_state scheduler_events \
-            scheduler_queue scheduler_misc object_setters object_init; do
+            scheduler_queue scheduler_misc object_timing object_setters \
+            object_init object_reset object_flags object_limit \
+            object_table_color object_table_reset object_table_lookup; do
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
         -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
@@ -207,9 +237,23 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/scheduler_misc.c.o .text 0x60 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_timing.c.o .text 0x34 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/object_setters.c.o .text 0xc0 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/object_init.c.o .text 0x30 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_reset.c.o .text 0x24 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_flags.c.o .text 0x2c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_limit.c.o .text 0x30 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_table_color.c.o .text 0x34 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_table_reset.c.o .text 0x28 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_table_lookup.c.o .text 0x2c --alignment 4
 mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_device_busy.c.o src/libultra/os_ai_device_busy.c
@@ -310,11 +354,25 @@ mkdir -p build/us/src/libultra
     build/us/src/code/scheduler_queue.c.o \
     build/us/asm/us/main_800A1B44_to_800A2DFC.s.o \
     build/us/src/code/scheduler_misc.c.o \
-    build/us/asm/us/main_800A2E5C_to_800A6ABC.s.o \
+    build/us/asm/us/main_800A2E5C_to_800A4098.s.o \
+    build/us/src/code/object_timing.c.o \
+    build/us/asm/us/main_800A40CC_to_800A6ABC.s.o \
     build/us/src/code/object_setters.c.o \
     build/us/asm/us/main_800A6B7C_to_800A7290.s.o \
     build/us/src/code/object_init.c.o \
-    build/us/asm/us/main_800A72C0_to_801029D0.s.o \
+    build/us/asm/us/main_800A72C0_to_800A8B14.s.o \
+    build/us/src/code/object_reset.c.o \
+    build/us/asm/us/main_800A8B38_to_800A9054.s.o \
+    build/us/src/code/object_flags.c.o \
+    build/us/asm/us/main_800A9080_to_800A974C.s.o \
+    build/us/src/code/object_limit.c.o \
+    build/us/asm/us/main_800A977C_to_800A9BF0.s.o \
+    build/us/src/code/object_table_color.c.o \
+    build/us/asm/us/main_800A9C24_to_800A9D50.s.o \
+    build/us/src/code/object_table_reset.c.o \
+    build/us/asm/us/main_800A9D78_to_800AA598.s.o \
+    build/us/src/code/object_table_lookup.c.o \
+    build/us/asm/us/main_800AA5C4_to_801029D0.s.o \
     build/us/src/libultra/os_ai_get_length.c.o \
     build/us/src/libultra/os_ai_get_status.c.o \
     build/us/asm/us/main_801029F0_to_80103160.s.o \
