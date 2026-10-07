@@ -61,6 +61,23 @@ class FunctionBoundaryTests(unittest.TestCase):
                 by_address[address],
             )
 
+    def test_early_command_wrappers_are_independent_functions(self) -> None:
+        functions = self.load_functions()
+        by_address = {function["vram"]: function for function in functions}
+
+        expected = {
+            0x800788E8: 0x20,
+            0x80078908: 0x4C,
+            0x80078954: 0x90,
+            0x800789E4: 0x90,
+            0x80078A74: 0x68,
+            0x80078ADC: 0xC4,
+            0x80078BA0: 0xC8,
+            0x80078C68: 0x70,
+        }
+        for address, size in expected.items():
+            self.assertEqual(size, by_address[address]["size"])
+
     def test_scheduler_noop_stubs_are_independent_functions(self) -> None:
         functions = self.load_functions()
         by_address = {function["vram"]: function for function in functions}

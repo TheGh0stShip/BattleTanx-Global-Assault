@@ -24,9 +24,13 @@ mkdir -p build/us/asm/us build/us/assets/extracted/us
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_80077FD0_to_80078048.s.o .text 0x78 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_80078200_to_8007A710.s.o asm/us/main_80078200_to_8007A710.s
+    -o build/us/asm/us/main_80078274_to_80078908.s.o asm/us/main_80078274_to_80078908.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_80078200_to_8007A710.s.o .text 0x2510 --alignment 4
+    build/us/asm/us/main_80078274_to_80078908.s.o .text 0x694 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80078ADC_to_8007A710.s.o asm/us/main_80078ADC_to_8007A710.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80078ADC_to_8007A710.s.o .text 0x1c34 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8007A720_to_8007ADB0.s.o asm/us/main_8007A720_to_8007ADB0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -329,7 +333,8 @@ python3 tools/normalize_kmc_gcc_asm.py \
     -o build/us/src/code/render_queue.c.o build/us/src/code/render_queue.s
 python3 tools/trim_elf32_section.py \
     build/us/src/code/render_queue.c.o .text 0x46c --alignment 4
-for unit in early_hw early_memory_read early_memory_write \
+for unit in early_hw early_memory_read early_memory_write early_remote_copy \
+            early_commands \
             render_submit asset_load video_mode texture_tile small_state \
             small_state_copy collision_noop state_noop state_modes \
             collision_fields object_query pair_queue \
@@ -363,6 +368,10 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/early_memory_read.c.o .text 0x22c --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/early_memory_write.c.o .text 0x1b8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/early_remote_copy.c.o .text 0x74 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/early_commands.c.o .text 0x1d4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/render_submit.c.o .text 0x290 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -566,7 +575,10 @@ mkdir -p build/us/src/libultra
     build/us/src/code/early_memory_read.c.o \
     build/us/asm/us/main_80077FD0_to_80078048.s.o \
     build/us/src/code/early_memory_write.c.o \
-    build/us/asm/us/main_80078200_to_8007A710.s.o \
+    build/us/src/code/early_remote_copy.c.o \
+    build/us/asm/us/main_80078274_to_80078908.s.o \
+    build/us/src/code/early_commands.c.o \
+    build/us/asm/us/main_80078ADC_to_8007A710.s.o \
     build/us/src/code/unknown_8007A710.c.o \
     build/us/asm/us/main_8007A720_to_8007ADB0.s.o \
     build/us/src/code/unknown_8007ADB0.c.o \
