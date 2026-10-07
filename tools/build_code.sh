@@ -136,9 +136,17 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800B06D8_to_800B5F30.s.o .text 0x5858 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800B5F70_to_800BD880.s.o asm/us/main_800B5F70_to_800BD880.s
+    -o build/us/asm/us/main_800B5F70_to_800B99C0.s.o asm/us/main_800B5F70_to_800B99C0.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800B5F70_to_800BD880.s.o .text 0x7910 --alignment 4
+    build/us/asm/us/main_800B5F70_to_800B99C0.s.o .text 0x3a50 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800B99F8_to_800B9C68.s.o asm/us/main_800B99F8_to_800B9C68.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800B99F8_to_800B9C68.s.o .text 0x270 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800B9CAC_to_800BD880.s.o asm/us/main_800B9CAC_to_800BD880.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800B9CAC_to_800BD880.s.o .text 0x3bd4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800BD93C_to_800BFD40.s.o asm/us/main_800BD93C_to_800BFD40.s
 python3 tools/trim_elf32_section.py \
@@ -172,9 +180,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800C1484_to_800C1578.s.o .text 0xf4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C15B8_to_800C17C8.s.o asm/us/main_800C15B8_to_800C17C8.s
+    -o build/us/asm/us/main_800C16B0_to_800C17C8.s.o asm/us/main_800C16B0_to_800C17C8.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C15B8_to_800C17C8.s.o .text 0x210 --alignment 4
+    build/us/asm/us/main_800C16B0_to_800C17C8.s.o .text 0x118 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800C180C_to_800C247C.s.o asm/us/main_800C180C_to_800C247C.s
 python3 tools/trim_elf32_section.py \
@@ -261,7 +269,8 @@ for unit in render_submit asset_load video_mode texture_tile session_queries \
             hud_ready hud_clear hud_navigation player_color entry_scan \
             entry_flags hud_callbacks hud_panel_callback hud_list_callback \
             hud_root_callback hud_layout hud_list_trigger \
-            hud_selection_apply hud_primary_trigger; do
+            hud_entry_values hud_list_reset hud_selection_apply \
+            hud_primary_trigger display_registry display_commands; do
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
         -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
@@ -370,6 +379,14 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_selection_apply.c.o .text 0x18 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_primary_trigger.c.o .text 0x14 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_entry_values.c.o .text 0x80 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_list_reset.c.o .text 0x78 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/display_registry.c.o .text 0x38 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/display_commands.c.o .text 0x44 --alignment 4
 mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_device_busy.c.o src/libultra/os_ai_device_busy.c
@@ -494,7 +511,11 @@ mkdir -p build/us/src/libultra
     build/us/src/code/player_color.c.o \
     build/us/asm/us/main_800B06D8_to_800B5F30.s.o \
     build/us/src/code/turn_adjust.c.o \
-    build/us/asm/us/main_800B5F70_to_800BD880.s.o \
+    build/us/asm/us/main_800B5F70_to_800B99C0.s.o \
+    build/us/src/code/display_registry.c.o \
+    build/us/asm/us/main_800B99F8_to_800B9C68.s.o \
+    build/us/src/code/display_commands.c.o \
+    build/us/asm/us/main_800B9CAC_to_800BD880.s.o \
     build/us/src/code/entry_scan.c.o \
     build/us/src/code/entry_flags.c.o \
     build/us/asm/us/main_800BD93C_to_800BFD40.s.o \
@@ -516,7 +537,9 @@ mkdir -p build/us/src/libultra
     build/us/asm/us/main_800C1484_to_800C1578.s.o \
     build/us/src/code/hud_panel_callback.c.o \
     build/us/src/code/hud_list_trigger.c.o \
-    build/us/asm/us/main_800C15B8_to_800C17C8.s.o \
+    build/us/src/code/hud_entry_values.c.o \
+    build/us/src/code/hud_list_reset.c.o \
+    build/us/asm/us/main_800C16B0_to_800C17C8.s.o \
     build/us/src/code/registry_lookup.c.o \
     build/us/asm/us/main_800C180C_to_800C247C.s.o \
     build/us/src/code/hud_ready.c.o \
