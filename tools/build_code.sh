@@ -28,9 +28,13 @@ mkdir -p build/us/asm/us build/us/assets/extracted/us
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8007B0E4_to_8007B1F0.s.o .text 0x10c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8007B65C_to_801029D0.s.o asm/us/main_8007B65C_to_801029D0.s
+    -o build/us/asm/us/main_8007B8EC_to_8007BCF0.s.o asm/us/main_8007B8EC_to_8007BCF0.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8007B65C_to_801029D0.s.o .text 0x87374 --alignment 4
+    build/us/asm/us/main_8007B8EC_to_8007BCF0.s.o .text 0x404 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007C364_to_801029D0.s.o asm/us/main_8007C364_to_801029D0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007C364_to_801029D0.s.o .text 0x8666c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_801029F0_to_80103160.s.o asm/us/main_801029F0_to_80103160.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -89,6 +93,23 @@ python3 tools/normalize_kmc_gcc_asm.py \
     -o build/us/src/code/render_queue.c.o build/us/src/code/render_queue.s
 python3 tools/trim_elf32_section.py \
     build/us/src/code/render_queue.c.o .text 0x46c --alignment 4
+for unit in render_submit asset_load video_mode texture_tile; do
+    .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+        -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
+        -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
+    python3 tools/normalize_kmc_gcc_asm.py \
+        "build/us/src/code/${unit}.raw.s" "build/us/src/code/${unit}.s"
+    .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+        -o "build/us/src/code/${unit}.c.o" "build/us/src/code/${unit}.s"
+done
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/render_submit.c.o .text 0x290 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/asset_load.c.o .text 0x10c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/video_mode.c.o .text 0xf4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/texture_tile.c.o .text 0x474 --alignment 4
 mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_device_busy.c.o src/libultra/os_ai_device_busy.c
@@ -156,7 +177,12 @@ mkdir -p build/us/src/libultra
     build/us/src/code/gfx_pool.c.o \
     build/us/asm/us/main_8007B0E4_to_8007B1F0.s.o \
     build/us/src/code/render_queue.c.o \
-    build/us/asm/us/main_8007B65C_to_801029D0.s.o \
+    build/us/src/code/render_submit.c.o \
+    build/us/asm/us/main_8007B8EC_to_8007BCF0.s.o \
+    build/us/src/code/asset_load.c.o \
+    build/us/src/code/video_mode.c.o \
+    build/us/src/code/texture_tile.c.o \
+    build/us/asm/us/main_8007C364_to_801029D0.s.o \
     build/us/src/libultra/os_ai_get_length.c.o \
     build/us/src/libultra/os_ai_get_status.c.o \
     build/us/asm/us/main_801029F0_to_80103160.s.o \

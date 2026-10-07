@@ -15,7 +15,11 @@ of accepting GNU assembler reorder scheduling. The deterministic
 `tools/normalize_kmc_gcc_asm.py` pass preserves compiler-owned regions,
 disables scheduling elsewhere, and inserts only those unfilled delay-slot
 NOPs. `func_8007B030`, `func_8007B03C`, `func_8007B1F0`, and
-`func_8007B498` prove the pipeline byte-for-byte.
+`func_8007B498` prove the pipeline byte-for-byte. The larger
+`func_8007B65C` renderer submit loop, asset loader `func_8007BCF0`, video-mode
+selector `func_8007BDFC`, and texture-tile builder `func_8007BEF0` independently
+confirm the same pipeline across control flow, DMA/decompression calls, and
+runtime display-list construction.
 
 Current C objects use `-O2 -mips2 -non_shared -G 0`, with `-g3` selected per
 translation unit when the retail scheduling requires it. In particular,
