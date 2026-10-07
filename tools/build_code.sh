@@ -60,13 +60,29 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8007E210_to_8007E778.s.o .text 0x568 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8007E7A8_to_80082D60.s.o asm/us/main_8007E7A8_to_80082D60.s
+    -o build/us/asm/us/main_8007E7A8_to_80081FD8.s.o asm/us/main_8007E7A8_to_80081FD8.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8007E7A8_to_80082D60.s.o .text 0x45b8 --alignment 4
+    build/us/asm/us/main_8007E7A8_to_80081FD8.s.o .text 0x3830 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_80082D98_to_8009C284.s.o asm/us/main_80082D98_to_8009C284.s
+    -o build/us/asm/us/main_80082004_to_80082B40.s.o asm/us/main_80082004_to_80082B40.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_80082D98_to_8009C284.s.o .text 0x194ec --alignment 4
+    build/us/asm/us/main_80082004_to_80082B40.s.o .text 0xb3c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80082B68_to_80082BD4.s.o asm/us/main_80082B68_to_80082BD4.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80082B68_to_80082BD4.s.o .text 0x6c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80082C1C_to_80082D60.s.o asm/us/main_80082C1C_to_80082D60.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80082C1C_to_80082D60.s.o .text 0x144 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80082D98_to_80082FE0.s.o asm/us/main_80082D98_to_80082FE0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80082D98_to_80082FE0.s.o .text 0x248 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80083028_to_8009C284.s.o asm/us/main_80083028_to_8009C284.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80083028_to_8009C284.s.o .text 0x1925c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8009C31C_to_8009D914.s.o asm/us/main_8009C31C_to_8009D914.s
 python3 tools/trim_elf32_section.py \
@@ -296,6 +312,7 @@ python3 tools/trim_elf32_section.py \
 for unit in render_submit asset_load video_mode texture_tile small_state \
             small_state_copy collision_noop state_noop state_modes \
             collision_fields object_query pair_queue \
+            object_defaults mode_owner mode_transition object_disable \
             session_queries \
             random_integer vector2 vector2_motion matrix_basic \
             matrix_transform vector2_rotate matrix_vector matrix_multiply \
@@ -341,7 +358,15 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/object_query.c.o .text 0x30 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_defaults.c.o .text 0x2c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mode_owner.c.o .text 0x28 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mode_transition.c.o .text 0x48 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/pair_queue.c.o .text 0x38 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_disable.c.o .text 0x48 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/session_queries.c.o .text 0x98 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -530,9 +555,17 @@ mkdir -p build/us/src/libultra
     build/us/src/code/collision_fields.c.o \
     build/us/asm/us/main_8007E210_to_8007E778.s.o \
     build/us/src/code/object_query.c.o \
-    build/us/asm/us/main_8007E7A8_to_80082D60.s.o \
+    build/us/asm/us/main_8007E7A8_to_80081FD8.s.o \
+    build/us/src/code/object_defaults.c.o \
+    build/us/asm/us/main_80082004_to_80082B40.s.o \
+    build/us/src/code/mode_owner.c.o \
+    build/us/asm/us/main_80082B68_to_80082BD4.s.o \
+    build/us/src/code/mode_transition.c.o \
+    build/us/asm/us/main_80082C1C_to_80082D60.s.o \
     build/us/src/code/pair_queue.c.o \
-    build/us/asm/us/main_80082D98_to_8009C284.s.o \
+    build/us/asm/us/main_80082D98_to_80082FE0.s.o \
+    build/us/src/code/object_disable.c.o \
+    build/us/asm/us/main_80083028_to_8009C284.s.o \
     build/us/src/code/session_queries.c.o \
     build/us/asm/us/main_8009C31C_to_8009D914.s.o \
     build/us/src/code/random_integer.c.o \
