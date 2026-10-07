@@ -38,7 +38,9 @@ mkdir -p build/us/asm/us build/us/assets/extracted/us
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8010CFA0_to_8010D660.s.o asm/us/main_8010CFA0_to_8010D660.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8010D740_to_8010F6A0.s.o asm/us/main_8010D740_to_8010F6A0.s
+    -o build/us/asm/us/main_8010D740_to_8010F3E0.s.o asm/us/main_8010D740_to_8010F3E0.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8010F5F0_to_8010F6A0.s.o asm/us/main_8010F5F0_to_8010F6A0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8010F6D0_to_8010FE90.s.o asm/us/main_8010F6D0_to_8010FE90.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -83,6 +85,8 @@ mkdir -p build/us/src/libultra
     -o build/us/src/libultra/os_pi_get_cmd_queue.c.o src/libultra/os_pi_get_cmd_queue.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_pi_access.c.o src/libultra/os_pi_access.c
+.toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/sched.c.o src/libultra/sched.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_get_thread_pri.c.o src/libultra/os_get_thread_pri.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
@@ -142,7 +146,9 @@ mkdir -p build/us/src/libultra
     build/us/asm/us/main_8010CFA0_to_8010D660.s.o \
     build/us/src/libultra/os_get_thread_pri.c.o \
     build/us/src/libultra/os_pi_access.c.o \
-    build/us/asm/us/main_8010D740_to_8010F6A0.s.o \
+    build/us/asm/us/main_8010D740_to_8010F3E0.s.o \
+    build/us/src/libultra/sched.c.o \
+    build/us/asm/us/main_8010F5F0_to_8010F6A0.s.o \
     build/us/src/libultra/os_dp_device_busy.c.o \
     build/us/asm/us/main_8010F6D0_to_8010FE90.s.o \
     build/us/src/libultra/os_si_device_busy.c.o \
