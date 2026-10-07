@@ -18,7 +18,11 @@ mkdir -p build/us/asm/us build/us/assets/extracted/us
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/header.s.o asm/us/header.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_before_8007A710.s.o asm/us/main_before_8007A710.s
+    -o build/us/asm/us/main_before_80077C40.s.o asm/us/main_before_80077C40.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80077DA4_to_8007A710.s.o asm/us/main_80077DA4_to_8007A710.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80077DA4_to_8007A710.s.o .text 0x296c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8007A720_to_8007ADB0.s.o asm/us/main_8007A720_to_8007ADB0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -321,7 +325,7 @@ python3 tools/normalize_kmc_gcc_asm.py \
     -o build/us/src/code/render_queue.c.o build/us/src/code/render_queue.s
 python3 tools/trim_elf32_section.py \
     build/us/src/code/render_queue.c.o .text 0x46c --alignment 4
-for unit in render_submit asset_load video_mode texture_tile small_state \
+for unit in early_hw render_submit asset_load video_mode texture_tile small_state \
             small_state_copy collision_noop state_noop state_modes \
             collision_fields object_query pair_queue \
             object_defaults mode_owner mode_transition object_disable \
@@ -348,6 +352,8 @@ for unit in render_submit asset_load video_mode texture_tile small_state \
     .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
         -o "build/us/src/code/${unit}.c.o" "build/us/src/code/${unit}.s"
 done
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/early_hw.c.o .text 0x164 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/render_submit.c.o .text 0x290 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -546,7 +552,9 @@ mkdir -p build/us/src/libultra
     assets/extracted/us/ipl3.bin build/us/assets/extracted/us/ipl3.bin.o
 
 "${tool_prefix}nm" -u \
-    build/us/asm/us/main_before_8007A710.s.o \
+    build/us/asm/us/main_before_80077C40.s.o \
+    build/us/src/code/early_hw.c.o \
+    build/us/asm/us/main_80077DA4_to_8007A710.s.o \
     build/us/src/code/unknown_8007A710.c.o \
     build/us/asm/us/main_8007A720_to_8007ADB0.s.o \
     build/us/src/code/unknown_8007ADB0.c.o \
