@@ -18,3 +18,5 @@ Host or emulator success is not evidence of physical Vita correctness. Label hos
 3. Every matching claim must be supported by an object/ROM diff, not just equivalent behavior.
 4. Every portability change must retain original 32-bit semantics and receive host compile-time layout assertions where relevant.
 5. Do not deploy to or launch hardware without an explicitly supervised hardware-test request.
+
+`make verify-code` is the current matching gate. It must remain byte-identical while assembly functions are replaced with C. Do not describe a function as decompiled or matching unless its compiled bytes pass this gate (or a narrower object diff that is subsequently covered by it).

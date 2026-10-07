@@ -18,16 +18,18 @@ No ROM or ROM-derived assets are included. Supply your own legally obtained dump
 cp /path/to/BattleTanxGA.z64 "BattleTanx - Global Assault (USA).z64"
 make setup
 make split
+make verify-code
 make check
 ```
 
-`make setup` creates a local Python environment, verifies the dump, and copies it to the ignored canonical path. `make split` disassembles the known first-MiB code region with splat. Generated assembly is intentionally ignored; reviewed C and project metadata are the source of truth.
+`make setup` creates a local Python environment, verifies the dump, and copies it to the ignored canonical path. `make split` disassembles the known first-MiB code region with splat. `make verify-code` assembles and links that region and requires it to match ROM offsets `0x000000-0x101000` byte-for-byte. If GNU MIPS binutils are not installed system-wide, the build downloads the Ubuntu package into the ignored `.toolchain/` directory without requiring root. Generated assembly is intentionally ignored; reviewed C and project metadata are the source of truth.
 
 ## Current status
 
 - ROM identity and the unusual `0x80071000` load address are verified.
-- A GPL-compatible seed map of roughly 1,400 function symbols has been imported with provenance.
+- A GPL-compatible seed map of 1,580 candidate function boundaries has been imported with provenance.
 - Reproducible splat extraction and repository safety gates are in place.
+- The header, IPL3, and known first-MiB code region reconstruct byte-for-byte.
 - Matching C reconstruction, compiler identification, linker layout, asset format mapping, and ROM rebuild are not complete.
 - The Vita port has not begun; N64 source recovery comes first.
 

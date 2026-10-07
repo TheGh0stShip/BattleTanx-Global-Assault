@@ -9,6 +9,7 @@
 *.velf
 *.psp2dmp
 .venv/
+.toolchain/
 .splache/
 asm/
 assets/extracted/

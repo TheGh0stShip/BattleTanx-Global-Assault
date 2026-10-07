@@ -4,7 +4,7 @@ VENV_PYTHON := $(VENV)/bin/python
 VENV_STAMP := $(VENV)/.installed
 ROM := baseroms/us/baserom.z64
 
-.PHONY: all setup verify split check clean-generated
+.PHONY: all setup toolchain verify split build-code verify-code check clean-generated
 
 all: split
 
@@ -17,11 +17,21 @@ $(VENV_STAMP): requirements.txt
 setup: $(VENV_STAMP)
 	$(VENV_PYTHON) tools/prepare_rom.py --output $(ROM)
 
+toolchain:
+	tools/bootstrap_mips_binutils.sh
+
 verify:
 	$(PYTHON) tools/verify_rom.py $(ROM)
 
 split: $(VENV_STAMP) verify
 	$(VENV_PYTHON) -m splat split config/us/splat.yaml
+
+build-code: split
+	tools/build_code.sh
+
+verify-code: build-code
+	cmp -s -n 1052672 $(ROM) build/us/battletanx_ga.code.bin
+	@echo "Verified reconstructed ROM 0x000000-0x101000 matches the retail dump"
 
 check:
 	$(PYTHON) -m unittest discover -s tests -v
