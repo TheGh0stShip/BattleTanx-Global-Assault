@@ -18,18 +18,33 @@ mkdir -p build/us/asm/us build/us/assets/extracted/us
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/header.s.o asm/us/header.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main.s.o asm/us/main.s
+    -o build/us/asm/us/main_before_8007ADB0.s.o asm/us/main_before_8007ADB0.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_after_8007ADB0.s.o asm/us/main_after_8007ADB0.s
+
+tools/bootstrap_ido.sh
+mkdir -p build/us/src/code
+.toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/code/unknown_8007ADB0.c.o src/code/unknown_8007ADB0.c
+
 "${tool_prefix}objcopy" -I binary -O elf32-tradbigmips -B mips \
     assets/extracted/us/ipl3.bin build/us/assets/extracted/us/ipl3.bin.o
 
-# The first two are BSS bounds outside the ROM-backed segment. The latter two
-# are false jump targets decoded from embedded data and retain their raw values.
-"${tool_prefix}ld.bfd" -EB -T battletanx_ga.ld \
+"${tool_prefix}nm" -u \
+    build/us/asm/us/main_before_8007ADB0.s.o \
+    build/us/src/code/unknown_8007ADB0.c.o \
+    build/us/asm/us/main_after_8007ADB0.s.o \
+    > build/us/undefined_object_symbols.txt
+python3 tools/generate_linker_symbols.py build/us/symbols.ld \
+    config/us/symbol_addrs.txt \
+    build/us/undefined_syms_auto.txt \
+    build/us/undefined_funcs_auto.txt \
+    --undefined-list build/us/undefined_object_symbols.txt \
+    --symbol func_8E180004=0x8E180004 \
+    --symbol func_80000000=0x80000000
+
+"${tool_prefix}ld.bfd" -EB -T build/us/symbols.ld -T battletanx_ga.ld \
     -Map build/us/battletanx_ga.map \
-    --defsym D_8021E0B8=0x8021E0B8 \
-    --defsym D_803B17B0=0x803B17B0 \
-    --defsym func_8E180004=0x8E180004 \
-    --defsym func_80000000=0x80000000 \
     -o build/us/battletanx_ga.elf
 "${tool_prefix}objcopy" -O binary \
     build/us/battletanx_ga.elf build/us/battletanx_ga.code.bin

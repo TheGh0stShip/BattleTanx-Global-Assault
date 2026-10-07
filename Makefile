@@ -4,7 +4,7 @@ VENV_PYTHON := $(VENV)/bin/python
 VENV_STAMP := $(VENV)/.installed
 ROM := baseroms/us/baserom.z64
 
-.PHONY: all setup toolchain verify split build-code verify-code check clean-generated
+.PHONY: all setup toolchain symbols verify split build-code verify-code check clean-generated
 
 all: split
 
@@ -19,11 +19,19 @@ setup: $(VENV_STAMP)
 
 toolchain:
 	tools/bootstrap_mips_binutils.sh
+	tools/bootstrap_ido.sh
 
 verify:
 	$(PYTHON) tools/verify_rom.py $(ROM)
 
-split: $(VENV_STAMP) verify
+symbols:
+	$(PYTHON) tools/import_recomp_symbols.py \
+		config/us/recomp_function_boundaries.toml \
+		config/us/recomp_symbol_seed.txt \
+		config/us/symbol_addrs.txt \
+		--manual config/us/manual_symbols.toml
+
+split: $(VENV_STAMP) verify symbols
 	$(VENV_PYTHON) -m splat split config/us/splat.yaml
 
 build-code: split

@@ -30,6 +30,7 @@ make check
 - A GPL-compatible seed map of 1,580 candidate function boundaries has been imported with provenance.
 - Reproducible splat extraction and repository safety gates are in place.
 - The header, IPL3, and known first-MiB code region reconstruct byte-for-byte.
+- `func_8007ADB0` is reconstructed in C and passes the full byte-exact region gate.
 - Matching C reconstruction, compiler identification, linker layout, asset format mapping, and ROM rebuild are not complete.
 - The Vita port has not begun; N64 source recovery comes first.
 

@@ -16,7 +16,9 @@ options:
   undefined_funcs_auto_path: build/us/undefined_funcs_auto.txt
   undefined_syms_auto_path: build/us/undefined_syms_auto.txt
   create_asm_dependencies: true
-  disassemble_all: true
+  # This ROM interleaves code and data. Auto-disassembling every word invents
+  # false functions from embedded tables, so only typed seed boundaries are code.
+  disassemble_all: false
 
 segments:
   - name: header
@@ -32,7 +34,9 @@ segments:
     start: 0x1000
     vram: 0x80071000
     subsegments:
-      - [0x1000, asm, main]
+      - [0x1000, asm, main_before_8007ADB0]
+      - [0xADB0, c, code/unknown_8007ADB0]
+      - [0xADC0, asm, main_after_8007ADB0]
 
   # The first automatically loaded MiB contains the known executable code.
   # The remaining ROM is kept opaque until its asset/archive formats are mapped.

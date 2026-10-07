@@ -1,0 +1,15 @@
+# Corrections established by direct disassembly and the byte-exact build.
+
+[[symbol]]
+name = "D_80099828"
+vram = 0x80099828
+size = 0x8
+type = "u32"
+reason = "Two embedded data words between verified function boundaries."
+
+[[symbol]]
+name = "D_800EAC2C"
+vram = 0x800EAC2C
+size = 0x4
+type = "u32"
+reason = "Embedded data word between verified function boundaries."
