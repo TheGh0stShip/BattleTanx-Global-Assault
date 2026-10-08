@@ -108,7 +108,7 @@ segments:
       - [0xDD54, c, code/codex_batch_next2/func_8007DD54]
       - [0xDE3C, c, code/codex_batch_next2/func_8007DE3C]
       - [0xDFA0, c, code/codex_batch/func_8007DFA0]
-      - [0xE024, asm, main_8007E024_to_8007E118]
+      - [0xE024, c, code/codex_batch_next2/func_8007E024]
       - [0xE118, c, code/codex_batch_next2/func_8007E118]
       - [0xE164, asm, main_8007E164_to_8007E170]
       - [0xE170, c, code/codex_batch/func_8007E170]
