@@ -44,7 +44,10 @@ def normalize(source: str) -> str:
 
         output.append(line)
         instruction = stripped.split("#", 1)[0].strip()
-        if compiler_reorder and TRANSFER.match(instruction):
+        # GCC's own instructions are tab-indented. Continuation lines from an
+        # inline-assembly block are not; those blocks already spell out their
+        # intended delay slots and must remain byte-for-byte intact.
+        if compiler_reorder and line.startswith("\t") and TRANSFER.match(instruction):
             newline = "\n" if line.endswith("\n") else ""
             output.append("\tnop" + newline)
 
