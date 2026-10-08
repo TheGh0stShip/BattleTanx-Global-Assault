@@ -20,6 +20,9 @@ mkdir -p build/us/asm/us build/us/asm/us/data build/us/assets/extracted/us
 for asm_source in asm/us/*.s; do
     sed -i 's/beql       \$s2, \$a1, \.\?L80099664/.word      0x52454D41/' \
         "$asm_source"
+    sed -i -E \
+        's/^dlabel (osViClock|__osShutdown|__OSGlobalIntMask|osClockRate|D_80126F80|xlitob_data_0000|xlitob_data_0014)$/dlabel __retail_\1/' \
+        "$asm_source"
 done
 
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -300,10 +303,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800C0A6C_to_800C0C18.s.o .text 0x1ac --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C0C38_to_800C1094.s.o asm/us/main_800C0C38_to_800C1094.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C0C38_to_800C1094.s.o .text 0x45c --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800C11B8_to_800C1420.s.o asm/us/main_800C11B8_to_800C1420.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800C11B8_to_800C1420.s.o .text 0x268 --alignment 4
@@ -316,10 +315,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800C16B0_to_800C17C8.s.o .text 0x118 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C180C_to_800C247C.s.o asm/us/main_800C180C_to_800C247C.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C180C_to_800C247C.s.o .text 0xc70 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800C2528_to_800C27EC.s.o asm/us/main_800C2528_to_800C27EC.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800C2528_to_800C27EC.s.o .text 0x2c4 --alignment 4
@@ -328,17 +323,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800C2924_to_800C30A0.s.o .text 0x77c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C30B4_to_800C402C.s.o asm/us/main_800C30B4_to_800C402C.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C30B4_to_800C402C.s.o .text 0xf78 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800C4BB4_to_800C4E24.s.o asm/us/main_800C4BB4_to_800C4E24.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800C4BB4_to_800C4E24.s.o .text 0x270 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C65B4_to_800C674C.s.o asm/us/main_800C65B4_to_800C674C.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C65B4_to_800C674C.s.o .text 0x198 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800C6914_to_800C6918.s.o asm/us/main_800C6914_to_800C6918.s
 python3 tools/trim_elf32_section.py \
@@ -348,25 +335,13 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/data/main_800C6918_textbin.s.o .text 0x8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C74AC_to_800C7514.s.o asm/us/main_800C74AC_to_800C7514.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C74AC_to_800C7514.s.o .text 0x68 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800C7594_to_800C7650.s.o asm/us/main_800C7594_to_800C7650.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800C7594_to_800C7650.s.o .text 0xbc --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C7C10_to_800C8238.s.o asm/us/main_800C7C10_to_800C8238.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C7C10_to_800C8238.s.o .text 0x628 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800C8350_to_800C8484.s.o asm/us/main_800C8350_to_800C8484.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800C8350_to_800C8484.s.o .text 0x134 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C877C_to_800C8B74.s.o asm/us/main_800C877C_to_800C8B74.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C877C_to_800C8B74.s.o .text 0x3f8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800C98E8_to_800CA1A8.s.o asm/us/main_800C98E8_to_800CA1A8.s
 python3 tools/trim_elf32_section.py \
@@ -384,10 +359,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800CB10C_to_800CB110.s.o .text 0x4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800CBE40_to_800CC2F8.s.o asm/us/main_800CBE40_to_800CC2F8.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800CBE40_to_800CC2F8.s.o .text 0x4b8 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800CD57C_to_800CD85C.s.o asm/us/main_800CD57C_to_800CD85C.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800CD57C_to_800CD85C.s.o .text 0x2e0 --alignment 4
@@ -399,10 +370,6 @@ python3 tools/trim_elf32_section.py \
     -o build/us/asm/us/main_800CE610_to_800CE814.s.o asm/us/main_800CE610_to_800CE814.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800CE610_to_800CE814.s.o .text 0x204 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800CE9A0_to_800CF0CC.s.o asm/us/main_800CE9A0_to_800CF0CC.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800CE9A0_to_800CF0CC.s.o .text 0x72c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800CFA84_to_800CFBD8.s.o asm/us/main_800CFA84_to_800CFBD8.s
 python3 tools/trim_elf32_section.py \
@@ -780,11 +747,23 @@ python3 tools/trim_elf32_section.py \
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_80103190_to_801037B0.s.o asm/us/main_80103190_to_801037B0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_80103860_to_801059B0.s.o asm/us/main_80103860_to_801059B0.s
+    -o build/us/asm/us/main_801039B0_to_80104EC0.s.o asm/us/main_801039B0_to_80104EC0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_801059D0_to_80105A70.s.o asm/us/main_801059D0_to_80105A70.s
+    -o build/us/asm/us/main_80104FA0_to_801058B0.s.o asm/us/main_80104FA0_to_801058B0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_80105B10_to_8010CF70.s.o asm/us/main_80105B10_to_8010CF70.s
+    -o build/us/asm/us/main_80105A60_to_80105A70.s.o asm/us/main_80105A60_to_80105A70.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80105B10_to_80105F20.s.o asm/us/main_80105B10_to_80105F20.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80106070_to_801068F0.s.o asm/us/main_80106070_to_801068F0.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80106EE0_to_80107A30.s.o asm/us/main_80106EE0_to_80107A30.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80107D60_to_80108530.s.o asm/us/main_80107D60_to_80108530.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80109030_to_80109090.s.o asm/us/main_80109030_to_80109090.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80109490_to_8010A9A0.s.o asm/us/main_80109490_to_8010A9A0.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8010CFA0_to_8010D660.s.o asm/us/main_8010CFA0_to_8010D660.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -830,6 +809,105 @@ done < <(find asm/us -type f -name '*.s' -print0)
 tools/bootstrap_ido.sh
 tools/bootstrap_kmc_gcc.sh
 mkdir -p build/us/src/code
+mkdir -p build/us/src/code/libmus
+# libmus was assembled with reorder enabled, so preserve KMC's raw assembly and
+# its assembler-scheduled delay slots instead of applying the gameplay normalizer.
+while read -r unit text_size; do
+    .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+        -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude -Isrc/code/libmus \
+        -o "build/us/src/code/libmus/${unit}.raw.s" \
+        "src/code/libmus/${unit}.c"
+    .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+        -o "build/us/src/code/libmus/${unit}.c.o" \
+        "build/us/src/code/libmus/${unit}.raw.s"
+    python3 tools/trim_elf32_section.py \
+        "build/us/src/code/libmus/${unit}.c.o" .text "$text_size" --alignment 4
+    case "$unit" in
+        800FBF94_player_main)
+            python3 tools/trim_elf32_section.py \
+                "build/us/src/code/libmus/${unit}.c.o" .rodata 0x8 --alignment 8 ;;
+        800FDD20_player_commands)
+            python3 tools/trim_elf32_section.py \
+                "build/us/src/code/libmus/${unit}.c.o" .rodata 0x40 --alignment 4 ;;
+        800FE710_n_syn_custom_fx)
+            python3 tools/trim_elf32_section.py \
+                "build/us/src/code/libmus/${unit}.c.o" .rodata 0x10 --alignment 4 ;;
+    esac
+done <<'LIBMUS_UNITS'
+func_800FB4F0 0x80
+800FB570_player_api 0x264
+800FB7D4_player_api_handles 0x5AC
+800FBD80_player_api_misc_pre 0x48
+func_800FBDC8 0x64
+800FBE2C_player_api_misc_post 0x168
+800FBF94_player_main 0x8D0
+800FC864_player_voice 0x34C
+800FCBB0_player_effects 0x55C
+800FD10C_player_bank_math 0x194
+800FD438_random_range 0x94
+func_800FD4CC 0x13C
+800FD608_player_start_pre 0x458
+800FDCCC_channel_flags 0x54
+800FDD20_player_commands 0x9F0
+800FE710_n_syn_custom_fx 0x850
+800FEF60_mus_dma_sched 0x600
+800FF560_mus_audio_thread 0x2C0
+800FF820_mus_frame_size 0x130
+800FF950_mus_heap_mem 0x140
+800FFA90_n_auxbus_pull 0xA0
+LIBMUS_UNITS
+mkdir -p build/us/src/code/n_audio
+# The customized n_audio library uses the same raw KMC assembler scheduling as
+# libmus. Keep this separate from gameplay's normalized assembly pipeline.
+while read -r unit text_size; do
+    .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+        -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude -Isrc/code/n_audio \
+        -o "build/us/src/code/n_audio/${unit}.raw.s" \
+        "src/code/n_audio/${unit}.c"
+    .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+        -o "build/us/src/code/n_audio/${unit}.c.o" \
+        "build/us/src/code/n_audio/${unit}.raw.s"
+    python3 tools/trim_elf32_section.py \
+        "build/us/src/code/n_audio/${unit}.c.o" .text "$text_size" --alignment 4
+    case "$unit" in
+        800FFB30_n_drvrnew)
+            python3 tools/trim_elf32_section.py \
+                "build/us/src/code/n_audio/${unit}.c.o" .rodata 0x30 --alignment 16 ;;
+        80100050_n_env)
+            python3 tools/trim_elf32_section.py \
+                "build/us/src/code/n_audio/${unit}.c.o" .rodata 0x70 --alignment 16 ;;
+        80101140_n_resample)
+            python3 tools/trim_elf32_section.py \
+                "build/us/src/code/n_audio/${unit}.c.o" .rodata 0x10 --alignment 16 ;;
+        80101320_n_reverb)
+            python3 tools/trim_elf32_section.py \
+                "build/us/src/code/n_audio/${unit}.c.o" .rodata 0x40 --alignment 16 ;;
+        80102350_n_synthesizer)
+            python3 tools/trim_elf32_section.py \
+                "build/us/src/code/n_audio/${unit}.c.o" .rodata 0x20 --alignment 16 ;;
+    esac
+done <<'N_AUDIO_UNITS'
+800FFB30_n_drvrnew 0x520
+80100050_n_env 0x9D0
+80100E68_n_load_param 0x18C
+80100FF4_decode_chunk 0x14C
+80101140_n_resample 0x1E0
+80101320_n_reverb 0x9F0
+80101D10_n_alinit 0x80
+80101D90_n_synaddplayer 0x50
+80101DE0_n_synallocvoice 0x1E0
+80101FC0_n_syndelete 0x10
+80101FD0_n_synsetfxmix 0xA0
+80102070_n_synsetpan 0x90
+80102100_n_synsetpitch 0x90
+80102190_n_synsetvol 0xB0
+80102240_n_synstartvoice 0x90
+801022D0_n_synstopvoice 0x80
+80102350_n_synthesizer 0x560
+801028B0_n_save 0x50
+80102900_n_mainbus 0x80
+80102980_n_synallocfx 0x50
+N_AUDIO_UNITS
 .toolchain/ido5.3/cc -c -O2 -g3 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/code/unknown_8007A710.c.o src/code/unknown_8007A710.c
 .toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
@@ -871,7 +949,15 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             scheduler_queue scheduler_misc object_range object_timing object_setters \
             object_init object_reset object_flags object_limit \
             object_table_color object_table_reset object_table_lookup \
-            gameplay_stub turn_adjust hud_state hud_modes hud_stub \
+            gameplay_stub turn_adjust hud_state hud_tree_update hud_modes hud_stub \
+            race_assets_init race_mode_query race_hud_layout race_marker_project race_map_draw race_state_init controller_menu_state \
+            hud_volume_adjust hud_controls_page hud_page_next controller_save_slots \
+            results_menu_callbacks results_panel_setup results_split_setup spawn_color_lookup \
+            hud_key_nav hud_slots_layout controls_config controls_preset hud_binding_select \
+            hud_tree_remove hud_tree_draw hud_frame hud_mode_table hud_mode_cycle_full hud_exit_dispatch \
+            hud_menu_open hud_option_select hud_list_select_full hud_player_page \
+            race_popup_setup results_bar_step results_rank_label \
+            results_time_text cheat_codes \
             hud_secondary hud_primary_modes hud_transition registry_lookup \
             hud_ready hud_clear hud_navigation player_color entry_scan \
             entry_flags hud_callbacks hud_panel_callback hud_list_callback \
@@ -1261,6 +1347,132 @@ while IFS=$'\t' read -r function_name address size status; do
     python3 tools/trim_elf32_section.py \
         "build/us/src/${unit}.c.o" .text "$size" --alignment 4
 done < config/us/codex_batch_next.tsv
+for function_name in \
+        func_8007A7B4 \
+        func_8007B8EC \
+        func_8007AF84 \
+        func_8007D33C \
+        func_80080818 \
+        func_80082A90 \
+        func_8008518C \
+        func_80085250 \
+        func_80089DBC \
+        func_8008A350 \
+        func_8008A5E4 \
+        func_8008B788 \
+        func_8008BEC4 \
+        func_8008E620 \
+        func_80096F48 \
+        func_800979F4 \
+        func_80097BC4 \
+        func_80097CC8 \
+        func_80098334 \
+        func_80098B58 \
+        func_8009A650 \
+        func_8009D4B0 \
+        func_8009DAB0 \
+        func_8009E0E8 \
+        func_8009E19C \
+        func_8009E9C8 \
+        func_8009EA70 \
+        func_8009ED00 \
+        func_800A19DC \
+        func_800A6B7C \
+        func_800A9660 \
+        func_800A96B8 \
+        func_800A97FC \
+        func_800A9A44 \
+        func_800B22F8 \
+        func_800B9F44 \
+        func_800BEE0C \
+        func_800BF1A4 \
+        func_800BF3EC \
+        func_800BFCA4 \
+        func_800BFDA4 \
+        func_800BFE4C \
+        func_800C04C8 \
+        func_800C0564 \
+        func_800C0ADC \
+        func_800C0B78 \
+        func_800C0C38 \
+        func_800C13BC \
+        func_800C180C \
+        func_800C1E48; do
+    case "$function_name" in
+        func_8007A7B4|func_8007AF84|func_8007B8EC|func_8007D33C|\
+        func_80080818|func_80082A90|func_8008518C|func_80085250|\
+        func_8008A350|func_8008B788|func_8008BEC4|func_8008E620|func_80096F48|func_800979F4|\
+        func_80097CC8|func_80098334|func_8009A650|func_8009D4B0|\
+        func_8009DAB0|func_8009E0E8|func_8009E19C|func_800A19DC|\
+        func_800A6B7C|func_800A9660|func_800A96B8|func_800B22F8|\
+        func_800B9F44|func_800BEE0C|func_800C04C8|func_800C0564|\
+        func_800C0ADC|func_800C0B78|func_800C0C38|func_800C13BC|\
+        func_800C180C)
+            unit="code/codex_batch_next2/${function_name}" ;;
+        *) unit="code/${function_name}" ;;
+    esac
+    .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+        -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
+        -o "build/us/src/${unit}.raw.s" "src/${unit}.c"
+    python3 tools/normalize_kmc_gcc_asm.py \
+        "build/us/src/${unit}.raw.s" "build/us/src/${unit}.s"
+    .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+        -o "build/us/src/${unit}.c.o" "build/us/src/${unit}.s"
+    case "$function_name" in
+        func_8007A7B4) size=0x64 ;;
+        func_8007AF84) size=0x98 ;;
+        func_8007B8EC) size=0x400 ;;
+        func_8007D33C) size=0x60 ;;
+        func_80080818) size=0x9C ;;
+        func_80082A90) size=0xAC ;;
+        func_8008518C) size=0xC4 ;;
+        func_80085250) size=0xA8 ;;
+        func_80089DBC) size=0x64 ;;
+        func_8008A350) size=0x50 ;;
+        func_8008A5E4) size=0x48 ;;
+        func_8008B788) size=0xA4 ;;
+        func_8008BEC4) size=0x98 ;;
+        func_8008E620) size=0x9C ;;
+        func_80096F48) size=0xC4 ;;
+        func_800979F4) size=0x78 ;;
+        func_80097BC4) size=0x58 ;;
+        func_80097CC8) size=0x4C ;;
+        func_80098334) size=0x38 ;;
+        func_80098B58) size=0x70 ;;
+        func_8009A650) size=0xA0 ;;
+        func_8009D4B0) size=0x60 ;;
+        func_8009DAB0) size=0x5C ;;
+        func_8009E0E8) size=0xB4 ;;
+        func_8009E19C) size=0xB4 ;;
+        func_8009E9C8) size=0xA8 ;;
+        func_8009EA70) size=0xF8 ;;
+        func_8009ED00) size=0x9C ;;
+        func_800A19DC) size=0x4C ;;
+        func_800A6B7C) size=0xA4 ;;
+        func_800A9660) size=0x58 ;;
+        func_800A96B8) size=0x94 ;;
+        func_800A97FC) size=0xBC ;;
+        func_800A9A44) size=0x54 ;;
+        func_800B22F8) size=0x6C ;;
+        func_800B9F44) size=0x90 ;;
+        func_800BEE0C) size=0xA8 ;;
+        func_800BF1A4) size=0x60 ;;
+        func_800BF3EC) size=0x98 ;;
+        func_800BFCA4) size=0x9C ;;
+        func_800BFDA4) size=0xA8 ;;
+        func_800BFE4C) size=0x48 ;;
+        func_800C04C8) size=0x9C ;;
+        func_800C0564) size=0xA4 ;;
+        func_800C0ADC) size=0x9C ;;
+        func_800C0B78) size=0xA0 ;;
+        func_800C0C38) size=0xC8 ;;
+        func_800C13BC) size=0x64 ;;
+        func_800C180C) size=0x12C ;;
+        func_800C1E48) size=0xC0 ;;
+    esac
+    python3 tools/trim_elf32_section.py \
+        "build/us/src/${unit}.c.o" .text "$size" --alignment 4
+done
 python3 tools/trim_elf32_section.py \
     build/us/src/code/early_hw.c.o .text 0x164 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -1963,6 +2175,28 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/race_timer_update.c.o .text 0x2f8 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_marker_project.c.o .text 0x3f8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_marker_project.c.o .rodata 0x28 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_map_draw.c.o .text 0x628 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_map_draw.c.o .rodata 0x34 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_state_init.c.o .text 0x68 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_volume_adjust.c.o .text 0x394 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_volume_adjust.c.o .rodata 0xC --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_controls_page.c.o .text 0xF78 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_controls_page.c.o .rodata 0x1D0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_page_next.c.o .text 0x198 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controller_save_slots.c.o .text 0x4B8 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/race_start_check.c.o .text 0x170 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/race_start_check.c.o .rodata 0x34 --alignment 4
@@ -2273,6 +2507,90 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_state.c.o .text 0x64 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_tree_update.c.o .text 0x1e8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_tree_remove.c.o .text 0x130 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_mode_query.c.o .text 0xbc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_hud_layout.c.o .text 0x134 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controller_menu_state.c.o .text 0x2e0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_assets_init.c.o .text 0x550 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_menu_callbacks.c.o .text 0x26c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_panel_setup.c.o .text 0x204 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_split_setup.c.o .text 0x72C --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawn_color_lookup.c.o .text 0x108 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_key_nav.c.o .text 0x108 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_slots_layout.c.o .text 0x118 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controls_preset.c.o .text 0x2a4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controls_config.c.o .text 0x510 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_binding_select.c.o .text 0x1f8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_tree_draw.c.o .text 0x314 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_tree_draw.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_frame.c.o .text 0x498 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_frame.c.o .rodata 0x10 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_mode_table.c.o .text 0xac --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_mode_table.c.o .rodata 0x20 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_mode_cycle_full.c.o .text 0x1f8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_mode_cycle_full.c.o .rodata 0x40 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_exit_dispatch.c.o .text 0x184 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_exit_dispatch.c.o .rodata 0x14 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_menu_open.c.o .text 0xf4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_menu_open.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_option_select.c.o .text 0x2c4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_option_select.c.o .rodata 0x18 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_list_select_full.c.o .text 0x77c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_list_select_full.c.o .rodata 0xc0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_player_page.c.o .text 0x270 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_player_page.c.o .rodata 0x40 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_popup_setup.c.o .text 0xfc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_popup_setup.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_bar_step.c.o .text 0x154 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_bar_step.c.o .rodata 0x10 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_rank_label.c.o .text 0xb8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_time_text.c.o .text 0x190 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_time_text.c.o .rodata 0x1c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/cheat_codes.c.o .text 0x568 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/cheat_codes.c.o .rodata 0x84 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_modes.c.o .text 0x50 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_stub.c.o .text 0x8 --alignment 4
@@ -2324,6 +2642,98 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/display_commands.c.o .text 0x44 --alignment 4
 mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_ai_set_frequency.c.o src/libultra/os_ai_set_frequency.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_ai_set_next_buffer.c.o src/libultra/os_ai_set_next_buffer.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_cart_rom_init.c.o src/libultra/os_cart_rom_init.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_cont_query.c.o src/libultra/os_cont_query.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_cont_read_data.c.o src/libultra/os_cont_read_data.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_controller.c.o src/libultra/os_controller.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_epi_raw_read_io.c.o src/libultra/os_epi_raw_read_io.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_epi_raw_write_io.c.o src/libultra/os_epi_raw_write_io.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_pi_raw_read_io.c.o src/libultra/os_pi_raw_read_io.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_pi_raw_start_dma.c.o src/libultra/os_pi_raw_start_dma.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_recv_mesg.c.o src/libultra/os_recv_mesg.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_send_mesg.c.o src/libultra/os_send_mesg.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_set_event_mesg.c.o src/libultra/os_set_event_mesg.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_set_thread_pri.c.o src/libultra/os_set_thread_pri.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_set_timer.c.o src/libultra/os_set_timer.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_sp_task_yielded.c.o src/libultra/os_sp_task_yielded.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_dp_set_next_buffer.c.o src/libultra/os_dp_set_next_buffer.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_si_raw_start_dma.c.o src/libultra/os_si_raw_start_dma.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_sp_raw_start_dma.c.o src/libultra/os_sp_raw_start_dma.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_dequeue_thread.c.o src/libultra/os_dequeue_thread.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_vi_black.c.o src/libultra/os_vi_black.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_vi_init.c.o src/libultra/os_vi_init.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_vi_get_current_framebuffer.c.o src/libultra/os_vi_get_current_framebuffer.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_vi_get_next_framebuffer.c.o src/libultra/os_vi_get_next_framebuffer.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_vi_manager.c.o src/libultra/os_vi_manager.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_timer.c.o src/libultra/os_timer.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_vi_set_event.c.o src/libultra/os_vi_set_event.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_vi_set_mode.c.o src/libultra/os_vi_set_mode.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_vi_set_special_features.c.o src/libultra/os_vi_set_special_features.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_vi_swap_buffer.c.o src/libultra/os_vi_swap_buffer.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_vi_swap_context.c.o src/libultra/os_vi_swap_context.c
+.toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/ldiv.c.o src/libultra/ldiv.c
+.toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/litob.c.o src/libultra/litob.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_yield_thread.c.o src/libultra/os_yield_thread.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_virtual_to_physical.c.o src/libultra/os_virtual_to_physical.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_reset_global_int_mask.c.o src/libultra/os_reset_global_int_mask.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_set_global_int_mask.c.o src/libultra/os_set_global_int_mask.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_si_access_queue.c.o src/libultra/os_si_access_queue.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/sched_empty_callbacks.c.o src/libultra/sched_empty_callbacks.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/al_fx_param.c.o src/libultra/al_fx_param.c
+python3 tools/trim_elf32_section.py \
+    build/us/src/libultra/al_fx_param.c.o .text 0x18 --alignment 4
+.toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/al_save_param.c.o src/libultra/al_save_param.c
+python3 tools/trim_elf32_section.py \
+    build/us/src/libultra/al_save_param.c.o .text 0x34 --alignment 4
+.toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/al_save_pull.c.o src/libultra/al_save_pull.c
+python3 tools/trim_elf32_section.py \
+    build/us/src/libultra/al_save_pull.c.o .text 0x8C --alignment 4
+.toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/gu_normalize.c.o src/libultra/gu_normalize.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_device_busy.c.o src/libultra/os_ai_device_busy.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_get_length.c.o src/libultra/os_ai_get_length.c
@@ -2333,6 +2743,60 @@ mkdir -p build/us/src/libultra
     -o build/us/src/libultra/al_copy.c.o src/libultra/al_copy.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_create_mesg_queue.c.o src/libultra/os_create_mesg_queue.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_create_thread.c.o src/libultra/os_create_thread.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_epi_start_dma.c.o src/libultra/os_epi_start_dma.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_destroy_thread.c.o src/libultra/os_destroy_thread.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_get_time.c.o src/libultra/os_get_time.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_jam_mesg.c.o src/libultra/os_jam_mesg.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_epi_raw_start_dma.c.o src/libultra/os_epi_raw_start_dma.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_leo_disk_init.c.o src/libultra/os_leo_disk_init.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_cont_crc.c.o src/libultra/os_cont_crc.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_pi_start_dma.c.o src/libultra/os_pi_start_dma.c
+.toolchain/ido5.3/cc -c -O2 -mips2 -Wab,-r4300_mul -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/gu_mtx.c.o src/libultra/gu_mtx.c
+.toolchain/ido5.3/cc -c -O2 -mips2 -Wab,-r4300_mul -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/gu_perspective.c.o src/libultra/gu_perspective.c
+.toolchain/ido5.3/cc -c -O2 -mips2 -Wab,-r4300_mul -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/cosf.c.o src/libultra/cosf.c
+.toolchain/ido5.3/cc -c -O3 -mips2 -Wab,-r4300_mul -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/gu_look_at.c.o src/libultra/gu_look_at.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_cont_ram_write.c.o src/libultra/os_cont_ram_write.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_cont_ram_read.c.o src/libultra/os_cont_ram_read.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_initialize.c.o src/libultra/os_initialize.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_motor.c.o src/libultra/os_motor.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_pfs_delete_file.c.o src/libultra/os_pfs_delete_file.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_pfs_file_state.c.o src/libultra/os_pfs_file_state.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_pfs_free_blocks.c.o src/libultra/os_pfs_free_blocks.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_pfs_get_status.c.o src/libultra/os_pfs_get_status.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_pfs_init_pak.c.o src/libultra/os_pfs_init_pak.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_pfs_is_plug.c.o src/libultra/os_pfs_is_plug.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_pfs_checker.c.o src/libultra/os_pfs_checker.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_pfs_read_write_file.c.o src/libultra/os_pfs_read_write_file.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_pfs_get_id_copy.c.o src/libultra/os_pfs_get_id_copy.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_pfs_find_file.c.o src/libultra/os_pfs_find_file.c
 .toolchain/ido5.3/cc -c -O3 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/al_filter_new.c.o src/libultra/al_filter_new.c
 .toolchain/ido5.3/cc -c -O3 -mips2 -non_shared -G 0 -Iinclude \
@@ -2343,6 +2807,9 @@ mkdir -p build/us/src/libultra
     -o build/us/src/libultra/os_pi_get_cmd_queue.c.o src/libultra/os_pi_get_cmd_queue.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_pi_access.c.o src/libultra/os_pi_access.c
+.toolchain/ido5.3/cc -c -O1 -mips3 -32 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/ll.c.o src/libultra/ll.c
+python3 tools/set_elf32_mips_o32.py build/us/src/libultra/ll.c.o
 .toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/sched.c.o src/libultra/sched.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
@@ -2371,6 +2838,22 @@ mkdir -p build/us/src/libultra
     -o build/us/src/libultra/os_sp_get_status.c.o src/libultra/os_sp_get_status.c
 .toolchain/ido5.3/cc -c -O2 -Wo,-loopunroll,0 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/string.c.o src/libultra/string.c
+.toolchain/ido5.3/cc -c -O3 -mips2 -non_shared -G 0 -Iinclude \
+    -Isrc/libultra -o build/us/src/libultra/al_drvrnew.c.o src/libultra/al_drvrnew.c
+.toolchain/ido5.3/cc -c -O3 -mips2 -non_shared -G 0 -Iinclude \
+    -Isrc/libultra -o build/us/src/libultra/al_aux_bus.c.o src/libultra/al_aux_bus.c
+.toolchain/ido5.3/cc -c -O3 -mips2 -Wab,-r4300_mul -non_shared -G 0 -Iinclude \
+    -Isrc/libultra -o build/us/src/libultra/al_env.c.o src/libultra/al_env.c
+.toolchain/ido5.3/cc -c -O3 -mips2 -non_shared -G 0 -Iinclude \
+    -Isrc/libultra -o build/us/src/libultra/al_load.c.o src/libultra/al_load.c
+.toolchain/ido5.3/cc -c -O3 -mips2 -non_shared -G 0 -Iinclude \
+    -Isrc/libultra -o build/us/src/libultra/al_main_bus.c.o src/libultra/al_main_bus.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -Isrc/libultra -o build/us/src/libultra/os_pfs_allocate_file.c.o src/libultra/os_pfs_allocate_file.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -Isrc/libultra -o build/us/src/libultra/os_cont_pfs.c.o src/libultra/os_cont_pfs.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Xcpluscomm -Iinclude \
+    -Isrc/libultra -o build/us/src/libultra/os_leo_interrupt.c.o src/libultra/os_leo_interrupt.c
 .toolchain/ido5.3/cc -c -O3 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/al_syn_delete.c.o src/libultra/al_syn_delete.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
@@ -2548,7 +3031,7 @@ if false; then
     build/us/src/code/hud_list_reset.c.o \
     build/us/asm/us/main_800C16B0_to_800C17C8.s.o \
     build/us/src/code/registry_lookup.c.o \
-    build/us/asm/us/main_800C180C_to_800C247C.s.o \
+    build/us/src/code/controls_config.c.o \
     build/us/src/code/hud_ready.c.o \
     build/us/src/code/hud_clear.c.o \
     build/us/src/code/hud_list_callback.c.o \
@@ -2557,7 +3040,7 @@ if false; then
     build/us/src/code/hud_selection_apply.c.o \
     build/us/asm/us/main_800C2924_to_800C30A0.s.o \
     build/us/src/code/hud_primary_trigger.c.o \
-    build/us/asm/us/main_800C30B4_to_800C402C.s.o \
+    build/us/src/code/hud_controls_page.c.o \
     build/us/src/code/hud_player_slots_cycle.c.o \
     build/us/src/code/hud_row_preset.c.o \
     build/us/src/code/hud_row_defaults.c.o \
@@ -2580,7 +3063,7 @@ if false; then
     build/us/src/code/hud_panel_refresh.c.o \
     build/us/src/code/hud_panel_select.c.o \
     build/us/src/code/hud_page_focus.c.o \
-    build/us/asm/us/main_800C65B4_to_800C674C.s.o \
+    build/us/src/code/hud_page_next.c.o \
     build/us/src/code/hud_page_exit_request.c.o \
     build/us/src/code/hud_page_show.c.o \
     build/us/src/code/hud_page_open.c.o \
@@ -2592,16 +3075,16 @@ if false; then
     build/us/src/code/race_hud_init.c.o \
     build/us/src/code/race_result_setup.c.o \
     build/us/src/code/race_object_timestamps.c.o \
-    build/us/asm/us/main_800C74AC_to_800C7514.s.o \
+    build/us/src/code/race_state_init.c.o \
     build/us/src/code/race_state_reset.c.o \
     build/us/asm/us/main_800C7594_to_800C7650.s.o \
     build/us/src/code/race_frame_border_draw.c.o \
     build/us/src/code/race_start_check.c.o \
-    build/us/asm/us/main_800C7C10_to_800C8238.s.o \
+    build/us/src/code/race_map_draw.c.o \
     build/us/src/code/race_event_push.c.o \
     build/us/asm/us/main_800C8350_to_800C8484.s.o \
     build/us/src/code/race_timer_update.c.o \
-    build/us/asm/us/main_800C877C_to_800C8B74.s.o \
+    build/us/src/code/race_marker_project.c.o \
     build/us/src/code/race_player_icons_draw.c.o \
     build/us/src/code/race_slot_clear.c.o \
     build/us/src/code/race_player_set_vehicle_label.c.o \
@@ -2632,7 +3115,7 @@ if false; then
     build/us/src/code/controls_button_index_map.c.o \
     build/us/src/code/controls_bindings_save.c.o \
     build/us/src/code/controls_bindings_load.c.o \
-    build/us/asm/us/main_800CBE40_to_800CC2F8.s.o \
+    build/us/src/code/controller_save_slots.c.o \
     build/us/src/code/controller_slots_scan.c.o \
     build/us/src/code/controller_menu_input.c.o \
     build/us/src/code/controller_queue_push.c.o \
@@ -2644,7 +3127,7 @@ if false; then
     build/us/src/code/results_time_compare.c.o \
     build/us/asm/us/main_800CE610_to_800CE814.s.o \
     build/us/src/code/results_screen_setup.c.o \
-    build/us/asm/us/main_800CE9A0_to_800CF0CC.s.o \
+    build/us/src/code/results_split_setup.c.o \
     build/us/src/code/results_continue.c.o \
     build/us/src/code/results_return.c.o \
     build/us/src/code/results_option_codes.c.o \
@@ -3014,21 +3497,74 @@ if false; then
     build/us/asm/us/main_80103190_to_801037B0.s.o \
     build/us/src/libultra/al_copy.c.o \
     build/us/src/libultra/os_create_mesg_queue.c.o \
-    build/us/asm/us/main_80103860_to_801059B0.s.o \
+    build/us/src/libultra/os_create_thread.c.o \
+    build/us/asm/us/main_801039B0_to_80104EC0.s.o \
+    build/us/src/libultra/os_epi_start_dma.c.o \
+    build/us/asm/us/main_80104FA0_to_801058B0.s.o \
+    build/us/src/libultra/os_destroy_thread.c.o \
     build/us/src/libultra/al_filter_new.c.o \
-    build/us/asm/us/main_801059D0_to_80105A70.s.o \
+    build/us/src/libultra/os_get_time.c.o \
+    build/us/asm/us/main_80105A60_to_80105A70.s.o \
     build/us/src/libultra/al_heap_alloc.c.o \
     build/us/src/libultra/al_heap_init.c.o \
-    build/us/asm/us/main_80105B10_to_8010CF70.s.o \
+    build/us/asm/us/main_80105B10_to_80105F20.s.o \
+    build/us/src/libultra/os_jam_mesg.c.o \
+    build/us/asm/us/main_80106070_to_801068F0.s.o \
+    build/us/src/libultra/os_epi_raw_start_dma.c.o \
+    build/us/src/libultra/os_leo_disk_init.c.o \
+    build/us/src/libultra/ll.c.o \
+    build/us/asm/us/main_80106EE0_to_80107A30.s.o \
+    build/us/src/libultra/gu_look_at.c.o \
+    build/us/asm/us/main_80107D60_to_80108530.s.o \
+    build/us/src/libultra/os_cont_ram_write.c.o \
+    build/us/src/libultra/os_cont_ram_read.c.o \
+    build/us/src/libultra/os_cont_crc.c.o \
+    build/us/src/libultra/gu_mtx.c.o \
+    build/us/asm/us/main_80109030_to_80109090.s.o \
+    build/us/src/libultra/gu_perspective.c.o \
+    build/us/src/libultra/cosf.c.o \
+    build/us/asm/us/main_80109490_to_8010A9A0.s.o \
+    build/us/src/libultra/os_pfs_delete_file.c.o \
+    build/us/src/libultra/os_pfs_file_state.c.o \
+    build/us/src/libultra/os_pfs_free_blocks.c.o \
+    build/us/src/libultra/os_pfs_get_status.c.o \
+    build/us/src/libultra/os_pfs_init_pak.c.o \
+    build/us/src/libultra/os_pfs_checker.c.o \
+    build/us/src/libultra/os_pfs_is_plug.c.o \
+    build/us/src/libultra/os_pfs_read_write_file.c.o \
+    build/us/src/libultra/os_pfs_get_id_copy.c.o \
+    build/us/src/libultra/os_pfs_find_file.c.o \
+    build/us/src/libultra/os_pi_start_dma.c.o \
     build/us/src/libultra/os_pi_get_cmd_queue.c.o \
     build/us/asm/us/main_8010CFA0_to_8010D660.s.o \
     build/us/src/libultra/os_get_thread_pri.c.o \
     build/us/src/libultra/os_pi_access.c.o \
-    build/us/asm/us/main_8010D740_to_8010F3E0.s.o \
+    build/us/src/libultra/os_pi_raw_start_dma.c.o \
+    build/us/src/libultra/os_recv_mesg.c.o \
+    build/us/asm/us/main_8010D9C0_to_8010DCC0.s.o \
+    build/us/src/libultra/os_reset_global_int_mask.c.o \
+    build/us/asm/us/main_8010DD20_to_8010E614.s.o \
+    build/us/src/libultra/al_fx_param.c.o \
+    build/us/asm/us/main_8010E62C_to_8010EB60.s.o \
+    build/us/src/libultra/gu_normalize.c.o \
+    build/us/src/libultra/al_save_param.c.o \
+    build/us/src/libultra/al_save_pull.c.o \
+    build/us/asm/us/main_8010ECB0_to_8010F014.s.o \
+    build/us/src/libultra/sched_empty_callbacks.c.o \
+    build/us/asm/us/main_8010F034_to_8010F3E0.s.o \
     build/us/src/libultra/sched.c.o \
-    build/us/asm/us/main_8010F5F0_to_8010F6A0.s.o \
+    build/us/src/libultra/os_dp_set_next_buffer.c.o \
     build/us/src/libultra/os_dp_device_busy.c.o \
-    build/us/asm/us/main_8010F6D0_to_8010FE90.s.o \
+    build/us/src/libultra/os_send_mesg.c.o \
+    build/us/src/libultra/os_set_event_mesg.c.o \
+    build/us/asm/us/main_8010F890_to_8010F8A0.s.o \
+    build/us/src/libultra/os_set_global_int_mask.c.o \
+    build/us/asm/us/main_8010F8F0_to_8010F9A0.s.o \
+    build/us/src/libultra/os_set_thread_pri.c.o \
+    build/us/src/libultra/os_set_timer.c.o \
+    build/us/src/libultra/os_si_access_queue.c.o \
+    build/us/asm/us/main_8010FC20_to_8010FDE0.s.o \
+    build/us/src/libultra/os_si_raw_start_dma.c.o \
     build/us/src/libultra/os_si_device_busy.c.o \
     build/us/src/libultra/os_si_raw_read_io.c.o \
     build/us/src/libultra/os_si_raw_write_io.c.o \
@@ -3037,17 +3573,36 @@ if false; then
     build/us/src/libultra/os_sp_set_pc.c.o \
     build/us/asm/us/main_801100E0_to_801103D0.s.o \
     build/us/src/libultra/os_sp_device_busy.c.o \
-    build/us/asm/us/main_80110400_to_80110490.s.o \
+    build/us/src/libultra/os_sp_raw_start_dma.c.o \
     build/us/src/libultra/os_sp_set_status.c.o \
     build/us/src/libultra/os_sp_task_yield.c.o \
-    build/us/asm/us/main_801104C0_to_80110540.s.o \
+    build/us/src/libultra/os_sp_task_yielded.c.o \
     build/us/src/libultra/os_sp_get_status.c.o \
     build/us/asm/us/main_80110550_to_801106B0.s.o \
     build/us/src/libultra/string.c.o \
     build/us/src/libultra/al_syn_delete.c.o \
-    build/us/asm/us/main_80110760_to_801118C0.s.o \
+    build/us/asm/us/main_80110760_to_80110EE0.s.o \
+    build/us/src/libultra/os_dequeue_thread.c.o \
+    build/us/src/libultra/os_timer.c.o \
+    build/us/asm/us/main_80111320_to_80111330.s.o \
+    build/us/src/libultra/os_vi_black.c.o \
+    build/us/src/libultra/os_vi_init.c.o \
+    build/us/src/libultra/os_vi_get_current_framebuffer.c.o \
+    build/us/src/libultra/os_vi_get_next_framebuffer.c.o \
+    build/us/src/libultra/os_vi_manager.c.o \
     build/us/src/libultra/os_vi_get_current_context.c.o \
-    build/us/asm/us/main_after_801118C0.s.o \
+    build/us/src/libultra/os_virtual_to_physical.c.o \
+    build/us/asm/us/main_80111950_to_80111A10.s.o \
+    build/us/src/libultra/os_vi_set_event.c.o \
+    build/us/src/libultra/os_vi_set_mode.c.o \
+    build/us/src/libultra/os_vi_set_special_features.c.o \
+    build/us/src/libultra/os_vi_swap_buffer.c.o \
+    build/us/src/libultra/os_vi_swap_context.c.o \
+    build/us/asm/us/main_80112060_to_80113890.s.o \
+    build/us/src/libultra/ldiv.c.o \
+    build/us/src/libultra/litob.c.o \
+    build/us/src/libultra/os_yield_thread.c.o \
+    build/us/asm/us/main_after_80113D10.s.o \
     > build/us/undefined_object_symbols.txt
 fi
 find build/us/asm build/us/src -type f -name '*.o' -print0 \
@@ -3063,15 +3618,17 @@ python3 tools/generate_linker_symbols.py build/us/symbols.ld \
     --symbol D_803A66C0=0x803A66C0
 
 python3 tools/place_unit_rodata.py battletanx_ga.ld config/us/unit_rodata.tsv \
-    build/us/battletanx_ga.placed.ld
+    build/us/battletanx_ga.placed.ld --bss-table config/us/unit_bss.tsv \
+    --data-table config/us/unit_data.tsv
 "${tool_prefix}ld.bfd" -EB --no-check-sections \
     -T build/us/symbols.ld -T build/us/battletanx_ga.placed.ld \
     -Map build/us/battletanx_ga.map \
     -o build/us/battletanx_ga.elf
-"${tool_prefix}objcopy" -O binary -R '.unit_rodata_*' \
+"${tool_prefix}objcopy" -O binary -R '.unit_rodata_*' -R '.unit_data_*' \
     build/us/battletanx_ga.elf build/us/battletanx_ga.code.bin
 python3 tools/splice_unit_rodata.py build/us/battletanx_ga.elf \
-    config/us/unit_rodata.tsv build/us/battletanx_ga.code.bin
+    config/us/unit_rodata.tsv build/us/battletanx_ga.code.bin \
+    --data-table config/us/unit_data.tsv
 
 actual_size="$(wc -c < build/us/battletanx_ga.code.bin)"
 [[ "$actual_size" -eq 1052672 ]] || {

@@ -1,0 +1,7 @@
+# unit	data_vram	data_size
+# C units whose initialized data must be linked and spliced at retail addresses.
+libultra/al_drvrnew	0x80126B60	0x190
+libultra/al_env	0x80126CF0	0x140
+libultra/os_initialize	0x80126E50	0x20
+libultra/os_vi_manager	0x80126F80	0x20
+libultra/litob	0x80127E00	0x30

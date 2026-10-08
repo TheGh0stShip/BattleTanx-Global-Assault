@@ -1,0 +1,9 @@
+# unit	bss_vram	section_size
+# C units whose local .bss identity affects code generation and therefore must
+# be linked at the original fixed address. Sizes include compiler alignment.
+libultra/os_cart_rom_init	0x803ADCA0	0x80
+libultra/os_leo_interrupt	0x803ADF70	0x1000
+libultra/os_leo_disk_init	0x803AEF70	0x80
+libultra/os_motor	0x803AEFF0	0x240
+libultra/os_timer	0x803B0570	0x20
+libultra/os_vi_manager	0x803B0590	0x1220

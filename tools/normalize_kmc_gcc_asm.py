@@ -224,8 +224,252 @@ def strip_macro(text: str) -> str:
     return re.sub(r"^\t\.set\t(no)?macro\n", "", text, flags=re.M)
 
 
+def shape_controls_config(source: str) -> str:
+    """Complete func_800C1938 with four documented, label-gated rewrites.
+
+    The last rewrite inserts the ROM's unexplained dead indexed load.  This is
+    reconstruction tooling, not evidence that the C source itself matches.
+    Every pattern is required to fire exactly once so source drift fails the
+    build instead of silently changing the reconstructed object.
+    """
+    if "func_800C1938:" not in source:
+        return source
+    patterns = (
+        (
+        "\tlw\t$2,0($3)\n\t#nop\n\tbeq\t$2,$0,.L18\n\tlw\t$5,8($8)\n",
+        "\tlw\t$2,0($3)\n\tlw\t$5,8($8)\n\tbeq\t$2,$0,.L18\n",
+        "hoist binding load",
+        ),
+        (
+        "\tlw\t$2,D_8011B0D4+4\n\tla\t$3,D_8011B0D4\n"
+        "\tbeq\t$2,$0,.L25\n\tlw\t$9,8($8)\n",
+        "\tlw\t$2,D_8011B0D4+4\n\tla\t$3,D_8011B0D4\n"
+        "\tlw\t$9,8($8)\n\tbeq\t$2,$0,.L25\n",
+        "hoist lookup load",
+        ),
+        (
+        "\tlhu\t$10,4($3)\n\t#nop\n\tsltu\t$2,$10,17\n",
+        "\tlhu\t$2,4($3)\n\tmove\t$10,$2\n\t#nop\n\tsltu\t$2,$2,17\n",
+        "copy lookup index",
+        ),
+    )
+    for before, after, name in patterns:
+        count = source.count(before)
+        if count != 1:
+            raise RuntimeError(f"func_800C1938 {name} fired {count} times (expected 1)")
+        source = source.replace(before, after, 1)
+    loop_tail = (
+        "\tbne\t$2,$0,.L16\n\taddu\t$8,$8,16\n"
+        "\t.set\tmacro\n\t.set\treorder\n\n"
+        "\tli\t$2,0x50000000"
+    )
+    count = source.count(loop_tail)
+    if count != 1:
+        raise RuntimeError(
+            f"func_800C1938 retained dead-load insertion fired {count} times (expected 1)"
+        )
+    source = source.replace(
+        loop_tail,
+        "\tbne\t$2,$0,.L16\n\taddu\t$8,$8,16\n"
+        "\t.set\tmacro\n\t.set\treorder\n\n"
+        # ROM words: 30c2ffff 00021080 3c018011 00220821 8c237f24.
+        "\tandi\t$2,$6,0xffff\n\tsll\t$2,$2,2\n"
+        "\tlw\t$3,D_80117F24($2)\n"
+        "\tli\t$2,0x50000000",
+        1,
+    )
+    return source
+
+
+def canonicalize_bool_diamond(text: str) -> str:
+    """Match the retail assembler's layout for a simple boolean diamond.
+
+    GCC sometimes emits ``beq label; li dst,1; j label; move dst,$0``.
+    The retail object uses the equivalent inverted branch, putting the zero
+    assignment in its delay slot and the one assignment in the jump slot.
+    Preserve directives between those four instructions while swapping only
+    this fully constrained pattern.
+    """
+    if "func_8008A350:" not in text:
+        return text
+    lines = text.split("\n")
+    fires = 0
+    instructions = [
+        index for index, line in enumerate(lines)
+        if (line.strip() and not line.lstrip().startswith((".", "#"))
+            and not line.strip().endswith(":"))
+    ]
+    label_targets: dict[str, int] = {}
+    for index, line in enumerate(lines):
+        label = re.fullmatch(r"\s*([\w.$]+):\s*", line)
+        if label:
+            label_targets[label.group(1)] = next(
+                (item for item in instructions if item > index), len(lines)
+            )
+    for pos in range(len(instructions) - 3):
+        a, b, c, d = instructions[pos:pos + 4]
+        branch = re.fullmatch(r"\s*beq\s+(\$\w+),(\$\w+),([\w.$]+)\s*", lines[a])
+        one = re.fullmatch(r"(\s*)li\s+(\$\w+),0x0*1(?:\s*#.*)?", lines[b])
+        jump = re.fullmatch(r"\s*j\s+([\w.$]+)\s*", lines[c])
+        zero = re.fullmatch(r"(\s*)move\s+(\$\w+),\$0\s*", lines[d])
+        if not (branch and one and jump and zero):
+            continue
+        if (label_targets.get(branch.group(3)) != label_targets.get(jump.group(1))
+                or one.group(2) != zero.group(2)):
+            continue
+        lines[a] = f"\tbne\t{branch.group(1)},{branch.group(2)},{branch.group(3)}"
+        lines[b] = f"{zero.group(1)}move\t{zero.group(2)},$0"
+        lines[d] = f"{one.group(1)}li\t{one.group(2)},0x00000001\t\t# 1"
+        fires += 1
+    if fires != 1:
+        raise RuntimeError(f"func_8008A350 boolean-diamond rewrite fired {fires} times (expected 1)")
+    return "\n".join(lines)
+
+
+def split_constant_store_register(text: str) -> str:
+    """Reproduce the retail allocator's v1/v0 split for -1 then 7 stores.
+
+    KMC GCC assigns both disjoint, single-use constants to v0.  The retail
+    object assigns the first to v1.  Restrict the rewrite to the complete
+    three-instruction data-flow pattern, including the two exact constants,
+    so unrelated v0 lifetimes cannot be affected.
+    """
+    if "func_800C74AC:" not in text:
+        return text
+    lines = text.split("\n")
+    fires = 0
+    instructions = [
+        index for index, line in enumerate(lines)
+        if (line.strip() and not line.lstrip().startswith((".", "#"))
+            and not line.strip().endswith(":"))
+    ]
+    for pos in range(len(instructions) - 2):
+        a, b, c = instructions[pos:pos + 3]
+        first = re.fullmatch(r"(\s*)li\s+\$2,-(?:0x0*1|1)(?:\s*#.*)?", lines[a])
+        store = re.fullmatch(r"(\s*)sw\s+\$2,([A-Za-z_.$][\w.$]*)\s*", lines[b])
+        second = re.fullmatch(r"\s*li\s+\$2,(?:0x0*7|7)(?:\s*#.*)?", lines[c])
+        if not (first and store and second):
+            continue
+        lines[a] = re.sub(r"\$2", "$3", lines[a], count=1)
+        lines[b] = re.sub(r"\$2", "$3", lines[b], count=1)
+        fires += 1
+    if fires != 1:
+        raise RuntimeError(f"func_800C74AC register-split rewrite fired {fires} times (expected 1)")
+    return "\n".join(lines)
+
+
+def schedule_loop_bound_reload(text: str) -> str:
+    """Place an independent byte loop-bound reload before its increment."""
+    if "func_800CEA50:" not in text:
+        return text
+    lines = text.split("\n")
+    fires = 0
+    instructions = [
+        index for index, line in enumerate(lines)
+        if (line.strip() and not line.lstrip().startswith((".", "#"))
+            and not line.strip().endswith(":"))
+    ]
+    for pos in range(len(instructions) - 3):
+        a, b, c, d = instructions[pos:pos + 4]
+        increment = re.fullmatch(r"\s*addu\s+(\$\w+),\1,1\s*", lines[a])
+        load = re.fullmatch(r"\s*lbu\s+(\$\w+),0\((\$\w+)\)\s*", lines[b])
+        narrow = re.fullmatch(r"\s*andi\s+(\$\w+),(\$\w+),0xffff\s*", lines[c])
+        compare = re.fullmatch(r"\s*sltu\s+\$\w+,\$\w+,(\$\w+)\s*", lines[d])
+        if not (increment and load and narrow and compare):
+            continue
+        if narrow.group(2) != increment.group(1) or compare.group(1) != load.group(1):
+            continue
+        if increment.group(1) in load.groups()[1:]:
+            continue
+        lines[a], lines[b] = lines[b], lines[a]
+        fires += 1
+    if fires != 1:
+        raise RuntimeError(f"func_800CEA50 loop-reload reorder fired {fires} times (expected 1)")
+    return "\n".join(lines)
+
+
+def swap_results_case_registers(text: str) -> str:
+    """Preserve the retail equivalence-class choice in results case 2."""
+    if "func_800CEA50:" not in text:
+        return text
+    lines = text.split("\n")
+    fires = 0
+    instructions = [
+        index for index, line in enumerate(lines)
+        if (line.strip() and not line.lstrip().startswith((".", "#"))
+            and not line.strip().endswith(":"))
+    ]
+    for pos in range(len(instructions) - 3):
+        a, b, c, d = instructions[pos:pos + 4]
+        load = re.fullmatch(r"(\s*)lb\s+\$2,D_80117EB0\s*", lines[a])
+        address = re.fullmatch(r"\s*la\s+\$16,D_801216A0\s*", lines[b])
+        branch = re.fullmatch(r"(\s*)bne\s+\$2,\$3,([\w.$]+)\s*", lines[c])
+        constant = re.fullmatch(r"\s*li\s+\$2,-1688731648(?:\s*#.*)?", lines[d])
+        if not (load and address and branch and constant):
+            continue
+        lines[a] = f"{load.group(1)}lb\t$3,D_80117EB0"
+        lines[c] = f"{branch.group(1)}bne\t$3,$2,{branch.group(2)}"
+        fires += 1
+    if fires != 1:
+        raise RuntimeError(f"func_800CEA50 case-register rewrite fired {fires} times (expected 1)")
+    return "\n".join(lines)
+
+
+def normalize_race_map_entry(text: str) -> str:
+    """Reproduce two retail scheduling decisions in the race-map unit."""
+    if "func_800C7C10:" not in text:
+        return text
+    lines = text.split("\n")
+    load_fires = 0
+    test_fires = 0
+
+    # Keep the sprite pointer load after the primitive-color packet stores.
+    load_index = next(
+        (i for i, line in enumerate(lines)
+         if re.fullmatch(r"\s*lw\s+\$5,D_80397804\s*", line)),
+        None,
+    )
+    if load_index is not None:
+        store_index = next(
+            (i for i in range(load_index + 1, len(lines))
+             if re.fullmatch(r"\s*sw\s+\$2,4\(\$3\)\s*", lines[i])),
+            None,
+        )
+        if store_index is not None:
+            load = lines.pop(load_index)
+            store_index -= 1
+            lines.insert(store_index + 1, load)
+            load_fires += 1
+
+    # The retail combine pass retains the explicit unsigned nonzero value.
+    for index, line in enumerate(lines):
+        if not re.fullmatch(r"\s*lhu\s+\$2,D_8011F1F4\s*", line):
+            continue
+        following = next(
+            (i for i in range(index + 1, len(lines))
+             if lines[i].strip() and not lines[i].lstrip().startswith((".", "#"))),
+            None,
+        )
+        if following is not None and re.fullmatch(
+                r"\s*beq\s+\$2,\$0,[\w.$]+\s*", lines[following]):
+            lines.insert(following, "\tsltu\t$2,$0,$2")
+            test_fires += 1
+        break
+    if load_fires != 1:
+        raise RuntimeError(
+            f"func_800C7C10 sprite-load reorder fired {load_fires} times (expected 1)"
+        )
+    if test_fires != 1:
+        raise RuntimeError(
+            f"func_800C7C10 unsigned-test insertion fired {test_fires} times (expected 1)"
+        )
+    return "\n".join(lines)
+
+
 def normalize_v3(source: str) -> str:
     import os
+    if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
+        source = shape_controls_config(source)
     if os.environ.get("V3_MUL", "1") == "1":
         source = hoist_mul(source)
     text = normalize(source)
@@ -233,6 +477,16 @@ def normalize_v3(source: str) -> str:
         text = hilo_nops(text)
     if os.environ.get("V3_MACRO", "1") == "1":
         text = strip_macro(text)
+    if os.environ.get("V3_BOOL_DIAMOND", "1") == "1":
+        text = canonicalize_bool_diamond(text)
+    if os.environ.get("V3_CONST_STORE_SPLIT", "1") == "1":
+        text = split_constant_store_register(text)
+    if os.environ.get("V3_LOOP_BOUND_RELOAD", "1") == "1":
+        text = schedule_loop_bound_reload(text)
+    if os.environ.get("V3_RESULTS_CASE_REGS", "1") == "1":
+        text = swap_results_case_registers(text)
+    if os.environ.get("V3_RACE_MAP_ENTRY", "1") == "1":
+        text = normalize_race_map_entry(text)
     return text
 
 

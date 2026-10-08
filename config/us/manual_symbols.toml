@@ -1,6 +1,90 @@
 # Corrections established by direct disassembly and the byte-exact build.
 
 [[symbol]]
+name = "__osFinalrom"
+vram = 0x803ADDB0
+size = 0x1
+type = "u8"
+reason = "Libultra final-ROM flag referenced by the byte-exact osInitialize unit."
+
+[[symbol]]
+name = "osTvType"
+vram = 0x80000300
+size = 0x4
+type = "u32"
+reason = "Boot parameter referenced by the byte-exact osInitialize unit."
+
+[[symbol]]
+name = "osResetType"
+vram = 0x8000030C
+size = 0x4
+type = "u32"
+reason = "Boot parameter referenced by the byte-exact osInitialize unit."
+
+[[symbol]]
+name = "osAppNMIBuffer"
+vram = 0x8000031C
+size = 0x40
+type = "u8"
+reason = "Boot NMI buffer referenced by the byte-exact osInitialize unit."
+
+[[symbol]]
+name = "D_80121940"
+vram = 0x80121940
+size = 0x80
+type = "u8"
+reason = "Results-column array required by the byte-exact results rank-label unit."
+
+[[symbol]]
+name = "__osPfsPifRam"
+vram = 0x803AF230
+size = 0x40
+type = "u8"
+reason = "External controller-pak PIF RAM address established by byte-exact libultra RAM read/write units."
+
+[[symbol]]
+name = "__osContPifRam"
+vram = 0x803ADD20
+size = 0x40
+type = "u8"
+reason = "Controller PIF RAM address established by the byte-exact libultra controller units."
+
+[[symbol]]
+name = "__osContLastCmd"
+vram = 0x803ADD60
+size = 0x1
+type = "u8"
+reason = "Controller last-command byte established by the byte-exact libultra controller units."
+
+[[symbol]]
+name = "__osMaxControllers"
+vram = 0x803ADD61
+size = 0x1
+type = "u8"
+reason = "Controller-count byte established by the byte-exact libultra controller units."
+
+[[symbol]]
+name = "__osEepromTimerQ"
+vram = 0x803ADD88
+size = 0x18
+type = "u8"
+reason = "EEPROM timer queue address established by the byte-exact libultra controller unit."
+
+[[symbol]]
+name = "__osEepromTimerMsg"
+vram = 0x803ADDA0
+size = 0x4
+type = "u32"
+reason = "EEPROM timer message address established by the byte-exact libultra controller unit."
+
+[[symbol]]
+name = "D_80126E50"
+vram = 0x80126E50
+size = 0x8
+type = "u64"
+reason = "The controller unit reads the retail clock-rate value here; existing osClockRate names a different address."
+
+[[symbol]]
 name = "D_80099828"
 vram = 0x80099828
 size = 0x8
@@ -1130,4 +1214,3 @@ vram = 0x800F8264
 size = 0x154
 type = "func"
 reason = "Matched C TU model_f8264; symbol_addrs size was 0x15c."
-

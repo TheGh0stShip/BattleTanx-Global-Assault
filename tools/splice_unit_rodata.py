@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Splice fixed-VMA unit .rodata sections from the linked ELF into the code image."""
+"""Splice fixed-VMA unit rodata/data sections into the code image."""
 
 from __future__ import annotations
 
@@ -10,7 +10,12 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from place_unit_rodata import MAIN_ROM, MAIN_VRAM, load_table  # noqa: E402
+from place_unit_rodata import (  # noqa: E402
+    MAIN_ROM,
+    MAIN_VRAM,
+    load_table,
+    output_section_name,
+)
 
 
 def sections(data: bytes) -> dict[str, tuple[int, int, int, int]]:
@@ -34,6 +39,7 @@ def main() -> None:
     parser.add_argument("elf", type=Path)
     parser.add_argument("table", type=Path)
     parser.add_argument("image", type=Path)
+    parser.add_argument("--data-table", type=Path)
     args = parser.parse_args()
 
     elf = args.elf.read_bytes()
@@ -44,14 +50,17 @@ def main() -> None:
     alloc = sorted(
         (addr, addr + size, name)
         for name, (addr, _off, size, flags) in found.items()
-        if flags & 2 and size and not name.startswith(".unit_rodata_")
+        if flags & 2 and size and not name.startswith((".unit_rodata_", ".unit_data_"))
     )
     for (s0, e0, n0), (s1, _e1, n1) in zip(alloc, alloc[1:]):
         if e0 > s1:
             raise SystemExit(f"section {n0} overlaps {n1}")
     image = bytearray(args.image.read_bytes())
-    for unit, vram, size in load_table(args.table):
-        name = f".unit_rodata_{unit}"
+    rows = [(unit, vram, size, "rodata") for unit, vram, size in load_table(args.table)]
+    if args.data_table:
+        rows += [(unit, vram, size, "data") for unit, vram, size in load_table(args.data_table)]
+    for unit, vram, size, kind in rows:
+        name = output_section_name(unit, kind)
         if name not in found:
             raise SystemExit(f"missing {name} in {args.elf}")
         addr, offset, actual, _flags = found[name]

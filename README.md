@@ -27,10 +27,12 @@ make check
 ## Current status
 
 - ROM identity and the unusual `0x80071000` load address are verified.
-- A GPL-compatible seed map currently contains 1,683 supported candidate function boundaries after correcting false splits and aggregations, with provenance.
+- A GPL-compatible catalogue contains 1,684 supported function boundaries after correcting false splits and aggregations, with provenance.
 - Reproducible splat extraction and repository safety gates are in place.
 - The header, IPL3, and known first-MiB code region reconstruct byte-for-byte.
-- Two hundred five functions (one hundred sixty-eight game helpers and thirty-seven independently reconstructed SDK/runtime routines) are reconstructed in C and pass the full byte-exact region gate.
+- 1,163 of 1,684 functions (69.1%) are reconstructed in production C and pass the full byte-exact region gate. By function-body bytes, 283,216 of 632,176 bytes (44.8%) are reconstructed.
+- Four reconstructed units require narrowly gated, documented normalizer rules; they are identified separately from pure source matches in [the normalizer-assisted record](docs/NORMALIZER_ASSISTED.md).
+- CI publishes an objdiff v2 `us_report` artifact for decomp.dev progress tracking.
 - Matching C reconstruction, compiler identification, linker layout, asset format mapping, and ROM rebuild are not complete.
 - The Vita port has not begun; N64 source recovery comes first.
 

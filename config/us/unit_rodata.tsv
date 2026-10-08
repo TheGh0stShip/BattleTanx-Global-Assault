@@ -1,6 +1,23 @@
 # unit	rodata_vram	rodata_size
 # See tools/place_unit_rodata.py. Listed C units own [vram, vram+size) of
 # main-segment rodata; make verify-code proves the C bytes equal the ROM.
+hud_tree_draw	0x80073288	0x8
+hud_frame	0x80073290	0x10
+hud_mode_table	0x80073608	0x20
+hud_mode_cycle_full	0x80073628	0x40
+hud_exit_dispatch	0x80073668	0x14
+hud_volume_adjust	0x80073680	0xC
+hud_menu_open	0x80073800	0x4
+hud_option_select	0x80073808	0x18
+hud_list_select_full	0x80073820	0xC0
+hud_controls_page	0x800738E0	0x1D0
+race_map_draw	0x80073D3C	0x34
+hud_player_page	0x80073B48	0x40
+race_marker_project	0x80073D80	0x28
+race_popup_setup	0x80073F6C	0x4
+results_bar_step	0x80074120	0x10
+results_time_text	0x800740E0	0x1C
+cheat_codes	0x80074140	0x84
 hud_slot_icons_update	0x80073B88	0xE0
 hud_menu_entries_apply_settings	0x80073AC8	0x60
 hud_entry_set_label	0x80073B28	0x20
@@ -98,3 +115,15 @@ powerup_timer_update	0x80077060	0x20
 barrel_explode	0x800770E0	0x4C
 effect_burn_update	0x8007721C	0x10
 mesh_rings_draw	0x80077180	0x4C
+libmus/800FBF94_player_main	0x80077608	0x8
+libmus/800FDD20_player_commands	0x800776A0	0x40
+libmus/800FE710_n_syn_custom_fx	0x800776E0	0x10
+n_audio/800FFB30_n_drvrnew	0x800776F0	0x30
+n_audio/80100050_n_env	0x80077720	0x70
+n_audio/80101140_n_resample	0x80077790	0x10
+n_audio/80101320_n_reverb	0x800777A0	0x40
+n_audio/80102350_n_synthesizer	0x800777E0	0x20
+libultra/gu_perspective	0x800778D0	0x10
+libultra/cosf	0x800778E0	0x50
+libultra/al_drvrnew	0x80077800	0x20
+libultra/al_env	0x80077820	0x60
