@@ -619,6 +619,64 @@ def normalize_display_slot_wait(text: str) -> str:
     return text
 
 
+def schedule_display_record_prefix(text: str) -> str:
+    """Reproduce the retail pre-call schedule in ``func_8007A8F0``."""
+    if "func_8007A8F0:" not in text:
+        return text
+    before = (
+        "\tsubu\t$sp,$sp,32\n"
+        "\tsw\t$18,24($sp)\n"
+        "\tmove\t$18,$5\n"
+        "\tmove\t$3,$18\n"
+        "\tsw\t$16,16($sp)\n"
+        "\tlw\t$16,D_80114500\n"
+        "\taddu\t$18,$18,8\n"
+        "\tli\t$2,-385875968\t\t\t# 0xe9000000\n"
+        "\tsw\t$31,28($sp)\n"
+        "\tsw\t$17,20($sp)\n"
+        "\tsw\t$2,0($3)\n"
+        "\tsw\t$0,4($3)\n"
+        "\tmove\t$3,$18\n"
+        "\tli\t$2,-553648128\t\t\t# 0xdf000000\n"
+        "\tsw\t$2,0($3)\n"
+        "\tsw\t$0,4($3)\n"
+        "\tlhu\t$3,192($16)\n"
+        "\tmove\t$17,$4\n"
+        "\tsll\t$2,$3,3\n"
+        "\taddu\t$2,$2,$3\n"
+        "\tsll\t$2,$2,3\n"
+    )
+    after = (
+        "\tsubu\t$sp,$sp,32\n"
+        "\tsw\t$16,16($sp)\n"
+        "\tlw\t$16,D_80114500\n"
+        "\tsw\t$17,20($sp)\n"
+        "\tmove\t$17,$4\n"
+        "\tsw\t$18,24($sp)\n"
+        "\tmove\t$18,$5\n"
+        "\tmove\t$3,$18\n"
+        "\tsw\t$31,28($sp)\n"
+        "\tlhu\t$4,192($16)\n"
+        "\taddu\t$18,$18,8\n"
+        "\tli\t$2,-385875968\t\t\t# 0xe9000000\n"
+        "\tsw\t$2,0($3)\n"
+        "\tsw\t$0,4($3)\n"
+        "\tmove\t$3,$18\n"
+        "\tli\t$2,-553648128\t\t\t# 0xdf000000\n"
+        "\tsw\t$2,0($3)\n"
+        "\tsw\t$0,4($3)\n"
+        "\tsll\t$2,$4,3\n"
+        "\taddu\t$2,$2,$4\n"
+        "\tsll\t$2,$2,3\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_8007A8F0 prefix schedule fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -646,6 +704,8 @@ def normalize_v3(source: str) -> str:
         text = normalize_object_phase_lookup(text)
     if os.environ.get("V3_DISPLAY_SLOT_WAIT", "1") == "1":
         text = normalize_display_slot_wait(text)
+    if os.environ.get("V3_DISPLAY_RECORD_PREFIX", "1") == "1":
+        text = schedule_display_record_prefix(text)
     return text
 
 

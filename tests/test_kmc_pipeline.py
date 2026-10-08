@@ -119,6 +119,10 @@ class KmcPipelineTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.normalize_display_slot_wait("func_8007A818:\n\tnop\n")
 
+    def test_display_record_prefix_requires_one_pattern(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.schedule_display_record_prefix("func_8007A8F0:\n\tnop\n")
+
 
 if __name__ == "__main__":
     unittest.main()
