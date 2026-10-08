@@ -5,7 +5,7 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-MANIFEST = ROOT / "config/us/codex_batch_100.tsv"
+MANIFEST = ROOT / "config/us/codex_batch_next.tsv"
 SPLAT = ROOT / "config/us/splat.yaml"
 BUILD = ROOT / "tools/build_code.sh"
 VRAM_BASE = 0x80070000
@@ -74,7 +74,8 @@ def rewrite_splat(funcs):
             continue
         if start in selected:
             _, name = selected[start]
-            output.append(f"      - [0x{start:X}, c, code/codex_batch/{name}]")
+            source_dir = "codex_batch" if name == "func_800ACEFC" else "codex_batch_next"
+            output.append(f"      - [0x{start:X}, c, code/{source_dir}/{name}]")
             continue
         # A selected unit ending inside an assembly range starts a new gap.
         prior_selected_end = any(s + z == start for s, z, _ in funcs)
@@ -120,8 +121,8 @@ while IFS=$'\\t' read -r function_name address size status; do
     case "$function_name" in
         \\#*|function|'') continue ;;
     esac
-    unit="code/codex_batch/${function_name}"
-    mkdir -p "build/us/src/code/codex_batch"
+    unit="code/codex_batch_next/${function_name}"
+    mkdir -p "build/us/src/code/codex_batch_next"
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \\
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \\
         -o "build/us/src/${unit}.raw.s" "src/${unit}.c"
@@ -131,7 +132,7 @@ while IFS=$'\\t' read -r function_name address size status; do
         -o "build/us/src/${unit}.c.o" "build/us/src/${unit}.s"
     python3 tools/trim_elf32_section.py \\
         "build/us/src/${unit}.c.o" .text "$size" --alignment 4
-done < config/us/codex_batch_100.tsv
+done < config/us/codex_batch_next.tsv
 python3 tools/trim_elf32_section.py \\
     build/us/src/code/early_hw.c.o'''
     if compile_anchor not in text:
@@ -151,7 +152,6 @@ python3 tools/trim_elf32_section.py \\
 def main():
     funcs = functions()
     rewrite_splat(funcs)
-    rewrite_build()
 
 
 if __name__ == "__main__":

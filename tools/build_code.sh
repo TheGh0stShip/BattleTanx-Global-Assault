@@ -17,8 +17,10 @@ mkdir -p build/us/asm/us build/us/assets/extracted/us
 
 # These bytes spell ASCII "REMA" and are data, despite decoding as a branch.
 # Emitting the word directly avoids a false cross-file branch relocation.
-sed -i 's/beql       \$s2, \$a1, \.\?L80099664/.word      0x52454D41/' \
-    asm/us/main_80085DA8_to_80086190.s
+for asm_source in asm/us/*.s; do
+    sed -i 's/beql       \$s2, \$a1, \.\?L80099664/.word      0x52454D41/' \
+        "$asm_source"
+done
 
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/header.s.o asm/us/header.s
@@ -111,6 +113,26 @@ while IFS=$'\t' read -r function_name address size status; do
     python3 tools/trim_elf32_section.py \
         "build/us/src/${unit}.c.o" .text "$size" --alignment 4
 done < config/us/codex_batch_100.tsv
+while IFS=$'\t' read -r function_name address size status; do
+    case "$function_name" in
+        \#*|function|'') continue ;;
+    esac
+    source_dir="codex_batch_next"
+    if [[ "$function_name" == "func_800ACEFC" ]]; then
+        source_dir="codex_batch"
+    fi
+    unit="code/${source_dir}/${function_name}"
+    mkdir -p "build/us/src/code/${source_dir}"
+    .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+        -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
+        -o "build/us/src/${unit}.raw.s" "src/${unit}.c"
+    python3 tools/normalize_kmc_gcc_asm.py \
+        "build/us/src/${unit}.raw.s" "build/us/src/${unit}.s"
+    .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+        -o "build/us/src/${unit}.c.o" "build/us/src/${unit}.s"
+    python3 tools/trim_elf32_section.py \
+        "build/us/src/${unit}.c.o" .text "$size" --alignment 4
+done < config/us/codex_batch_next.tsv
 python3 tools/trim_elf32_section.py \
     build/us/src/code/early_hw.c.o .text 0x164 --alignment 4
 python3 tools/trim_elf32_section.py \

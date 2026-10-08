@@ -2,8 +2,8 @@
 set -euo pipefail
 
 root_dir="$(cd "$(dirname "$0")/.." && pwd)"
-manifest="$root_dir/config/us/codex_batch_100.tsv"
-source_dir="$root_dir/src/code/codex_batch"
+manifest="$root_dir/config/us/codex_batch_next.tsv"
+source_dir="$root_dir/src/code/codex_batch_next"
 gcc_dir="$root_dir/.toolchain/kmc-gcc-2.7.2"
 matches=0
 differences=0
@@ -15,6 +15,9 @@ while IFS=$'\t' read -r function_name address size status; do
     esac
 
     source_file="$source_dir/$function_name.c"
+    if [[ ! -f "$source_file" && -f "$root_dir/src/code/codex_batch/$function_name.c" ]]; then
+        source_file="$root_dir/src/code/codex_batch/$function_name.c"
+    fi
     if [[ ! -f "$source_file" ]]; then
         printf 'MISSING\t%s\n' "$function_name"
         missing=$((missing + 1))
