@@ -67,9 +67,13 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8007B8EC_to_8007BCF0.s.o .text 0x404 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8007C364_to_8007D470.s.o asm/us/main_8007C364_to_8007D470.s
+    -o build/us/asm/us/main_8007C364_to_8007D33C.s.o asm/us/main_8007C364_to_8007D33C.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8007C364_to_8007D470.s.o .text 0x110c --alignment 4
+    build/us/asm/us/main_8007C364_to_8007D33C.s.o .text 0xfd8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007D468_to_8007D470.s.o asm/us/main_8007D468_to_8007D470.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007D468_to_8007D470.s.o .text 0x8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8007D5B0_to_8007D694.s.o asm/us/main_8007D5B0_to_8007D694.s
 python3 tools/trim_elf32_section.py \
@@ -1356,6 +1360,7 @@ for function_name in \
         func_8007AB64 \
         func_8007ADF0 \
         func_8007B0E4 \
+        func_8007D39C \
         func_8007E118 \
         func_8007B8EC \
         func_8007AF84 \
@@ -1408,7 +1413,7 @@ for function_name in \
         func_800C180C \
         func_800C1E48; do
     case "$function_name" in
-        func_8007A7B4|func_8007A818|func_8007A8F0|func_8007A9EC|func_8007AAA8|func_8007AB64|func_8007ADF0|func_8007AF84|func_8007B0E4|func_8007B8EC|func_8007D33C|func_8007E118|\
+        func_8007A7B4|func_8007A818|func_8007A8F0|func_8007A9EC|func_8007AAA8|func_8007AB64|func_8007ADF0|func_8007AF84|func_8007B0E4|func_8007B8EC|func_8007D33C|func_8007D39C|func_8007E118|\
         func_80080818|func_80082A90|func_8008518C|func_80085250|\
         func_8008A350|func_8008B788|func_8008BEC4|func_8008E620|func_80096F48|func_800979F4|\
         func_80097CC8|func_80098334|func_8009A650|func_8009D4B0|\
@@ -1439,6 +1444,7 @@ for function_name in \
         func_8007B0E4) size=0xAC ;;
         func_8007B8EC) size=0x400 ;;
         func_8007D33C) size=0x60 ;;
+        func_8007D39C) size=0xCC ;;
         func_8007E118) size=0x4C ;;
         func_80080818) size=0x9C ;;
         func_80082A90) size=0xAC ;;
