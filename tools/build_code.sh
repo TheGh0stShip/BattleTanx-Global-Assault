@@ -13,7 +13,7 @@ else
     export LD_LIBRARY_PATH="$local_root/lib/x86_64-linux-gnu${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 fi
 
-mkdir -p build/us/asm/us build/us/assets/extracted/us
+mkdir -p build/us/asm/us build/us/asm/us/data build/us/assets/extracted/us
 
 # These bytes spell ASCII "REMA" and are data, despite decoding as a branch.
 # Emitting the word directly avoids a false cross-file branch relocation.
@@ -24,9 +24,797 @@ done
 
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/header.s.o asm/us/header.s
-for asm_source in asm/us/*.s; do
-    asm_name="$(basename "$asm_source" .s)"
-    asm_object="build/us/asm/us/${asm_name}.s.o"
+if false; then
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_before_80077C40.s.o asm/us/main_before_80077C40.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80077FD0_to_80078048.s.o asm/us/main_80077FD0_to_80078048.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80077FD0_to_80078048.s.o .text 0x78 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80078274_to_80078908.s.o asm/us/main_80078274_to_80078908.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80078274_to_80078908.s.o .text 0x694 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80078ADC_to_80078C68.s.o asm/us/main_80078ADC_to_80078C68.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80078ADC_to_80078C68.s.o .text 0x18c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80078CD8_to_8007A710.s.o asm/us/main_80078CD8_to_8007A710.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80078CD8_to_8007A710.s.o .text 0x1a38 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007A75C_to_8007AC34.s.o asm/us/main_8007A75C_to_8007AC34.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007A75C_to_8007AC34.s.o .text 0x4d8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007AD40_to_8007AD94.s.o asm/us/main_8007AD40_to_8007AD94.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007AD40_to_8007AD94.s.o .text 0x54 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007ADF0_to_8007B020.s.o asm/us/main_8007ADF0_to_8007B020.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007ADF0_to_8007B020.s.o .text 0x230 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007B0E4_to_8007B1F0.s.o asm/us/main_8007B0E4_to_8007B1F0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007B0E4_to_8007B1F0.s.o .text 0x10c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007B8EC_to_8007BCF0.s.o asm/us/main_8007B8EC_to_8007BCF0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007B8EC_to_8007BCF0.s.o .text 0x404 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007C364_to_8007D470.s.o asm/us/main_8007C364_to_8007D470.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007C364_to_8007D470.s.o .text 0x110c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007D5B0_to_8007D694.s.o asm/us/main_8007D5B0_to_8007D694.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007D5B0_to_8007D694.s.o .text 0xe4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007D69C_to_8007D710.s.o asm/us/main_8007D69C_to_8007D710.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007D69C_to_8007D710.s.o .text 0x74 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007D718_to_8007D720.s.o asm/us/main_8007D718_to_8007D720.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007D718_to_8007D720.s.o .text 0x8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007D7C4_to_8007E1FC.s.o asm/us/main_8007D7C4_to_8007E1FC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007D7C4_to_8007E1FC.s.o .text 0xa38 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007E210_to_8007E778.s.o asm/us/main_8007E210_to_8007E778.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007E210_to_8007E778.s.o .text 0x568 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8007E7A8_to_80081FD8.s.o asm/us/main_8007E7A8_to_80081FD8.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8007E7A8_to_80081FD8.s.o .text 0x3830 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80082004_to_80082B40.s.o asm/us/main_80082004_to_80082B40.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80082004_to_80082B40.s.o .text 0xb3c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80082B68_to_80082BD4.s.o asm/us/main_80082B68_to_80082BD4.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80082B68_to_80082BD4.s.o .text 0x6c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80082C1C_to_80082D60.s.o asm/us/main_80082C1C_to_80082D60.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80082C1C_to_80082D60.s.o .text 0x144 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80082D98_to_80082FE0.s.o asm/us/main_80082D98_to_80082FE0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80082D98_to_80082FE0.s.o .text 0x248 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80083028_to_80083FCC.s.o asm/us/main_80083028_to_80083FCC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80083028_to_80083FCC.s.o .text 0xfa4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80083FF8_to_80084C50.s.o asm/us/main_80083FF8_to_80084C50.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80083FF8_to_80084C50.s.o .text 0xc58 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80084CC8_to_800859A8.s.o asm/us/main_80084CC8_to_800859A8.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_80084CC8_to_800859A8.s.o .text 0xce0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800859E4_to_8009C284.s.o asm/us/main_800859E4_to_8009C284.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800859E4_to_8009C284.s.o .text 0x168a0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009C31C_to_8009D144.s.o asm/us/main_8009C31C_to_8009D144.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009C31C_to_8009D144.s.o .text 0xe28 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009D168_to_8009D578.s.o asm/us/main_8009D168_to_8009D578.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009D168_to_8009D578.s.o .text 0x410 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009D5B4_to_8009D6DC.s.o asm/us/main_8009D5B4_to_8009D6DC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009D5B4_to_8009D6DC.s.o .text 0x128 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009D6F8_to_8009D72C.s.o asm/us/main_8009D6F8_to_8009D72C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009D6F8_to_8009D72C.s.o .text 0x34 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009D75C_to_8009D81C.s.o asm/us/main_8009D75C_to_8009D81C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009D75C_to_8009D81C.s.o .text 0xc0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009D8A0_to_8009D914.s.o asm/us/main_8009D8A0_to_8009D914.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009D8A0_to_8009D914.s.o .text 0x74 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009D960_to_8009DA34.s.o asm/us/main_8009D960_to_8009DA34.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009D960_to_8009DA34.s.o .text 0xd4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009DAB0_to_8009DB0C.s.o asm/us/main_8009DAB0_to_8009DB0C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009DAB0_to_8009DB0C.s.o .text 0x5c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009DB2C_to_8009E044.s.o asm/us/main_8009DB2C_to_8009E044.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009DB2C_to_8009E044.s.o .text 0x518 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009E0E8_to_8009EEA0.s.o asm/us/main_8009E0E8_to_8009EEA0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009E0E8_to_8009EEA0.s.o .text 0xdb8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009EED8_to_8009EEE0.s.o asm/us/main_8009EED8_to_8009EEE0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009EED8_to_8009EEE0.s.o .text 0x8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009EF4C_to_8009F064.s.o asm/us/main_8009EF4C_to_8009F064.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009EF4C_to_8009F064.s.o .text 0x118 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009F090_to_8009F1F4.s.o asm/us/main_8009F090_to_8009F1F4.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009F090_to_8009F1F4.s.o .text 0x164 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009F334_to_8009F4B4.s.o asm/us/main_8009F334_to_8009F4B4.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009F334_to_8009F4B4.s.o .text 0x180 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009F5AC_to_8009F768.s.o asm/us/main_8009F5AC_to_8009F768.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009F5AC_to_8009F768.s.o .text 0x1bc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009F8A0_to_8009FF1C.s.o asm/us/main_8009F8A0_to_8009FF1C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009F8A0_to_8009FF1C.s.o .text 0x67c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8009FFB8_to_800A1280.s.o asm/us/main_8009FFB8_to_800A1280.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_8009FFB8_to_800A1280.s.o .text 0x12c8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A1290_to_800A134C.s.o asm/us/main_800A1290_to_800A134C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A1290_to_800A134C.s.o .text 0xbc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A1384_to_800A179C.s.o asm/us/main_800A1384_to_800A179C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A1384_to_800A179C.s.o .text 0x418 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A18D0_to_800A1A28.s.o asm/us/main_800A18D0_to_800A1A28.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A18D0_to_800A1A28.s.o .text 0x158 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A1B44_to_800A2B74.s.o asm/us/main_800A1B44_to_800A2B74.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A1B44_to_800A2B74.s.o .text 0x1030 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A2B9C_to_800A2DFC.s.o asm/us/main_800A2B9C_to_800A2DFC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A2B9C_to_800A2DFC.s.o .text 0x260 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A2E5C_to_800A4098.s.o asm/us/main_800A2E5C_to_800A4098.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A2E5C_to_800A4098.s.o .text 0x123c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A40CC_to_800A6ABC.s.o asm/us/main_800A40CC_to_800A6ABC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A40CC_to_800A6ABC.s.o .text 0x29f0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A6B7C_to_800A7290.s.o asm/us/main_800A6B7C_to_800A7290.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A6B7C_to_800A7290.s.o .text 0x714 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A72C0_to_800A8B14.s.o asm/us/main_800A72C0_to_800A8B14.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A72C0_to_800A8B14.s.o .text 0x1854 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A8B38_to_800A9054.s.o asm/us/main_800A8B38_to_800A9054.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A8B38_to_800A9054.s.o .text 0x51c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A9080_to_800A974C.s.o asm/us/main_800A9080_to_800A974C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A9080_to_800A974C.s.o .text 0x6cc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A977C_to_800A9BF0.s.o asm/us/main_800A977C_to_800A9BF0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A977C_to_800A9BF0.s.o .text 0x474 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A9C24_to_800A9D50.s.o asm/us/main_800A9C24_to_800A9D50.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A9C24_to_800A9D50.s.o .text 0x12c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800A9D78_to_800AA598.s.o asm/us/main_800A9D78_to_800AA598.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800A9D78_to_800AA598.s.o .text 0x820 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800AA5C4_to_800B0444.s.o asm/us/main_800AA5C4_to_800B0444.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800AA5C4_to_800B0444.s.o .text 0x5e80 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800B044C_to_800B06A8.s.o asm/us/main_800B044C_to_800B06A8.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800B044C_to_800B06A8.s.o .text 0x25c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800B06D8_to_800B5F30.s.o asm/us/main_800B06D8_to_800B5F30.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800B06D8_to_800B5F30.s.o .text 0x5858 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800B5F70_to_800B99C0.s.o asm/us/main_800B5F70_to_800B99C0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800B5F70_to_800B99C0.s.o .text 0x3a50 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800B99F8_to_800B9A4C.s.o asm/us/main_800B99F8_to_800B9A4C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800B99F8_to_800B9A4C.s.o .text 0x54 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800B9AB0_to_800B9C68.s.o asm/us/main_800B9AB0_to_800B9C68.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800B9AB0_to_800B9C68.s.o .text 0x1b8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800B9CAC_to_800B9D4C.s.o asm/us/main_800B9CAC_to_800B9D4C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800B9CAC_to_800B9D4C.s.o .text 0xa0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800B9E24_to_800BD880.s.o asm/us/main_800B9E24_to_800BD880.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800B9E24_to_800BD880.s.o .text 0x3a5c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800BD93C_to_800BFD40.s.o asm/us/main_800BD93C_to_800BFD40.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800BD93C_to_800BFD40.s.o .text 0x2404 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800BFDA4_to_800C03F0.s.o asm/us/main_800BFDA4_to_800C03F0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800BFDA4_to_800C03F0.s.o .text 0x64c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C041C_to_800C0800.s.o asm/us/main_800C041C_to_800C0800.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C041C_to_800C0800.s.o .text 0x3e4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C08E0_to_800C0A64.s.o asm/us/main_800C08E0_to_800C0A64.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C08E0_to_800C0A64.s.o .text 0x184 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C0A6C_to_800C0C18.s.o asm/us/main_800C0A6C_to_800C0C18.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C0A6C_to_800C0C18.s.o .text 0x1ac --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C0C38_to_800C1094.s.o asm/us/main_800C0C38_to_800C1094.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C0C38_to_800C1094.s.o .text 0x45c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C11B8_to_800C1420.s.o asm/us/main_800C11B8_to_800C1420.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C11B8_to_800C1420.s.o .text 0x268 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C1484_to_800C1578.s.o asm/us/main_800C1484_to_800C1578.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C1484_to_800C1578.s.o .text 0xf4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C16B0_to_800C17C8.s.o asm/us/main_800C16B0_to_800C17C8.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C16B0_to_800C17C8.s.o .text 0x118 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C180C_to_800C247C.s.o asm/us/main_800C180C_to_800C247C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C180C_to_800C247C.s.o .text 0xc70 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C2528_to_800C27EC.s.o asm/us/main_800C2528_to_800C27EC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C2528_to_800C27EC.s.o .text 0x2c4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C2924_to_800C30A0.s.o asm/us/main_800C2924_to_800C30A0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C2924_to_800C30A0.s.o .text 0x77c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C30B4_to_800C402C.s.o asm/us/main_800C30B4_to_800C402C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C30B4_to_800C402C.s.o .text 0xf78 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C4BB4_to_800C4E24.s.o asm/us/main_800C4BB4_to_800C4E24.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C4BB4_to_800C4E24.s.o .text 0x270 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C65B4_to_800C674C.s.o asm/us/main_800C65B4_to_800C674C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C65B4_to_800C674C.s.o .text 0x198 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C6914_to_800C6918.s.o asm/us/main_800C6914_to_800C6918.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C6914_to_800C6918.s.o .text 0x4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/data/main_800C6918_textbin.s.o asm/us/data/main_800C6918_textbin.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/data/main_800C6918_textbin.s.o .text 0x8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C74AC_to_800C7514.s.o asm/us/main_800C74AC_to_800C7514.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C74AC_to_800C7514.s.o .text 0x68 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C7594_to_800C7650.s.o asm/us/main_800C7594_to_800C7650.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C7594_to_800C7650.s.o .text 0xbc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C7C10_to_800C8238.s.o asm/us/main_800C7C10_to_800C8238.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C7C10_to_800C8238.s.o .text 0x628 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C8350_to_800C8484.s.o asm/us/main_800C8350_to_800C8484.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C8350_to_800C8484.s.o .text 0x134 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C877C_to_800C8B74.s.o asm/us/main_800C877C_to_800C8B74.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C877C_to_800C8B74.s.o .text 0x3f8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800C98E8_to_800CA1A8.s.o asm/us/main_800C98E8_to_800CA1A8.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800C98E8_to_800CA1A8.s.o .text 0x8c0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800CA620_to_800CAA0C.s.o asm/us/main_800CA620_to_800CAA0C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800CA620_to_800CAA0C.s.o .text 0x3ec --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800CAA48_to_800CAB44.s.o asm/us/main_800CAA48_to_800CAB44.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800CAA48_to_800CAB44.s.o .text 0xfc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800CB10C_to_800CB110.s.o asm/us/main_800CB10C_to_800CB110.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800CB10C_to_800CB110.s.o .text 0x4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800CBE40_to_800CC2F8.s.o asm/us/main_800CBE40_to_800CC2F8.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800CBE40_to_800CC2F8.s.o .text 0x4b8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800CD57C_to_800CD85C.s.o asm/us/main_800CD57C_to_800CD85C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800CD57C_to_800CD85C.s.o .text 0x2e0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800CD96C_to_800CDD70.s.o asm/us/main_800CD96C_to_800CDD70.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800CD96C_to_800CDD70.s.o .text 0x404 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800CE610_to_800CE814.s.o asm/us/main_800CE610_to_800CE814.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800CE610_to_800CE814.s.o .text 0x204 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800CE9A0_to_800CF0CC.s.o asm/us/main_800CE9A0_to_800CF0CC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800CE9A0_to_800CF0CC.s.o .text 0x72c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800CFA84_to_800CFBD8.s.o asm/us/main_800CFA84_to_800CFBD8.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800CFA84_to_800CFBD8.s.o .text 0x154 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800CFD18_to_800CFDD0.s.o asm/us/main_800CFD18_to_800CFDD0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800CFD18_to_800CFDD0.s.o .text 0xb8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800D0070_to_800D05E0.s.o asm/us/main_800D0070_to_800D05E0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800D0070_to_800D05E0.s.o .text 0x570 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800D0858_to_800D0960.s.o asm/us/main_800D0858_to_800D0960.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800D0858_to_800D0960.s.o .text 0x108 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800D0A74_to_800D0DF8.s.o asm/us/main_800D0A74_to_800D0DF8.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800D0A74_to_800D0DF8.s.o .text 0x384 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800D12B0_to_800D1C90.s.o asm/us/main_800D12B0_to_800D1C90.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800D12B0_to_800D1C90.s.o .text 0x9e0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800D3C64_to_800D404C.s.o asm/us/main_800D3C64_to_800D404C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800D3C64_to_800D404C.s.o .text 0x3e8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800D5C7C_to_800D5C80.s.o asm/us/main_800D5C7C_to_800D5C80.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800D5C7C_to_800D5C80.s.o .text 0x4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800D5E2C_to_800D67F0.s.o asm/us/main_800D5E2C_to_800D67F0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800D5E2C_to_800D67F0.s.o .text 0x9c4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800D6E34_to_800D6E40.s.o asm/us/main_800D6E34_to_800D6E40.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800D6E34_to_800D6E40.s.o .text 0xc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800D7DD4_to_800D7DE0.s.o asm/us/main_800D7DD4_to_800D7DE0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800D7DD4_to_800D7DE0.s.o .text 0xc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800D84D8_to_800D84DC.s.o asm/us/main_800D84D8_to_800D84DC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800D84D8_to_800D84DC.s.o .text 0x4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800D88E8_to_800D88F0.s.o asm/us/main_800D88E8_to_800D88F0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800D88E8_to_800D88F0.s.o .text 0x8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800D92D4_to_800D92E0.s.o asm/us/main_800D92D4_to_800D92E0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800D92D4_to_800D92E0.s.o .text 0xc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800D9B48_to_800D9B50.s.o asm/us/main_800D9B48_to_800D9B50.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800D9B48_to_800D9B50.s.o .text 0x8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800D9D50_to_800DA340.s.o asm/us/main_800D9D50_to_800DA340.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800D9D50_to_800DA340.s.o .text 0x5f0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800DA7D0_to_800DA984.s.o asm/us/main_800DA7D0_to_800DA984.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800DA7D0_to_800DA984.s.o .text 0x1b4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800DAAE0_to_800DAC34.s.o asm/us/main_800DAAE0_to_800DAC34.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800DAAE0_to_800DAC34.s.o .text 0x154 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800DB1B0_to_800DB6F0.s.o asm/us/main_800DB1B0_to_800DB6F0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800DB1B0_to_800DB6F0.s.o .text 0x540 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800DB850_to_800DC214.s.o asm/us/main_800DB850_to_800DC214.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800DB850_to_800DC214.s.o .text 0x9c4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800DC7A4_to_800DC7B0.s.o asm/us/main_800DC7A4_to_800DC7B0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800DC7A4_to_800DC7B0.s.o .text 0xc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800DD28C_to_800DD290.s.o asm/us/main_800DD28C_to_800DD290.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800DD28C_to_800DD290.s.o .text 0x4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800DD75C_to_800DDF04.s.o asm/us/main_800DD75C_to_800DDF04.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800DD75C_to_800DDF04.s.o .text 0x7a8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800DE374_to_800DE4DC.s.o asm/us/main_800DE374_to_800DE4DC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800DE374_to_800DE4DC.s.o .text 0x168 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800DF0C4_to_800DF0D0.s.o asm/us/main_800DF0C4_to_800DF0D0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800DF0C4_to_800DF0D0.s.o .text 0xc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800DF89C_to_800E1540.s.o asm/us/main_800DF89C_to_800E1540.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800DF89C_to_800E1540.s.o .text 0x1ca4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E16D8_to_800E18D8.s.o asm/us/main_800E16D8_to_800E18D8.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E16D8_to_800E18D8.s.o .text 0x200 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E1BA4_to_800E2018.s.o asm/us/main_800E1BA4_to_800E2018.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E1BA4_to_800E2018.s.o .text 0x474 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E2520_to_800E26A8.s.o asm/us/main_800E2520_to_800E26A8.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E2520_to_800E26A8.s.o .text 0x188 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E2F9C_to_800E3404.s.o asm/us/main_800E2F9C_to_800E3404.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E2F9C_to_800E3404.s.o .text 0x468 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E3460_to_800E44C8.s.o asm/us/main_800E3460_to_800E44C8.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E3460_to_800E44C8.s.o .text 0x1068 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E48A8_to_800E48E0.s.o asm/us/main_800E48A8_to_800E48E0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E48A8_to_800E48E0.s.o .text 0x38 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E4DA0_to_800E4ECC.s.o asm/us/main_800E4DA0_to_800E4ECC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E4DA0_to_800E4ECC.s.o .text 0x12c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E56C8_to_800E56D0.s.o asm/us/main_800E56C8_to_800E56D0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E56C8_to_800E56D0.s.o .text 0x8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E58C4_to_800E58D0.s.o asm/us/main_800E58C4_to_800E58D0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E58C4_to_800E58D0.s.o .text 0xc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E5BB8_to_800E6040.s.o asm/us/main_800E5BB8_to_800E6040.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E5BB8_to_800E6040.s.o .text 0x488 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E64EC_to_800E64F0.s.o asm/us/main_800E64EC_to_800E64F0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E64EC_to_800E64F0.s.o .text 0x4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E66A8_to_800E68BC.s.o asm/us/main_800E66A8_to_800E68BC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E66A8_to_800E68BC.s.o .text 0x214 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E6B04_to_800E713C.s.o asm/us/main_800E6B04_to_800E713C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E6B04_to_800E713C.s.o .text 0x638 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E73B0_to_800E759C.s.o asm/us/main_800E73B0_to_800E759C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E73B0_to_800E759C.s.o .text 0x1ec --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E7768_to_800E7968.s.o asm/us/main_800E7768_to_800E7968.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E7768_to_800E7968.s.o .text 0x200 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E7A10_to_800E7DF8.s.o asm/us/main_800E7A10_to_800E7DF8.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E7A10_to_800E7DF8.s.o .text 0x3e8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E7F5C_to_800E7F60.s.o asm/us/main_800E7F5C_to_800E7F60.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E7F5C_to_800E7F60.s.o .text 0x4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E80F4_to_800E8318.s.o asm/us/main_800E80F4_to_800E8318.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E80F4_to_800E8318.s.o .text 0x224 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E8378_to_800E8C88.s.o asm/us/main_800E8378_to_800E8C88.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E8378_to_800E8C88.s.o .text 0x910 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E92E8_to_800E92F0.s.o asm/us/main_800E92E8_to_800E92F0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E92E8_to_800E92F0.s.o .text 0x8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E9990_to_800E9B50.s.o asm/us/main_800E9990_to_800E9B50.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E9990_to_800E9B50.s.o .text 0x1c0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800E9E78_to_800E9E80.s.o asm/us/main_800E9E78_to_800E9E80.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800E9E78_to_800E9E80.s.o .text 0x8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800EA224_to_800EA714.s.o asm/us/main_800EA224_to_800EA714.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800EA224_to_800EA714.s.o .text 0x4f0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800EAC2C_to_800EAC30.s.o asm/us/main_800EAC2C_to_800EAC30.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800EAC2C_to_800EAC30.s.o .text 0x4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800EAEB4_to_800EAF6C.s.o asm/us/main_800EAEB4_to_800EAF6C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800EAEB4_to_800EAF6C.s.o .text 0xb8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800EB308_to_800EB4FC.s.o asm/us/main_800EB308_to_800EB4FC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800EB308_to_800EB4FC.s.o .text 0x1f4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800EB714_to_800EB720.s.o asm/us/main_800EB714_to_800EB720.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800EB714_to_800EB720.s.o .text 0xc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800EB838_to_800EB934.s.o asm/us/main_800EB838_to_800EB934.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800EB838_to_800EB934.s.o .text 0xfc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800EBA98_to_800EBCA8.s.o asm/us/main_800EBA98_to_800EBCA8.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800EBA98_to_800EBCA8.s.o .text 0x210 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800EBDA0_to_800EC1C0.s.o asm/us/main_800EBDA0_to_800EC1C0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800EBDA0_to_800EC1C0.s.o .text 0x420 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800EC1F8_to_800EC4A8.s.o asm/us/main_800EC1F8_to_800EC4A8.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800EC1F8_to_800EC4A8.s.o .text 0x2b0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800EC788_to_800EC790.s.o asm/us/main_800EC788_to_800EC790.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800EC788_to_800EC790.s.o .text 0x8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800EC8E8_to_800ECEBC.s.o asm/us/main_800EC8E8_to_800ECEBC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800EC8E8_to_800ECEBC.s.o .text 0x5d4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800ED4F4_to_800ED63C.s.o asm/us/main_800ED4F4_to_800ED63C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800ED4F4_to_800ED63C.s.o .text 0x148 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800ED694_to_800ED698.s.o asm/us/main_800ED694_to_800ED698.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800ED694_to_800ED698.s.o .text 0x4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800ED804_to_800EDC00.s.o asm/us/main_800ED804_to_800EDC00.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800ED804_to_800EDC00.s.o .text 0x3fc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800EDDCC_to_800EDF14.s.o asm/us/main_800EDDCC_to_800EDF14.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800EDDCC_to_800EDF14.s.o .text 0x148 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800EE288_to_800EE688.s.o asm/us/main_800EE288_to_800EE688.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800EE288_to_800EE688.s.o .text 0x400 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800EED90_to_800EF400.s.o asm/us/main_800EED90_to_800EF400.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800EED90_to_800EF400.s.o .text 0x670 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800EF770_to_800EFB30.s.o asm/us/main_800EF770_to_800EFB30.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800EF770_to_800EFB30.s.o .text 0x3c0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800EFC68_to_800EFC70.s.o asm/us/main_800EFC68_to_800EFC70.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800EFC68_to_800EFC70.s.o .text 0x8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F01F0_to_800F0618.s.o asm/us/main_800F01F0_to_800F0618.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F01F0_to_800F0618.s.o .text 0x428 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F0A20_to_800F0B08.s.o asm/us/main_800F0A20_to_800F0B08.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F0A20_to_800F0B08.s.o .text 0xe8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F1278_to_800F1770.s.o asm/us/main_800F1278_to_800F1770.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F1278_to_800F1770.s.o .text 0x4f8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F17AC_to_800F17B0.s.o asm/us/main_800F17AC_to_800F17B0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F17AC_to_800F17B0.s.o .text 0x4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F1900_to_800F1B30.s.o asm/us/main_800F1900_to_800F1B30.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F1900_to_800F1B30.s.o .text 0x230 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F2184_to_800F2288.s.o asm/us/main_800F2184_to_800F2288.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F2184_to_800F2288.s.o .text 0x104 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F24F8_to_800F265C.s.o asm/us/main_800F24F8_to_800F265C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F24F8_to_800F265C.s.o .text 0x164 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F2BB8_to_800F2BC0.s.o asm/us/main_800F2BB8_to_800F2BC0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F2BB8_to_800F2BC0.s.o .text 0x8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F3208_to_800F32EC.s.o asm/us/main_800F3208_to_800F32EC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F3208_to_800F32EC.s.o .text 0xe4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F3B7C_to_800F3D04.s.o asm/us/main_800F3B7C_to_800F3D04.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F3B7C_to_800F3D04.s.o .text 0x188 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F4D74_to_800F4D80.s.o asm/us/main_800F4D74_to_800F4D80.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F4D74_to_800F4D80.s.o .text 0xc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F5264_to_800F5270.s.o asm/us/main_800F5264_to_800F5270.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F5264_to_800F5270.s.o .text 0xc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F6100_to_800F6144.s.o asm/us/main_800F6100_to_800F6144.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F6100_to_800F6144.s.o .text 0x44 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F6344_to_800F64B8.s.o asm/us/main_800F6344_to_800F64B8.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F6344_to_800F64B8.s.o .text 0x174 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F6648_to_800F6650.s.o asm/us/main_800F6648_to_800F6650.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F6648_to_800F6650.s.o .text 0x8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F67F0_to_800F6ED0.s.o asm/us/main_800F67F0_to_800F6ED0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F67F0_to_800F6ED0.s.o .text 0x6e0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F7150_to_800F71FC.s.o asm/us/main_800F7150_to_800F71FC.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F7150_to_800F71FC.s.o .text 0xac --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F7230_to_800F756C.s.o asm/us/main_800F7230_to_800F756C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F7230_to_800F756C.s.o .text 0x33c --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F7648_to_800F7870.s.o asm/us/main_800F7648_to_800F7870.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F7648_to_800F7870.s.o .text 0x228 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F7C24_to_800F7C30.s.o asm/us/main_800F7C24_to_800F7C30.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F7C24_to_800F7C30.s.o .text 0xc --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F7EB8_to_800F7EC0.s.o asm/us/main_800F7EB8_to_800F7EC0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F7EB8_to_800F7EC0.s.o .text 0x8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F809C_to_800F80A0.s.o asm/us/main_800F809C_to_800F80A0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F809C_to_800F80A0.s.o .text 0x4 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F80E8_to_800F8208.s.o asm/us/main_800F80E8_to_800F8208.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F80E8_to_800F8208.s.o .text 0x120 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F83B8_to_800F83C0.s.o asm/us/main_800F83B8_to_800F83C0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F83B8_to_800F83C0.s.o .text 0x8 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F865C_to_800F872C.s.o asm/us/main_800F865C_to_800F872C.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F865C_to_800F872C.s.o .text 0xd0 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_800F8AAC_to_801029D0.s.o asm/us/main_800F8AAC_to_801029D0.s
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/main_800F8AAC_to_801029D0.s.o .text 0x9f24 --alignment 4
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_801029F0_to_80103160.s.o asm/us/main_801029F0_to_80103160.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80103190_to_801037B0.s.o asm/us/main_80103190_to_801037B0.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80103860_to_801059B0.s.o asm/us/main_80103860_to_801059B0.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_801059D0_to_80105A70.s.o asm/us/main_801059D0_to_80105A70.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80105B10_to_8010CF70.s.o asm/us/main_80105B10_to_8010CF70.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8010CFA0_to_8010D660.s.o asm/us/main_8010CFA0_to_8010D660.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8010D740_to_8010F3E0.s.o asm/us/main_8010D740_to_8010F3E0.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8010F5F0_to_8010F6A0.s.o asm/us/main_8010F5F0_to_8010F6A0.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_8010F6D0_to_8010FE90.s.o asm/us/main_8010F6D0_to_8010FE90.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_801100E0_to_801103D0.s.o asm/us/main_801100E0_to_801103D0.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80110400_to_80110490.s.o asm/us/main_80110400_to_80110490.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_801104C0_to_80110540.s.o asm/us/main_801104C0_to_80110540.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80110550_to_801106B0.s.o asm/us/main_80110550_to_801106B0.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_80110760_to_801118C0.s.o asm/us/main_80110760_to_801118C0.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/main_after_801118C0.s.o asm/us/main_after_801118C0.s
+
+fi
+
+# Assemble the generated segment set rather than maintaining a second,
+# hand-written copy of every split in splat.yaml.
+while IFS= read -r -d '' asm_source; do
+    asm_relative="${asm_source#asm/us/}"
+    asm_name="$(basename "$asm_relative" .s)"
+    asm_object="build/us/asm/us/${asm_relative}.o"
+    mkdir -p "$(dirname "$asm_object")"
     "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
         -o "$asm_object" "$asm_source"
     if [[ "$asm_name" =~ ^main_([0-9A-Fa-f]{8})_to_([0-9A-Fa-f]{8})$ ]]; then
@@ -34,8 +822,10 @@ for asm_source in asm/us/*.s; do
         range_end=$((16#${BASH_REMATCH[2]}))
         python3 tools/trim_elf32_section.py "$asm_object" .text \
             "$((range_end - range_start))" --alignment 4
+    elif [[ "$asm_name" == "main_800C6918_textbin" ]]; then
+        python3 tools/trim_elf32_section.py "$asm_object" .text 0x8 --alignment 4
     fi
-done
+done < <(find asm/us -type f -name '*.s' -print0)
 
 tools/bootstrap_ido.sh
 tools/bootstrap_kmc_gcc.sh
@@ -88,7 +878,345 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             hud_root_callback hud_layout hud_list_trigger \
             hud_entry_values hud_list_reset hud_selection_apply \
             hud_primary_trigger display_registry display_color display_commands \
-            menu_state menu_toggle menu_countdown table_lookup; do
+            menu_state menu_toggle menu_countdown table_lookup \
+            hud_row_preset \
+            hud_row_defaults \
+            hud_exit_request \
+            hud_list_refresh \
+            hud_list_focus_cycle \
+            hud_list_open \
+            hud_list_close \
+            hud_alt_exit_request \
+            hud_page_select \
+            hud_page_focus_cycle \
+            game_mode8_toggled \
+            hud_page_focus \
+            hud_page_exit_request \
+            hud_page_show \
+            hud_page_open \
+            hud_page_close \
+            race_assets_load \
+            race_hud_init \
+            race_result_setup \
+            race_object_timestamps \
+            race_state_reset \
+            race_event_push \
+            race_slot_clear \
+            race_player_panel \
+            race_player_message \
+            race_player_pair_set \
+            race_display_value_set \
+            race_player_reset \
+            race_timer_queries \
+            race_popup_show \
+            race_flag_queries \
+            race_player_widget \
+            race_widget_values \
+            race_widget_clear \
+            race_widget_reset \
+            race_widget_flag_set \
+            results_assets_load \
+            controls_button_index_map \
+            results_record_write \
+            results_time_format \
+            results_time_compare \
+            results_screen_setup \
+            results_continue \
+            results_return \
+            results_option_codes \
+            results_ready_flags_a \
+            results_ready_flags_b \
+            results_ready_flags_c \
+            results_status_flags \
+            results_assets_reload \
+            game_state_clear \
+            spawn_ctl_index \
+            spawn_ctl_alloc \
+            audio_listener_update \
+            race_buffers_alloc \
+            player_attach_effect_create \
+            player_attach_effect_matrix \
+            player_attach_effect_matrix_cb \
+            actor_collision_free \
+            turret_message_handlers \
+            single_player_check \
+            trigger_zone_query \
+            minimap_layer_build \
+            model_texture_find \
+            model_bounds_center \
+            debris_piece_draw \
+            debris_burst_spawn \
+            debris_burst_spawn_tinted \
+            debris_scatter_spawn \
+            projectile_model_draw \
+            projectile_model_create \
+            projectile_model_matrix \
+            projectile_model_matrix_cb \
+            projectile_trail_draw \
+            projectile_launch_delayed \
+            projectile_launch_delayed_tick \
+            model_mesh_partition \
+            structure_create \
+            spawner_target_query \
+            unit_spawner_create \
+            unit_spawner_update \
+            prop_multiplayer_filter \
+            level_prop_points_find \
+            foliage_prop_create \
+            foliage_prop_handlers \
+            turret_destroy \
+            turret_draw_create \
+            turret_message_handler \
+            turret_line_of_sight \
+            wreck_timer_duration \
+            flag_capture_attempt \
+            actor_kind16_link_clear \
+            sound_emitter_delayed_spawn \
+            ambient_sound_stop_first \
+            bridge_create_handlers \
+            lightning_arc_update \
+            crate_model_randomize \
+            crate_actor_attach \
+            pending_list_flush \
+            powerup_flag_players \
+            powerup_count_refresh \
+            pickup_actor_count \
+            game_mode_has_pickups \
+            slist_remove_count \
+            mission_select_init \
+            mission_entry_query \
+            mission_time_bonus \
+            mission_event_forward \
+            building_target_query \
+            building_destroy_on_hit \
+            building_damage_apply \
+            building_create \
+            building_anim_frame_tick \
+            building_destroy \
+            impact_flash_spawn \
+            impact_flash_expire \
+            player_projectile_launch \
+            mission_counter_release \
+            splash_damage_falloff \
+            projectile_spawn_typed \
+            shockwave_ring_spawn \
+            shockwave_ring_draw \
+            destructible_prop_create \
+            destructible_anim_frame_tick \
+            projectile_target_query \
+            destructible_prop_on_hit \
+            destructible_prop_on_hit_alt \
+            prop_destroy_slot_release \
+            prop_target_query \
+            prop_debris_burst_on_hit \
+            prop_debris_burst_on_hit_alt \
+            barrier_break_open \
+            particle_emitter_tail \
+            particle_emitter_create \
+            particle_pool_init \
+            particle_emitter_update \
+            particle_free_list \
+            particle_node_list \
+            anim_list_register_global \
+            hazard_actor_spawn \
+            hazard_actor_spawn_simple \
+            mine_message_handlers \
+            powerup_pad_create \
+            powerup_pad_draw \
+            barrel_handlers \
+            falling_crate_update \
+            decal_spawn_draw \
+            mesh_vertex_transform \
+            tracer_spawn \
+            effect_table_reset \
+            generator_damage_apply \
+            generator_message_damage \
+            generator_splash_damage \
+            generator_dispatch_bonus \
+            effect_expire_100 \
+            wreck_debris_spawn \
+            wreck_debris_update \
+            anim_list_create \
+            anim_list_reset \
+            anim_list_register \
+            spark_spawn \
+            smoke_puff_spawn \
+            flicker_prop_create \
+            flicker_prop_draw \
+            flicker_prop_message \
+            flicker_prop_message_cb \
+            static_prop_create \
+            static_prop_expire \
+            static_prop_draw \
+            model_cache_globals \
+            artillery_emplacement_update \
+            artillery_emplacement_disable \
+            artillery_emplacement_create \
+            hud_slot_icons_update \
+            hud_menu_entries_apply_settings \
+            hud_entry_set_label \
+            race_player_set_vehicle_label \
+            race_type_name_lookup \
+            race_player_set_layout \
+            race_mode_icon_get \
+            race_player_set_mode_icon \
+            race_slot_set_digit \
+            controls_bindings_save \
+            controls_bindings_load \
+            spawn_effect_by_type \
+            seq_event_spawn_tick \
+            seq_event_start \
+            seq_script_load \
+            seq_level_header_load \
+            seq_events_update \
+            model_height_to_angle \
+            slot_condition_check \
+            player_message_hit \
+            player_dispatch \
+            wreck_message_hit \
+            slot_mode_name_get \
+            slot_mode_title_get \
+            slot_mode_subtitle_get \
+            slot_mode_description_get \
+            slot_mode_value_get \
+            model_pickup_create \
+            model_mode_objective_message \
+            model_message_damage_u8 \
+            model_turret_dispatch \
+            model_shielded_dispatch \
+            model_message_damage_destroy \
+            prop_message_shatter \
+            effect_segment_append \
+            effect_segments_draw \
+            effect_message_damage \
+            effect_message_damage_guarded \
+            hud_player_slots_cycle \
+            hud_marker_update \
+            hud_mode_cycle \
+            hud_panel_layout \
+            hud_panel_refresh \
+            hud_panel_select \
+            hud_value_to_byte \
+            race_frame_border_draw \
+            race_start_check \
+            race_timer_update \
+            race_player_icons_draw \
+            race_lap_times_clamp \
+            controller_slots_scan \
+            controller_menu_input \
+            controller_queue_push \
+            controller_slot_find \
+            results_kills_tick \
+            results_deaths_tick \
+            results_score_tick \
+            results_score_finish \
+            results_bonus_tick \
+            results_bonus_finish \
+            results_time_tick \
+            results_columns_draw \
+            hud_element_unlink \
+            hud_element_alloc \
+            spawn_nearest_type1 \
+            spawn_nearest_type28 \
+            spawn_nearest_type31 \
+            spawn_counters \
+            spawn_object_command \
+            seq_script_tick \
+            seq_spawn_script_tick \
+            seq_event_script_tick \
+            seq_spawn_events_update \
+            seq_command_dispatch \
+            script_event_finish \
+            hud_draw_list \
+            script_particle_spawn \
+            effect_draw \
+            effect_code_table \
+            effect_code_parse \
+            player_menu_update \
+            player_cursor_anim \
+            player_menu_draw \
+            effect_node_spawn \
+            actor_model_draw \
+            actor_timer_update \
+            actor_message_handler \
+            turret_state_messages \
+            turret_weights_total \
+            turret_weighted_pick \
+            turret_random_slot \
+            turret_model_draw \
+            turret_spawn_random \
+            single_spawn_timer_update \
+            trigger_particles_spawn \
+            trigger_particles_update \
+            minimap_blips_spawn \
+            model_bounds_compute \
+            projectile_bounce \
+            projectile_life_tick \
+            projectile_fire \
+            structure_flicker_roll \
+            structure_model_draw \
+            structure_owner_award \
+            spawner_state_update \
+            spawner_owner_score \
+            spawner_message_handler \
+            slot_corners_build \
+            slot_entity_attach \
+            slot_angle_classify \
+            slot_entry_lookup \
+            target_search \
+            wreck_spawn \
+            turret_spawn_at \
+            wreck_ctl \
+            object_damage \
+            flag_owner_capture \
+            flag_owner_score \
+            actor_wreck_spawn_at \
+            sound_emitter_draw \
+            bridge_segments_init \
+            bridge_piece_spawn \
+            crate_owner_check \
+            crate_contents_spawn \
+            pending_spawns_flush \
+            pickup_find_by_id \
+            game_team_compare \
+            mission_code_parse \
+            mission_flag_set \
+            mission_props_spawn \
+            mission_targets_query \
+            mission_marker_draw \
+            impact_debris_spray \
+            mission_objectives_update \
+            projectile_shell_draw \
+            shockwave_expand \
+            prop_spawn_child \
+            prop_spawn_pickup \
+            prop_height_update \
+            particle_emitter_free \
+            particle_smoke_update \
+            particle_hit_spawn \
+            particle_system_create \
+            particle_owner_message \
+            anim_keyframes_apply \
+            hazard_state_update \
+            hazard_model_draw \
+            hazard_message_handler \
+            mine_trigger_update \
+            powerup_timer_update \
+            barrel_explode \
+            mesh_wave_update \
+            tracer_trail_update \
+            effect_prop_spawn \
+            effect_targets_query \
+            effect_targets_damage \
+            effect_burn_update \
+            effect_beam_draw \
+            generator_spawn \
+            anim_alpha_fade_draw \
+            spark_burst_update \
+            static_in_radius \
+            model_in_draw_range \
+            artillery_target_track \
+            mesh_rings_draw; do
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
         -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
@@ -107,7 +1235,7 @@ while IFS=$'\t' read -r function_name address size status; do
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
         -o "build/us/src/${unit}.raw.s" "src/${unit}.c"
     python3 tools/normalize_kmc_gcc_asm.py \
-        "build/us/src/${unit}.raw.s" "build/us/src/${unit}.s"
+        "build/us/src/${unit}.raw.s" "build/us/src/${unit}.s" --legacy
     .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
         -o "build/us/src/${unit}.c.o" "build/us/src/${unit}.s"
     python3 tools/trim_elf32_section.py \
@@ -127,7 +1255,7 @@ while IFS=$'\t' read -r function_name address size status; do
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
         -o "build/us/src/${unit}.raw.s" "src/${unit}.c"
     python3 tools/normalize_kmc_gcc_asm.py \
-        "build/us/src/${unit}.raw.s" "build/us/src/${unit}.s"
+        "build/us/src/${unit}.raw.s" "build/us/src/${unit}.s" --legacy
     .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
         -o "build/us/src/${unit}.c.o" "build/us/src/${unit}.s"
     python3 tools/trim_elf32_section.py \
@@ -163,6 +1291,877 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/menu_countdown.c.o .text 0x48 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/table_lookup.c.o .text 0xd8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_assets_reload.c.o .text 0x288 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/game_state_clear.c.o .text 0x18 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawn_ctl_index.c.o .text 0x44 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawn_ctl_alloc.c.o .text 0x80 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/audio_listener_update.c.o .text 0xd4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_buffers_alloc.c.o .text 0xe0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/player_attach_effect_create.c.o .text 0xac --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/player_attach_effect_matrix.c.o .text 0x6c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/player_attach_effect_matrix_cb.c.o .text 0x74 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/actor_collision_free.c.o .text 0x38 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/turret_message_handlers.c.o .text 0xe4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/single_player_check.c.o .text 0x20 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/trigger_zone_query.c.o .text 0x114 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/minimap_layer_build.c.o .text 0x114 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_texture_find.c.o .text 0xc0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_bounds_center.c.o .text 0x118 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/debris_piece_draw.c.o .text 0x1b0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/debris_burst_spawn.c.o .text 0x16c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/debris_burst_spawn_tinted.c.o .text 0x174 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/debris_scatter_spawn.c.o .text 0x15c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_model_draw.c.o .text 0x194 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_model_create.c.o .text 0x28c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_model_matrix.c.o .text 0xb8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_model_matrix_cb.c.o .text 0xb8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_trail_draw.c.o .text 0x164 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_launch_delayed.c.o .text 0xe8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_launch_delayed_tick.c.o .text 0xcc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_mesh_partition.c.o .text 0x110 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/structure_create.c.o .text 0x354 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawner_target_query.c.o .text 0x50 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/unit_spawner_create.c.o .text 0x190 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/unit_spawner_update.c.o .text 0x604 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/prop_multiplayer_filter.c.o .text 0x7c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/level_prop_points_find.c.o .text 0xfc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/foliage_prop_create.c.o .text 0x198 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/foliage_prop_handlers.c.o .text 0xcc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/turret_destroy.c.o .text 0x188 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/turret_draw_create.c.o .text 0x380 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/turret_message_handler.c.o .text 0x168 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/turret_line_of_sight.c.o .text 0x98 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/wreck_timer_duration.c.o .text 0x5c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/flag_capture_attempt.c.o .text 0x27c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/actor_kind16_link_clear.c.o .text 0x70 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/sound_emitter_delayed_spawn.c.o .text 0x84 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/ambient_sound_stop_first.c.o .text 0x9c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/bridge_create_handlers.c.o .text 0x1f4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/lightning_arc_update.c.o .text 0x304 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/crate_model_randomize.c.o .text 0x50 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/crate_actor_attach.c.o .text 0x168 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/pending_list_flush.c.o .text 0x58 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/powerup_flag_players.c.o .text 0xa8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/powerup_count_refresh.c.o .text 0xe8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/pickup_actor_count.c.o .text 0x7c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/game_mode_has_pickups.c.o .text 0x44 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slist_remove_count.c.o .text 0x60 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mission_select_init.c.o .text 0x134 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mission_entry_query.c.o .text 0x28 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mission_time_bonus.c.o .text 0x98 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mission_event_forward.c.o .text 0x2c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/building_target_query.c.o .text 0x5c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/building_destroy_on_hit.c.o .text 0xa8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/building_damage_apply.c.o .text 0x14 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/building_create.c.o .text 0x228 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/building_anim_frame_tick.c.o .text 0x5c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/building_destroy.c.o .text 0x39c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/impact_flash_spawn.c.o .text 0x9c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/impact_flash_expire.c.o .text 0x164 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/player_projectile_launch.c.o .text 0xf8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mission_counter_release.c.o .text 0x38 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/splash_damage_falloff.c.o .text 0x5c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_spawn_typed.c.o .text 0x158 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/shockwave_ring_spawn.c.o .text 0x9c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/shockwave_ring_draw.c.o .text 0x170 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/destructible_prop_create.c.o .text 0x1d4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/destructible_anim_frame_tick.c.o .text 0x58 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_target_query.c.o .text 0x44 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/destructible_prop_on_hit.c.o .text 0x48 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/destructible_prop_on_hit_alt.c.o .text 0x48 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/prop_destroy_slot_release.c.o .text 0x1cc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/prop_target_query.c.o .text 0x38 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/prop_debris_burst_on_hit.c.o .text 0xd0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/prop_debris_burst_on_hit_alt.c.o .text 0xd0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/barrier_break_open.c.o .text 0x2b4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/particle_emitter_tail.c.o .text 0x6c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/particle_emitter_create.c.o .text 0x1a0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/particle_pool_init.c.o .text 0xb4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/particle_emitter_update.c.o .text 0x18c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/particle_free_list.c.o .text 0x40 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/particle_node_list.c.o .text 0xf0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/anim_list_register_global.c.o .text 0x3c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hazard_actor_spawn.c.o .text 0x198 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hazard_actor_spawn_simple.c.o .text 0xcc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mine_message_handlers.c.o .text 0x324 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/powerup_pad_create.c.o .text 0x1f4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/powerup_pad_draw.c.o .text 0x170 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/barrel_handlers.c.o .text 0x240 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/falling_crate_update.c.o .text 0x1f0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/decal_spawn_draw.c.o .text 0x2bc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mesh_vertex_transform.c.o .text 0x274 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/tracer_spawn.c.o .text 0xc8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_table_reset.c.o .text 0x28 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/generator_damage_apply.c.o .text 0xf8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/generator_message_damage.c.o .text 0x1f0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/generator_splash_damage.c.o .text 0x200 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/generator_dispatch_bonus.c.o .text 0x190 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_expire_100.c.o .text 0x28 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/wreck_debris_spawn.c.o .text 0x1bc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/wreck_debris_update.c.o .text 0xc4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/anim_list_create.c.o .text 0x34 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/anim_list_reset.c.o .text 0x10 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/anim_list_register.c.o .text 0xcc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spark_spawn.c.o .text 0xe4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/smoke_puff_spawn.c.o .text 0x80 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/flicker_prop_create.c.o .text 0xf4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/flicker_prop_draw.c.o .text 0xf0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/flicker_prop_message.c.o .text 0x50 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/flicker_prop_message_cb.c.o .text 0x54 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/static_prop_create.c.o .text 0xac --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/static_prop_expire.c.o .text 0x18 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/static_prop_draw.c.o .text 0x118 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_cache_globals.c.o .text 0x5c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/artillery_emplacement_update.c.o .text 0x218 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/artillery_emplacement_disable.c.o .text 0x18 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/artillery_emplacement_create.c.o .text 0x6c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_status_flags.c.o .text 0x34 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_ready_flags_c.c.o .text 0x70 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_ready_flags_b.c.o .text 0x3c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_ready_flags_a.c.o .text 0x3c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_option_codes.c.o .text 0x40 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_return.c.o .text 0x80 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_continue.c.o .text 0xcc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_screen_setup.c.o .text 0x18c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_time_compare.c.o .text 0x488 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_time_format.c.o .text 0x418 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_record_write.c.o .text 0x110 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controls_button_index_map.c.o .text 0x150 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_assets_load.c.o .text 0xd4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_widget_flag_set.c.o .text 0x4c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_widget_reset.c.o .text 0x118 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_widget_clear.c.o .text 0xd8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_widget_values.c.o .text 0x134 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_player_widget.c.o .text 0x1dc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_flag_queries.c.o .text 0x7c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_popup_show.c.o .text 0x3c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_timer_queries.c.o .text 0xb0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_player_reset.c.o .text 0x114 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_display_value_set.c.o .text 0x10 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_player_pair_set.c.o .text 0x54 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_player_message.c.o .text 0x8c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_player_panel.c.o .text 0x11c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_slot_clear.c.o .text 0x24 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_event_push.c.o .text 0x118 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_state_reset.c.o .text 0x80 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_object_timestamps.c.o .text 0x104 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_result_setup.c.o .text 0x13c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_hud_init.c.o .text 0x504 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_assets_load.c.o .text 0x448 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_page_close.c.o .text 0x68 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_page_open.c.o .text 0x88 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_page_show.c.o .text 0x2c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_page_exit_request.c.o .text 0x44 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_page_focus.c.o .text 0x70 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_slot_icons_update.c.o .text 0xba4 --alignment 4
+# Trim KMC tail padding so .rodata is exactly the original range (unit_rodata.tsv).
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_slot_icons_update.c.o .rodata 0xe0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_message_damage_guarded.c.o .text 0x6c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_message_damage_guarded.c.o .rodata 0xfc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mesh_rings_draw.c.o .text 0xdfc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mesh_rings_draw.c.o .rodata 0x4c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/artillery_target_track.c.o .text 0x380 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_in_draw_range.c.o .text 0x154 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/static_in_radius.c.o .text 0x48 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spark_burst_update.c.o .text 0x124 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/anim_alpha_fade_draw.c.o .text 0x12c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/generator_spawn.c.o .text 0x178 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_beam_draw.c.o .text 0x2dc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_burn_update.c.o .text 0x3c0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_burn_update.c.o .rodata 0x10 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_targets_damage.c.o .text 0x234 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_targets_query.c.o .text 0xd8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_prop_spawn.c.o .text 0x1d8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/tracer_trail_update.c.o .text 0x1ac --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mesh_wave_update.c.o .text 0x270 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/barrel_explode.c.o .text 0x1a4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/barrel_explode.c.o .rodata 0x4c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/powerup_timer_update.c.o .text 0x2e4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/powerup_timer_update.c.o .rodata 0x20 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mine_trigger_update.c.o .text 0x238 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mine_trigger_update.c.o .rodata 0xc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hazard_message_handler.c.o .text 0x270 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hazard_message_handler.c.o .rodata 0x18 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hazard_model_draw.c.o .text 0x134 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hazard_state_update.c.o .text 0x2bc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hazard_state_update.c.o .rodata 0x20 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/anim_keyframes_apply.c.o .text 0x150 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/anim_keyframes_apply.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/particle_owner_message.c.o .text 0xa8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/particle_owner_message.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/particle_system_create.c.o .text 0x300 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/particle_system_create.c.o .rodata 0x4c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/particle_hit_spawn.c.o .text 0x3c8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/particle_hit_spawn.c.o .rodata 0x1c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/particle_smoke_update.c.o .text 0x2d8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/particle_smoke_update.c.o .rodata 0x14 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/particle_emitter_free.c.o .text 0x1a0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/particle_emitter_free.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/prop_height_update.c.o .text 0x21c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/prop_spawn_pickup.c.o .text 0xc8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/prop_spawn_child.c.o .text 0x170 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/shockwave_expand.c.o .text 0x104 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_shell_draw.c.o .text 0x154 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mission_objectives_update.c.o .text 0x284 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/impact_debris_spray.c.o .text 0x7c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mission_marker_draw.c.o .text 0x1e0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mission_marker_draw.c.o .rodata 0x60 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mission_targets_query.c.o .text 0xd8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mission_props_spawn.c.o .text 0x2cc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mission_flag_set.c.o .text 0x244 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mission_code_parse.c.o .text 0x268 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/game_team_compare.c.o .text 0x64 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/pickup_find_by_id.c.o .text 0xec --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/pending_spawns_flush.c.o .text 0x174 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/pending_spawns_flush.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/crate_contents_spawn.c.o .text 0x274 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/crate_owner_check.c.o .text 0x248 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/crate_owner_check.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/bridge_piece_spawn.c.o .text 0x1a8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/bridge_piece_spawn.c.o .rodata 0xc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/bridge_segments_init.c.o .text 0x2e8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/bridge_segments_init.c.o .rodata 0x18 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/sound_emitter_draw.c.o .text 0x444 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/sound_emitter_draw.c.o .rodata 0x14 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/actor_wreck_spawn_at.c.o .text 0x228 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/actor_wreck_spawn_at.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/flag_owner_score.c.o .text 0x21c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/flag_owner_capture.c.o .text 0x2a4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_damage.c.o .text 0xfc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/wreck_ctl.c.o .text 0x190 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/turret_spawn_at.c.o .text 0x288 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/wreck_spawn.c.o .text 0x148 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/target_search.c.o .text 0x194 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_entry_lookup.c.o .text 0x48 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_angle_classify.c.o .text 0x11c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_entity_attach.c.o .text 0xe4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_corners_build.c.o .text 0x26c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawner_message_handler.c.o .text 0x148 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawner_owner_score.c.o .text 0xa0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawner_state_update.c.o .text 0x21c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/structure_owner_award.c.o .text 0x78 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/structure_model_draw.c.o .text 0x3f8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/structure_model_draw.c.o .rodata 0x68 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/structure_flicker_roll.c.o .text 0x68 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_fire.c.o .text 0x770 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_fire.c.o .rodata 0x2c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_life_tick.c.o .text 0x54 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_bounce.c.o .text 0x57c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_bounce.c.o .rodata 0x38 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_bounds_compute.c.o .text 0xe8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/minimap_blips_spawn.c.o .text 0x188 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/minimap_blips_spawn.c.o .rodata 0x24 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/trigger_particles_update.c.o .text 0x3c0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/trigger_particles_update.c.o .rodata 0x40 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/trigger_particles_spawn.c.o .text 0x14c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/trigger_particles_spawn.c.o .rodata 0x38 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/single_spawn_timer_update.c.o .text 0x278 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/single_spawn_timer_update.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/turret_spawn_random.c.o .text 0x2c8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/turret_spawn_random.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/turret_model_draw.c.o .text 0x1e0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/turret_random_slot.c.o .text 0x88 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/turret_weighted_pick.c.o .text 0xb8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/turret_weights_total.c.o .text 0x50 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/turret_state_messages.c.o .text 0x190 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/turret_state_messages.c.o .rodata 0x18 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/actor_message_handler.c.o .text 0x198 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/actor_message_handler.c.o .rodata 0xc8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/actor_timer_update.c.o .text 0x158 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/actor_model_draw.c.o .text 0x2f8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_node_spawn.c.o .text 0x270 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/player_menu_draw.c.o .text 0x6bc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/player_cursor_anim.c.o .text 0xf4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/player_menu_update.c.o .text 0x658 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_code_parse.c.o .text 0x2b4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_code_table.c.o .text 0x1a0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_draw.c.o .text 0x1f0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/script_particle_spawn.c.o .text 0x1ac --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/script_particle_spawn.c.o .rodata 0xc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_draw_list.c.o .text 0x580 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_draw_list.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/script_event_finish.c.o .text 0x134 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/script_event_finish.c.o .rodata 0xd8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_command_dispatch.c.o .text 0x73c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_command_dispatch.c.o .rodata 0xc8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_spawn_events_update.c.o .text 0x3d0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_spawn_events_update.c.o .rodata 0xc8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_event_script_tick.c.o .text 0x378 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_event_script_tick.c.o .rodata 0xec --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_spawn_script_tick.c.o .text 0x698 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_spawn_script_tick.c.o .rodata 0xf0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_script_tick.c.o .text 0x564 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_script_tick.c.o .rodata 0xc8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawn_object_command.c.o .text 0x87c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawn_object_command.c.o .rodata 0x18c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawn_counters.c.o .text 0x7c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawn_nearest_type31.c.o .text 0xf4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawn_nearest_type28.c.o .text 0xf4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawn_nearest_type1.c.o .text 0xf4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_element_alloc.c.o .text 0x94 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_element_unlink.c.o .text 0x234 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_columns_draw.c.o .text 0x140 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_columns_draw.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_time_tick.c.o .text 0x2a8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_time_tick.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_bonus_finish.c.o .text 0xa8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_bonus_finish.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_bonus_tick.c.o .text 0xc8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_bonus_tick.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_score_finish.c.o .text 0xa8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_score_finish.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_score_tick.c.o .text 0xc8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_score_tick.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_deaths_tick.c.o .text 0xb4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_deaths_tick.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_kills_tick.c.o .text 0xd4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/results_kills_tick.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controller_slot_find.c.o .text 0x6b8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controller_slot_find.c.o .rodata 0x2c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controller_queue_push.c.o .text 0x458 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controller_queue_push.c.o .rodata 0x28 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controller_menu_input.c.o .text 0x4f8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controller_menu_input.c.o .rodata 0x28 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controller_slots_scan.c.o .text 0x27c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_lap_times_clamp.c.o .text 0x134 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_player_icons_draw.c.o .text 0x368 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_player_icons_draw.c.o .rodata 0x10 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_timer_update.c.o .text 0x2f8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_start_check.c.o .text 0x170 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_start_check.c.o .rodata 0x34 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_frame_border_draw.c.o .text 0x450 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_frame_border_draw.c.o .rodata 0x14 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_value_to_byte.c.o .text 0x68 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_value_to_byte.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_panel_select.c.o .text 0x2c4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_panel_select.c.o .rodata 0x1c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_panel_refresh.c.o .text 0x2cc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_panel_refresh.c.o .rodata 0x20 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_panel_layout.c.o .text 0x234 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_panel_layout.c.o .rodata 0x20 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_mode_cycle.c.o .text 0x244 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_mode_cycle.c.o .rodata 0x20 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_marker_update.c.o .text 0x240 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_marker_update.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_player_slots_cycle.c.o .text 0x1e0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_message_damage.c.o .text 0x60 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_message_damage.c.o .rodata 0x100 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_segments_draw.c.o .text 0x1f8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_segments_draw.c.o .rodata 0x40 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_segment_append.c.o .text 0x178 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_segment_append.c.o .rodata 0x1c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/prop_message_shatter.c.o .text 0x19c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/prop_message_shatter.c.o .rodata 0xbc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_message_damage_destroy.c.o .text 0x98 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_message_damage_destroy.c.o .rodata 0x100 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_shielded_dispatch.c.o .text 0x218 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_shielded_dispatch.c.o .rodata 0xfc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_turret_dispatch.c.o .text 0x1b0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_turret_dispatch.c.o .rodata 0xfc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_message_damage_u8.c.o .text 0x70 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_message_damage_u8.c.o .rodata 0x100 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_mode_objective_message.c.o .text 0x1a0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_mode_objective_message.c.o .rodata 0x2c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_pickup_create.c.o .text 0x15c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_pickup_create.c.o .rodata 0x38 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_mode_value_get.c.o .text 0x15c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_mode_value_get.c.o .rodata 0x6c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_mode_description_get.c.o .text 0x15c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_mode_description_get.c.o .rodata 0x70 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_mode_subtitle_get.c.o .text 0xa0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_mode_subtitle_get.c.o .rodata 0x20 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_mode_title_get.c.o .text 0x15c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_mode_title_get.c.o .rodata 0x70 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_mode_name_get.c.o .text 0x1ac --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_mode_name_get.c.o .rodata 0x70 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/wreck_message_hit.c.o .text 0x68 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/wreck_message_hit.c.o .rodata 0xbc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/player_dispatch.c.o .text 0x158 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/player_dispatch.c.o .rodata 0xfc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/player_message_hit.c.o .text 0xa8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/player_message_hit.c.o .rodata 0x100 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_condition_check.c.o .text 0x1a0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_condition_check.c.o .rodata 0xb8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_height_to_angle.c.o .text 0x160 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_height_to_angle.c.o .rodata 0x2c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_events_update.c.o .text 0x1f4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_events_update.c.o .rodata 0xd8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_level_header_load.c.o .text 0x1c8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_level_header_load.c.o .rodata 0x68 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_script_load.c.o .text 0x42c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_script_load.c.o .rodata 0x20 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_event_start.c.o .text 0x1a8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_event_start.c.o .rodata 0xd8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_event_spawn_tick.c.o .text 0x710 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/seq_event_spawn_tick.c.o .rodata 0x240 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawn_effect_by_type.c.o .text 0x160 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawn_effect_by_type.c.o .rodata 0x2c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controls_bindings_load.c.o .text 0x50c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controls_bindings_load.c.o .rodata 0x9c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controls_bindings_save.c.o .text 0x600 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controls_bindings_save.c.o .rodata 0x28 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_slot_set_digit.c.o .text 0x180 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_slot_set_digit.c.o .rodata 0x20 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_player_set_mode_icon.c.o .text 0x17c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_player_set_mode_icon.c.o .rodata 0x3c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_mode_icon_get.c.o .text 0xdc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_mode_icon_get.c.o .rodata 0x40 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_player_set_layout.c.o .text 0x354 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_player_set_layout.c.o .rodata 0x40 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_type_name_lookup.c.o .text 0x120 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_type_name_lookup.c.o .rodata 0x40 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_player_set_vehicle_label.c.o .text 0x110 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_player_set_vehicle_label.c.o .rodata 0x30 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_entry_set_label.c.o .text 0x90 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_entry_set_label.c.o .rodata 0x20 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_menu_entries_apply_settings.c.o .text 0x1cc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_menu_entries_apply_settings.c.o .rodata 0x60 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/game_mode8_toggled.c.o .text 0x48 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_page_focus_cycle.c.o .text 0x12c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_page_select.c.o .text 0x68 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_alt_exit_request.c.o .text 0x2c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_list_close.c.o .text 0x68 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_list_open.c.o .text 0x88 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_list_focus_cycle.c.o .text 0x248 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_list_refresh.c.o .text 0x68 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_exit_request.c.o .text 0x44 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_row_defaults.c.o .text 0x44 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_row_preset.c.o .text 0x50 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/game_queue.c.o .text 0x38 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -380,8 +2379,679 @@ mkdir -p build/us/src/libultra
 "${tool_prefix}objcopy" -I binary -O elf32-tradbigmips -B mips \
     assets/extracted/us/ipl3.bin build/us/assets/extracted/us/ipl3.bin.o
 
-mapfile -t object_files < <(find build/us -type f -name '*.o' -print | sort)
-"${tool_prefix}nm" -u "${object_files[@]}" \
+if false; then
+"${tool_prefix}nm" -u \
+    build/us/asm/us/main_before_80077C40.s.o \
+    build/us/src/code/early_hw.c.o \
+    build/us/src/code/early_memory_read.c.o \
+    build/us/asm/us/main_80077FD0_to_80078048.s.o \
+    build/us/src/code/early_memory_write.c.o \
+    build/us/src/code/early_remote_copy.c.o \
+    build/us/asm/us/main_80078274_to_80078908.s.o \
+    build/us/src/code/early_commands.c.o \
+    build/us/asm/us/main_80078ADC_to_80078C68.s.o \
+    build/us/src/code/early_command_status.c.o \
+    build/us/asm/us/main_80078CD8_to_8007A710.s.o \
+    build/us/src/code/unknown_8007A710.c.o \
+    build/us/src/code/display_slot.c.o \
+    build/us/asm/us/main_8007A75C_to_8007AC34.s.o \
+    build/us/src/code/display_buffer.c.o \
+    build/us/asm/us/main_8007AD40_to_8007AD94.s.o \
+    build/us/src/code/display_buffer_select.c.o \
+    build/us/src/code/unknown_8007ADB0.c.o \
+    build/us/src/code/controller_state.c.o \
+    build/us/asm/us/main_8007ADF0_to_8007B020.s.o \
+    build/us/src/code/unknown_8007B020.c.o \
+    build/us/src/code/gfx_pool.c.o \
+    build/us/asm/us/main_8007B0E4_to_8007B1F0.s.o \
+    build/us/src/code/render_queue.c.o \
+    build/us/src/code/render_submit.c.o \
+    build/us/asm/us/main_8007B8EC_to_8007BCF0.s.o \
+    build/us/src/code/asset_load.c.o \
+    build/us/src/code/video_mode.c.o \
+    build/us/src/code/texture_tile.c.o \
+    build/us/asm/us/main_8007C364_to_8007D470.s.o \
+    build/us/src/code/small_state.c.o \
+    build/us/src/code/mapped_record.c.o \
+    build/us/src/code/small_state_copy.c.o \
+    build/us/asm/us/main_8007D5B0_to_8007D694.s.o \
+    build/us/src/code/collision_noop.c.o \
+    build/us/asm/us/main_8007D69C_to_8007D710.s.o \
+    build/us/src/code/state_noop.c.o \
+    build/us/asm/us/main_8007D718_to_8007D720.s.o \
+    build/us/src/code/state_modes.c.o \
+    build/us/asm/us/main_8007D7C4_to_8007E1FC.s.o \
+    build/us/src/code/collision_fields.c.o \
+    build/us/asm/us/main_8007E210_to_8007E778.s.o \
+    build/us/src/code/object_query.c.o \
+    build/us/asm/us/main_8007E7A8_to_80081FD8.s.o \
+    build/us/src/code/object_defaults.c.o \
+    build/us/asm/us/main_80082004_to_80082B40.s.o \
+    build/us/src/code/mode_owner.c.o \
+    build/us/asm/us/main_80082B68_to_80082BD4.s.o \
+    build/us/src/code/mode_transition.c.o \
+    build/us/asm/us/main_80082C1C_to_80082D60.s.o \
+    build/us/src/code/pair_queue.c.o \
+    build/us/asm/us/main_80082D98_to_80082FE0.s.o \
+    build/us/src/code/object_disable.c.o \
+    build/us/asm/us/main_80083028_to_80083FCC.s.o \
+    build/us/src/code/object_predicates.c.o \
+    build/us/asm/us/main_80083FF8_to_80084C50.s.o \
+    build/us/src/code/object_direction.c.o \
+    build/us/asm/us/main_80084CC8_to_800859A8.s.o \
+    build/us/src/code/object_action.c.o \
+    build/us/asm/us/main_800859E4_to_8009C284.s.o \
+    build/us/src/code/session_queries.c.o \
+    build/us/asm/us/main_8009C31C_to_8009D144.s.o \
+    build/us/src/code/mode_range.c.o \
+    build/us/asm/us/main_8009D168_to_8009D578.s.o \
+    build/us/src/code/angle_fold.c.o \
+    build/us/asm/us/main_8009D5B4_to_8009D6DC.s.o \
+    build/us/src/code/angle_subtract.c.o \
+    build/us/asm/us/main_8009D6F8_to_8009D72C.s.o \
+    build/us/src/code/angle_between.c.o \
+    build/us/asm/us/main_8009D75C_to_8009D81C.s.o \
+    build/us/src/code/angle_distance.c.o \
+    build/us/src/code/angle_direction.c.o \
+    build/us/asm/us/main_8009D8A0_to_8009D914.s.o \
+    build/us/src/code/random_integer.c.o \
+    build/us/asm/us/main_8009D960_to_8009DA34.s.o \
+    build/us/src/code/vector2.c.o \
+    build/us/asm/us/main_8009DAB0_to_8009DB0C.s.o \
+    build/us/src/code/vector2_scale.c.o \
+    build/us/asm/us/main_8009DB2C_to_8009E044.s.o \
+    build/us/src/code/vector2_motion.c.o \
+    build/us/asm/us/main_8009E0E8_to_8009EEA0.s.o \
+    build/us/src/code/game_queue.c.o \
+    build/us/asm/us/main_8009EED8_to_8009EEE0.s.o \
+    build/us/src/code/matrix_basic.c.o \
+    build/us/asm/us/main_8009EF4C_to_8009F064.s.o \
+    build/us/src/code/matrix_state.c.o \
+    build/us/asm/us/main_8009F090_to_8009F1F4.s.o \
+    build/us/src/code/matrix_vector.c.o \
+    build/us/asm/us/main_8009F334_to_8009F4B4.s.o \
+    build/us/src/code/matrix_multiply.c.o \
+    build/us/asm/us/main_8009F5AC_to_8009F768.s.o \
+    build/us/src/code/matrix_transform.c.o \
+    build/us/asm/us/main_8009F8A0_to_8009FF1C.s.o \
+    build/us/src/code/vector2_rotate.c.o \
+    build/us/asm/us/main_8009FFB8_to_800A1280.s.o \
+    build/us/src/code/scheduler_context.c.o \
+    build/us/asm/us/main_800A1290_to_800A134C.s.o \
+    build/us/src/code/scheduler_state.c.o \
+    build/us/asm/us/main_800A1384_to_800A179C.s.o \
+    build/us/src/code/scheduler_events.c.o \
+    build/us/asm/us/main_800A18D0_to_800A1A28.s.o \
+    build/us/src/code/scheduler_queue.c.o \
+    build/us/asm/us/main_800A1B44_to_800A2B74.s.o \
+    build/us/src/code/object_range.c.o \
+    build/us/asm/us/main_800A2B9C_to_800A2DFC.s.o \
+    build/us/src/code/scheduler_misc.c.o \
+    build/us/asm/us/main_800A2E5C_to_800A4098.s.o \
+    build/us/src/code/object_timing.c.o \
+    build/us/asm/us/main_800A40CC_to_800A6ABC.s.o \
+    build/us/src/code/object_setters.c.o \
+    build/us/asm/us/main_800A6B7C_to_800A7290.s.o \
+    build/us/src/code/object_init.c.o \
+    build/us/asm/us/main_800A72C0_to_800A8B14.s.o \
+    build/us/src/code/object_reset.c.o \
+    build/us/asm/us/main_800A8B38_to_800A9054.s.o \
+    build/us/src/code/object_flags.c.o \
+    build/us/asm/us/main_800A9080_to_800A974C.s.o \
+    build/us/src/code/object_limit.c.o \
+    build/us/asm/us/main_800A977C_to_800A9BF0.s.o \
+    build/us/src/code/object_table_color.c.o \
+    build/us/asm/us/main_800A9C24_to_800A9D50.s.o \
+    build/us/src/code/object_table_reset.c.o \
+    build/us/asm/us/main_800A9D78_to_800AA598.s.o \
+    build/us/src/code/object_table_lookup.c.o \
+    build/us/asm/us/main_800AA5C4_to_800B0444.s.o \
+    build/us/src/code/gameplay_stub.c.o \
+    build/us/asm/us/main_800B044C_to_800B06A8.s.o \
+    build/us/src/code/player_color.c.o \
+    build/us/asm/us/main_800B06D8_to_800B5F30.s.o \
+    build/us/src/code/turn_adjust.c.o \
+    build/us/asm/us/main_800B5F70_to_800B99C0.s.o \
+    build/us/src/code/display_registry.c.o \
+    build/us/asm/us/main_800B99F8_to_800B9A4C.s.o \
+    build/us/src/code/display_color.c.o \
+    build/us/asm/us/main_800B9AB0_to_800B9C68.s.o \
+    build/us/src/code/display_commands.c.o \
+    build/us/asm/us/main_800B9CAC_to_800B9D4C.s.o \
+    build/us/src/code/table_lookup.c.o \
+    build/us/asm/us/main_800B9E24_to_800BD880.s.o \
+    build/us/src/code/entry_scan.c.o \
+    build/us/src/code/entry_flags.c.o \
+    build/us/asm/us/main_800BD93C_to_800BFD40.s.o \
+    build/us/src/code/hud_state.c.o \
+    build/us/asm/us/main_800BFDA4_to_800C03F0.s.o \
+    build/us/src/code/hud_root_callback.c.o \
+    build/us/asm/us/main_800C041C_to_800C0800.s.o \
+    build/us/src/code/hud_modes.c.o \
+    build/us/src/code/menu_state.c.o \
+    build/us/asm/us/main_800C08E0_to_800C0A64.s.o \
+    build/us/src/code/hud_stub.c.o \
+    build/us/asm/us/main_800C0A6C_to_800C0C18.s.o \
+    build/us/src/code/hud_layout.c.o \
+    build/us/asm/us/main_800C0C38_to_800C1094.s.o \
+    build/us/src/code/menu_toggle.c.o \
+    build/us/src/code/hud_secondary.c.o \
+    build/us/src/code/hud_callbacks.c.o \
+    build/us/src/code/hud_primary_modes.c.o \
+    build/us/asm/us/main_800C11B8_to_800C1420.s.o \
+    build/us/src/code/menu_countdown.c.o \
+    build/us/src/code/hud_transition.c.o \
+    build/us/asm/us/main_800C1484_to_800C1578.s.o \
+    build/us/src/code/hud_panel_callback.c.o \
+    build/us/src/code/hud_list_trigger.c.o \
+    build/us/src/code/hud_entry_values.c.o \
+    build/us/src/code/hud_list_reset.c.o \
+    build/us/asm/us/main_800C16B0_to_800C17C8.s.o \
+    build/us/src/code/registry_lookup.c.o \
+    build/us/asm/us/main_800C180C_to_800C247C.s.o \
+    build/us/src/code/hud_ready.c.o \
+    build/us/src/code/hud_clear.c.o \
+    build/us/src/code/hud_list_callback.c.o \
+    build/us/asm/us/main_800C2528_to_800C27EC.s.o \
+    build/us/src/code/hud_navigation.c.o \
+    build/us/src/code/hud_selection_apply.c.o \
+    build/us/asm/us/main_800C2924_to_800C30A0.s.o \
+    build/us/src/code/hud_primary_trigger.c.o \
+    build/us/asm/us/main_800C30B4_to_800C402C.s.o \
+    build/us/src/code/hud_player_slots_cycle.c.o \
+    build/us/src/code/hud_row_preset.c.o \
+    build/us/src/code/hud_row_defaults.c.o \
+    build/us/src/code/hud_exit_request.c.o \
+    build/us/src/code/hud_list_refresh.c.o \
+    build/us/src/code/hud_list_focus_cycle.c.o \
+    build/us/src/code/hud_marker_update.c.o \
+    build/us/src/code/hud_list_open.c.o \
+    build/us/src/code/hud_list_close.c.o \
+    build/us/src/code/hud_alt_exit_request.c.o \
+    build/us/src/code/hud_menu_entries_apply_settings.c.o \
+    build/us/src/code/hud_page_select.c.o \
+    build/us/src/code/hud_entry_set_label.c.o \
+    build/us/asm/us/main_800C4BB4_to_800C4E24.s.o \
+    build/us/src/code/hud_page_focus_cycle.c.o \
+    build/us/src/code/game_mode8_toggled.c.o \
+    build/us/src/code/hud_slot_icons_update.c.o \
+    build/us/src/code/hud_mode_cycle.c.o \
+    build/us/src/code/hud_panel_layout.c.o \
+    build/us/src/code/hud_panel_refresh.c.o \
+    build/us/src/code/hud_panel_select.c.o \
+    build/us/src/code/hud_page_focus.c.o \
+    build/us/asm/us/main_800C65B4_to_800C674C.s.o \
+    build/us/src/code/hud_page_exit_request.c.o \
+    build/us/src/code/hud_page_show.c.o \
+    build/us/src/code/hud_page_open.c.o \
+    build/us/src/code/hud_page_close.c.o \
+    build/us/src/code/hud_value_to_byte.c.o \
+    build/us/asm/us/main_800C6914_to_800C6918.s.o \
+    build/us/asm/us/data/main_800C6918_textbin.s.o \
+    build/us/src/code/race_assets_load.c.o \
+    build/us/src/code/race_hud_init.c.o \
+    build/us/src/code/race_result_setup.c.o \
+    build/us/src/code/race_object_timestamps.c.o \
+    build/us/asm/us/main_800C74AC_to_800C7514.s.o \
+    build/us/src/code/race_state_reset.c.o \
+    build/us/asm/us/main_800C7594_to_800C7650.s.o \
+    build/us/src/code/race_frame_border_draw.c.o \
+    build/us/src/code/race_start_check.c.o \
+    build/us/asm/us/main_800C7C10_to_800C8238.s.o \
+    build/us/src/code/race_event_push.c.o \
+    build/us/asm/us/main_800C8350_to_800C8484.s.o \
+    build/us/src/code/race_timer_update.c.o \
+    build/us/asm/us/main_800C877C_to_800C8B74.s.o \
+    build/us/src/code/race_player_icons_draw.c.o \
+    build/us/src/code/race_slot_clear.c.o \
+    build/us/src/code/race_player_set_vehicle_label.c.o \
+    build/us/src/code/race_type_name_lookup.c.o \
+    build/us/src/code/race_player_panel.c.o \
+    build/us/src/code/race_player_set_layout.c.o \
+    build/us/src/code/race_player_message.c.o \
+    build/us/src/code/race_player_pair_set.c.o \
+    build/us/src/code/race_mode_icon_get.c.o \
+    build/us/src/code/race_player_set_mode_icon.c.o \
+    build/us/src/code/race_display_value_set.c.o \
+    build/us/asm/us/main_800C98E8_to_800CA1A8.s.o \
+    build/us/src/code/race_player_reset.c.o \
+    build/us/src/code/race_lap_times_clamp.c.o \
+    build/us/src/code/race_timer_queries.c.o \
+    build/us/src/code/race_slot_set_digit.c.o \
+    build/us/asm/us/main_800CA620_to_800CAA0C.s.o \
+    build/us/src/code/race_popup_show.c.o \
+    build/us/asm/us/main_800CAA48_to_800CAB44.s.o \
+    build/us/src/code/race_flag_queries.c.o \
+    build/us/src/code/race_player_widget.c.o \
+    build/us/src/code/race_widget_values.c.o \
+    build/us/src/code/race_widget_clear.c.o \
+    build/us/src/code/race_widget_reset.c.o \
+    build/us/src/code/race_widget_flag_set.c.o \
+    build/us/asm/us/main_800CB10C_to_800CB110.s.o \
+    build/us/src/code/results_assets_load.c.o \
+    build/us/src/code/controls_button_index_map.c.o \
+    build/us/src/code/controls_bindings_save.c.o \
+    build/us/src/code/controls_bindings_load.c.o \
+    build/us/asm/us/main_800CBE40_to_800CC2F8.s.o \
+    build/us/src/code/controller_slots_scan.c.o \
+    build/us/src/code/controller_menu_input.c.o \
+    build/us/src/code/controller_queue_push.c.o \
+    build/us/src/code/controller_slot_find.c.o \
+    build/us/asm/us/main_800CD57C_to_800CD85C.s.o \
+    build/us/src/code/results_record_write.c.o \
+    build/us/asm/us/main_800CD96C_to_800CDD70.s.o \
+    build/us/src/code/results_time_format.c.o \
+    build/us/src/code/results_time_compare.c.o \
+    build/us/asm/us/main_800CE610_to_800CE814.s.o \
+    build/us/src/code/results_screen_setup.c.o \
+    build/us/asm/us/main_800CE9A0_to_800CF0CC.s.o \
+    build/us/src/code/results_continue.c.o \
+    build/us/src/code/results_return.c.o \
+    build/us/src/code/results_option_codes.c.o \
+    build/us/src/code/results_kills_tick.c.o \
+    build/us/src/code/results_deaths_tick.c.o \
+    build/us/src/code/results_ready_flags_a.c.o \
+    build/us/src/code/results_score_tick.c.o \
+    build/us/src/code/results_score_finish.c.o \
+    build/us/src/code/results_ready_flags_b.c.o \
+    build/us/src/code/results_bonus_tick.c.o \
+    build/us/src/code/results_bonus_finish.c.o \
+    build/us/src/code/results_ready_flags_c.c.o \
+    build/us/src/code/results_time_tick.c.o \
+    build/us/src/code/results_status_flags.c.o \
+    build/us/asm/us/main_800CFA84_to_800CFBD8.s.o \
+    build/us/src/code/results_columns_draw.c.o \
+    build/us/asm/us/main_800CFD18_to_800CFDD0.s.o \
+    build/us/src/code/results_assets_reload.c.o \
+    build/us/src/code/game_state_clear.c.o \
+    build/us/asm/us/main_800D0070_to_800D05E0.s.o \
+    build/us/src/code/hud_element_unlink.c.o \
+    build/us/src/code/spawn_ctl_index.c.o \
+    build/us/asm/us/main_800D0858_to_800D0960.s.o \
+    build/us/src/code/spawn_ctl_alloc.c.o \
+    build/us/src/code/hud_element_alloc.c.o \
+    build/us/asm/us/main_800D0A74_to_800D0DF8.s.o \
+    build/us/src/code/spawn_effect_by_type.c.o \
+    build/us/src/code/spawn_nearest_type1.c.o \
+    build/us/src/code/spawn_nearest_type28.c.o \
+    build/us/src/code/spawn_nearest_type31.c.o \
+    build/us/src/code/spawn_counters.c.o \
+    build/us/asm/us/main_800D12B0_to_800D1C90.s.o \
+    build/us/src/code/spawn_object_command.c.o \
+    build/us/src/code/audio_listener_update.c.o \
+    build/us/src/code/seq_script_tick.c.o \
+    build/us/src/code/seq_spawn_script_tick.c.o \
+    build/us/src/code/seq_event_script_tick.c.o \
+    build/us/src/code/seq_event_spawn_tick.c.o \
+    build/us/asm/us/main_800D3C64_to_800D404C.s.o \
+    build/us/src/code/seq_spawn_events_update.c.o \
+    build/us/src/code/seq_command_dispatch.c.o \
+    build/us/src/code/seq_event_start.c.o \
+    build/us/src/code/race_buffers_alloc.c.o \
+    build/us/src/code/seq_script_load.c.o \
+    build/us/src/code/seq_level_header_load.c.o \
+    build/us/src/code/script_event_finish.c.o \
+    build/us/src/code/seq_events_update.c.o \
+    build/us/src/code/hud_draw_list.c.o \
+    build/us/asm/us/main_800D5C7C_to_800D5C80.s.o \
+    build/us/src/code/script_particle_spawn.c.o \
+    build/us/asm/us/main_800D5E2C_to_800D67F0.s.o \
+    build/us/src/code/effect_draw.c.o \
+    build/us/src/code/effect_code_table.c.o \
+    build/us/src/code/effect_code_parse.c.o \
+    build/us/asm/us/main_800D6E34_to_800D6E40.s.o \
+    build/us/src/code/player_attach_effect_create.c.o \
+    build/us/src/code/player_menu_update.c.o \
+    build/us/src/code/player_cursor_anim.c.o \
+    build/us/src/code/player_menu_draw.c.o \
+    build/us/src/code/player_attach_effect_matrix.c.o \
+    build/us/src/code/player_attach_effect_matrix_cb.c.o \
+    build/us/asm/us/main_800D7DD4_to_800D7DE0.s.o \
+    build/us/src/code/effect_node_spawn.c.o \
+    build/us/src/code/actor_collision_free.c.o \
+    build/us/src/code/actor_model_draw.c.o \
+    build/us/src/code/actor_timer_update.c.o \
+    build/us/asm/us/main_800D84D8_to_800D84DC.s.o \
+    build/us/src/code/actor_message_handler.c.o \
+    build/us/src/code/turret_message_handlers.c.o \
+    build/us/src/code/turret_state_messages.c.o \
+    build/us/asm/us/main_800D88E8_to_800D88F0.s.o \
+    build/us/src/code/turret_weights_total.c.o \
+    build/us/src/code/turret_weighted_pick.c.o \
+    build/us/src/code/turret_random_slot.c.o \
+    build/us/src/code/turret_model_draw.c.o \
+    build/us/src/code/turret_spawn_random.c.o \
+    build/us/src/code/single_player_check.c.o \
+    build/us/src/code/single_spawn_timer_update.c.o \
+    build/us/src/code/trigger_zone_query.c.o \
+    build/us/asm/us/main_800D92D4_to_800D92E0.s.o \
+    build/us/src/code/trigger_particles_spawn.c.o \
+    build/us/src/code/trigger_particles_update.c.o \
+    build/us/src/code/minimap_layer_build.c.o \
+    build/us/src/code/minimap_blips_spawn.c.o \
+    build/us/src/code/model_texture_find.c.o \
+    build/us/asm/us/main_800D9B48_to_800D9B50.s.o \
+    build/us/src/code/model_bounds_compute.c.o \
+    build/us/src/code/model_bounds_center.c.o \
+    build/us/asm/us/main_800D9D50_to_800DA340.s.o \
+    build/us/src/code/debris_piece_draw.c.o \
+    build/us/src/code/debris_burst_spawn.c.o \
+    build/us/src/code/debris_burst_spawn_tinted.c.o \
+    build/us/asm/us/main_800DA7D0_to_800DA984.s.o \
+    build/us/src/code/debris_scatter_spawn.c.o \
+    build/us/asm/us/main_800DAAE0_to_800DAC34.s.o \
+    build/us/src/code/projectile_bounce.c.o \
+    build/us/asm/us/main_800DB1B0_to_800DB6F0.s.o \
+    build/us/src/code/model_height_to_angle.c.o \
+    build/us/asm/us/main_800DB850_to_800DC214.s.o \
+    build/us/src/code/projectile_model_draw.c.o \
+    build/us/src/code/projectile_model_create.c.o \
+    build/us/src/code/projectile_model_matrix.c.o \
+    build/us/src/code/projectile_model_matrix_cb.c.o \
+    build/us/asm/us/main_800DC7A4_to_800DC7B0.s.o \
+    build/us/src/code/projectile_life_tick.c.o \
+    build/us/src/code/projectile_trail_draw.c.o \
+    build/us/src/code/projectile_fire.c.o \
+    build/us/src/code/projectile_launch_delayed.c.o \
+    build/us/src/code/projectile_launch_delayed_tick.c.o \
+    build/us/asm/us/main_800DD28C_to_800DD290.s.o \
+    build/us/src/code/model_mesh_partition.c.o \
+    build/us/src/code/structure_create.c.o \
+    build/us/src/code/structure_flicker_roll.c.o \
+    build/us/asm/us/main_800DD75C_to_800DDF04.s.o \
+    build/us/src/code/structure_model_draw.c.o \
+    build/us/src/code/structure_owner_award.c.o \
+    build/us/asm/us/main_800DE374_to_800DE4DC.s.o \
+    build/us/src/code/spawner_target_query.c.o \
+    build/us/src/code/spawner_state_update.c.o \
+    build/us/src/code/spawner_owner_score.c.o \
+    build/us/src/code/spawner_message_handler.c.o \
+    build/us/src/code/unit_spawner_create.c.o \
+    build/us/src/code/unit_spawner_update.c.o \
+    build/us/asm/us/main_800DF0C4_to_800DF0D0.s.o \
+    build/us/src/code/slot_corners_build.c.o \
+    build/us/src/code/prop_multiplayer_filter.c.o \
+    build/us/src/code/slot_condition_check.c.o \
+    build/us/src/code/slot_entity_attach.c.o \
+    build/us/src/code/slot_angle_classify.c.o \
+    build/us/src/code/slot_entry_lookup.c.o \
+    build/us/src/code/level_prop_points_find.c.o \
+    build/us/asm/us/main_800DF89C_to_800E1540.s.o \
+    build/us/src/code/foliage_prop_create.c.o \
+    build/us/asm/us/main_800E16D8_to_800E18D8.s.o \
+    build/us/src/code/player_message_hit.c.o \
+    build/us/src/code/foliage_prop_handlers.c.o \
+    build/us/src/code/player_dispatch.c.o \
+    build/us/asm/us/main_800E1BA4_to_800E2018.s.o \
+    build/us/src/code/turret_destroy.c.o \
+    build/us/src/code/turret_draw_create.c.o \
+    build/us/asm/us/main_800E2520_to_800E26A8.s.o \
+    build/us/src/code/turret_message_handler.c.o \
+    build/us/src/code/target_search.c.o \
+    build/us/src/code/wreck_spawn.c.o \
+    build/us/src/code/turret_spawn_at.c.o \
+    build/us/src/code/turret_line_of_sight.c.o \
+    build/us/src/code/wreck_ctl.c.o \
+    build/us/asm/us/main_800E2F9C_to_800E3404.s.o \
+    build/us/src/code/wreck_timer_duration.c.o \
+    build/us/asm/us/main_800E3460_to_800E44C8.s.o \
+    build/us/src/code/wreck_message_hit.c.o \
+    build/us/src/code/object_damage.c.o \
+    build/us/src/code/flag_capture_attempt.c.o \
+    build/us/asm/us/main_800E48A8_to_800E48E0.s.o \
+    build/us/src/code/flag_owner_capture.c.o \
+    build/us/src/code/flag_owner_score.c.o \
+    build/us/asm/us/main_800E4DA0_to_800E4ECC.s.o \
+    build/us/src/code/actor_kind16_link_clear.c.o \
+    build/us/src/code/actor_wreck_spawn_at.c.o \
+    build/us/src/code/sound_emitter_delayed_spawn.c.o \
+    build/us/src/code/sound_emitter_draw.c.o \
+    build/us/src/code/ambient_sound_stop_first.c.o \
+    build/us/asm/us/main_800E56C8_to_800E56D0.s.o \
+    build/us/src/code/bridge_create_handlers.c.o \
+    build/us/asm/us/main_800E58C4_to_800E58D0.s.o \
+    build/us/src/code/bridge_segments_init.c.o \
+    build/us/asm/us/main_800E5BB8_to_800E6040.s.o \
+    build/us/src/code/bridge_piece_spawn.c.o \
+    build/us/src/code/lightning_arc_update.c.o \
+    build/us/asm/us/main_800E64EC_to_800E64F0.s.o \
+    build/us/src/code/crate_model_randomize.c.o \
+    build/us/src/code/crate_actor_attach.c.o \
+    build/us/asm/us/main_800E66A8_to_800E68BC.s.o \
+    build/us/src/code/crate_owner_check.c.o \
+    build/us/asm/us/main_800E6B04_to_800E713C.s.o \
+    build/us/src/code/crate_contents_spawn.c.o \
+    build/us/asm/us/main_800E73B0_to_800E759C.s.o \
+    build/us/src/code/pending_list_flush.c.o \
+    build/us/src/code/pending_spawns_flush.c.o \
+    build/us/asm/us/main_800E7768_to_800E7968.s.o \
+    build/us/src/code/powerup_flag_players.c.o \
+    build/us/asm/us/main_800E7A10_to_800E7DF8.s.o \
+    build/us/src/code/powerup_count_refresh.c.o \
+    build/us/src/code/pickup_actor_count.c.o \
+    build/us/asm/us/main_800E7F5C_to_800E7F60.s.o \
+    build/us/src/code/pickup_find_by_id.c.o \
+    build/us/src/code/game_mode_has_pickups.c.o \
+    build/us/src/code/game_team_compare.c.o \
+    build/us/asm/us/main_800E80F4_to_800E8318.s.o \
+    build/us/src/code/slist_remove_count.c.o \
+    build/us/asm/us/main_800E8378_to_800E8C88.s.o \
+    build/us/src/code/slot_mode_name_get.c.o \
+    build/us/src/code/slot_mode_title_get.c.o \
+    build/us/src/code/slot_mode_subtitle_get.c.o \
+    build/us/src/code/slot_mode_description_get.c.o \
+    build/us/src/code/slot_mode_value_get.c.o \
+    build/us/asm/us/main_800E92E8_to_800E92F0.s.o \
+    build/us/src/code/mission_select_init.c.o \
+    build/us/src/code/mission_entry_query.c.o \
+    build/us/src/code/mission_code_parse.c.o \
+    build/us/src/code/mission_flag_set.c.o \
+    build/us/src/code/mission_time_bonus.c.o \
+    build/us/asm/us/main_800E9990_to_800E9B50.s.o \
+    build/us/src/code/model_pickup_create.c.o \
+    build/us/src/code/model_mode_objective_message.c.o \
+    build/us/src/code/mission_event_forward.c.o \
+    build/us/asm/us/main_800E9E78_to_800E9E80.s.o \
+    build/us/src/code/mission_props_spawn.c.o \
+    build/us/src/code/mission_targets_query.c.o \
+    build/us/asm/us/main_800EA224_to_800EA714.s.o \
+    build/us/src/code/mission_marker_draw.c.o \
+    build/us/src/code/model_message_damage_u8.c.o \
+    build/us/src/code/building_target_query.c.o \
+    build/us/src/code/building_destroy_on_hit.c.o \
+    build/us/src/code/building_damage_apply.c.o \
+    build/us/src/code/model_turret_dispatch.c.o \
+    build/us/asm/us/main_800EAC2C_to_800EAC30.s.o \
+    build/us/src/code/building_create.c.o \
+    build/us/src/code/building_anim_frame_tick.c.o \
+    build/us/asm/us/main_800EAEB4_to_800EAF6C.s.o \
+    build/us/src/code/building_destroy.c.o \
+    build/us/asm/us/main_800EB308_to_800EB4FC.s.o \
+    build/us/src/code/model_shielded_dispatch.c.o \
+    build/us/asm/us/main_800EB714_to_800EB720.s.o \
+    build/us/src/code/impact_flash_spawn.c.o \
+    build/us/src/code/impact_debris_spray.c.o \
+    build/us/asm/us/main_800EB838_to_800EB934.s.o \
+    build/us/src/code/impact_flash_expire.c.o \
+    build/us/asm/us/main_800EBA98_to_800EBCA8.s.o \
+    build/us/src/code/player_projectile_launch.c.o \
+    build/us/asm/us/main_800EBDA0_to_800EC1C0.s.o \
+    build/us/src/code/mission_counter_release.c.o \
+    build/us/asm/us/main_800EC1F8_to_800EC4A8.s.o \
+    build/us/src/code/mission_objectives_update.c.o \
+    build/us/src/code/splash_damage_falloff.c.o \
+    build/us/asm/us/main_800EC788_to_800EC790.s.o \
+    build/us/src/code/projectile_spawn_typed.c.o \
+    build/us/asm/us/main_800EC8E8_to_800ECEBC.s.o \
+    build/us/src/code/projectile_shell_draw.c.o \
+    build/us/src/code/shockwave_ring_spawn.c.o \
+    build/us/src/code/shockwave_expand.c.o \
+    build/us/src/code/shockwave_ring_draw.c.o \
+    build/us/src/code/destructible_prop_create.c.o \
+    build/us/asm/us/main_800ED4F4_to_800ED63C.s.o \
+    build/us/src/code/destructible_anim_frame_tick.c.o \
+    build/us/asm/us/main_800ED694_to_800ED698.s.o \
+    build/us/src/code/model_message_damage_destroy.c.o \
+    build/us/src/code/projectile_target_query.c.o \
+    build/us/src/code/destructible_prop_on_hit.c.o \
+    build/us/src/code/destructible_prop_on_hit_alt.c.o \
+    build/us/asm/us/main_800ED804_to_800EDC00.s.o \
+    build/us/src/code/prop_destroy_slot_release.c.o \
+    build/us/asm/us/main_800EDDCC_to_800EDF14.s.o \
+    build/us/src/code/prop_message_shatter.c.o \
+    build/us/src/code/prop_target_query.c.o \
+    build/us/src/code/prop_debris_burst_on_hit.c.o \
+    build/us/src/code/prop_debris_burst_on_hit_alt.c.o \
+    build/us/asm/us/main_800EE288_to_800EE688.s.o \
+    build/us/src/code/prop_spawn_child.c.o \
+    build/us/src/code/prop_spawn_pickup.c.o \
+    build/us/src/code/prop_height_update.c.o \
+    build/us/src/code/barrier_break_open.c.o \
+    build/us/asm/us/main_800EED90_to_800EF400.s.o \
+    build/us/src/code/effect_segment_append.c.o \
+    build/us/src/code/effect_segments_draw.c.o \
+    build/us/asm/us/main_800EF770_to_800EFB30.s.o \
+    build/us/src/code/effect_message_damage.c.o \
+    build/us/src/code/effect_message_damage_guarded.c.o \
+    build/us/src/code/particle_emitter_tail.c.o \
+    build/us/asm/us/main_800EFC68_to_800EFC70.s.o \
+    build/us/src/code/particle_emitter_create.c.o \
+    build/us/src/code/particle_pool_init.c.o \
+    build/us/src/code/particle_emitter_free.c.o \
+    build/us/src/code/particle_emitter_update.c.o \
+    build/us/asm/us/main_800F01F0_to_800F0618.s.o \
+    build/us/src/code/particle_free_list.c.o \
+    build/us/src/code/particle_smoke_update.c.o \
+    build/us/src/code/particle_node_list.c.o \
+    build/us/asm/us/main_800F0A20_to_800F0B08.s.o \
+    build/us/src/code/particle_hit_spawn.c.o \
+    build/us/src/code/particle_system_create.c.o \
+    build/us/src/code/particle_owner_message.c.o \
+    build/us/asm/us/main_800F1278_to_800F1770.s.o \
+    build/us/src/code/anim_list_register_global.c.o \
+    build/us/asm/us/main_800F17AC_to_800F17B0.s.o \
+    build/us/src/code/anim_keyframes_apply.c.o \
+    build/us/asm/us/main_800F1900_to_800F1B30.s.o \
+    build/us/src/code/hazard_actor_spawn.c.o \
+    build/us/src/code/hazard_actor_spawn_simple.c.o \
+    build/us/src/code/hazard_state_update.c.o \
+    build/us/src/code/hazard_model_draw.c.o \
+    build/us/asm/us/main_800F2184_to_800F2288.s.o \
+    build/us/src/code/hazard_message_handler.c.o \
+    build/us/asm/us/main_800F24F8_to_800F265C.s.o \
+    build/us/src/code/mine_message_handlers.c.o \
+    build/us/src/code/mine_trigger_update.c.o \
+    build/us/asm/us/main_800F2BB8_to_800F2BC0.s.o \
+    build/us/src/code/powerup_pad_create.c.o \
+    build/us/src/code/powerup_timer_update.c.o \
+    build/us/src/code/powerup_pad_draw.c.o \
+    build/us/asm/us/main_800F3208_to_800F32EC.s.o \
+    build/us/src/code/barrel_handlers.c.o \
+    build/us/src/code/barrel_explode.c.o \
+    build/us/src/code/falling_crate_update.c.o \
+    build/us/src/code/decal_spawn_draw.c.o \
+    build/us/asm/us/main_800F3B7C_to_800F3D04.s.o \
+    build/us/src/code/mesh_vertex_transform.c.o \
+    build/us/src/code/mesh_rings_draw.c.o \
+    build/us/asm/us/main_800F4D74_to_800F4D80.s.o \
+    build/us/src/code/mesh_wave_update.c.o \
+    build/us/src/code/tracer_spawn.c.o \
+    build/us/src/code/tracer_trail_update.c.o \
+    build/us/asm/us/main_800F5264_to_800F5270.s.o \
+    build/us/src/code/effect_table_reset.c.o \
+    build/us/src/code/effect_prop_spawn.c.o \
+    build/us/src/code/effect_targets_query.c.o \
+    build/us/src/code/effect_targets_damage.c.o \
+    build/us/src/code/effect_burn_update.c.o \
+    build/us/src/code/effect_beam_draw.c.o \
+    build/us/src/code/generator_damage_apply.c.o \
+    build/us/src/code/generator_message_damage.c.o \
+    build/us/asm/us/main_800F6100_to_800F6144.s.o \
+    build/us/src/code/generator_splash_damage.c.o \
+    build/us/asm/us/main_800F6344_to_800F64B8.s.o \
+    build/us/src/code/generator_dispatch_bonus.c.o \
+    build/us/asm/us/main_800F6648_to_800F6650.s.o \
+    build/us/src/code/generator_spawn.c.o \
+    build/us/src/code/effect_expire_100.c.o \
+    build/us/asm/us/main_800F67F0_to_800F6ED0.s.o \
+    build/us/src/code/wreck_debris_spawn.c.o \
+    build/us/src/code/wreck_debris_update.c.o \
+    build/us/asm/us/main_800F7150_to_800F71FC.s.o \
+    build/us/src/code/anim_list_create.c.o \
+    build/us/asm/us/main_800F7230_to_800F756C.s.o \
+    build/us/src/code/anim_list_reset.c.o \
+    build/us/src/code/anim_list_register.c.o \
+    build/us/asm/us/main_800F7648_to_800F7870.s.o \
+    build/us/src/code/anim_alpha_fade_draw.c.o \
+    build/us/src/code/spark_spawn.c.o \
+    build/us/src/code/spark_burst_update.c.o \
+    build/us/src/code/smoke_puff_spawn.c.o \
+    build/us/asm/us/main_800F7C24_to_800F7C30.s.o \
+    build/us/src/code/flicker_prop_create.c.o \
+    build/us/src/code/flicker_prop_draw.c.o \
+    build/us/src/code/flicker_prop_message.c.o \
+    build/us/src/code/flicker_prop_message_cb.c.o \
+    build/us/asm/us/main_800F7EB8_to_800F7EC0.s.o \
+    build/us/src/code/static_prop_create.c.o \
+    build/us/src/code/static_prop_expire.c.o \
+    build/us/src/code/static_prop_draw.c.o \
+    build/us/asm/us/main_800F809C_to_800F80A0.s.o \
+    build/us/src/code/static_in_radius.c.o \
+    build/us/asm/us/main_800F80E8_to_800F8208.s.o \
+    build/us/src/code/model_cache_globals.c.o \
+    build/us/src/code/model_in_draw_range.c.o \
+    build/us/asm/us/main_800F83B8_to_800F83C0.s.o \
+    build/us/src/code/artillery_emplacement_update.c.o \
+    build/us/src/code/artillery_emplacement_disable.c.o \
+    build/us/src/code/artillery_emplacement_create.c.o \
+    build/us/asm/us/main_800F865C_to_800F872C.s.o \
+    build/us/src/code/artillery_target_track.c.o \
+    build/us/asm/us/main_800F8AAC_to_801029D0.s.o \
+    build/us/src/libultra/os_ai_get_length.c.o \
+    build/us/src/libultra/os_ai_get_status.c.o \
+    build/us/asm/us/main_801029F0_to_80103160.s.o \
+    build/us/src/libultra/os_ai_device_busy.c.o \
+    build/us/asm/us/main_80103190_to_801037B0.s.o \
+    build/us/src/libultra/al_copy.c.o \
+    build/us/src/libultra/os_create_mesg_queue.c.o \
+    build/us/asm/us/main_80103860_to_801059B0.s.o \
+    build/us/src/libultra/al_filter_new.c.o \
+    build/us/asm/us/main_801059D0_to_80105A70.s.o \
+    build/us/src/libultra/al_heap_alloc.c.o \
+    build/us/src/libultra/al_heap_init.c.o \
+    build/us/asm/us/main_80105B10_to_8010CF70.s.o \
+    build/us/src/libultra/os_pi_get_cmd_queue.c.o \
+    build/us/asm/us/main_8010CFA0_to_8010D660.s.o \
+    build/us/src/libultra/os_get_thread_pri.c.o \
+    build/us/src/libultra/os_pi_access.c.o \
+    build/us/asm/us/main_8010D740_to_8010F3E0.s.o \
+    build/us/src/libultra/sched.c.o \
+    build/us/asm/us/main_8010F5F0_to_8010F6A0.s.o \
+    build/us/src/libultra/os_dp_device_busy.c.o \
+    build/us/asm/us/main_8010F6D0_to_8010FE90.s.o \
+    build/us/src/libultra/os_si_device_busy.c.o \
+    build/us/src/libultra/os_si_raw_read_io.c.o \
+    build/us/src/libultra/os_si_raw_write_io.c.o \
+    build/us/src/libultra/al_main.c.o \
+    build/us/src/libultra/sprintf.c.o \
+    build/us/src/libultra/os_sp_set_pc.c.o \
+    build/us/asm/us/main_801100E0_to_801103D0.s.o \
+    build/us/src/libultra/os_sp_device_busy.c.o \
+    build/us/asm/us/main_80110400_to_80110490.s.o \
+    build/us/src/libultra/os_sp_set_status.c.o \
+    build/us/src/libultra/os_sp_task_yield.c.o \
+    build/us/asm/us/main_801104C0_to_80110540.s.o \
+    build/us/src/libultra/os_sp_get_status.c.o \
+    build/us/asm/us/main_80110550_to_801106B0.s.o \
+    build/us/src/libultra/string.c.o \
+    build/us/src/libultra/al_syn_delete.c.o \
+    build/us/asm/us/main_80110760_to_801118C0.s.o \
+    build/us/src/libultra/os_vi_get_current_context.c.o \
+    build/us/asm/us/main_after_801118C0.s.o \
+    > build/us/undefined_object_symbols.txt
+fi
+find build/us/asm build/us/src -type f -name '*.o' -print0 \
+    | xargs -0 "${tool_prefix}nm" -u \
     > build/us/undefined_object_symbols.txt
 python3 tools/generate_linker_symbols.py build/us/symbols.ld \
     config/us/symbol_addrs.txt \
@@ -389,13 +3059,19 @@ python3 tools/generate_linker_symbols.py build/us/symbols.ld \
     build/us/undefined_funcs_auto.txt \
     --undefined-list build/us/undefined_object_symbols.txt \
     --symbol func_8E180004=0x8E180004 \
-    --symbol func_80000000=0x80000000
+    --symbol func_80000000=0x80000000 \
+    --symbol D_803A66C0=0x803A66C0
 
-"${tool_prefix}ld.bfd" -EB -T build/us/symbols.ld -T battletanx_ga.ld \
+python3 tools/place_unit_rodata.py battletanx_ga.ld config/us/unit_rodata.tsv \
+    build/us/battletanx_ga.placed.ld
+"${tool_prefix}ld.bfd" -EB --no-check-sections \
+    -T build/us/symbols.ld -T build/us/battletanx_ga.placed.ld \
     -Map build/us/battletanx_ga.map \
     -o build/us/battletanx_ga.elf
-"${tool_prefix}objcopy" -O binary \
+"${tool_prefix}objcopy" -O binary -R '.unit_rodata_*' \
     build/us/battletanx_ga.elf build/us/battletanx_ga.code.bin
+python3 tools/splice_unit_rodata.py build/us/battletanx_ga.elf \
+    config/us/unit_rodata.tsv build/us/battletanx_ga.code.bin
 
 actual_size="$(wc -c < build/us/battletanx_ga.code.bin)"
 [[ "$actual_size" -eq 1052672 ]] || {

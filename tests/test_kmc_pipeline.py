@@ -45,6 +45,43 @@ class KmcPipelineTests(unittest.TestCase):
             MODULE.normalize(source),
         )
 
+    def test_uses_retail_encoding_for_long_shift_helper_branch(self) -> None:
+        source = "\t.set\tnoreorder\n\tb\t3f\n\tmove\t$12,$0\n"
+        self.assertEqual(
+            "\t.set\tnoreorder\n\t.set\tnoreorder\n"
+            "\tbgez\t$zero,3f\n\tmove\t$12,$0\n",
+            MODULE.normalize(source),
+        )
+
+    def test_materializes_fp_compare_hazard_but_not_load_placeholder(self) -> None:
+        source = (
+            "\tl.s\t$f0,0($4)\n"
+            "\t#nop\n"
+            "\tc.le.s\t$f4,$f0\n"
+            "\t#nop\n"
+            "\tbc1t\t.L1\n"
+        )
+        self.assertEqual(
+            "\t.set\tnoreorder\n"
+            "\tl.s\t$f0,0($4)\n"
+            "\t#nop\n"
+            "\tc.le.s\t$f4,$f0\n"
+            "\tnop\n"
+            "\tbc1t\t.L1\n"
+            "\tnop\n",
+            MODULE.normalize(source),
+        )
+
+    def test_uses_at_for_indexed_symbol_load(self) -> None:
+        source = "\tlbu\t$2,D_801146D4+8($5)\n"
+        self.assertEqual(
+            "\t.set\tnoreorder\n"
+            "\tlui\t$at,%hi(D_801146D4+8)\n"
+            "\taddu\t$at,$at,$5\n"
+            "\tlbu\t$2,%lo(D_801146D4+8)($at)\n",
+            MODULE.normalize(source),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -52,11 +52,11 @@ def main() -> None:
 
     for name, address in sorted(selected, key=lambda item: (item[1], item[0])):
         line = f"{name} = 0x{address:08X};"
-        if name in functions:
-            line += f" // type:func size:0x{functions[name][1]:X}"
-        elif name in manual:
+        if name in manual:
             entry = manual[name]
             line += f" // type:{entry['type']} size:0x{int(entry['size']):X}"
+        elif name in functions:
+            line += f" // type:func size:0x{functions[name][1]:X}"
         output.append(line)
 
     args.output.write_text("\n".join(output) + "\n")

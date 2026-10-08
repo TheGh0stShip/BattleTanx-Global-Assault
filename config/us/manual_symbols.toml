@@ -13,3 +13,1121 @@ vram = 0x800EAC2C
 size = 0x4
 type = "u32"
 reason = "Embedded data word between verified function boundaries."
+
+[[symbol]]
+name = "func_800C42E4"
+vram = 0x800C42E4
+size = 0x68
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800C434C"
+vram = 0x800C434C
+size = 0xCC
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800C4ABC"
+vram = 0x800C4ABC
+size = 0x68
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800C4E24"
+vram = 0x800C4E24
+size = 0x12C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800C4F50"
+vram = 0x800C4F50
+size = 0x48
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800C7514"
+vram = 0x800C7514
+size = 0x80
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800C9130"
+vram = 0x800C9130
+size = 0x11C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800C962C"
+vram = 0x800C962C
+size = 0x54
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800CA474"
+vram = 0x800CA474
+size = 0x2C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800CB110"
+vram = 0x800CB110
+size = 0xD4
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800CB1E4"
+vram = 0x800CB1E4
+size = 0x150
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800CF750"
+vram = 0x800CF750
+size = 0x24
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800CF774"
+vram = 0x800CF774
+size = 0x1C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800D0814"
+vram = 0x800D0814
+size = 0x44
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800D0960"
+vram = 0x800D0960
+size = 0xC
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800D096C"
+vram = 0x800D096C
+size = 0x74
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800D09E0"
+vram = 0x800D09E0
+size = 0x94
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800D4D00"
+vram = 0x800D4D00
+size = 0xE0
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800D7CF4"
+vram = 0x800D7CF4
+size = 0x6C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800D7DD4"
+vram = 0x800D7DD4
+size = 0xC
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800D8050"
+vram = 0x800D8050
+size = 0x38
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800D8674"
+vram = 0x800D8674
+size = 0x50
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800D86C4"
+vram = 0x800D86C4
+size = 0x58
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800D871C"
+vram = 0x800D871C
+size = 0x3C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800D8F28"
+vram = 0x800D8F28
+size = 0x20
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800D91C0"
+vram = 0x800D91C0
+size = 0x84
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800D92D4"
+vram = 0x800D92D4
+size = 0xC
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800D9A88"
+vram = 0x800D9A88
+size = 0x58
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800D9B48"
+vram = 0x800D9B48
+size = 0x8
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800D9C38"
+vram = 0x800D9C38
+size = 0x118
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800DA984"
+vram = 0x800DA984
+size = 0x15C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800DC3A8"
+vram = 0x800DC3A8
+size = 0x28C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800DC634"
+vram = 0x800DC634
+size = 0xB8
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800DC634"
+vram = 0x800DC634
+size = 0xB8
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800DC7A4"
+vram = 0x800DC7A4
+size = 0xC
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800DD1C0"
+vram = 0x800DD1C0
+size = 0xCC
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800DD28C"
+vram = 0x800DD28C
+size = 0x4
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800DD3A0"
+vram = 0x800DD3A0
+size = 0x354
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800DD6F4"
+vram = 0x800DD6F4
+size = 0x68
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800DE4DC"
+vram = 0x800DE4DC
+size = 0x50
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800DF0C4"
+vram = 0x800DF0C4
+size = 0xC
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800DF33C"
+vram = 0x800DF33C
+size = 0x7C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800E1980"
+vram = 0x800E1980
+size = 0xCC
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800E2308"
+vram = 0x800E2308
+size = 0x218
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800E2520"
+vram = 0x800E2520
+size = 0x188
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800E2D74"
+vram = 0x800E2D74
+size = 0x98
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800E3404"
+vram = 0x800E3404
+size = 0x5C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800E462C"
+vram = 0x800E462C
+size = 0x27C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800E48A8"
+vram = 0x800E48A8
+size = 0x38
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800E562C"
+vram = 0x800E562C
+size = 0x9C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800E56C8"
+vram = 0x800E56C8
+size = 0x8
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800E56D0"
+vram = 0x800E56D0
+size = 0x134
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800E5804"
+vram = 0x800E5804
+size = 0x5C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800E58C4"
+vram = 0x800E58C4
+size = 0xC
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800E64EC"
+vram = 0x800E64EC
+size = 0x4
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800E7968"
+vram = 0x800E7968
+size = 0xA8
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800E7F5C"
+vram = 0x800E7F5C
+size = 0x4
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800E804C"
+vram = 0x800E804C
+size = 0x44
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800E8358"
+vram = 0x800E8358
+size = 0x20
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800E8378"
+vram = 0x800E8378
+size = 0x8
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800EAE58"
+vram = 0x800EAE58
+size = 0x5C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800EAEB4"
+vram = 0x800EAEB4
+size = 0xB8
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800EAF6C"
+vram = 0x800EAF6C
+size = 0x39C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800EB308"
+vram = 0x800EB308
+size = 0x418
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800EBCA8"
+vram = 0x800EBCA8
+size = 0xF8
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800EC788"
+vram = 0x800EC788
+size = 0x8
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800ED63C"
+vram = 0x800ED63C
+size = 0x58
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800ED694"
+vram = 0x800ED694
+size = 0x9C
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800ED730"
+vram = 0x800ED730
+size = 0x44
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800ED774"
+vram = 0x800ED774
+size = 0x48
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800ED774"
+vram = 0x800ED774
+size = 0x48
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800ED7BC"
+vram = 0x800ED7BC
+size = 0x48
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800ED7BC"
+vram = 0x800ED7BC
+size = 0x48
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800EDC00"
+vram = 0x800EDC00
+size = 0xEC
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800EE0B0"
+vram = 0x800EE0B0
+size = 0x38
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800EE0E8"
+vram = 0x800EE0E8
+size = 0xD0
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800EE0E8"
+vram = 0x800EE0E8
+size = 0xD0
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800EE1B8"
+vram = 0x800EE1B8
+size = 0xD0
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800EE1B8"
+vram = 0x800EE1B8
+size = 0xD0
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800EFC68"
+vram = 0x800EFC68
+size = 0x8
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800EFE10"
+vram = 0x800EFE10
+size = 0x50
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800EFE60"
+vram = 0x800EFE60
+size = 0x64
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800F09C0"
+vram = 0x800F09C0
+size = 0x60
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800F0A20"
+vram = 0x800F0A20
+size = 0xD50
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800F17AC"
+vram = 0x800F17AC
+size = 0x384
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800F3098"
+vram = 0x800F3098
+size = 0x170
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800F3208"
+vram = 0x800F3208
+size = 0xE4
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800F3B7C"
+vram = 0x800F3B7C
+size = 0x188
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800F3E58"
+vram = 0x800F3E58
+size = 0x120
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800F3F78"
+vram = 0x800F3F78
+size = 0x1078
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800F5F10"
+vram = 0x800F5F10
+size = 0x1F0
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800F6100"
+vram = 0x800F6100
+size = 0x44
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800F6648"
+vram = 0x800F6648
+size = 0x180
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800F71FC"
+vram = 0x800F71FC
+size = 0x34
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800F7648"
+vram = 0x800F7648
+size = 0x354
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800F799C"
+vram = 0x800F799C
+size = 0xE4
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800F7C24"
+vram = 0x800F7C24
+size = 0xC
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800F7D24"
+vram = 0x800F7D24
+size = 0xF0
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800F7E14"
+vram = 0x800F7E14
+size = 0x50
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800F7E14"
+vram = 0x800F7E14
+size = 0x50
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800F7E64"
+vram = 0x800F7E64
+size = 0x54
+type = "func"
+reason = "Function boundary established by the byte-exact C build (make verify-code)."
+
+[[symbol]]
+name = "func_800F7EB8"
+vram = 0x800F7EB8
+size = 0x8
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800F809C"
+vram = 0x800F809C
+size = 0x16C
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800F865C"
+vram = 0x800F865C
+size = 0xA374
+type = "func"
+reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+
+[[symbol]]
+name = "func_800C48F0"
+vram = 0x800C48F0
+size = 0x1CC
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit hud_rodata_c48f0; was 0x6a8)."
+
+[[symbol]]
+name = "func_800C4B24"
+vram = 0x800C4B24
+size = 0x90
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit hud_rodata_c4b24; was missing)."
+
+[[symbol]]
+name = "func_800C8F00"
+vram = 0x800C8F00
+size = 0x110
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit race_rodata_c8f00; was 0x34c)."
+
+[[symbol]]
+name = "func_800C9010"
+vram = 0x800C9010
+size = 0x120
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit race_rodata_c9010; was missing)."
+
+[[symbol]]
+name = "func_800C9680"
+vram = 0x800C9680
+size = 0xDC
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit race_rodata_c9680; was missing)."
+
+[[symbol]]
+name = "func_800CA4A0"
+vram = 0x800CA4A0
+size = 0x180
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit race_rodata_ca4a0; was missing)."
+
+[[symbol]]
+name = "func_800CB334"
+vram = 0x800CB334
+size = 0x4F0
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit controls_rodata_cb334; was 0x600)."
+
+[[symbol]]
+name = "func_800CB824"
+vram = 0x800CB824
+size = 0x110
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit controls_rodata_cb334; was missing)."
+
+[[symbol]]
+name = "func_800D0DF8"
+vram = 0x800D0DF8
+size = 0x160
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit spawn_rodata_d0df8; was missing)."
+
+[[symbol]]
+name = "func_800D4B58"
+vram = 0x800D4B58
+size = 0x1A8
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit seq_rodata_d4b58; was 0x288)."
+
+[[symbol]]
+name = "func_800E18D8"
+vram = 0x800E18D8
+size = 0xA8
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit player_rodata_e18d8; was missing)."
+
+[[symbol]]
+name = "func_800E44C8"
+vram = 0x800E44C8
+size = 0x68
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit wreck_rodata_e44c8; was missing)."
+
+[[symbol]]
+name = "func_800E918C"
+vram = 0x800E918C
+size = 0x15C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit slot_rodata_e918c; was 0x164)."
+
+[[symbol]]
+name = "func_800ED698"
+vram = 0x800ED698
+size = 0x98
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit model_rodata_ed698; was missing)."
+
+[[symbol]]
+name = "func_800EDF14"
+vram = 0x800EDF14
+size = 0x19C
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit prop_rodata_edf14; was 0x374)."
+
+[[symbol]]
+name = "func_800EF400"
+vram = 0x800EF400
+size = 0x178
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit effect_rodata_ef400; was missing)."
+
+[[symbol]]
+name = "func_800EFB30"
+vram = 0x800EFB30
+size = 0x60
+type = "func"
+reason = "Function boundary established by the byte-exact C build (rodata unit effect_rodata_efb30; was missing)."
+
+[[symbol]]
+name = "func_800C68AC"
+vram = 0x800C68AC
+size = 0x68
+type = "func"
+reason = "Matched C TU hud_c68ac; symbol_addrs size was 0x6c."
+
+
+[[symbol]]
+name = "func_800CFBD8"
+vram = 0x800CFBD8
+size = 0x140
+type = "func"
+reason = "Matched C TU results_cfbd8; symbol_addrs size was 0x1f8."
+
+
+[[symbol]]
+name = "func_800D05E0"
+vram = 0x800D05E0
+size = 0x234
+type = "func"
+reason = "Matched C TU game_d05e0; symbol_addrs size was 0x278."
+
+
+[[symbol]]
+name = "func_800D0F58"
+vram = 0x800D0F58
+size = 0xF4
+type = "func"
+reason = "Matched C TU spawn_d0f58; symbol_addrs size was missing."
+
+
+[[symbol]]
+name = "func_800D104C"
+vram = 0x800D104C
+size = 0xF4
+type = "func"
+reason = "Matched C TU spawn_d104c; symbol_addrs size was missing."
+
+
+[[symbol]]
+name = "func_800D1140"
+vram = 0x800D1140
+size = 0xF4
+type = "func"
+reason = "Matched C TU spawn_d1140; symbol_addrs size was missing."
+
+
+[[symbol]]
+name = "func_800D1234"
+vram = 0x800D1234
+size = 0x40
+type = "func"
+reason = "Matched C TU spawn_d1234; symbol_addrs size was missing."
+
+[[symbol]]
+name = "func_800D1274"
+vram = 0x800D1274
+size = 0x3C
+type = "func"
+reason = "Matched C TU spawn_d1234; symbol_addrs size was missing."
+
+
+[[symbol]]
+name = "func_800D56FC"
+vram = 0x800D56FC
+size = 0x580
+type = "func"
+reason = "Matched C TU hud_draw_list; symbol_addrs size was 0x584."
+
+
+[[symbol]]
+name = "func_800D6EEC"
+vram = 0x800D6EEC
+size = 0x658
+type = "func"
+reason = "Matched C TU player_d6eec; symbol_addrs size was 0x74c."
+
+
+[[symbol]]
+name = "func_800D7544"
+vram = 0x800D7544
+size = 0xF4
+type = "func"
+reason = "Matched C TU player_d7544; symbol_addrs size was missing."
+
+
+[[symbol]]
+name = "func_800D7638"
+vram = 0x800D7638
+size = 0x6BC
+type = "func"
+reason = "Matched C TU player_d7638; symbol_addrs size was 0x728."
+
+
+[[symbol]]
+name = "func_800D7DE0"
+vram = 0x800D7DE0
+size = 0x270
+type = "func"
+reason = "Matched C TU effect_node_spawn; symbol_addrs size was 0x2a8."
+
+
+[[symbol]]
+name = "func_800D8380"
+vram = 0x800D8380
+size = 0x158
+type = "func"
+reason = "Matched C TU actor_d8380; symbol_addrs size was 0x15c."
+
+
+[[symbol]]
+name = "func_800D84DC"
+vram = 0x800D84DC
+size = 0x198
+type = "func"
+reason = "Matched C TU actor_d84dc; symbol_addrs size was 0x27c."
+
+
+[[symbol]]
+name = "func_800D88F0"
+vram = 0x800D88F0
+size = 0x50
+type = "func"
+reason = "Matched C TU turret_d88f0; symbol_addrs size was 0x190."
+
+
+[[symbol]]
+name = "func_800D8940"
+vram = 0x800D8940
+size = 0xB8
+type = "func"
+reason = "Matched C TU turret_d8940; symbol_addrs size was missing."
+
+
+[[symbol]]
+name = "func_800D89F8"
+vram = 0x800D89F8
+size = 0x88
+type = "func"
+reason = "Matched C TU turret_d89f8; symbol_addrs size was missing."
+
+
+[[symbol]]
+name = "func_800D8C60"
+vram = 0x800D8C60
+size = 0x2C8
+type = "func"
+reason = "Matched C TU turret_d8c60; symbol_addrs size was 0x2e8."
+
+
+[[symbol]]
+name = "func_800D8F48"
+vram = 0x800D8F48
+size = 0x278
+type = "func"
+reason = "Matched C TU single_d8f48; symbol_addrs size was 0x2fc."
+
+
+[[symbol]]
+name = "func_800D9900"
+vram = 0x800D9900
+size = 0x188
+type = "func"
+reason = "Matched C TU minimap_d9900; symbol_addrs size was 0x1e0."
+
+
+[[symbol]]
+name = "func_800D9B50"
+vram = 0x800D9B50
+size = 0xE8
+type = "func"
+reason = "Matched C TU model_d9b50; symbol_addrs size was 0x200."
+
+
+[[symbol]]
+name = "func_800DE52C"
+vram = 0x800DE52C
+size = 0x21C
+type = "func"
+reason = "Matched C TU spawner_de52c; symbol_addrs size was 0x2bc."
+
+
+[[symbol]]
+name = "func_800DE748"
+vram = 0x800DE748
+size = 0xA0
+type = "func"
+reason = "Matched C TU spawner_de748; symbol_addrs size was missing."
+
+
+[[symbol]]
+name = "func_800DF0D0"
+vram = 0x800DF0D0
+size = 0x26C
+type = "func"
+reason = "Matched C TU slot_df0d0; symbol_addrs size was 0x2e8."
+
+
+[[symbol]]
+name = "func_800E2AEC"
+vram = 0x800E2AEC
+size = 0x288
+type = "func"
+reason = "Matched C TU turret_e2aec; symbol_addrs size was 0x320."
+
+
+[[symbol]]
+name = "func_800E6040"
+vram = 0x800E6040
+size = 0x1A8
+type = "func"
+reason = "Matched C TU bridge_e6040; symbol_addrs size was missing."
+
+
+[[symbol]]
+name = "func_800E7F60"
+vram = 0x800E7F60
+size = 0xEC
+type = "func"
+reason = "Matched C TU pickup_e7f60; symbol_addrs size was 0x130."
+
+
+[[symbol]]
+name = "func_800EE688"
+vram = 0x800EE688
+size = 0x170
+type = "func"
+reason = "Matched C TU prop_ee688; symbol_addrs size was 0x238."
+
+
+[[symbol]]
+name = "func_800EE7F8"
+vram = 0x800EE7F8
+size = 0xC8
+type = "func"
+reason = "Matched C TU prop_ee7f8; symbol_addrs size was missing."
+
+
+[[symbol]]
+name = "func_800F2050"
+vram = 0x800F2050
+size = 0x134
+type = "func"
+reason = "Matched C TU hazard_f2050; symbol_addrs size was 0x238."
+
+
+[[symbol]]
+name = "func_800F2288"
+vram = 0x800F2288
+size = 0x270
+type = "func"
+reason = "Matched C TU hazard_f2288; symbol_addrs size was 0x3d4."
+
+
+[[symbol]]
+name = "func_800F7870"
+vram = 0x800F7870
+size = 0x12C
+type = "func"
+reason = "Matched C TU anim_f7870; symbol_addrs size was 0x210."
+
+
+[[symbol]]
+name = "func_800F8264"
+vram = 0x800F8264
+size = 0x154
+type = "func"
+reason = "Matched C TU model_f8264; symbol_addrs size was 0x15c."
+
