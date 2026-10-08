@@ -82,6 +82,35 @@ class KmcPipelineTests(unittest.TestCase):
             MODULE.normalize(source),
         )
 
+    def test_resource_copy_prologue_reorders_once(self) -> None:
+        source = (
+            "func_8007E118:\n"
+            "\tsubu\t$sp,$sp,24\n"
+            "\tsw\t$31,20($sp)\n"
+            "\tsw\t$16,16($sp)\n"
+            "\tlbu\t$3,0($4)\n"
+            "\tli\t$2,0x00000002\t\t# 2\n"
+            "\t.set\tnoreorder\n"
+            "\tbne\t$3,$2,.L2\n"
+            "\tmove\t$16,$5\n"
+        )
+        normalized = MODULE.normalize_v3(source)
+        expected = (
+            "\tlbu\t$3,0($4)\n"
+            "\tsubu\t$sp,$sp,24\n"
+            "\tsw\t$16,16($sp)\n"
+            "\tmove\t$16,$5\n"
+            "\tli\t$2,0x00000002\t\t# 2\n"
+            "\t.set\tnoreorder\n"
+            "\tbne\t$3,$2,.L2\n"
+            "\tsw\t$31,20($sp)\n"
+        )
+        self.assertIn(expected, normalized)
+
+    def test_resource_copy_prologue_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.normalize_v3("func_8007E118:\n\tnop\n")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -466,6 +466,44 @@ def normalize_race_map_entry(text: str) -> str:
     return "\n".join(lines)
 
 
+def schedule_resource_copy_prologue(text: str) -> str:
+    """Reproduce the retail scheduler order for ``func_8007E118``.
+
+    The generated body is otherwise exact.  KMC GCC gives the frame setup
+    priority over the entry byte load and leaves the destination save in the
+    branch delay slot; the retail object schedules the independent load first,
+    saves ``s0`` before assigning it, and uses the delay slot for ``ra``.
+    """
+    if "func_8007E118:" not in text:
+        return text
+    before = (
+        "\tsubu\t$sp,$sp,24\n"
+        "\tsw\t$31,20($sp)\n"
+        "\tsw\t$16,16($sp)\n"
+        "\tlbu\t$3,0($4)\n"
+        "\tli\t$2,0x00000002\t\t# 2\n"
+        "\t.set\tnoreorder\n"
+        "\tbne\t$3,$2,.L2\n"
+        "\tmove\t$16,$5\n"
+    )
+    after = (
+        "\tlbu\t$3,0($4)\n"
+        "\tsubu\t$sp,$sp,24\n"
+        "\tsw\t$16,16($sp)\n"
+        "\tmove\t$16,$5\n"
+        "\tli\t$2,0x00000002\t\t# 2\n"
+        "\t.set\tnoreorder\n"
+        "\tbne\t$3,$2,.L2\n"
+        "\tsw\t$31,20($sp)\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_8007E118 prologue reorder fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -487,6 +525,8 @@ def normalize_v3(source: str) -> str:
         text = swap_results_case_registers(text)
     if os.environ.get("V3_RACE_MAP_ENTRY", "1") == "1":
         text = normalize_race_map_entry(text)
+    if os.environ.get("V3_RESOURCE_COPY_PROLOGUE", "1") == "1":
+        text = schedule_resource_copy_prologue(text)
     return text
 
 

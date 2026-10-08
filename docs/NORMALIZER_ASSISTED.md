@@ -7,6 +7,7 @@ its instruction pattern fires exactly once.
 
 | Function | Rule and exact pattern | Action | Retail words reproduced |
 | --- | --- | --- | --- |
+| `func_8007E118` | `addiu sp,-24; sw ra,20(sp); sw s0,16(sp); lbu v1,0(a0); li v0,2; bne v1,v0; move s0,a1` | Reorder the seven independent/dependency-safe prologue instructions: entry load first, save/assign `s0` before the constant, and save `ra` in the branch delay slot. | At `0x8007E118`–`0x8007E130`: `90830000 27BDFFE8 AFB00010 00A08021 24020002 14620005 AFBF0014`. |
 | `func_800C74AC` | `li $2,-1; sw $2,D_802195D4; li $2,7` | Rename the first constant/store pair from `$2` (`v0`) to `$3` (`v1`). | At `0x800C74AC`/`0x800C74B4`: `2403FFFF`, `AC2395D4` instead of `2402FFFF`, `AC2295D4`. |
 | `func_800CEA50` | `addiu i,i,1; lbu count,0(base); andi i,i,0xffff; sltu ...,i,count` | Reorder the independent count load before the increment. | At `0x800CEC1C`/`0x800CEC20`: `90C30000`, `24A50001`. |
 | `func_800CEA50` | `lb $2,D_80117EB0; la $16,D_801216A0; bne $2,$3,label; li $2,-1688731648` | Rename the load to `$3` and reverse the compare operands to preserve the retail CSE equivalence-class choice. | At `0x800CED5C`, `0x800CED60`, `0x800CED6C`: `3C038011`, `80637EB0`, `14620004`. |
