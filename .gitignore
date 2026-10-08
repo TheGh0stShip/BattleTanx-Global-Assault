@@ -19,3 +19,4 @@ include/macro.inc
 baseroms/*/baserom.*
 !baseroms/*/.gitkeep
 __pycache__/
+claude-work/
