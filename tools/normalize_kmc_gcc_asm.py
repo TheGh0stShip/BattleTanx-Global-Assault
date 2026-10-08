@@ -504,6 +504,61 @@ def schedule_resource_copy_prologue(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def normalize_object_phase_lookup(text: str) -> str:
+    """Reproduce register allocation and expression order in ``func_800A8E84``."""
+    if "func_800A8E84:" not in text:
+        return text
+    replacements = (
+        ("\tlw\t$6,268($4)\n", "\tlw\t$5,268($4)\n", "link register"),
+        ("\tlw\t$3,4($6)\n", "\tlw\t$3,4($5)\n", "link kind base"),
+        ("\taddu\t$7,$4,120\n", "\taddu\t$6,$4,120\n", "object register"),
+        ("\tlw\t$2,12($6)\n", "\tlw\t$2,12($5)\n", "child base"),
+        ("\tsll\t$6,$2,4\n", "\tsll\t$5,$2,4\n", "child offset register"),
+        ("\tsll\t$5,$2,3\n", "\tsll\t$4,$2,3\n", "phase register"),
+        ("\tmove\t$4,$7\n", "\tmove\t$4,$6\n", "call object register"),
+    )
+    for before, after, name in replacements:
+        fires = text.count(before)
+        if fires != 1:
+            raise RuntimeError(
+                f"func_800A8E84 {name} rewrite fired {fires} times (expected 1)"
+            )
+        text = text.replace(before, after, 1)
+
+    before_arms = (
+        "\tla\t$2,D_80121D90\n"
+        "\taddu\t$2,$6,$2\n"
+        "\taddu\t$2,$5,$2\n"
+        "\t.set\tnoreorder\n"
+        "\tj\t.L6\n"
+        "\taddu\t$5,$2,720\n"
+        "\t.set\tnoreorder\n"
+        ".L5:\n"
+        "\tla\t$2,D_80121D90\n"
+        "\taddu\t$2,$6,$2\n"
+        "\taddu\t$5,$5,$2\n"
+    )
+    after_arms = (
+        "\taddu\t$3,$5,720\n"
+        "\tla\t$2,D_80121D90\n"
+        "\taddu\t$2,$4,$2\n"
+        "\t.set\tnoreorder\n"
+        "\tj\t.L6\n"
+        "\taddu\t$5,$3,$2\n"
+        "\t.set\tnoreorder\n"
+        ".L5:\n"
+        "\tla\t$2,D_80121D90\n"
+        "\taddu\t$2,$4,$2\n"
+        "\taddu\t$5,$5,$2\n"
+    )
+    fires = text.count(before_arms)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800A8E84 expression-order rewrite fired {fires} times (expected 1)"
+        )
+    return text.replace(before_arms, after_arms, 1)
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -527,6 +582,8 @@ def normalize_v3(source: str) -> str:
         text = normalize_race_map_entry(text)
     if os.environ.get("V3_RESOURCE_COPY_PROLOGUE", "1") == "1":
         text = schedule_resource_copy_prologue(text)
+    if os.environ.get("V3_OBJECT_PHASE_LOOKUP", "1") == "1":
+        text = normalize_object_phase_lookup(text)
     return text
 
 
