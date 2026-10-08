@@ -73,7 +73,7 @@ segments:
       - [0xB01C, asm, main_8007B01C_to_8007B020]
       - [0xB020, c, code/unknown_8007B020]
       - [0xB030, c, code/gfx_pool]
-      - [0xB0E4, asm, main_8007B0E4_to_8007B190]
+      - [0xB0E4, c, code/codex_batch_next2/func_8007B0E4]
       - [0xB190, c, code/codex_batch/func_8007B190]
       - [0xB1F0, c, code/render_queue]
       - [0xB65C, c, code/render_submit]
