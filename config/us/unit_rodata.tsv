@@ -1,6 +1,7 @@
 # unit	rodata_vram	rodata_size
 # See tools/place_unit_rodata.py. Listed C units own [vram, vram+size) of
 # main-segment rodata; make verify-code proves the C bytes equal the ROM.
+codex_batch_next2/func_8007D7C4	0x800710C0	0x18
 hud_tree_draw	0x80073288	0x8
 hud_frame	0x80073290	0x10
 hud_mode_table	0x80073608	0x20
