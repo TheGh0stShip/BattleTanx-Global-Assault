@@ -20,3 +20,4 @@ baseroms/*/baserom.*
 !baseroms/*/.gitkeep
 __pycache__/
 claude-work/
+AGENTS.md
