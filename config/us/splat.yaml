@@ -68,7 +68,7 @@ segments:
       - [0xAD94, c, code/display_buffer_select]
       - [0xADB0, c, code/unknown_8007ADB0]
       - [0xADC0, c, code/controller_state]
-      - [0xADF0, asm, main_8007ADF0_to_8007AF84]
+      - [0xADF0, c, code/codex_batch_next2/func_8007ADF0]
       - [0xAF84, c, code/codex_batch_next2/func_8007AF84]
       - [0xB01C, asm, main_8007B01C_to_8007B020]
       - [0xB020, c, code/unknown_8007B020]
