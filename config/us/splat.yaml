@@ -102,7 +102,7 @@ segments:
       - [0xD998, c, code/codex_batch_next2/func_8007D998]
       - [0xDA5C, c, code/codex_batch_next/func_8007DA5C]
       - [0xDA8C, c, code/codex_batch/func_8007DA8C]
-      - [0xDACC, asm, main_8007DACC_to_8007DB84]
+      - [0xDACC, c, code/codex_batch_next2/func_8007DACC]
       - [0xDB84, c, code/codex_batch/func_8007DB84]
       - [0xDBE0, asm, main_8007DBE0_to_8007DFA0]
       - [0xDFA0, c, code/codex_batch/func_8007DFA0]

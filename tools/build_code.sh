@@ -1364,6 +1364,7 @@ for function_name in \
         func_8007D7C4 \
         func_8007D884 \
         func_8007D998 \
+        func_8007DACC \
         func_8007E118 \
         func_8007B8EC \
         func_8007AF84 \
@@ -1416,7 +1417,7 @@ for function_name in \
         func_800C180C \
         func_800C1E48; do
     case "$function_name" in
-        func_8007A7B4|func_8007A818|func_8007A8F0|func_8007A9EC|func_8007AAA8|func_8007AB64|func_8007ADF0|func_8007AF84|func_8007B0E4|func_8007B8EC|func_8007D33C|func_8007D39C|func_8007D7C4|func_8007D884|func_8007D998|func_8007E118|\
+        func_8007A7B4|func_8007A818|func_8007A8F0|func_8007A9EC|func_8007AAA8|func_8007AB64|func_8007ADF0|func_8007AF84|func_8007B0E4|func_8007B8EC|func_8007D33C|func_8007D39C|func_8007D7C4|func_8007D884|func_8007D998|func_8007DACC|func_8007E118|\
         func_80080818|func_80082A90|func_8008518C|func_80085250|\
         func_8008A350|func_8008B788|func_8008BEC4|func_8008E620|func_80096F48|func_800979F4|\
         func_80097CC8|func_80098334|func_8009A650|func_8009D4B0|\
@@ -1451,6 +1452,7 @@ for function_name in \
         func_8007D7C4) size=0xC0 ;;
         func_8007D884) size=0x114 ;;
         func_8007D998) size=0xC4 ;;
+        func_8007DACC) size=0xB8 ;;
         func_8007E118) size=0x4C ;;
         func_80080818) size=0x9C ;;
         func_80082A90) size=0xAC ;;
