@@ -1349,6 +1349,7 @@ while IFS=$'\t' read -r function_name address size status; do
 done < config/us/codex_batch_next.tsv
 for function_name in \
         func_8007A7B4 \
+        func_8007A818 \
         func_8007E118 \
         func_8007B8EC \
         func_8007AF84 \
@@ -1401,7 +1402,7 @@ for function_name in \
         func_800C180C \
         func_800C1E48; do
     case "$function_name" in
-        func_8007A7B4|func_8007AF84|func_8007B8EC|func_8007D33C|func_8007E118|\
+        func_8007A7B4|func_8007A818|func_8007AF84|func_8007B8EC|func_8007D33C|func_8007E118|\
         func_80080818|func_80082A90|func_8008518C|func_80085250|\
         func_8008A350|func_8008B788|func_8008BEC4|func_8008E620|func_80096F48|func_800979F4|\
         func_80097CC8|func_80098334|func_8009A650|func_8009D4B0|\
@@ -1422,6 +1423,7 @@ for function_name in \
         -o "build/us/src/${unit}.c.o" "build/us/src/${unit}.s"
     case "$function_name" in
         func_8007A7B4) size=0x64 ;;
+        func_8007A818) size=0xD8 ;;
         func_8007AF84) size=0x98 ;;
         func_8007B8EC) size=0x400 ;;
         func_8007D33C) size=0x60 ;;

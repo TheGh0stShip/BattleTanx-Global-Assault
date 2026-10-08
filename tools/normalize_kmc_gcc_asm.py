@@ -559,6 +559,66 @@ def normalize_object_phase_lookup(text: str) -> str:
     return text.replace(before_arms, after_arms, 1)
 
 
+def normalize_display_slot_wait(text: str) -> str:
+    """Keep the invalid-slot value live through the first inlined search."""
+    if "func_8007A818:" not in text:
+        return text
+    patterns = (
+        (
+            "\tli\t$3,-1\t\t\t# 0xffffffff\n"
+            "\tlh\t$2,176($5)\n"
+            ".L11:\n"
+            "\t.set\tnoreorder\n"
+            "\tbne\t$2,$3,.L11\n",
+            "\tli\t$7,-1\t\t\t# 0xffffffff\n"
+            "\tlh\t$8,176($5)\n"
+            ".L11:\n"
+            "\t.set\tnoreorder\n"
+            "\tbne\t$8,$7,.L11\n",
+            "entry invalid/work registers",
+        ),
+        (
+            "\tbne\t$3,$2,.L32\n"
+            "\tsll\t$2,$3,16\n"
+            "\t.set\tnoreorder\n"
+            "\taddu\t$2,$4,1\n"
+            ".L31:\n",
+            "\tbeq\t$3,$2,.L31\n"
+            "\taddu\t$2,$4,1\n"
+            "\t.set\tnoreorder\n"
+            "\tj\t.L32\n"
+            "\tmove\t$2,$3\n"
+            "\t.set\tnoreorder\n"
+            ".L31:\n",
+            "first-search success branch",
+        ),
+        (
+            "\tli\t$3,-1\t\t\t# 0xffffffff\n"
+            "\tsll\t$2,$3,16\n"
+            ".L32:\n"
+            "\tsra\t$2,$2,16\n"
+            "\tli\t$3,-1\t\t\t# 0xffffffff\n"
+            "\t.set\tnoreorder\n"
+            "\tbeq\t$2,$3,.L34\n",
+            "\tli\t$2,-1\t\t\t# 0xffffffff\n"
+            ".L32:\n"
+            "\tsll\t$2,$2,16\n"
+            "\tsra\t$2,$2,16\n"
+            "\t.set\tnoreorder\n"
+            "\tbeq\t$2,$7,.L11\n",
+            "first-search failure and retry",
+        ),
+    )
+    for before, after, name in patterns:
+        fires = text.count(before)
+        if fires != 1:
+            raise RuntimeError(
+                f"func_8007A818 {name} rewrite fired {fires} times (expected 1)"
+            )
+        text = text.replace(before, after, 1)
+    return text
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -584,6 +644,8 @@ def normalize_v3(source: str) -> str:
         text = schedule_resource_copy_prologue(text)
     if os.environ.get("V3_OBJECT_PHASE_LOOKUP", "1") == "1":
         text = normalize_object_phase_lookup(text)
+    if os.environ.get("V3_DISPLAY_SLOT_WAIT", "1") == "1":
+        text = normalize_display_slot_wait(text)
     return text
 
 
