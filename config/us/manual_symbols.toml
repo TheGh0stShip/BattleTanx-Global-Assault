@@ -757,11 +757,11 @@ type = "func"
 reason = "Function boundary established by the byte-exact C build (make verify-code)."
 
 [[symbol]]
-name = "func_800F7648"
+name = "D_800F7648"
 vram = 0x800F7648
-size = 0x354
-type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+size = 0x8
+type = "u64"
+reason = "Two non-code words before func_800F7650; no function prologue or return."
 
 [[symbol]]
 name = "func_800F799C"

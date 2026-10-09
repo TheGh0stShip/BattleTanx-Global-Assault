@@ -135,6 +135,7 @@ mine_trigger_update	0x80077040	0xC
 powerup_timer_update	0x80077060	0x20
 barrel_explode	0x800770E0	0x4C
 effect_burn_update	0x8007721C	0x10
+effect_motion_update	0x80077364	0xC
 mesh_rings_draw	0x80077180	0x4C
 libmus/800FBF94_player_main	0x80077608	0x8
 libmus/800FD2A0_remap_ptr_bank	0x80077698	0x8

@@ -659,9 +659,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800F7230_to_800F756C.s.o .text 0x33c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800F7648_to_800F7870.s.o asm/us/main_800F7648_to_800F7870.s
+    -o build/us/asm/us/main_800F7648_to_800F7650.s.o asm/us/main_800F7648_to_800F7650.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800F7648_to_800F7870.s.o .text 0x228 --alignment 4
+    build/us/asm/us/main_800F7648_to_800F7650.s.o .text 0x8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800F7C24_to_800F7C30.s.o asm/us/main_800F7C24_to_800F7C30.s
 python3 tools/trim_elf32_section.py \
@@ -1267,6 +1267,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             particle_system_create \
             particle_owner_message \
             anim_keyframes_apply \
+            effect_motion_update \
             hazard_state_update \
             hazard_model_draw \
             hazard_message_handler \
@@ -2072,6 +2073,10 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/anim_keyframes_apply.c.o .text 0x150 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/anim_keyframes_apply.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_motion_update.c.o .text 0x220 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_motion_update.c.o .rodata 0xc --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/particle_owner_message.c.o .text 0xa8 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3783,7 +3788,8 @@ if false; then
     build/us/asm/us/main_800F7230_to_800F756C.s.o \
     build/us/src/code/anim_list_reset.c.o \
     build/us/src/code/anim_list_register.c.o \
-    build/us/asm/us/main_800F7648_to_800F7870.s.o \
+    build/us/asm/us/main_800F7648_to_800F7650.s.o \
+    build/us/src/code/effect_motion_update.c.o \
     build/us/src/code/anim_alpha_fade_draw.c.o \
     build/us/src/code/spark_spawn.c.o \
     build/us/src/code/spark_burst_update.c.o \
