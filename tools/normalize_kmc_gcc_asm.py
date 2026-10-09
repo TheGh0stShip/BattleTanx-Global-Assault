@@ -644,6 +644,41 @@ def shape_selection_state_dispatch(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def shape_snapshot_record_address(text: str) -> str:
+    """Reproduce the retail address tree in ``func_80079FF0``.
+
+    The unoptimized C and every surrounding instruction are exact.  GCC
+    reassociates ``base + (index * 16 + 0x90)`` as
+    ``(base + 0x90) + index * 16``; the retail object retains the source
+    grouping.  Rewrite this single label-gated six-instruction tree and
+    require exactly one occurrence so source drift cannot broaden the rule.
+    """
+    if "func_80079FF0:" not in text:
+        return text
+    before = (
+        "\tmove\t$4,$3\n"
+        "\tsll\t$2,$4,4\n"
+        "\tlw\t$4,0($fp)\n"
+        "\taddu\t$3,$4,144\n"
+        "\taddu\t$2,$2,$3\n"
+        "\tsw\t$2,8($fp)\n"
+    )
+    after = (
+        "\tmove\t$2,$3\n"
+        "\tsll\t$3,$2,4\n"
+        "\taddu\t$2,$3,144\n"
+        "\tlw\t$3,0($fp)\n"
+        "\taddu\t$2,$3,$2\n"
+        "\tsw\t$2,8($fp)\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_80079FF0 record-address rewrite fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def normalize_object_phase_lookup(text: str) -> str:
     """Reproduce register allocation and expression order in ``func_800A8E84``."""
     if "func_800A8E84:" not in text:
@@ -848,6 +883,8 @@ def normalize_v3(source: str) -> str:
         text = schedule_vector_angle_prologue(text)
     if os.environ.get("V3_SELECTION_STATE_DISPATCH", "1") == "1":
         text = shape_selection_state_dispatch(text)
+    if os.environ.get("V3_SNAPSHOT_RECORD_ADDRESS", "1") == "1":
+        text = shape_snapshot_record_address(text)
     if os.environ.get("V3_OBJECT_PHASE_LOOKUP", "1") == "1":
         text = normalize_object_phase_lookup(text)
     if os.environ.get("V3_DISPLAY_SLOT_WAIT", "1") == "1":
