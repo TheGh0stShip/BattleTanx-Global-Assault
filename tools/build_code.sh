@@ -655,10 +655,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800F2184_to_800F2288.s.o .text 0x104 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800F2558_to_800F265C.s.o asm/us/main_800F2558_to_800F265C.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800F2558_to_800F265C.s.o .text 0x104 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800F2BB8_to_800F2BC0.s.o asm/us/main_800F2BB8_to_800F2BC0.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800F2BB8_to_800F2BC0.s.o .text 0x8 --alignment 4
@@ -2018,7 +2014,7 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hazard_message_handler.c.o .rodata 0x18 --alignment 4
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/object_state_query.c.o .text 0x60 --alignment 4
+    build/us/src/code/object_state_query.c.o .text 0x164 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hazard_model_draw.c.o .text 0x134 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3614,7 +3610,6 @@ if false; then
     build/us/asm/us/main_800F2184_to_800F2288.s.o \
     build/us/src/code/hazard_message_handler.c.o \
     build/us/src/code/object_state_query.c.o \
-    build/us/asm/us/main_800F2558_to_800F265C.s.o \
     build/us/src/code/mine_message_handlers.c.o \
     build/us/src/code/mine_trigger_update.c.o \
     build/us/asm/us/main_800F2BB8_to_800F2BC0.s.o \

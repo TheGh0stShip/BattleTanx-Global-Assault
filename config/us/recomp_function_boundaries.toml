@@ -1560,6 +1560,7 @@ functions = [
     { name = "func_800F2288", vram = 0x800f2288, size = 0x270 },
     { name = "func_800F24F8", vram = 0x800f24f8, size = 0x44 },
     { name = "func_800F253C", vram = 0x800f253c, size = 0x1c },
+    { name = "func_800F2558", vram = 0x800f2558, size = 0x104 },
     { name = "func_800F265C", vram = 0x800f265c, size = 0x1b4 },
     { name = "func_800F2810", vram = 0x800f2810, size = 0x9c },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.

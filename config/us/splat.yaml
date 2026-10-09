@@ -987,7 +987,6 @@ segments:
       - [0x82184, asm, main_800F2184_to_800F2288]
       - [0x82288, c, code/hazard_message_handler]
       - [0x824F8, c, code/object_state_query]
-      - [0x82558, asm, main_800F2558_to_800F265C]
       - [0x8265C, c, code/mine_message_handlers]
       - [0x82980, c, code/mine_trigger_update]
       - [0x82BB8, asm, main_800F2BB8_to_800F2BC0]
