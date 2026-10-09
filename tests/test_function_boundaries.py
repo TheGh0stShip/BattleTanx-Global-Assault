@@ -346,6 +346,33 @@ class FunctionBoundaryTests(unittest.TestCase):
                         0x80082D08, 0x80082D0C, 0x8009859C):
             self.assertNotIn(address, covered_words)
 
+    def test_late_game_units_do_not_swallow_helpers_or_data(self) -> None:
+        functions = self.load_functions()
+        by_address = {function["vram"]: function for function in functions}
+        expected = {
+            0x800EB308: 0xE0,
+            0x800EB3E8: 0x38,
+            0x800EB420: 0x3C,
+            0x800EB45C: 0xA0,
+            0x800ED804: 0x188,
+            0x800EED90: 0x670,
+            0x800EF400: 0x178,
+            0x800F2184: 0x104,
+        }
+        for address, size in expected.items():
+            self.assertEqual(size, by_address[address]["size"])
+
+        covered_words = {
+            address
+            for function in functions
+            for address in range(
+                int(function["vram"]),
+                int(function["vram"]) + int(function["size"]),
+                4,
+            )
+        }
+        self.assertNotIn(0x800ED98C, covered_words)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1028,6 +1028,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             building_create \
             building_anim_frame_tick \
             building_destroy \
+            800EB308_object_handlers \
             impact_flash_spawn \
             impact_flash_expire \
             player_projectile_launch \
@@ -1041,12 +1042,14 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             projectile_target_query \
             destructible_prop_on_hit \
             destructible_prop_on_hit_alt \
+            800ED804_message_dispatch \
             prop_destroy_slot_release \
             prop_target_query \
             prop_debris_burst_on_hit \
             prop_debris_burst_on_hit_alt \
             800EE288_entity_message \
             barrier_break_open \
+            800EED90_segment_update \
             particle_emitter_tail \
             particle_emitter_create \
             particle_pool_init \
@@ -1056,6 +1059,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             anim_list_register_global \
             hazard_actor_spawn \
             hazard_actor_spawn_simple \
+            800F2184_hazard_trigger \
             object_state_query \
             mine_message_handlers \
             powerup_pad_create \
@@ -1091,6 +1095,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             static_prop_expire \
             static_prop_draw \
             model_variant_get \
+            800F67F0_sway_model_draw \
             model_cache_globals \
             artillery_emplacement_update \
             artillery_emplacement_disable \
@@ -1878,6 +1883,26 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/prop_debris_burst_on_hit.c.o .text 0xd0 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/prop_debris_burst_on_hit_alt.c.o .text 0xd0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800EB308_object_handlers.c.o .text 0x1f4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800EB308_object_handlers.c.o .rodata 0x100 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800ED804_message_dispatch.c.o .text 0x188 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800ED804_message_dispatch.c.o .rodata 0xfc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800EED90_segment_update.c.o .text 0x670 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800EED90_segment_update.c.o .rodata 0x20 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800F2184_hazard_trigger.c.o .text 0x104 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800F2184_hazard_trigger.c.o .rodata 0xc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800F67F0_sway_model_draw.c.o .text 0x474 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800F67F0_sway_model_draw.c.o .rodata 0x14 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800EE288_entity_message.c.o .text 0x200 --alignment 4
 python3 tools/trim_elf32_section.py \
