@@ -32,7 +32,7 @@ make check
 - Reproducible splat extraction and repository safety gates are in place.
 - The header, IPL3, and known first-MiB code region reconstruct byte-for-byte.
 - 1,367 of 1,707 catalogue functions (80.1%) are reconstructed in production C and pass the byte-exact gate. By catalogue function-body bytes, 367,772 of 630,568 bytes (58.3%) are reconstructed.
-- The matching LZARI decoder and its ROM boundary table identify 74 compressed asset bundles: 481,785 packed bytes expand to 1,570,628 bytes. Every decoded bundle has the same big-endian eight-offset container shape. `tools/inventory_lzari_assets.py` inventories or locally extracts them without committing ROM-derived data.
+- The matching LZARI codec and its ROM boundary table identify 74 compressed asset bundles: 481,785 packed bytes expand to 1,570,628 bytes. Every decoded bundle has the same big-endian eight-offset container shape, and re-encoding all 74 reproduces every retail compressed byte. `tools/inventory_lzari_assets.py` inventories or locally extracts them without committing ROM-derived data.
 - Normalizer-assisted units require narrowly gated, documented rules with exact fire counts; they are identified separately from pure source matches in [the normalizer-assisted record](docs/NORMALIZER_ASSISTED.md).
 - CI publishes Code and Data categories in the objdiff v2 `us_report` artifact. Data progress counts only source-owned bytes already proven identical; merely locating or extracting an opaque asset does not count as a match.
 - Matching C reconstruction, compiler identification, linker layout, asset format mapping, and ROM rebuild are not complete.

@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
-from lzari import LzariError, decompress  # noqa: E402
+from lzari import LzariError, compress, decompress  # noqa: E402
 
 
 class LzariTests(unittest.TestCase):
@@ -26,6 +26,12 @@ class LzariTests(unittest.TestCase):
             hashlib.sha256(decoded).hexdigest(),
             "53adcb8fa1ee6307a4e945be6f5a849e711b5c4ef647247e3d16da7fed1d2b70",
         )
+        self.assertEqual(compress(decoded), data)
+
+    def test_empty_round_trip(self):
+        encoded = compress(b"")
+        self.assertEqual(encoded, bytes(4))
+        self.assertEqual(decompress(encoded), b"")
 
     def test_rejects_oversized_header(self):
         with self.assertRaisesRegex(LzariError, "exceeds limit"):

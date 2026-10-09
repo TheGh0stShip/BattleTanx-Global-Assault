@@ -15,7 +15,7 @@ import re
 import struct
 from pathlib import Path
 
-from lzari import LzariError, decompress_with_info
+from lzari import LzariError, compress, decompress_with_info
 
 
 ROM_SHA1 = "805248fb0a0ee694cad8d7dc927b631d860dd8cf"
@@ -43,7 +43,37 @@ def bundle_offsets(data: bytes) -> tuple[int, ...] | None:
     return None
 
 
+def bundle_layout(data: bytes) -> dict | None:
+    offsets = bundle_offsets(data)
+    if offsets is None or len(offsets) != 8:
+        return None
+    sizes = [right - left for left, right in zip(offsets, offsets[1:])]
+    if sizes[0] != 4:
+        return None
+    table_count = struct.unpack_from(">I", data, offsets[0])[0]
+    if sizes[1] != table_count * 16:
+        return None
+    if sizes[2] % 12 or sizes[4] % 4 or sizes[5] % 4 or sizes[6] % 24:
+        return None
+    return {
+        "offsets": list(offsets),
+        "component_sizes": sizes,
+        "component_counts": [
+            1,
+            table_count,
+            sizes[2] // 12,
+            sizes[3] // 16,
+            sizes[4] // 4,
+            None,
+            sizes[6] // 24,
+        ],
+        "component_3_tail_bytes": sizes[3] % 16,
+    }
+
+
 def format_hint(data: bytes) -> str:
+    if bundle_layout(data) is not None:
+        return "btga_7_component_bundle"
     offsets = bundle_offsets(data)
     if offsets is not None:
         return f"be_{len(offsets)}_offset_bundle"
@@ -61,7 +91,7 @@ def inventory(rom: bytes, boundary_path: Path) -> list[dict]:
             continue
         if result.consumed_bytes != len(packed) or result.padding_bits not in (8, 16):
             continue
-        offsets = bundle_offsets(result.data)
+        layout = bundle_layout(result.data)
         record = {
             "index": len(streams),
             "rom_start": start,
@@ -71,13 +101,11 @@ def inventory(rom: bytes, boundary_path: Path) -> list[dict]:
             "padding_bits": result.padding_bits,
             "format_hint": format_hint(result.data),
             "sha256": hashlib.sha256(result.data).hexdigest(),
+            "reencode_exact": compress(result.data) == packed,
             "data": result.data,
         }
-        if offsets is not None:
-            record["bundle_offsets"] = list(offsets)
-            record["component_sizes"] = [
-                right - left for left, right in zip(offsets, offsets[1:])
-            ]
+        if layout is not None:
+            record.update(layout)
         streams.append(record)
     return streams
 
@@ -112,9 +140,9 @@ def main() -> None:
         for stream in streams:
             name = f"{stream['index']:03d}_{stream['rom_start']:06X}_{stream['rom_end']:06X}.bin"
             (args.extract_dir / name).write_bytes(stream["data"])
-            if args.split_bundles and "bundle_offsets" in stream:
+            if args.split_bundles and "offsets" in stream:
                 stem = name.removesuffix(".bin")
-                offsets = stream["bundle_offsets"]
+                offsets = stream["offsets"]
                 for index, (left, right) in enumerate(zip(offsets, offsets[1:])):
                     (args.extract_dir / f"{stem}.part{index}.bin").write_bytes(
                         stream["data"][left:right]

@@ -15,6 +15,13 @@ distribution, and modification. All nine functions in the recovered unit and
 the repository decoder are independently checked against this ROM; the N64
 unit requires two documented retail-assembler load-delay nops.
 
+The matching asset encoder in `tools/lzari.py` is a Python port of Okumura's
+freely redistributable 1989 [`LZARI.C`](https://github.com/e-n-f/lzss/blob/f370a64a7ce5e4c54cfe122ca441671c3faccc24/LZARI.C).
+The retail variant changes the native `unsigned long` size field to a
+four-byte big-endian value; its match parser and arithmetic coder are
+otherwise exact. All known retail streams are re-encoded and compared
+byte-for-byte in the asset inventory tests.
+
 The predecessor-game project `bdragoncore/battle-tanx-recomp`, commit `52c92319766e24b0c7244f76952325bece0f59ab`, is a secondary reference for shared engine, libultra, audio, and runtime behavior. BattleTanx and Global Assault are distinct games; symbols or conclusions are never transferred between them without binary evidence.
 
 Those symbols are hypotheses and navigation aids, not matching-decomp proof. Each function boundary, name, type, and implementation must be independently verified against the supported ROM and recorded through this repository's diff workflow.
