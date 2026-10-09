@@ -12,6 +12,34 @@ SPEC.loader.exec_module(MODULE)
 
 
 class KmcPipelineTests(unittest.TestCase):
+    def test_angle_step_update_requires_both_patterns(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.shape_angle_step_update("func_8009D75C:\n\tnop\n")
+
+    def test_angle_step_update_uses_retail_shared_store(self) -> None:
+        source = (
+            "func_8009D75C:\n\tor\t$2,$4,$22\n"
+            "\tmove\t$4,$2\n\tandi\t$3,$18,0xffff\n"
+            "\tandi\t$2,$4,0xffff\n\tsltu\t$2,$2,$3\n"
+            "\t.set\tnoreorder\n\tbeq\t$2,$0,.L2\n\tsrl\t$2,$20,15\n"
+            "\t.set\tnoreorder\n\t.set\tnoreorder\n\tj\t.L3\n"
+            "\tsh\t$19,0($17)\n\t.set\tnoreorder\n.L2:\n"
+            "\tandi\t$2,$2,0x0001\n\t.set\tnoreorder\n"
+            "\tbeq\t$2,$0,.L4\n\tor\t$2,$16,$22\n"
+            "\t.set\tnoreorder\n\tsubu\t$2,$2,$3\n"
+            "\t.set\tnoreorder\n\tj\t.L3\n\tsh\t$2,0($17)\n"
+            "\t.set\tnoreorder\n.L4:\n\taddu\t$18,$21,$18\n"
+            "\tsh\t$18,0($17)\n.L3:\n\tandi\t$2,$4,0xffff\n"
+        )
+        normalized = MODULE.shape_angle_step_update(source)
+        self.assertIn("\taddu\t$2,$4,$22\n", normalized)
+        self.assertIn(
+            "\tmove\t$3,$18\n\tmove\t$4,$2\n"
+            "\tandi\t$2,$4,0xffff\n\tandi\t$3,$3,0xffff\n",
+            normalized,
+        )
+        self.assertIn(".L5:\n\tsh\t$2,0($17)\n", normalized)
+
     def test_search_record_address_uses_retained_index_copy(self) -> None:
         source = "func_8008875C:\n.L5:\n\tsll\t$2,$2,3\n"
         normalized = MODULE.normalize_v3(source)

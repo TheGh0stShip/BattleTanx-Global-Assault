@@ -1551,6 +1551,89 @@ def preserve_search_record_index_copy(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def shape_angle_step_update(text: str) -> str:
+    """Reproduce func_8009D75C's retail temporary allocation and shared store."""
+    if "func_8009D75C:" not in text:
+        return text
+
+    add_before = "\tor\t$2,$4,$22\n"
+    add_after = "\taddu\t$2,$4,$22\n"
+    add_fires = text.count(add_before)
+    if add_fires != 1:
+        raise RuntimeError(
+            f"func_8009D75C wrapped-target add fired {add_fires} times (expected 1)"
+        )
+    text = text.replace(add_before, add_after, 1)
+
+    tail_before = (
+        "\tmove\t$4,$2\n"
+        "\tandi\t$3,$18,0xffff\n"
+        "\tandi\t$2,$4,0xffff\n"
+        "\tsltu\t$2,$2,$3\n"
+        "\t.set\tnoreorder\n"
+        "\tbeq\t$2,$0,.L2\n"
+        "\tsrl\t$2,$20,15\n"
+        "\t.set\tnoreorder\n"
+        "\t.set\tnoreorder\n"
+        "\tj\t.L3\n"
+        "\tsh\t$19,0($17)\n"
+        "\t.set\tnoreorder\n"
+        ".L2:\n"
+        "\tandi\t$2,$2,0x0001\n"
+        "\t.set\tnoreorder\n"
+        "\tbeq\t$2,$0,.L4\n"
+        "\tor\t$2,$16,$22\n"
+        "\t.set\tnoreorder\n"
+        "\tsubu\t$2,$2,$3\n"
+        "\t.set\tnoreorder\n"
+        "\tj\t.L3\n"
+        "\tsh\t$2,0($17)\n"
+        "\t.set\tnoreorder\n"
+        ".L4:\n"
+        "\taddu\t$18,$21,$18\n"
+        "\tsh\t$18,0($17)\n"
+        ".L3:\n"
+        "\tandi\t$2,$4,0xffff\n"
+    )
+    tail_after = (
+        "\tmove\t$3,$18\n"
+        "\tmove\t$4,$2\n"
+        "\tandi\t$2,$4,0xffff\n"
+        "\tandi\t$3,$3,0xffff\n"
+        "\tsltu\t$2,$2,$3\n"
+        "\t.set\tnoreorder\n"
+        "\tbeq\t$2,$0,.L2\n"
+        "\tsrl\t$2,$20,15\n"
+        "\t.set\tnoreorder\n"
+        "\t.set\tnoreorder\n"
+        "\tj\t.L3\n"
+        "\tsh\t$19,0($17)\n"
+        "\t.set\tnoreorder\n"
+        ".L2:\n"
+        "\tandi\t$2,$2,0x0001\n"
+        "\t.set\tnoreorder\n"
+        "\tbeq\t$2,$0,.L4\n"
+        "\taddu\t$2,$16,$22\n"
+        "\t.set\tnoreorder\n"
+        "\t.set\tnoreorder\n"
+        "\tj\t.L5\n"
+        "\tsubu\t$2,$2,$3\n"
+        "\t.set\tnoreorder\n"
+        ".L4:\n"
+        "\taddu\t$2,$21,$18\n"
+        ".L5:\n"
+        "\tsh\t$2,0($17)\n"
+        ".L3:\n"
+        "\tandi\t$2,$4,0xffff\n"
+    )
+    tail_fires = text.count(tail_before)
+    if tail_fires != 1:
+        raise RuntimeError(
+            f"func_8009D75C compare/store rewrite fired {tail_fires} times (expected 1)"
+        )
+    return text.replace(tail_before, tail_after, 1)
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -1626,6 +1709,8 @@ def normalize_v3(source: str) -> str:
         text = preserve_record_index_copy(text)
     if os.environ.get("V3_SEARCH_RECORD_INDEX_COPY", "1") == "1":
         text = preserve_search_record_index_copy(text)
+    if os.environ.get("V3_ANGLE_STEP_UPDATE", "1") == "1":
+        text = shape_angle_step_update(text)
     return text
 
 

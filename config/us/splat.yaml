@@ -390,7 +390,7 @@ segments:
       - [0x2D6DC, c, code/angle_subtract]
       - [0x2D6F8, c, code/codex_batch_next/func_8009D6F8]
       - [0x2D72C, c, code/angle_between]
-      - [0x2D75C, asm, main_8009D75C_to_8009D81C]
+      - [0x2D75C, c, code/codex_batch_next2/func_8009D75C]
       - [0x2D81C, c, code/angle_distance]
       - [0x2D850, c, code/angle_direction]
       - [0x2D8A0, c, code/codex_batch/func_8009D8A0]
