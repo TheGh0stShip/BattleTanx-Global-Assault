@@ -651,9 +651,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800F6648_to_800F6650.s.o .text 0x8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800F67F0_to_800F6ED0.s.o asm/us/main_800F67F0_to_800F6ED0.s
+    -o build/us/asm/us/main_800F67F0_to_800F6C70.s.o asm/us/main_800F67F0_to_800F6C70.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800F67F0_to_800F6ED0.s.o .text 0x6e0 --alignment 4
+    build/us/asm/us/main_800F67F0_to_800F6C70.s.o .text 0x480 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800F7230_to_800F756C.s.o asm/us/main_800F7230_to_800F756C.s
 python3 tools/trim_elf32_section.py \
@@ -1258,6 +1258,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             prop_spawn_child \
             motion_scale_curve \
             rotated_texture_coords \
+            effect_billboard_draw \
             prop_spawn_pickup \
             prop_height_update \
             particle_emitter_free \
@@ -2105,6 +2106,8 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/rotated_texture_coords.c.o .text 0xe8 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/rotated_texture_coords.c.o .rodata 0xc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_billboard_draw.c.o .text 0x260 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/shockwave_expand.c.o .text 0x104 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3771,7 +3774,8 @@ if false; then
     build/us/asm/us/main_800F6648_to_800F6650.s.o \
     build/us/src/code/generator_spawn.c.o \
     build/us/src/code/effect_expire_100.c.o \
-    build/us/asm/us/main_800F67F0_to_800F6ED0.s.o \
+    build/us/asm/us/main_800F67F0_to_800F6C70.s.o \
+    build/us/src/code/effect_billboard_draw.c.o \
     build/us/src/code/wreck_debris_spawn.c.o \
     build/us/src/code/wreck_debris_update.c.o \
     build/us/src/code/anim_colors_set.c.o \
