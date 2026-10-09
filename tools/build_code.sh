@@ -794,6 +794,9 @@ while read -r unit text_size; do
         800FBF94_player_main)
             python3 tools/trim_elf32_section.py \
                 "build/us/src/code/libmus/${unit}.c.o" .rodata 0x8 --alignment 8 ;;
+        800FD2A0_remap_ptr_bank)
+            python3 tools/trim_elf32_section.py \
+                "build/us/src/code/libmus/${unit}.c.o" .rodata 0x8 --alignment 8 ;;
         800FDD20_player_commands)
             python3 tools/trim_elf32_section.py \
                 "build/us/src/code/libmus/${unit}.c.o" .rodata 0x40 --alignment 4 ;;
@@ -815,6 +818,7 @@ func_800FBDC8 0x64
 800FC864_player_voice 0x34C
 800FCBB0_player_effects 0x55C
 800FD10C_player_bank_math 0x194
+800FD2A0_remap_ptr_bank 0x198
 800FD438_random_range 0x94
 func_800FD4CC 0x13C
 800FD608_player_start_pre 0x458

@@ -1070,7 +1070,7 @@ segments:
       - [0x8C864, c, code/libmus/800FC864_player_voice]
       - [0x8CBB0, c, code/libmus/800FCBB0_player_effects]
       - [0x8D10C, c, code/libmus/800FD10C_player_bank_math]
-      - [0x8D2A0, asm, main_800FD2A0_to_800FD438]
+      - [0x8D2A0, c, code/libmus/800FD2A0_remap_ptr_bank]
       - [0x8D438, c, code/libmus/800FD438_random_range]
       - [0x8D4CC, c, code/libmus/func_800FD4CC]
       - [0x8D608, c, code/libmus/800FD608_player_start_pre]
