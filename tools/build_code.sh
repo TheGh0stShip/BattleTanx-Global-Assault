@@ -2935,6 +2935,12 @@ python3 tools/trim_elf32_section.py \
     -o build/us/src/libultra/gu_normalize.c.o src/libultra/gu_normalize.c
 .toolchain/ido5.3/cc -c -O3 -mips2 -Wab,-r4300_mul -non_shared -G 0 -Iinclude -Isrc/libultra \
     -o build/us/src/libultra/gu_rotate.c.o src/libultra/gu_rotate.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_sp_task.c.o src/libultra/os_sp_task.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/os_start_thread.c.o src/libultra/os_start_thread.c
+.toolchain/ido5.3/cc -c -O2 -mips2 -Wab,-r4300_mul -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/sinf.c.o src/libultra/sinf.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_device_busy.c.o src/libultra/os_ai_device_busy.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
@@ -3771,7 +3777,7 @@ if false; then
     build/us/src/libultra/os_set_thread_pri.c.o \
     build/us/src/libultra/os_set_timer.c.o \
     build/us/src/libultra/os_si_access_queue.c.o \
-    build/us/asm/us/main_8010FC20_to_8010FDE0.s.o \
+    build/us/src/libultra/sinf.c.o \
     build/us/src/libultra/os_si_raw_start_dma.c.o \
     build/us/src/libultra/os_si_device_busy.c.o \
     build/us/src/libultra/os_si_raw_read_io.c.o \
@@ -3779,14 +3785,15 @@ if false; then
     build/us/src/libultra/al_main.c.o \
     build/us/src/libultra/sprintf.c.o \
     build/us/src/libultra/os_sp_set_pc.c.o \
-    build/us/asm/us/main_801100E0_to_801103D0.s.o \
+    build/us/src/libultra/os_sp_task.c.o \
     build/us/src/libultra/os_sp_device_busy.c.o \
     build/us/src/libultra/os_sp_raw_start_dma.c.o \
     build/us/src/libultra/os_sp_set_status.c.o \
     build/us/src/libultra/os_sp_task_yield.c.o \
     build/us/src/libultra/os_sp_task_yielded.c.o \
     build/us/src/libultra/os_sp_get_status.c.o \
-    build/us/asm/us/main_80110550_to_801106B0.s.o \
+    build/us/asm/us/main_80110550_to_80110560.s.o \
+    build/us/src/libultra/os_start_thread.c.o \
     build/us/src/libultra/string.c.o \
     build/us/src/libultra/al_syn_delete.c.o \
     build/us/asm/us/main_80110760_to_80110EE0.s.o \

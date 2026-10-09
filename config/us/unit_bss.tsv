@@ -7,5 +7,6 @@ libultra/os_leo_disk_init	0x803AEF70	0x80
 libultra/os_motor	0x803AEFF0	0x240
 libultra/os_pi_manager	0x803AF270	0x11D0
 libultra/gu_rotate	0x803B0460	0x10
+libultra/os_sp_task	0x803B0510	0x40
 libultra/os_timer	0x803B0570	0x20
 libultra/os_vi_manager	0x803B0590	0x1220
