@@ -1,5 +1,7 @@
 # unit	data_vram	data_size
 # C units whose initialized data must be linked and spliced at retail addresses.
+n_audio/800FFB30_n_drvrnew	0x80126890	0x190
+n_audio/80100050_n_env	0x80126A20	0x100
 libultra/al_drvrnew	0x80126B60	0x190
 libultra/al_env	0x80126CF0	0x140
 libultra/os_initialize	0x80126E50	0x20

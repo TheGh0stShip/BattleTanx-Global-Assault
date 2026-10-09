@@ -1,22 +1,36 @@
-/* RODATA_VRAM 0x800776F0: this unit's switch table and literal pool are linked at their retail address. */
+/* RODATA_VRAM 0x800776F0; DATA_VRAM 0x80126890.
+ * Preset tables follow the SDK source retained by Dr. Mario 64. */
 #include "n_audio_private.h"
 
 #define RANGE 2.0
 #define CONVERT 173123.404906676
 #define LENGTH (d->output - d->input)
 
-extern s32 n_drvrnew_data_0000[];
-extern s32 n_drvrnew_data_0068[];
-extern s32 n_drvrnew_data_00F0[];
-extern s32 n_drvrnew_data_0118[];
-extern s32 n_drvrnew_data_0140[];
-extern s32 n_drvrnew_data_0168[];
-#define SMALLROOM_PARAMS n_drvrnew_data_0000
-#define BIGROOM_PARAMS n_drvrnew_data_0068
-#define ECHO_PARAMS n_drvrnew_data_00F0
-#define CHORUS_PARAMS n_drvrnew_data_0118
-#define FLANGE_PARAMS n_drvrnew_data_0140
-#define NULL_PARAMS n_drvrnew_data_0168
+#define ms *(((s32)((f32)44.1)) & ~0x7)
+
+static s32 SMALLROOM_PARAMS[26] = {
+    3, 100 ms,
+    0, 54 ms, 9830, -9830, 0, 0, 0, 0,
+    19 ms, 38 ms, 3276, -3276, 0x3fff, 0, 0, 0,
+    0, 60 ms, 5000, 0, 0, 0, 0, 0x5000
+};
+static s32 BIGROOM_PARAMS[34] = {
+    4, 100 ms,
+    0, 66 ms, 9830, -9830, 0, 0, 0, 0,
+    22 ms, 54 ms, 3276, -3276, 0x3fff, 0, 0, 0,
+    66 ms, 91 ms, 3276, -3276, 0x3fff, 0, 0, 0,
+    0, 94 ms, 8000, 0, 0, 0, 0, 0x5000
+};
+static s32 ECHO_PARAMS[10] = {
+    1, 200 ms, 0, 179 ms, 12000, 0, 0x7fff, 0, 0, 0
+};
+static s32 CHORUS_PARAMS[10] = {
+    1, 20 ms, 0, 5 ms, 0x4000, 0, 0x7fff, 7600, 700, 0
+};
+static s32 FLANGE_PARAMS[10] = {
+    1, 20 ms, 0, 5 ms, 0, 0x5fff, 0x7fff, 380, 500, 0
+};
+static s32 NULL_PARAMS[10] = { 0 };
 
 typedef void *(*ALDMANew)(void *state);
 

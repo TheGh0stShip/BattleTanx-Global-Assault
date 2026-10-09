@@ -8,6 +8,12 @@ The libultra 2.0I `osCreatePiManager`, `__osDevMgrMain`, scheduler, audio resamp
 
 The N_audio `n_alAdpcmPull`, `n_alLoadParam`, and `_decodeChunk` translation unit was reconstructed from the MIT-licensed [Mario Golf 64 `n_load.c`](https://github.com/monde-lointain/mariogolf64/blob/5014056b8ac5c26178e299bbdaede70c0d318910/src/libnaudio/n_load.c). Its declaration order and original `inp` local uses are required for the retail KMC allocation. The complete unit is independently compiled and compared byte-for-byte against this ROM.
 
+The N_audio reverb presets and equal-power pan curve were recovered from the
+SDK source retained in the MIT-licensed [Dr. Mario 64
+decompilation](https://github.com/AngheloAlf/drmario64/tree/b5526094c4b699c1718ebec510acc31ccafd4b47/lib/ultralib/src/audio).
+The two tables are independently compiled with this project's KMC toolchain,
+placed at `0x80126890` and `0x80126A20`, and checked against the retail ROM.
+
 The asset decompressor at `0x800A0750` is Haruhiko Okumura's LZARI algorithm
 (`N=4096`, `F=60`, `THRESHOLD=2`) adapted to the game's global decoder state
 and big-endian stream header. The public reference source permits free use,

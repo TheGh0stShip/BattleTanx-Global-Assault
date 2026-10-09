@@ -16,7 +16,7 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,560 bytes: the 749,104-byte loaded
 image minus 630,544 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 15,032 bytes, or 12.679%.
+`.data` and `.rodata` currently account for 15,688 bytes, or 13.232%.
 
 ## LZARI bundles
 

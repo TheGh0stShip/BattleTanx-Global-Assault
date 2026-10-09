@@ -1,4 +1,5 @@
-/* RODATA_VRAM 0x80077720: this unit's switch table and literal pool are linked at their retail address. */
+/* RODATA_VRAM 0x80077720; DATA_VRAM 0x80126A20.
+ * Equal-power table follows the SDK source retained by Dr. Mario 64. */
 #include "n_audio_private.h"
 #include "n_wavetable.h"
 #include "n_abi.h"
@@ -56,8 +57,20 @@ typedef struct {
     N_PVoice *pvoice;          /* 0x0C */
 } N_ALFreeParam;
 
-extern s16 n_env_data_0000[];
-#define n_eqpower n_env_data_0000
+static s16 n_eqpower[N_EQPOWER_LENGTH] = {
+    32767, 32764, 32757, 32744, 32727, 32704, 32677, 32644, 32607, 32564, 32517,
+    32464, 32407, 32344, 32277, 32205, 32127, 32045, 31958, 31866, 31770, 31668,
+    31561, 31450, 31334, 31213, 31087, 30957, 30822, 30682, 30537, 30388, 30234,
+    30075, 29912, 29744, 29572, 29395, 29214, 29028, 28838, 28643, 28444, 28241,
+    28033, 27821, 27605, 27385, 27160, 26931, 26698, 26461, 26220, 25975, 25726,
+    25473, 25216, 24956, 24691, 24423, 24151, 23875, 23596, 23313, 23026, 22736,
+    22442, 22145, 21845, 21541, 21234, 20924, 20610, 20294, 19974, 19651, 19325,
+    18997, 18665, 18331, 17993, 17653, 17310, 16965, 16617, 16266, 15913, 15558,
+    15200, 14840, 14477, 14113, 13746, 13377, 13006, 12633, 12258, 11881, 11503,
+    11122, 10740, 10357, 9971, 9584, 9196, 8806, 8415, 8023, 7630, 7235, 6839,
+    6442, 6044, 5646, 5246, 4845, 4444, 4042, 3640, 3237, 2833, 2429, 2025,
+    1620, 1216, 810, 405, 0
+};
 
 extern void n_alLoadParam(N_PVoice *filter, s32 paramID, void *param);
 extern Acmd *n_alResamplePull(N_PVoice *e, s16 *outp, Acmd *p);
