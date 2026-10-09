@@ -1061,6 +1061,25 @@ def reproduce_crate_burst_hilo_hazard(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def reproduce_color_interpolate_load_hazard(text: str) -> str:
+    """Restore the retail load-use hazard nop in ``func_800F3B80``.
+
+    GCC emits a ``#nop`` placeholder between the stack-argument load and the
+    first divide.  The retail assembler materialized it; global noreorder mode
+    does not.  Gate the exact sequence to this function and require one fire.
+    """
+    if "func_800F3B80:" not in text:
+        return text
+    before = "\tlw\t$8,16($sp)\n\t#nop\n\tdiv\t$2,$2,$8\n"
+    after = "\tlw\t$8,16($sp)\n\tnop\n\tdiv\t$2,$2,$8\n"
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800F3B80 load hazard fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -1110,6 +1129,8 @@ def normalize_v3(source: str) -> str:
         text = reproduce_turret_sweep_assembler_hazards(text)
     if os.environ.get("V3_CRATE_BURST_HAZARD", "1") == "1":
         text = reproduce_crate_burst_hilo_hazard(text)
+    if os.environ.get("V3_COLOR_INTERPOLATE_HAZARD", "1") == "1":
+        text = reproduce_color_interpolate_load_hazard(text)
     return text
 
 

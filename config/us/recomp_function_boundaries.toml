@@ -1580,11 +1580,9 @@ functions = [
     { name = "func_800F38C0", vram = 0x800f38c0, size = 0x108 },
     { name = "func_800F39C8", vram = 0x800f39c8, size = 0x18c },
     { name = "func_800F3B54", vram = 0x800f3b54, size = 0x28 },
-    # round 21: same story as func_800E16D8 above -- the original 0x444
-    # gap-guessed size covered this function (real end confirmed, clean jr $ra
-    # at 0x800f3b74/0x800f3b78) plus a 4-byte string constant ("MISS", at
-    # 0x800f3b7c) plus a second function recovered as func_800F3B80 below.
-    { name = "func_800F3B80", vram = 0x800f3b80, size = 0x184 },
+    # The word at 0x800f3b7c is the four-byte string "MISS", not code.
+    { name = "func_800F3B80", vram = 0x800f3b80, size = 0x144 },
+    { name = "func_800F3CC4", vram = 0x800f3cc4, size = 0x40 },
     { name = "func_800F3D04", vram = 0x800f3d04, size = 0x154 },
     { name = "func_800F3E58", vram = 0x800f3e58, size = 0x840 },
     { name = "func_800F4698", vram = 0x800f4698, size = 0x6dc },

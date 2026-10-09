@@ -307,6 +307,26 @@ class KmcPipelineTests(unittest.TestCase):
             normalized,
         )
 
+    def test_color_interpolate_hazard_requires_one_pattern(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.reproduce_color_interpolate_load_hazard(
+                "func_800F3B80:\n\tnop\n"
+            )
+
+    def test_color_interpolate_hazard_materializes_one_nop(self) -> None:
+        source = (
+            "func_800F3B80:\n"
+            "\tmflo\t$2\n"
+            "\tlw\t$8,16($sp)\n"
+            "\t#nop\n"
+            "\tdiv\t$2,$2,$8\n"
+        )
+        normalized = MODULE.reproduce_color_interpolate_load_hazard(source)
+        self.assertIn(
+            "\tlw\t$8,16($sp)\n\tnop\n\tdiv\t$2,$2,$8\n",
+            normalized,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

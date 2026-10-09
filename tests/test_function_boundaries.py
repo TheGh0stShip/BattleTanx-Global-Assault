@@ -46,6 +46,20 @@ class FunctionBoundaryTests(unittest.TestCase):
             by_address[0x8010CF70],
         )
 
+    def test_color_interpolation_data_and_function_boundaries(self) -> None:
+        functions = self.load_functions()
+        by_address = {function["vram"]: function for function in functions}
+
+        self.assertNotIn(0x800F3B7C, by_address)
+        self.assertEqual(
+            {"name": "func_800F3B80", "vram": 0x800F3B80, "size": 0x144},
+            by_address[0x800F3B80],
+        )
+        self.assertEqual(
+            {"name": "func_800F3CC4", "vram": 0x800F3CC4, "size": 0x40},
+            by_address[0x800F3CC4],
+        )
+
     def test_pi_access_queue_object_uses_pi_symbols(self) -> None:
         functions = self.load_functions()
         by_address = {function["vram"]: function for function in functions}

@@ -708,13 +708,6 @@ type = "func"
 reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
 
 [[symbol]]
-name = "func_800F3B7C"
-vram = 0x800F3B7C
-size = 0x188
-type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
-
-[[symbol]]
 name = "func_800F3E58"
 vram = 0x800F3E58
 size = 0x120

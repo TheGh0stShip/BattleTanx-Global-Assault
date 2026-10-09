@@ -22,6 +22,7 @@ its instruction pattern fires exactly once.
 | `func_800E1BB0` | The exact `mul.s $f20,$f0,$f2; jal func_8009D4B0; nop; mul.s $f0,$f20,$f0` chain | Insert the second FP-result hazard nop emitted by the retail assembler. The function label and complete instruction sequence are gated and must fire once. | At `0x800E1C60`–`0x800E1C70`: `46020502 0C02752C 00000000 00000000 4600A002`. |
 | `func_800E1BB0` | The exact `$LF_lis4` load immediately followed by `.L37` | Expand the load explicitly and define `.L37 = . + 4` before `lwc1`, preserving the retail target address without triggering KMC `as`'s extra load-delay nop. The label-gated pattern must fire once. | At `0x800E1F30`–`0x800E1F38`: `3C018007 C4205C50 46001082`. |
 | `func_800E7768` | The exact three-operand `div $16,$21,$18` immediately followed by `mult $16,$20` | Insert the two HI/LO hazard nops that the retail assembler placed after the division macro's `mflo`. The function label and exact operands are gated and must fire once. | At `0x800E789C`–`0x800E78A8`: `00008012 00000000 00000000 02140018`. |
+| `func_800F3B80` | The exact `lw $8,16($sp); #nop; div $2,$2,$8` sequence before the first divide | Materialize the retail assembler's load-use hazard placeholder as one `nop`. The function label and exact operands are gated and must fire once. | At `0x800F3B94`–`0x800F3B9C`: `8FA80010 00000000 0048001A`. |
 
 The `func_800C1938` dead load remains an open compiler/source-shape question.
 The normalizer restores the bytes; it does not explain why the retail compiler

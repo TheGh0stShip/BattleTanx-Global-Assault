@@ -663,9 +663,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800F3208_to_800F32EC.s.o .text 0xe4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800F3B7C_to_800F3D04.s.o asm/us/main_800F3B7C_to_800F3D04.s
+    -o build/us/asm/us/main_800F3B7C_to_800F3B80.s.o asm/us/main_800F3B7C_to_800F3B80.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800F3B7C_to_800F3D04.s.o .text 0x188 --alignment 4
+    build/us/asm/us/main_800F3B7C_to_800F3B80.s.o .text 0x4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800F4D74_to_800F4D80.s.o asm/us/main_800F4D74_to_800F4D80.s
 python3 tools/trim_elf32_section.py \
@@ -1085,6 +1085,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             barrel_handlers \
             falling_crate_update \
             decal_spawn_draw \
+            color_interpolate \
             mesh_vertex_transform \
             tracer_spawn \
             effect_table_reset \
@@ -1818,6 +1819,8 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/falling_crate_update.c.o .text 0x1f0 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/decal_spawn_draw.c.o .text 0x2bc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/color_interpolate.c.o .text 0x184 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/mesh_vertex_transform.c.o .text 0x274 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3621,7 +3624,8 @@ if false; then
     build/us/src/code/barrel_explode.c.o \
     build/us/src/code/falling_crate_update.c.o \
     build/us/src/code/decal_spawn_draw.c.o \
-    build/us/asm/us/main_800F3B7C_to_800F3D04.s.o \
+    build/us/asm/us/main_800F3B7C_to_800F3B80.s.o \
+    build/us/src/code/color_interpolate.c.o \
     build/us/src/code/mesh_vertex_transform.c.o \
     build/us/src/code/mesh_rings_draw.c.o \
     build/us/asm/us/main_800F4D74_to_800F4D80.s.o \
