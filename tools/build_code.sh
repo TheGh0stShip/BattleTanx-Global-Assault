@@ -779,6 +779,7 @@ while read -r unit text_size; do
                 "build/us/src/code/libmus/${unit}.c.o" .rodata 0x10 --alignment 4 ;;
     esac
 done <<'LIBMUS_UNITS'
+800FAFBC_mus_initialize 0x288
 800FB244_master_volume 0x2C
 800FB270_start_song 0x30
 800FB2A0_start_song_marker 0x250
@@ -1044,6 +1045,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             prop_target_query \
             prop_debris_burst_on_hit \
             prop_debris_burst_on_hit_alt \
+            800EE288_entity_message \
             barrier_break_open \
             particle_emitter_tail \
             particle_emitter_create \
@@ -1058,6 +1060,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             mine_message_handlers \
             powerup_pad_create \
             powerup_pad_draw \
+            800F3208_prop_handlers \
             barrel_handlers \
             falling_crate_update \
             decal_spawn_draw \
@@ -1876,6 +1879,8 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/prop_debris_burst_on_hit_alt.c.o .text 0xd0 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/800EE288_entity_message.c.o .text 0x200 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/barrier_break_open.c.o .text 0x2b4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/particle_emitter_tail.c.o .text 0x6c --alignment 4
@@ -1901,6 +1906,8 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/powerup_pad_create.c.o .text 0x1f4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/powerup_pad_draw.c.o .text 0x170 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800F3208_prop_handlers.c.o .text 0xe4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/barrel_handlers.c.o .text 0x240 --alignment 4
 python3 tools/trim_elf32_section.py \
