@@ -692,7 +692,7 @@ functions = [
     { name = "func_800A5744", vram = 0x800a5744, size = 0x114 },
     { name = "func_800A5858", vram = 0x800a5858, size = 0x380 },
     { name = "func_800A5BD8", vram = 0x800a5bd8, size = 0x508 },
-    { name = "func_800A60E0", vram = 0x800a60e0, size = 0xc0 },
+    { name = "func_800A60E0", vram = 0x800a60e0, size = 0xbc },
     { name = "func_800A61A0", vram = 0x800a61a0, size = 0x180 },
     { name = "func_800A6320", vram = 0x800a6320, size = 0x268 },
     { name = "func_800A6588", vram = 0x800a6588, size = 0x534 },

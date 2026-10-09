@@ -209,6 +209,10 @@ class KmcPipelineTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.normalize_v3("func_800A2B9C:\n\tnop\n")
 
+    def test_region_query_schedule_requires_all_patterns(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.normalize_v3("func_800ACFE0:\n\tnop\n")
+
     def test_object_phase_lookup_requires_all_patterns(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.normalize_object_phase_lookup("func_800A8E84:\n\tnop\n")

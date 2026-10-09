@@ -723,6 +723,58 @@ def schedule_large_search_prologue(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def schedule_region_query_call(text: str) -> str:
+    """Reproduce independent save and call-argument scheduling in 800ACFE0."""
+    if "func_800ACFE0:" not in text:
+        return text
+    patterns = (
+        (
+            "\tsw\t$31,52($sp)\n"
+            "\tsw\t$22,48($sp)\n"
+            "\tsw\t$20,40($sp)\n"
+            "\tsw\t$19,36($sp)\n"
+            "\tsw\t$18,32($sp)\n"
+            "\tsw\t$17,28($sp)\n"
+            "\tsw\t$16,24($sp)\n"
+            " #APP\n #NO_APP\n"
+            "\tmove\t$18,$0\n"
+            "\tla\t$6,D_802194A5\n",
+            "\tsw\t$18,32($sp)\n"
+            "\tmove\t$18,$0\n"
+            "\tla\t$6,D_802194A5\n"
+            "\tsw\t$31,52($sp)\n"
+            "\tsw\t$22,48($sp)\n"
+            "\tsw\t$20,40($sp)\n"
+            "\tsw\t$19,36($sp)\n"
+            "\tsw\t$17,28($sp)\n"
+            "\tsw\t$16,24($sp)\n"
+            " #APP\n #NO_APP\n",
+            "prologue",
+        ),
+        (
+            "\tmove\t$6,$17\n"
+            "\tmove\t$4,$21\n"
+            "\t.set\tnoreorder\n"
+            "\tjal\tfunc_800AA8A8\n"
+            "\tandi\t$5,$20,0x00ff\n",
+            "\tmove\t$4,$21\n"
+            "\tandi\t$5,$20,0x00ff\n"
+            "\t.set\tnoreorder\n"
+            "\tjal\tfunc_800AA8A8\n"
+            "\tmove\t$6,$17\n",
+            "call arguments",
+        ),
+    )
+    for before, after, name in patterns:
+        fires = text.count(before)
+        if fires != 1:
+            raise RuntimeError(
+                f"func_800ACFE0 {name} schedule fired {fires} times (expected 1)"
+            )
+        text = text.replace(before, after, 1)
+    return text
+
+
 def normalize_object_phase_lookup(text: str) -> str:
     """Reproduce register allocation and expression order in ``func_800A8E84``."""
     if "func_800A8E84:" not in text:
@@ -931,6 +983,8 @@ def normalize_v3(source: str) -> str:
         text = shape_snapshot_record_address(text)
     if os.environ.get("V3_LARGE_SEARCH_PROLOGUE", "1") == "1":
         text = schedule_large_search_prologue(text)
+    if os.environ.get("V3_REGION_QUERY_CALL", "1") == "1":
+        text = schedule_region_query_call(text)
     if os.environ.get("V3_OBJECT_PHASE_LOOKUP", "1") == "1":
         text = normalize_object_phase_lookup(text)
     if os.environ.get("V3_DISPLAY_SLOT_WAIT", "1") == "1":
