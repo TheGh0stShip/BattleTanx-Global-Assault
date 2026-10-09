@@ -515,10 +515,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800E7F5C_to_800E7F60.s.o .text 0x4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800E80F4_to_800E8318.s.o asm/us/main_800E80F4_to_800E8318.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800E80F4_to_800E8318.s.o .text 0x224 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800E8378_to_800E8C88.s.o asm/us/main_800E8378_to_800E8C88.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800E8378_to_800E8C88.s.o .text 0x910 --alignment 4
@@ -1252,6 +1248,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             pending_spawns_flush \
             pickup_find_by_id \
             game_team_compare \
+            multiplayer_actor_spawn \
             mission_code_parse \
             mission_flag_set \
             mission_props_spawn \
@@ -2123,6 +2120,8 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/mission_code_parse.c.o .text 0x268 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/game_team_compare.c.o .text 0x64 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/multiplayer_actor_spawn.c.o .text 0x1b8 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/pickup_find_by_id.c.o .text 0xec --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3617,7 +3616,8 @@ if false; then
     build/us/src/code/pickup_find_by_id.c.o \
     build/us/src/code/game_mode_has_pickups.c.o \
     build/us/src/code/game_team_compare.c.o \
-    build/us/asm/us/main_800E80F4_to_800E8318.s.o \
+    build/us/src/code/multiplayer_actor_spawn.c.o \
+    build/us/src/code/codex_batch_next2/func_800E82AC.c.o \
     build/us/src/code/slist_remove_count.c.o \
     build/us/asm/us/main_800E8378_to_800E8C88.s.o \
     build/us/src/code/slot_mode_name_get.c.o \

@@ -902,7 +902,7 @@ segments:
       - [0x77F60, c, code/pickup_find_by_id]
       - [0x7804C, c, code/game_mode_has_pickups]
       - [0x78090, c, code/game_team_compare]
-      - [0x780F4, asm, main_800E80F4_to_800E82AC]
+      - [0x780F4, c, code/multiplayer_actor_spawn]
       - [0x782AC, c, code/codex_batch_next2/func_800E82AC]
       - [0x78318, c, code/slist_remove_count]
       - [0x78378, asm, main_800E8378_to_800E8C88]
