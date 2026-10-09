@@ -2933,6 +2933,8 @@ python3 tools/trim_elf32_section.py \
     build/us/src/libultra/al_save_pull.c.o .text 0x8C --alignment 4
 .toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/gu_normalize.c.o src/libultra/gu_normalize.c
+.toolchain/ido5.3/cc -c -O3 -mips2 -Wab,-r4300_mul -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/gu_rotate.c.o src/libultra/gu_rotate.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_device_busy.c.o src/libultra/os_ai_device_busy.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
@@ -3751,7 +3753,7 @@ if false; then
     build/us/asm/us/main_8010D9C0_to_8010DCC0.s.o \
     build/us/src/libultra/os_reset_global_int_mask.c.o \
     build/us/src/libultra/al_reverb.c.o \
-    build/us/asm/us/main_8010E970_to_8010EB60.s.o \
+    build/us/src/libultra/gu_rotate.c.o \
     build/us/src/libultra/gu_normalize.c.o \
     build/us/src/libultra/al_save_param.c.o \
     build/us/src/libultra/al_save_pull.c.o \

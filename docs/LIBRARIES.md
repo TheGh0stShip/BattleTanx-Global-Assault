@@ -146,3 +146,11 @@ The final `__umoddi3` return is at `0x80114494`, with its architectural `nop`
 delay slot at `0x80114498`. Consequently its size is `0x2C` and the exclusive
 verified executable endpoint is `0x8011449C`; treating `0x80114498` as the
 start of data would omit an executed instruction.
+
+## Graphics utility correction
+
+The unit at `0x8010E970`-`0x8010EB5F` is the 2.0I `gu/rotate.o` object. Its
+matrix expressions, text, constant pool, and local static storage match
+`guRotateF` and `guRotate` exactly under the SDK's `-O3 -mips2
+-Wab,-r4300_mul` build. The earlier imported `guAlignF` and `guAlign` names
+were incorrect and have been replaced in the function catalogue.

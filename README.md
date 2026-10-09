@@ -31,7 +31,7 @@ make check
 - A GPL-compatible catalogue contains 1,698 supported function boundaries after correcting false splits and aggregations, with provenance.
 - Reproducible splat extraction and repository safety gates are in place.
 - The header, IPL3, and known first-MiB code region reconstruct byte-for-byte.
-- 1,273 of 1,698 functions (75.0%) are reconstructed in production C and pass the full byte-exact region gate. By function-body bytes, 320,284 of 630,580 bytes (50.8%) are reconstructed.
+- 1,275 of 1,698 functions (75.1%) are reconstructed in production C and pass the full byte-exact region gate. By function-body bytes, 320,780 of 630,580 bytes (50.9%) are reconstructed.
 - Normalizer-assisted units require narrowly gated, documented rules with exact fire counts; they are identified separately from pure source matches in [the normalizer-assisted record](docs/NORMALIZER_ASSISTED.md).
 - CI publishes an objdiff v2 `us_report` artifact for decomp.dev progress tracking.
 - Matching C reconstruction, compiler identification, linker layout, asset format mapping, and ROM rebuild are not complete.

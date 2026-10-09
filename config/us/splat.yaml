@@ -1173,7 +1173,7 @@ segments:
       - [0x9D9C0, c, libultra/al_resample]
       - [0x9DCC0, c, libultra/os_reset_global_int_mask]
       - [0x9DD20, c, libultra/al_reverb]
-      - [0x9E970, asm, main_8010E970_to_8010EB60]
+      - [0x9E970, c, libultra/gu_rotate]
       - [0x9EB60, c, libultra/gu_normalize]
       - [0x9EBF0, c, libultra/al_save_param]
       - [0x9EC24, c, libultra/al_save_pull]

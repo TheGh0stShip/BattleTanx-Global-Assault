@@ -148,6 +148,8 @@ class FunctionBoundaryTests(unittest.TestCase):
         by_address = {function["vram"]: function for function in functions}
 
         expected = {
+            0x8010E970: ("guRotateF", 0x194),
+            0x8010EB04: ("guRotate", 0x5C),
             0x80110020: ("proutSprintf", 0x24),
             0x801100E0: ("_VirtualToPhysicalTask", 0x11C),
             0x801116E8: ("viMgrMain", 0x1D8),
