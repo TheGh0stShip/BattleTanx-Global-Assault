@@ -1365,6 +1365,41 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
         -o "build/us/src/code/${unit}.c.o" "build/us/src/code/${unit}.s"
 done
 
+# Whole translation units recovered from the early engine and AI region.
+# Compile each unit once so inline copies and shared constant pools retain the
+# retail allocation and layout.
+for spec in \
+        early_remote_transfer:0x18C \
+        path_goal_update:0x290 \
+        ai_state_dispatch:0x49C \
+        unit_target_select:0x370 \
+        ai_target_refresh:0x2DC \
+        tank_damage_motion:0x860 \
+        weapon_inventory:0xD1C \
+        collision_query:0x390; do
+    unit="${spec%%:*}"
+    text_size="${spec#*:}"
+    .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+        -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
+        -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
+    python3 tools/normalize_kmc_gcc_asm.py \
+        "build/us/src/code/${unit}.raw.s" "build/us/src/code/${unit}.s"
+    .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+        -o "build/us/src/code/${unit}.c.o" "build/us/src/code/${unit}.s"
+    python3 tools/trim_elf32_section.py \
+        "build/us/src/code/${unit}.c.o" .text "$text_size" --alignment 4
+done
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/ai_state_dispatch.c.o .rodata 0xFC --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/unit_target_select.c.o .rodata 0x58 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/ai_target_refresh.c.o .rodata 0x38 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/tank_damage_motion.c.o .rodata 0x6C --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/weapon_inventory.c.o .rodata 0x2AC --alignment 4
+
 python3 tools/trim_elf32_section.py \
     build/us/src/code/80082C1C_state_activate.c.o .text 0xec --alignment 4
 
