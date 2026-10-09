@@ -2831,6 +2831,8 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/display_commands.c.o .text 0x44 --alignment 4
 mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_pi_manager.c.o src/libultra/os_pi_manager.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_set_frequency.c.o src/libultra/os_ai_set_frequency.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_set_next_buffer.c.o src/libultra/os_ai_set_next_buffer.c
