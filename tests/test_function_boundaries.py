@@ -60,6 +60,23 @@ class FunctionBoundaryTests(unittest.TestCase):
             by_address[0x800F3CC4],
         )
 
+    def test_libmus_song_starters_are_independent_functions(self) -> None:
+        functions = self.load_functions()
+        by_address = {function["vram"]: function for function in functions}
+
+        self.assertEqual(
+            {"name": "MusStartSong", "vram": 0x800FB270, "size": 0x30},
+            by_address[0x800FB270],
+        )
+        self.assertEqual(
+            {
+                "name": "MusStartSongFromMarker",
+                "vram": 0x800FB2A0,
+                "size": 0x250,
+            },
+            by_address[0x800FB2A0],
+        )
+
     def test_pi_access_queue_object_uses_pi_symbols(self) -> None:
         functions = self.load_functions()
         by_address = {function["vram"]: function for function in functions}

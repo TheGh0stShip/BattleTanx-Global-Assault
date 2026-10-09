@@ -994,6 +994,7 @@ n_aspMainTextStart = 0x800fa210;
 func_800FAFBC = 0x800fafbc;
 MusSetMasterVolume = 0x800fb244;
 MusStartSong = 0x800fb270;
+MusStartSongFromMarker = 0x800fb2a0;
 func_800FB4F0 = 0x800fb4f0;
 func_800FB570 = 0x800fb570;
 func_800FB688 = 0x800fb688;
