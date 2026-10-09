@@ -131,10 +131,11 @@ retaining those eight-byte static bodies.
 
 The `libc/xprintf.o` static routine at `0x80112110` is `_Putfld`, followed by
 `_Printf` at object offset `0x670`. In `libc/xldtob.o`, `_Genld` occupies
-`0x80112DD0`-`0x80113337`; the independently emitted eight-byte static no-op
-at `0x80113338` remains address-named, and `_Ldtob` begins at object offset
-`0x570`. These layouts match the rebuilt 2.0I objects. The libc units use the
-SDK I IDO `-O3 -mips2 -o32 -non_shared -G 0` configuration.
+`0x80112DD0`-`0x80113337`; source reconstruction identifies the independently
+emitted eight-byte static body at `0x80113338` as `_Ldunscale`, and `_Ldtob`
+begins at object offset `0x570`. Their text, read-only constants, and
+`xprintf.o` initialized data match the rebuilt 2.0I objects. The libc units
+use the SDK I IDO `-O3 -mips2 -o32 -non_shared -G 0` configuration.
 
 The executable tail after `osYieldThread` consists of GNU libgcc ABI helpers:
 `__cmpdi2`, `__floatdisf`, `__udivdi3`, `__udivmoddi4`, and `__umoddi3`.

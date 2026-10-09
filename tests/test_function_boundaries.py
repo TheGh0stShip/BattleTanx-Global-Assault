@@ -168,7 +168,7 @@ class FunctionBoundaryTests(unittest.TestCase):
         expected = {
             0x80112110: ("_Putfld", 0x670),
             0x80112DD0: ("_Genld", 0x568),
-            0x80113338: ("func_80113338", 0x8),
+            0x80113338: ("_Ldunscale", 0x8),
             0x80113340: ("_Ldtob", 0x550),
         }
         for address, (name, size) in expected.items():

@@ -2911,6 +2911,16 @@ python3 tools/insert_elf32_section_bytes.py \
     -o build/us/src/libultra/os_vi_swap_buffer.c.o src/libultra/os_vi_swap_buffer.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
     -o build/us/src/libultra/os_vi_swap_context.c.o src/libultra/os_vi_swap_context.c
+.toolchain/ido5.3/cc -c -Wab,-r4300_mul -G 0 -nostdinc -Xcpluscomm \
+    -fullwarn -woff 516,649,838,712 -mips2 -o32 -D_MIPS_SZLONG=32 \
+    -DBUILD_VERSION=VERSION_I -DBUILD_VERSION_STRING=\"2.0I\" -non_shared \
+    -DNDEBUG -D_FINALROM -O3 -Isrc/libultra/ido -Isrc/libultra/ido/PR \
+    -Isrc/libultra -o build/us/src/libultra/xprintf.c.o src/libultra/xprintf.c
+.toolchain/ido5.3/cc -c -Wab,-r4300_mul -G 0 -nostdinc -Xcpluscomm \
+    -fullwarn -woff 516,649,838,712 -mips2 -o32 -D_MIPS_SZLONG=32 \
+    -DBUILD_VERSION=VERSION_I -DBUILD_VERSION_STRING=\"2.0I\" -non_shared \
+    -DNDEBUG -D_FINALROM -O3 -Isrc/libultra/ido -Isrc/libultra/ido/PR \
+    -Isrc/libultra -o build/us/src/libultra/xldtob.c.o src/libultra/xldtob.c
 .toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/ldiv.c.o src/libultra/ldiv.c
 .toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
@@ -3818,7 +3828,9 @@ if false; then
     build/us/src/libultra/os_vi_set_special_features.c.o \
     build/us/src/libultra/os_vi_swap_buffer.c.o \
     build/us/src/libultra/os_vi_swap_context.c.o \
-    build/us/asm/us/main_80112060_to_80113890.s.o \
+    build/us/asm/us/main_80112060_to_80112110.s.o \
+    build/us/src/libultra/xprintf.c.o \
+    build/us/src/libultra/xldtob.c.o \
     build/us/src/libultra/ldiv.c.o \
     build/us/src/libultra/litob.c.o \
     build/us/src/libultra/os_yield_thread.c.o \

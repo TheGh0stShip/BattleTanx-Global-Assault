@@ -2154,7 +2154,7 @@ functions = [
     { name = "_Putfld", vram = 0x80112110, size = 0x670 },
     { name = "_Printf", vram = 0x80112780, size = 0x650 },
     { name = "_Genld", vram = 0x80112dd0, size = 0x568 },
-    { name = "func_80113338", vram = 0x80113338, size = 0x8 },
+    { name = "_Ldunscale", vram = 0x80113338, size = 0x8 },
     { name = "_Ldtob", vram = 0x80113340, size = 0x550 },
     { name = "lldiv", vram = 0x80113890, size = 0x100 },
     { name = "ldiv", vram = 0x80113990, size = 0x90 },
