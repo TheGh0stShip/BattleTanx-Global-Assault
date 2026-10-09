@@ -754,12 +754,16 @@ render_state_presets 0x150
 renderer_global_tables 0x90
 resource_bank_table 0xD0
 controller_pak_identity 0x58
+random_dispatch_tables 0x1B0
 effect_axis_geometry 0x64
 effect_event_table 0x1C
 effect_color_presets 0x60
-effect_definition_bank 0x14DC
+effect_definition_bank 0x1670
+effect_runtime_tables 0x190
 display_state_patches 0x110
+hud_runtime_defaults 0x40
 image_asset_descriptors 0x1570
+frontend_runtime_defaults 0x1E4
 cheat_code_data 0x2c0
 controller_pak_text 0x3e4
 title_legal_text 0x120
