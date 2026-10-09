@@ -430,6 +430,32 @@ class KmcPipelineTests(unittest.TestCase):
         normalized = MODULE.preserve_mask_value_magnitude_copy(source)
         self.assertIn("\tsubu\t$2,$0,$2\n", normalized)
 
+    def test_pool_type4_removal_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.schedule_pool_type4_removal("func_8007E7A8:\n\tnop\n")
+
+    def test_pool_type4_removal_schedules_state_before_call(self) -> None:
+        source = (
+            "func_8007E7A8:\n"
+            ".L7:\n"
+            "\t.set\tnoreorder\n"
+            "\tjal\tfunc_8007DB84\n"
+            "\tsw\t$0,240($16)\n"
+            "\t.set\tnoreorder\n"
+            "\tlhu\t$2,246($16)\n"
+            "\tsh\t$0,244($16)\n"
+        )
+        normalized = MODULE.schedule_pool_type4_removal(source)
+        self.assertIn(
+            "\tsw\t$0,240($16)\n"
+            "\t.set\tnoreorder\n"
+            "\tjal\tfunc_8007DB84\n"
+            "\tsh\t$0,244($16)\n"
+            "\t.set\tnoreorder\n"
+            "\tlhu\t$2,246($16)\n",
+            normalized,
+        )
+
     def test_turret_sweep_hazards_reproduce_retail_forms(self) -> None:
         source = (
             "func_800E1BB0:\n"

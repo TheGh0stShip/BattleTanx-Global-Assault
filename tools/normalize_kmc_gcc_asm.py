@@ -1359,6 +1359,37 @@ def preserve_mask_value_magnitude_copy(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def schedule_pool_type4_removal(text: str) -> str:
+    """Reproduce func_8007E7A8's state-clear/call schedule."""
+    if "func_8007E7A8:" not in text:
+        return text
+
+    before = (
+        ".L7:\n"
+        "\t.set\tnoreorder\n"
+        "\tjal\tfunc_8007DB84\n"
+        "\tsw\t$0,240($16)\n"
+        "\t.set\tnoreorder\n"
+        "\tlhu\t$2,246($16)\n"
+        "\tsh\t$0,244($16)\n"
+    )
+    after = (
+        ".L7:\n"
+        "\tsw\t$0,240($16)\n"
+        "\t.set\tnoreorder\n"
+        "\tjal\tfunc_8007DB84\n"
+        "\tsh\t$0,244($16)\n"
+        "\t.set\tnoreorder\n"
+        "\tlhu\t$2,246($16)\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_8007E7A8 type-4 schedule fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -1424,6 +1455,8 @@ def normalize_v3(source: str) -> str:
         text = shape_value_decay_clamp(text)
     if os.environ.get("V3_MASK_VALUE_MAGNITUDE", "1") == "1":
         text = preserve_mask_value_magnitude_copy(text)
+    if os.environ.get("V3_POOL_TYPE4_REMOVAL", "1") == "1":
+        text = schedule_pool_type4_removal(text)
     return text
 
 
