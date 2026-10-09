@@ -419,7 +419,7 @@ segments:
       - [0x2F334, c, code/codex_batch_next2/func_8009F334]
       - [0x2F444, c, code/codex_batch/func_8009F444]
       - [0x2F4B4, c, code/matrix_multiply]
-      - [0x2F5AC, asm, main_8009F5AC_to_8009F768]
+      - [0x2F5AC, c, code/codex_batch_next2/func_8009F5AC]
       - [0x2F768, c, code/matrix_transform]
       - [0x2F8A0, c, code/codex_batch_next2/func_8009F8A0]
       - [0x2FCCC, asm, main_8009FCCC_to_8009FF1C]

@@ -489,6 +489,34 @@ class KmcPipelineTests(unittest.TestCase):
         self.assertIn("\tmtc1\t$0,$f6\n\tc.lt.s\t$f6,$f4\n", normalized)
         self.assertIn("\tbeq\t$2,$0,.L5\n\tsub.s\t$f0,$f2,$f0\n", normalized)
 
+    def test_matrix_basis_inverse_requires_all_patterns(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "float register rewrite fired 0 times"):
+            MODULE.schedule_matrix_basis_inverse("func_8009F5AC:\n\tnop\n")
+
+    def test_matrix_basis_inverse_rewrites_each_pattern_once(self) -> None:
+        source = (
+            "func_8009F5AC:\n"
+            "\tl.s\t$f0,4($6)\n"
+            "\tl.s\t$f4,40($4)\n"
+            "\tsubu\t$sp,$sp,16\n"
+            "\tmove\t$11,$5\n"
+            "\tadd.s\t$f0,$f0,$f4\n"
+            "\tl.s\t$f2,D_80072650\n"
+            "\tmove\t$10,$11\n"
+            "\tmove\t$8,$0\n"
+            "\ts.s\t$f0,4($7)\n"
+            ".L5:\n"
+            "\tmove\t$9,$11\n"
+            "\tmove\t$7,$10\n"
+            "\tmove\t$3,$0\n"
+            "\taddu\t$2,$3,$11\n"
+        )
+        normalized = MODULE.schedule_matrix_basis_inverse(source)
+        self.assertIn("\tl.s\t$f2,40($4)\n", normalized)
+        self.assertIn("\tmove\t$8,$0\n\tadd.s\t$f0,$f0,$f2\n", normalized)
+        self.assertIn(".L5:\n\tmove\t$3,$0\n\tmove\t$9,$11\n", normalized)
+        self.assertIn("\taddu\t$2,$11,$3\n", normalized)
+
     def test_turret_sweep_hazards_reproduce_retail_forms(self) -> None:
         source = (
             "func_800E1BB0:\n"

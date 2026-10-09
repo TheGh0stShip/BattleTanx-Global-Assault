@@ -1465,6 +1465,62 @@ def schedule_object_distance_probe(text: str) -> str:
     return text
 
 
+def schedule_matrix_basis_inverse(text: str) -> str:
+    """Reproduce func_8009F5AC's retained registers and loop setup."""
+    if "func_8009F5AC:" not in text:
+        return text
+
+    float_before = (
+        "\tl.s\t$f0,4($6)\n"
+        "\tl.s\t$f4,40($4)\n"
+        "\tsubu\t$sp,$sp,16\n"
+        "\tmove\t$11,$5\n"
+        "\tadd.s\t$f0,$f0,$f4\n"
+    )
+    float_after = float_before.replace("$f4,40($4)", "$f2,40($4)").replace(
+        "$f0,$f0,$f4", "$f0,$f0,$f2"
+    )
+    loop_before = (
+        "\tmove\t$11,$5\n"
+        "\tadd.s\t$f0,$f0,$f2\n"
+        "\tl.s\t$f2,D_80072650\n"
+        "\tmove\t$10,$11\n"
+        "\tmove\t$8,$0\n"
+        "\ts.s\t$f0,4($7)\n"
+        ".L5:\n"
+        "\tmove\t$9,$11\n"
+        "\tmove\t$7,$10\n"
+        "\tmove\t$3,$0\n"
+    )
+    loop_after = (
+        "\tmove\t$8,$0\n"
+        "\tadd.s\t$f0,$f0,$f2\n"
+        "\tl.s\t$f2,D_80072650\n"
+        "\tmove\t$11,$5\n"
+        "\tmove\t$10,$5\n"
+        "\ts.s\t$f0,4($7)\n"
+        ".L5:\n"
+        "\tmove\t$3,$0\n"
+        "\tmove\t$9,$11\n"
+        "\tmove\t$7,$10\n"
+    )
+    address_before = "\taddu\t$2,$3,$11\n"
+    address_after = "\taddu\t$2,$11,$3\n"
+    patterns = (
+        ("float register", float_before, float_after),
+        ("identity loop", loop_before, loop_after),
+        ("column address", address_before, address_after),
+    )
+    for name, before, after in patterns:
+        fires = text.count(before)
+        if fires != 1:
+            raise RuntimeError(
+                f"func_8009F5AC {name} rewrite fired {fires} times (expected 1)"
+            )
+        text = text.replace(before, after, 1)
+    return text
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -1534,6 +1590,8 @@ def normalize_v3(source: str) -> str:
         text = schedule_pool_type4_removal(text)
     if os.environ.get("V3_OBJECT_DISTANCE_PROBE", "1") == "1":
         text = schedule_object_distance_probe(text)
+    if os.environ.get("V3_MATRIX_BASIS_INVERSE", "1") == "1":
+        text = schedule_matrix_basis_inverse(text)
     return text
 
 
