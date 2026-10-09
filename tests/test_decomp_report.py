@@ -23,14 +23,25 @@ class DecompReportTests(unittest.TestCase):
         measures = report["measures"]
         self.assertEqual(report["version"], 2)
         self.assertEqual(measures["total_functions"], 1748)
-        self.assertEqual(measures["matched_functions"], 1461)
+        self.assertEqual(measures["matched_functions"], 1463)
         self.assertEqual(measures["total_code"], "630284")
-        self.assertEqual(measures["matched_code"], "404476")
+        self.assertEqual(measures["matched_code"], "406056")
         self.assertEqual(measures["total_data"], "118820")
         self.assertEqual(measures["matched_data"], "49008")
         self.assertEqual([item["name"] for item in report["categories"]], ["Code", "Data"])
         data = report["categories"][1]["measures"]
         self.assertAlmostEqual(data["matched_data_percent"], 49008 * 100 / 118820)
+        unmatched = [
+            unit for unit in report["units"]
+            if unit["name"].startswith("data/unmatched_")
+        ]
+        self.assertEqual(len(unmatched), 216)
+        self.assertEqual(
+            sum(int(unit["sections"][0]["size"]) for unit in unmatched), 69812
+        )
+        self.assertTrue(
+            all("virtual_address" in unit["sections"][0]["metadata"] for unit in unmatched)
+        )
         self.assertEqual(
             sum(
                 unit["measures"]["total_functions"]

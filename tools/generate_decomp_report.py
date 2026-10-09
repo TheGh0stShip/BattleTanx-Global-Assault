@@ -174,6 +174,39 @@ def load_segments(path: Path) -> list[dict]:
     return segments
 
 
+def uncovered_data_ranges(
+    functions: list[dict], owned_data: list[dict], start: int, end: int
+) -> list[dict]:
+    """Return address-preserving gaps after code and source-owned data."""
+    covered = [
+        (item["vram"], item["vram"] + item["size"], f"function {item['name']}")
+        for item in functions
+    ]
+    covered.extend(
+        (item["address"], item["end"], f"data unit {item['unit']}")
+        for item in owned_data
+    )
+    covered = sorted(
+        (max(left, start), min(right, end), name)
+        for left, right, name in covered
+        if right > start and left < end
+    )
+
+    gaps = []
+    cursor = start
+    previous_name = "start of tracked image"
+    for left, right, name in covered:
+        if left < cursor:
+            raise ValueError(f"tracked ranges overlap: {previous_name} and {name}")
+        if left > cursor:
+            gaps.append({"address": cursor, "end": left, "size": left - cursor})
+        cursor = right
+        previous_name = name
+    if cursor < end:
+        gaps.append({"address": cursor, "end": end, "size": end - cursor})
+    return gaps
+
+
 def build_report(
     functions_path: Path,
     splat_path: Path,
@@ -281,17 +314,23 @@ def build_report(
             }
         )
 
-    unmatched_data = total_data - matched_data
-    if unmatched_data:
+    unmatched_ranges = uncovered_data_ranges(
+        all_functions, owned_data, tracked_vram_start, tracked_vram_end
+    )
+    unmatched_data = sum(item["size"] for item in unmatched_ranges)
+    if unmatched_data != total_data - matched_data:
+        raise ValueError("addressed data ranges do not cover the data denominator")
+    for item in unmatched_ranges:
         report_units.append(
             {
-                "name": "data/unmatched_rom",
-                "measures": data_measures(unmatched_data, 0, 0, 1, 0),
+                "name": f"data/unmatched_{item['address']:08X}",
+                "measures": data_measures(item["size"], 0, 0, 1, 0),
                 "sections": [
                     {
                         "name": ".unmatched",
-                        "size": str(unmatched_data),
+                        "size": str(item["size"]),
                         "fuzzy_match_percent": 0.0,
+                        "metadata": {"virtual_address": str(item["address"])},
                     }
                 ],
                 "functions": [],
@@ -306,7 +345,7 @@ def build_report(
         total_data,
         matched_data,
         matched_data,
-        len(owned_data) + int(bool(unmatched_data)),
+        len(owned_data) + len(unmatched_ranges),
         len(owned_data),
     )
     overall = dict(code_measures)
