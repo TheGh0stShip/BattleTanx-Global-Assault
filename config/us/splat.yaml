@@ -331,7 +331,7 @@ segments:
       - [0x28334, c, code/codex_batch_next2/func_80098334]
       - [0x2836C, c, code/codex_batch_next2/func_8009836C]
       - [0x28430, c, code/codex_batch_next/func_80098430]
-      - [0x28454, asm, main_80098454_to_80098534]
+      - [0x28454, c, code/codex_batch_next2/func_80098454]
       - [0x28534, c, code/codex_batch/func_80098534]
       - [0x2859C, asm, main_8009859C_to_80098AFC]
       - [0x28AFC, c, code/codex_batch_next/func_80098AFC]

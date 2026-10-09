@@ -1338,6 +1338,27 @@ def shape_value_decay_clamp(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def preserve_mask_value_magnitude_copy(text: str) -> str:
+    """Use func_80098454's retained magnitude copy for the negative arm."""
+    if "func_80098454:" not in text:
+        return text
+
+    before = (
+        "\tbgez\t$4,.L10\n"
+        "\tmove\t$2,$4\n"
+        "\t.set\tnoreorder\n"
+        "\tsubu\t$2,$0,$4\n"
+        ".L10:\n"
+    )
+    after = before.replace("\tsubu\t$2,$0,$4\n", "\tsubu\t$2,$0,$2\n")
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_80098454 magnitude-copy rewrite fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -1401,6 +1422,8 @@ def normalize_v3(source: str) -> str:
         text = allocate_flag_dispatch_output_to_a3(text)
     if os.environ.get("V3_VALUE_DECAY_CLAMP", "1") == "1":
         text = shape_value_decay_clamp(text)
+    if os.environ.get("V3_MASK_VALUE_MAGNITUDE", "1") == "1":
+        text = preserve_mask_value_magnitude_copy(text)
     return text
 
 

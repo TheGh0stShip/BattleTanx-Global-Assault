@@ -414,6 +414,22 @@ class KmcPipelineTests(unittest.TestCase):
             normalized,
         )
 
+    def test_mask_value_magnitude_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.preserve_mask_value_magnitude_copy("func_80098454:\n\tnop\n")
+
+    def test_mask_value_magnitude_uses_retained_copy(self) -> None:
+        source = (
+            "func_80098454:\n"
+            "\tbgez\t$4,.L10\n"
+            "\tmove\t$2,$4\n"
+            "\t.set\tnoreorder\n"
+            "\tsubu\t$2,$0,$4\n"
+            ".L10:\n"
+        )
+        normalized = MODULE.preserve_mask_value_magnitude_copy(source)
+        self.assertIn("\tsubu\t$2,$0,$2\n", normalized)
+
     def test_turret_sweep_hazards_reproduce_retail_forms(self) -> None:
         source = (
             "func_800E1BB0:\n"
