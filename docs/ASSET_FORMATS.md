@@ -76,6 +76,38 @@ That repository does not publish a license, so no source code was copied; the
 format facts were independently validated against this ROM and the matching
 game loader.
 
+### Image textures
+
+The image descriptor table contains 195 populated entries. Its format and size
+fields use the standard N64 `G_IM_FMT_*` and `G_IM_SIZ_*` values. All decoded
+payloads fall into six layouts, and their byte lengths agree with the table's
+dimensions:
+
+| Format | Size | Decoded layout |
+| --- | --- | --- |
+| RGBA | 16-bit | Big-endian RGBA5551 pixels |
+| RGBA | 32-bit | RGBA8888 pixels |
+| CI | 4-bit | 16-entry RGBA5551 palette followed by packed indices |
+| CI | 8-bit | 256-entry RGBA5551 palette followed by byte indices |
+| IA | 8-bit | Four-bit intensity and four-bit alpha |
+| IA | 16-bit | Eight-bit intensity and eight-bit alpha |
+
+One CI4 record stores one additional complete texture row beyond its visible
+descriptor height. The extractor validates the stored row stride and crops the
+preview to the descriptor dimensions; it does not discard or rewrite the raw
+decoded payload.
+
+Generate PNG previews and a provenance manifest in the ignored extraction tree
+without installing an external texture converter:
+
+```sh
+python3 tools/extract_lzari_images.py assets/extracted/us/images
+```
+
+The PNGs are inspection artifacts. The compressed stream and its decoded N64
+payload remain the byte-exact reconstruction inputs, preserving palette order,
+unused entries, and storage padding that a generic PNG round trip could lose.
+
 Run the inventory without writing extracted data:
 
 ```sh

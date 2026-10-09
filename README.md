@@ -28,11 +28,11 @@ make check
 ## Current status
 
 - ROM identity and the unusual `0x80071000` load address are verified.
-- A GPL-compatible catalogue contains 1,707 supported function boundaries after correcting false splits and aggregations, with provenance.
+- A GPL-compatible catalogue contains 1,733 supported function boundaries after correcting false splits and aggregations, with provenance.
 - Reproducible splat extraction and repository safety gates are in place.
 - The header, IPL3, and known first-MiB code region reconstruct byte-for-byte.
-- 1,371 of 1,707 catalogue functions (80.3%) are reconstructed in production C and pass the byte-exact gate. By catalogue function-body bytes, 370,168 of 630,544 bytes (58.7%) are reconstructed.
-- The matching LZARI codec and its ROM boundary table identify 74 compressed asset bundles: 481,785 packed bytes expand to 1,570,628 bytes. Every decoded bundle has the same big-endian eight-offset container shape, and re-encoding all 74 reproduces every retail compressed byte. `tools/inventory_lzari_assets.py` inventories or locally extracts them without committing ROM-derived data.
+- 1,398 of 1,733 catalogue functions (80.7%) are reconstructed in production C and pass the byte-exact gate. By catalogue function-body bytes, 370,404 of 630,540 bytes (58.7%) are reconstructed.
+- The matching LZARI codec and audited ROM tables identify 271 compressed streams: 75 game-world bundles, 195 images, and one leftover BattleTanx world. Their 1,174,975 stored bytes expand to 2,886,765 bytes and canonically re-encode to every retail byte. `tools/inventory_lzari_assets.py` inventories or locally extracts them; `tools/extract_lzari_images.py` converts all six observed N64 texture layouts into local PNG previews without committing ROM-derived data.
 - Normalizer-assisted units require narrowly gated, documented rules with exact fire counts; they are identified separately from pure source matches in [the normalizer-assisted record](docs/NORMALIZER_ASSISTED.md).
 - CI publishes Code and Data categories in the objdiff v2 `us_report` artifact. Data progress counts only source-owned bytes already proven identical; merely locating or extracting an opaque asset does not count as a match.
 - Matching C reconstruction, compiler identification, linker layout, asset format mapping, and ROM rebuild are not complete.

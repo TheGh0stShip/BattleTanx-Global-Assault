@@ -16,6 +16,7 @@ from inventory_lzari_assets import (  # noqa: E402
     load_boundaries,
 )
 from pack_lzari_bundle import pack_bundle  # noqa: E402
+from n64_texture import decode_texture  # noqa: E402
 
 
 class LzariAssetInventoryTests(unittest.TestCase):
@@ -91,6 +92,16 @@ class LzariAssetInventoryTests(unittest.TestCase):
         self.assertEqual(sum(item["decoded_size"] for item in streams), 2886765)
         self.assertTrue(all(item["reencode_exact"] for item in streams))
         self.assertTrue(all(item["storage_padding_bytes"] in (0, 1) for item in streams))
+        image_streams = [item for item in streams if item["kind"] == "image"]
+        self.assertEqual(
+            {(item["format"], item["flags"]) for item in image_streams},
+            {(0, 2), (0, 3), (2, 0), (2, 1), (3, 1), (3, 2)},
+        )
+        for item in image_streams:
+            pixels = decode_texture(
+                item["data"], item["format"], item["flags"], item["width"], item["height"]
+            )
+            self.assertEqual(len(pixels), item["width"] * item["height"] * 4)
 
 
 if __name__ == "__main__":
