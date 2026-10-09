@@ -416,7 +416,7 @@ segments:
       - [0x31290, c, code/codex_batch_next2/func_800A1290]
       - [0x3134C, c, code/scheduler_state]
       - [0x31384, c, code/codex_batch/func_800A1384]
-      - [0x3140C, asm, main_800A140C_to_800A15F0]
+      - [0x3140C, c, code/codex_batch_next2/func_800A140C]
       - [0x315F0, c, code/codex_batch_next2/func_800A15F0]
       - [0x316F8, c, code/codex_batch_next/func_800A16F8]
       - [0x3179C, c, code/scheduler_events]
