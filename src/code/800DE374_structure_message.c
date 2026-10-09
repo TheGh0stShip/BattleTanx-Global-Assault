@@ -1,4 +1,4 @@
-/* Normalizer-assisted: two redundant byte extensions become retail moves. */
+/* Exact source match: the byte-parameter helper preserves the index copy. */
 /* RODATA_VRAM 0x80075740 */
 typedef struct { char pad[0xD]; unsigned char idx; char p2[0x44-0xE]; } EntG;
 typedef struct { char pad[0x250]; } SlotG;
@@ -10,6 +10,7 @@ extern EntG D_80224EF0[];
 extern SlotG D_80235F00[];
 extern void func_800A9B64(void *, int);
 extern void func_800E82AC(int, void *);
+static inline int slot_index(unsigned char x) { return x; }
 void func_800DE374(ObjG *obj, MsgG *msg, ArgG *arg, int *out) {
     int i; int k;
     SlotG *p;
@@ -21,14 +22,14 @@ void func_800DE374(ObjG *obj, MsgG *msg, ArgG *arg, int *out) {
         obj->hp -= arg->dmg;
         if (obj->ent == -1) goto one;
         i = D_80224F00[obj->ent].idx;
-        k = (unsigned char)i;
+        k = slot_index(i);
         if (i == 127) goto null;
         goto slot;
     case 11: case 37: case 50:
         obj->hp -= arg->dmg;
         if (obj->ent == -1) goto one;
         i = D_80224F00[obj->ent].idx;
-        k = (unsigned char)i;
+        k = slot_index(i);
         if (i != 127) goto slot;
     null:
         p = 0;

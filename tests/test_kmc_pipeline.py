@@ -307,21 +307,27 @@ class KmcPipelineTests(unittest.TestCase):
                 "func_800E1BB0:\n\tnop\n"
             )
 
-    def test_structure_slot_index_copies_are_narrowly_rewritten(self) -> None:
+    def test_entity_model_draw_label_hazard_is_narrowly_rewritten(self) -> None:
         source = (
-            "func_800DE374:\n"
-            "\tbeq\t$3,$2,.L8\n"
-            "\tandi\t$4,$3,0x00ff\n"
-            "\tbne\t$3,$2,.L9\n"
-            "\tandi\t$4,$3,0x00ff\n"
+            "func_800E3FDC:\n"
+            "\tj\t.L20\n"
+            "\taddu\t$2,$4,$2\n"
+            "\t.set\tnoreorder\n"
+            ".L21:\n"
+            "\tmult\t$6,$5\n"
         )
-        normalized = MODULE.preserve_structure_slot_index_copy(source)
-        self.assertEqual(normalized.count("\tmove\t$4,$3\n"), 2)
-        self.assertNotIn("\tandi\t$4,$3,0x00ff\n", normalized)
+        normalized = MODULE.reproduce_entity_model_draw_label_hazard(source)
+        self.assertIn(
+            "\tj\t.L20\n.L21 = . + 4\n\taddu\t$2,$4,$2\n",
+            normalized,
+        )
+        self.assertNotIn(".L21:\n\tmult\t$6,$5\n", normalized)
 
-    def test_structure_slot_index_copy_requires_two_fires(self) -> None:
+    def test_entity_model_draw_label_hazard_requires_one_fire(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
-            MODULE.preserve_structure_slot_index_copy("func_800DE374:\n\tnop\n")
+            MODULE.reproduce_entity_model_draw_label_hazard(
+                "func_800E3FDC:\n\tnop\n"
+            )
 
     def test_crate_list_head_store_is_scheduled_first(self) -> None:
         source = (

@@ -863,7 +863,8 @@ segments:
       - [0x72E0C, c, code/wreck_ctl]
       - [0x72F9C, c, code/800E2F9C_wreck_update]
       - [0x73404, c, code/wreck_timer_duration]
-      - [0x73460, asm, main_800E3460_to_800E44C8]
+      - [0x73460, asm, main_800E3460_to_800E3FDC]
+      - [0x73FDC, c, code/800E3FDC_entity_model_draw]
       - [0x744C8, c, code/wreck_message_hit]
       - [0x74530, c, code/object_damage]
       - [0x7462C, c, code/flag_capture_attempt]
@@ -1254,7 +1255,9 @@ segments:
       - [0xA3890, c, libultra/ldiv]
       - [0xA3A20, c, libultra/litob]
       - [0xA3CC0, c, libultra/os_yield_thread]
-      - [0xA3D10, asm, main_after_80113D10]
+      - [0xA3D10, asm, main_80113D10_to_80113E30]
+      - [0xA3E30, c, libgcc/udivmoddi4]
+      - [0xA446C, asm, main_8011446C_to_80171000]
 
   # The first automatically loaded MiB contains the known executable code.
   # The remaining ROM is kept opaque until its asset/archive formats are mapped.

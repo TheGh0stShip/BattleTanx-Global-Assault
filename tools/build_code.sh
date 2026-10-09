@@ -471,9 +471,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800E2F9C_to_800E3404.s.o .text 0x468 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800E3460_to_800E44C8.s.o asm/us/main_800E3460_to_800E44C8.s
+    -o build/us/asm/us/main_800E3460_to_800E3FDC.s.o asm/us/main_800E3460_to_800E3FDC.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800E3460_to_800E44C8.s.o .text 0x1068 --alignment 4
+    build/us/asm/us/main_800E3460_to_800E3FDC.s.o .text 0xb7c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800E48A8_to_800E48E0.s.o asm/us/main_800E48A8_to_800E48E0.s
 python3 tools/trim_elf32_section.py \
@@ -1128,6 +1128,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             800E1BB0_turret_sweep \
             800E2520_turret_message_handlers \
             800E2F9C_wreck_update \
+            800E3FDC_entity_model_draw \
             800E48A8_flag_position_query \
             800E4DA0_flag_message_dispatch \
             800E66A8_crate_particle_attach \
@@ -1296,6 +1297,24 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
     .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
         -o "build/us/src/code/${unit}.c.o" "build/us/src/code/${unit}.s"
 done
+
+# The compiler-runtime tail uses GCC 2.7.2's libgcc implementation.  Its
+# assembler retained the return-slot nop while keeping the compiler's other
+# scheduling, so use the narrow libgcc postprocessor rather than the gameplay
+# normalizer.
+mkdir -p build/us/src/libgcc
+.toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+    -O2 -G0 -mips3 -mgp32 -mfp32 \
+    -o build/us/src/libgcc/udivmoddi4.raw.s src/libgcc/udivmoddi4.c
+python3 tools/normalize_libgcc_asm.py \
+    build/us/src/libgcc/udivmoddi4.raw.s build/us/src/libgcc/udivmoddi4.s
+.toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+    -o build/us/src/libgcc/udivmoddi4.c.o build/us/src/libgcc/udivmoddi4.s
+python3 tools/trim_elf32_section.py \
+    build/us/src/libgcc/udivmoddi4.c.o .text 0x63c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/libgcc/udivmoddi4.c.o .rodata 0x100 --alignment 4
+
 while IFS=$'\t' read -r function_name address size status; do
     case "$function_name" in
         \#*|function|'') continue ;;
@@ -2564,6 +2583,8 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800E2F9C_wreck_update.c.o .rodata 0x8 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E3FDC_entity_model_draw.c.o .text 0x4ec --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/800E48A8_flag_position_query.c.o .text 0x38 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800E4DA0_flag_message_dispatch.c.o .text 0x12c --alignment 4
@@ -3596,7 +3617,8 @@ if false; then
     build/us/src/code/wreck_ctl.c.o \
     build/us/src/code/800E2F9C_wreck_update.c.o \
     build/us/src/code/wreck_timer_duration.c.o \
-    build/us/asm/us/main_800E3460_to_800E44C8.s.o \
+    build/us/asm/us/main_800E3460_to_800E3FDC.s.o \
+    build/us/src/code/800E3FDC_entity_model_draw.c.o \
     build/us/src/code/wreck_message_hit.c.o \
     build/us/src/code/object_damage.c.o \
     build/us/src/code/flag_capture_attempt.c.o \
@@ -3928,7 +3950,7 @@ if false; then
     build/us/src/libultra/ldiv.c.o \
     build/us/src/libultra/litob.c.o \
     build/us/src/libultra/os_yield_thread.c.o \
-    build/us/asm/us/main_after_80113D10.s.o \
+    build/us/asm/us/main_8011446C_to_80171000.s.o \
     > build/us/undefined_object_symbols.txt
 fi
 find build/us/asm build/us/src -type f -name '*.o' -print0 \

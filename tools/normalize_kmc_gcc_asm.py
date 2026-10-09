@@ -1080,27 +1080,36 @@ def reproduce_color_interpolate_load_hazard(text: str) -> str:
     return text.replace(before, after, 1)
 
 
-def preserve_structure_slot_index_copy(text: str) -> str:
-    """Use the retail register copy in ``func_800DE374``.
+def reproduce_entity_model_draw_label_hazard(text: str) -> str:
+    """Suppress the label-adjacent HI/LO nop in ``func_800E3FDC``.
 
-    The source's byte-narrowed index creates the required independent pseudo,
-    but KMC GCC emits a redundant zero extension even though the preceding
-    ``lbu`` already established its range.  The retail object uses a plain
-    copy at both switch arms.  Require exactly those two branch delay-slot
-    patterns so unrelated ``andi`` instructions cannot be changed.
+    KMC as inserts a hazard nop when the branch target label immediately
+    precedes ``mult``.  The retail object targets the same address without
+    that nop.  Define the label one instruction earlier as ``. + 4`` so its
+    value is unchanged while the assembler no longer sees that boundary.
     """
-    if "func_800DE374:" not in text:
+    if "func_800E3FDC:" not in text:
         return text
-    pattern = re.compile(
-        r"(\t(?:beq|bne)\t\$3,\$2,\.L\d+\n)"
-        r"\tandi\t\$4,\$3,0x00ff\n"
+    before = (
+        "\tj\t.L20\n"
+        "\taddu\t$2,$4,$2\n"
+        "\t.set\tnoreorder\n"
+        ".L21:\n"
+        "\tmult\t$6,$5\n"
     )
-    text, fires = pattern.subn(r"\1\tmove\t$4,$3\n", text)
-    if fires != 2:
+    after = (
+        "\tj\t.L20\n"
+        ".L21 = . + 4\n"
+        "\taddu\t$2,$4,$2\n"
+        "\t.set\tnoreorder\n"
+        "\tmult\t$6,$5\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
         raise RuntimeError(
-            f"func_800DE374 slot-index copy fired {fires} times (expected 2)"
+            f"func_800E3FDC label-adjacent mult fired {fires} times (expected 1)"
         )
-    return text
+    return text.replace(before, after, 1)
 
 
 def schedule_crate_list_head_store(text: str) -> str:
@@ -1685,8 +1694,8 @@ def normalize_v3(source: str) -> str:
         text = reproduce_crate_burst_hilo_hazard(text)
     if os.environ.get("V3_COLOR_INTERPOLATE_HAZARD", "1") == "1":
         text = reproduce_color_interpolate_load_hazard(text)
-    if os.environ.get("V3_STRUCTURE_SLOT_INDEX", "1") == "1":
-        text = preserve_structure_slot_index_copy(text)
+    if os.environ.get("V3_ENTITY_MODEL_DRAW_LABEL_HAZARD", "1") == "1":
+        text = reproduce_entity_model_draw_label_hazard(text)
     if os.environ.get("V3_CRATE_LIST_HEAD_STORE", "1") == "1":
         text = schedule_crate_list_head_store(text)
     if os.environ.get("V3_SCRIPT_PAIR_REGISTERS", "1") == "1":
