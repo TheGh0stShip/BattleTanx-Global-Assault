@@ -1450,6 +1450,7 @@ for function_name in \
         func_800B22F8 \
         func_800B6934 \
         func_800B9F44 \
+        func_800BDA30 \
         func_800BEE0C \
         func_800BF1A4 \
         func_800BF3EC \
@@ -1472,7 +1473,7 @@ for function_name in \
         func_80097CC8|func_80097EE4|func_80098334|func_8009836C|func_80098454|func_80098BF8|func_80099028|func_8009A650|func_8009ACDC|func_8009AD7C|func_8009D1CC|func_8009D4B0|func_8009D75C|func_8009F090|func_8009F334|func_8009F5AC|func_8009F8A0|func_800A1150|func_800A1290|\
         func_8009D960|func_8009DAB0|func_8009DFAC|func_8009E0E8|func_8009E19C|func_8009EC0C|func_800A0968|func_800A140C|func_800A15F0|func_800A18D0|func_800A19DC|\
         func_800A1B44|func_800A2B9C|func_800A2EF0|func_800A2F0C|func_800A4924|func_800A49D0|func_800A60E0|func_800A6B7C|func_800A8D54|func_800A8E84|func_800A8F34|func_800A9660|func_800A96B8|func_800A9A98|func_800ACF20|func_800ACFE0|func_800AD088|func_800AA5D0|func_800ABE6C|func_800B22F8|\
-        func_800B0D70|func_800B6934|func_800B9F44|func_800BEE0C|func_800C04C8|func_800C0564|\
+        func_800B0D70|func_800B6934|func_800B9F44|func_800BDA30|func_800BEE0C|func_800C04C8|func_800C0564|\
         func_800C0ADC|func_800C0B78|func_800C0C38|func_800C13BC|\
         func_800C180C|func_800E82AC)
             unit="code/codex_batch_next2/${function_name}" ;;
@@ -1605,6 +1606,7 @@ for function_name in \
         func_800B22F8) size=0x6C ;;
         func_800B6934) size=0xC0 ;;
         func_800B9F44) size=0x90 ;;
+        func_800BDA30) size=0xC8 ;;
         func_800BEE0C) size=0xA8 ;;
         func_800BF1A4) size=0x60 ;;
         func_800BF3EC) size=0x98 ;;
