@@ -736,22 +736,26 @@ tools/bootstrap_ido.sh
 tools/bootstrap_kmc_gcc.sh
 mkdir -p build/us/src/code
 mkdir -p build/us/src/code/libmus
-.toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
-    -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
-    -o build/us/src/code/cheat_code_data.raw.s src/code/cheat_code_data.c
-python3 tools/normalize_kmc_gcc_asm.py \
-    build/us/src/code/cheat_code_data.raw.s build/us/src/code/cheat_code_data.s
-.toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
-    -o build/us/src/code/cheat_code_data.c.o build/us/src/code/cheat_code_data.s
-.toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
-    -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
-    -o build/us/src/code/controller_pak_text.raw.s src/code/controller_pak_text.c
-python3 tools/normalize_kmc_gcc_asm.py \
-    build/us/src/code/controller_pak_text.raw.s build/us/src/code/controller_pak_text.s
-.toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
-    -o build/us/src/code/controller_pak_text.c.o build/us/src/code/controller_pak_text.s
-python3 tools/trim_elf32_section.py \
-    build/us/src/code/controller_pak_text.c.o .data 0x3e4 --alignment 4
+# Initialized-only gameplay units use the retail KMC pipeline too. Keep them in
+# one manifest-like loop so adding recovered data does not duplicate build logic.
+while read -r unit data_size; do
+    .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+        -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
+        -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
+    python3 tools/normalize_kmc_gcc_asm.py \
+        "build/us/src/code/${unit}.raw.s" "build/us/src/code/${unit}.s"
+    .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+        -o "build/us/src/code/${unit}.c.o" "build/us/src/code/${unit}.s"
+    python3 tools/trim_elf32_section.py \
+        "build/us/src/code/${unit}.c.o" .data "$data_size" --alignment 4
+done <<'EOF'
+cheat_code_data 0x2c0
+controller_pak_text 0x3e4
+title_legal_text 0x120
+pal_warning_text 0x50
+results_text 0xb4
+ending_text 0xa4
+EOF
 # libmus was assembled with reorder enabled, so preserve KMC's raw assembly and
 # its assembler-scheduled delay slots instead of applying the gameplay normalizer.
 while read -r unit text_size; do

@@ -16,7 +16,7 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,560 bytes: the 749,104-byte loaded
 image minus 630,544 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 21,036 bytes, or 17.743%.
+`.data` and `.rodata` currently account for 21,748 bytes, or 18.343%.
 
 The initialized-data reconstruction includes the complete cheat-code unit at
 `0x80121A00`: 33 input strings, their pointer table, and the associated result
@@ -26,6 +26,10 @@ linker reproduce the original padding and relocated pointers.
 The 996-byte Controller Pak message pool at `0x8011F298` is likewise expressed
 as fixed-size fields in a typed C structure. This preserves the original text,
 newlines, field boundaries, and alignment used by the save-game menu.
+
+Other reconstructed text units cover the title and legal notices, PAL-system
+warning, results-screen labels, and ending/rating labels. Each remains mutable
+initialized data, matching how the original game updates some labels in place.
 
 ## LZARI bundles
 
