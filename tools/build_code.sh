@@ -1364,8 +1364,8 @@ while IFS=$'\t' read -r function_name address size status; do
     case "$function_name" in
         \#*|function|'') continue ;;
     esac
-    unit="code/codex_batch/${function_name}"
-    mkdir -p "build/us/src/code/codex_batch"
+    unit="code/${function_name}"
+    mkdir -p "build/us/src/code"
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
         -o "build/us/src/${unit}.raw.s" "src/${unit}.c"
@@ -1375,17 +1375,13 @@ while IFS=$'\t' read -r function_name address size status; do
         -o "build/us/src/${unit}.c.o" "build/us/src/${unit}.s"
     python3 tools/trim_elf32_section.py \
         "build/us/src/${unit}.c.o" .text "$size" --alignment 4
-done < config/us/codex_batch_100.tsv
+done < config/us/legacy_normalized_units.tsv
 while IFS=$'\t' read -r function_name address size status; do
     case "$function_name" in
         \#*|function|'') continue ;;
     esac
-    source_dir="codex_batch_next"
-    if [[ "$function_name" == "func_800ACEFC" ]]; then
-        source_dir="codex_batch"
-    fi
-    unit="code/${source_dir}/${function_name}"
-    mkdir -p "build/us/src/code/${source_dir}"
+    unit="code/${function_name}"
+    mkdir -p "build/us/src/code"
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
         -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
         -o "build/us/src/${unit}.raw.s" "src/${unit}.c"
@@ -1395,7 +1391,7 @@ while IFS=$'\t' read -r function_name address size status; do
         -o "build/us/src/${unit}.c.o" "build/us/src/${unit}.s"
     python3 tools/trim_elf32_section.py \
         "build/us/src/${unit}.c.o" .text "$size" --alignment 4
-done < config/us/codex_batch_next.tsv
+done < config/us/legacy_normalized_units_extra.tsv
 for function_name in \
         func_8007A7B4 \
         func_8007A818 \
@@ -1542,7 +1538,7 @@ for function_name in \
         func_800B0D70|func_800B6934|func_800B9F44|func_800BDA30|func_800BEE0C|func_800C04C8|func_800C0564|\
         func_800C0ADC|func_800C0B78|func_800C0C38|func_800C13BC|\
         func_800C180C|func_800E82AC)
-            unit="code/codex_batch_next2/${function_name}" ;;
+            unit="code/${function_name}" ;;
         *) unit="code/${function_name}" ;;
     esac
     optimization=-O2
@@ -1695,11 +1691,11 @@ for function_name in \
         "build/us/src/${unit}.c.o" .text "$size" --alignment 4
 done
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/codex_batch_next2/func_800A1290.c.o .rodata 0x14 --alignment 4
+    build/us/src/code/func_800A1290.c.o .rodata 0x14 --alignment 4
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/codex_batch_next2/func_8008E6E0.c.o .rodata 0x3C --alignment 4
+    build/us/src/code/func_8008E6E0.c.o .rodata 0x3C --alignment 4
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/codex_batch_next2/func_8009D1CC.c.o .rodata 0x30 --alignment 4
+    build/us/src/code/func_8009D1CC.c.o .rodata 0x30 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/early_hw.c.o .text 0x164 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3334,7 +3330,7 @@ if false; then
     build/us/src/code/angle_subtract.c.o \
     build/us/asm/us/main_8009D6F8_to_8009D72C.s.o \
     build/us/src/code/angle_between.c.o \
-    build/us/src/code/codex_batch_next2/func_8009D75C.c.o \
+    build/us/src/code/func_8009D75C.c.o \
     build/us/src/code/angle_distance.c.o \
     build/us/src/code/angle_direction.c.o \
     build/us/asm/us/main_8009D8A0_to_8009D914.s.o \
@@ -3351,24 +3347,24 @@ if false; then
     build/us/src/code/matrix_basic.c.o \
     build/us/asm/us/main_8009EF4C_to_8009F064.s.o \
     build/us/src/code/matrix_state.c.o \
-    build/us/src/code/codex_batch_next2/func_8009F090.c.o \
+    build/us/src/code/func_8009F090.c.o \
     build/us/src/code/matrix_vector.c.o \
-    build/us/src/code/codex_batch_next2/func_8009F334.c.o \
+    build/us/src/code/func_8009F334.c.o \
     build/us/src/code/matrix_multiply.c.o \
     build/us/asm/us/main_8009F5AC_to_8009F768.s.o \
     build/us/src/code/matrix_transform.c.o \
-    build/us/src/code/codex_batch_next2/func_8009F8A0.c.o \
+    build/us/src/code/func_8009F8A0.c.o \
     build/us/asm/us/main_8009FCCC_to_8009FF1C.s.o \
     build/us/src/code/vector2_rotate.c.o \
     build/us/asm/us/main_8009FFB8_to_800A1280.s.o \
     build/us/src/code/scheduler_context.c.o \
-    build/us/src/code/codex_batch_next2/func_800A1290.c.o \
+    build/us/src/code/func_800A1290.c.o \
     build/us/src/code/scheduler_state.c.o \
     build/us/asm/us/main_800A1384_to_800A179C.s.o \
     build/us/src/code/scheduler_events.c.o \
     build/us/asm/us/main_800A18D0_to_800A1A28.s.o \
     build/us/src/code/scheduler_queue.c.o \
-    build/us/src/code/codex_batch_next2/func_800A1B44.c.o \
+    build/us/src/code/func_800A1B44.c.o \
     build/us/asm/us/main_800A1BE0_to_800A2B74.s.o \
     build/us/src/code/object_range.c.o \
     build/us/asm/us/main_800A2B9C_to_800A2DFC.s.o \
@@ -3398,7 +3394,7 @@ if false; then
     build/us/asm/us/main_800B06D8_to_800B5F30.s.o \
     build/us/src/code/turn_adjust.c.o \
     build/us/asm/us/main_800B5F70_to_800B6934.s.o \
-    build/us/src/code/codex_batch_next2/func_800B6934.c.o \
+    build/us/src/code/func_800B6934.c.o \
     build/us/asm/us/main_800B69F4_to_800B99AC.s.o \
     build/us/src/code/display_registry.c.o \
     build/us/asm/us/main_800B99F8_to_800B9A4C.s.o \
@@ -3727,7 +3723,7 @@ if false; then
     build/us/src/code/game_mode_has_pickups.c.o \
     build/us/src/code/game_team_compare.c.o \
     build/us/src/code/multiplayer_actor_spawn.c.o \
-    build/us/src/code/codex_batch_next2/func_800E82AC.c.o \
+    build/us/src/code/func_800E82AC.c.o \
     build/us/src/code/slist_remove_count.c.o \
     build/us/asm/us/main_800E8378_to_800E8380.s.o \
     build/us/src/code/slot_asset_ranges.c.o \
