@@ -305,6 +305,39 @@ class KmcPipelineTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.schedule_crate_list_head_store("func_800E66A8:\n\tnop\n")
 
+    def test_script_pair_registers_are_narrowly_swapped(self) -> None:
+        source = (
+            "func_800D12B0:\n"
+            "\tlbu\t$2,0($6)\n"
+            "\taddu\t$6,$6,1\n"
+            "\tlbu\t$4,0($6)\n"
+            "\taddu\t$6,$6,1\n"
+            "\tlbu\t$3,D_803A6A04\n"
+            "\tsll\t$2,$2,8\n"
+            "\tor\t$4,$4,$2\n"
+            "\tsh\t$4,D_803A666E\n"
+            "\tlbu\t$2,0($6)\n"
+            "\taddu\t$6,$6,1\n"
+            "\tlbu\t$4,0($6)\n"
+            "\tsll\t$2,$2,8\n"
+            "\tor\t$4,$4,$2\n"
+            "\tli\t$2,0x00000017\t\t# 23\n"
+            "\tsh\t$4,D_803A6670\n"
+            "\t.set\tnoreorder\n"
+            "\tbne\t$3,$2,.L2\n"
+            "\taddu\t$6,$6,1\n"
+        )
+        normalized = MODULE.swap_script_pair_registers(source)
+        self.assertIn("\tlbu\t$3,0($6)\n", normalized)
+        self.assertIn("\tlbu\t$4,D_803A6A04\n", normalized)
+        self.assertIn("\tsh\t$3,D_803A666E\n", normalized)
+        self.assertIn("\tbne\t$4,$2,.L2\n", normalized)
+        self.assertNotIn("\tsh\t$4,D_803A666E\n", normalized)
+
+    def test_script_pair_register_swap_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.swap_script_pair_registers("func_800D12B0:\n\tnop\n")
+
     def test_turret_sweep_hazards_reproduce_retail_forms(self) -> None:
         source = (
             "func_800E1BB0:\n"

@@ -721,7 +721,7 @@ segments:
       - [0x6104C, c, code/spawn_nearest_type28]
       - [0x61140, c, code/spawn_nearest_type31]
       - [0x61234, c, code/spawn_counters]
-      - [0x612B0, asm, main_800D12B0_to_800D1C90]
+      - [0x612B0, c, code/800D12B0_script_command_decode]
       - [0x61C90, c, code/spawn_object_command]
       - [0x6250C, c, code/audio_listener_update]
       - [0x625E0, c, code/seq_script_tick]

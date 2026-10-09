@@ -1130,6 +1130,66 @@ def schedule_crate_list_head_store(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def swap_script_pair_registers(text: str) -> str:
+    """Reproduce the retail allocno choice in ``func_800D12B0``.
+
+    In the handlers shared by opcodes 22, 23, and 33, the reconstructed C
+    gives the two-byte accumulator to ``$4`` and the saved opcode to ``$3``.
+    The retail object assigns those two independent quantities in the opposite
+    order.  Replace the complete contiguous sequence once; the surrounding
+    pointer updates, shifts, constant, stores, and branch make this much
+    narrower than a general register rename.
+    """
+    if "func_800D12B0:" not in text:
+        return text
+    before = (
+        "\tlbu\t$2,0($6)\n"
+        "\taddu\t$6,$6,1\n"
+        "\tlbu\t$4,0($6)\n"
+        "\taddu\t$6,$6,1\n"
+        "\tlbu\t$3,D_803A6A04\n"
+        "\tsll\t$2,$2,8\n"
+        "\tor\t$4,$4,$2\n"
+        "\tsh\t$4,D_803A666E\n"
+        "\tlbu\t$2,0($6)\n"
+        "\taddu\t$6,$6,1\n"
+        "\tlbu\t$4,0($6)\n"
+        "\tsll\t$2,$2,8\n"
+        "\tor\t$4,$4,$2\n"
+        "\tli\t$2,0x00000017\t\t# 23\n"
+        "\tsh\t$4,D_803A6670\n"
+        "\t.set\tnoreorder\n"
+        "\tbne\t$3,$2,.L2\n"
+        "\taddu\t$6,$6,1\n"
+    )
+    after = (
+        "\tlbu\t$2,0($6)\n"
+        "\taddu\t$6,$6,1\n"
+        "\tlbu\t$3,0($6)\n"
+        "\taddu\t$6,$6,1\n"
+        "\tlbu\t$4,D_803A6A04\n"
+        "\tsll\t$2,$2,8\n"
+        "\tor\t$3,$3,$2\n"
+        "\tsh\t$3,D_803A666E\n"
+        "\tlbu\t$2,0($6)\n"
+        "\taddu\t$6,$6,1\n"
+        "\tlbu\t$3,0($6)\n"
+        "\tsll\t$2,$2,8\n"
+        "\tor\t$3,$3,$2\n"
+        "\tli\t$2,0x00000017\t\t# 23\n"
+        "\tsh\t$3,D_803A6670\n"
+        "\t.set\tnoreorder\n"
+        "\tbne\t$4,$2,.L2\n"
+        "\taddu\t$6,$6,1\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800D12B0 pair-register swap fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -1185,6 +1245,8 @@ def normalize_v3(source: str) -> str:
         text = preserve_structure_slot_index_copy(text)
     if os.environ.get("V3_CRATE_LIST_HEAD_STORE", "1") == "1":
         text = schedule_crate_list_head_store(text)
+    if os.environ.get("V3_SCRIPT_PAIR_REGISTERS", "1") == "1":
+        text = swap_script_pair_registers(text)
     return text
 
 

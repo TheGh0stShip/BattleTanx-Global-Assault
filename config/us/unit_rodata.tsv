@@ -33,6 +33,7 @@ race_slot_set_digit	0x80073F30	0x20
 controls_bindings_save	0x80073F70	0x28
 controls_bindings_load	0x80073F98	0x9C
 spawn_effect_by_type	0x800741D0	0x2C
+800D12B0_script_command_decode	0x80074208	0xF8
 seq_event_spawn_tick	0x80074768	0x240
 seq_event_start	0x80074C08	0xD8
 seq_script_load	0x80074CE0	0x20

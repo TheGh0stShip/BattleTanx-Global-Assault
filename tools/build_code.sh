@@ -383,10 +383,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800D0A74_to_800D0DF8.s.o .text 0x384 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800D12B0_to_800D1C90.s.o asm/us/main_800D12B0_to_800D1C90.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800D12B0_to_800D1C90.s.o .text 0x9e0 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800D3C64_to_800D404C.s.o asm/us/main_800D3C64_to_800D404C.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800D3C64_to_800D404C.s.o .text 0x3e8 --alignment 4
@@ -1124,6 +1120,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             controls_bindings_save \
             controls_bindings_load \
             spawn_effect_by_type \
+            800D12B0_script_command_decode \
             seq_event_spawn_tick \
             seq_event_start \
             seq_script_load \
@@ -2439,6 +2436,10 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/slot_condition_check.c.o .rodata 0xb8 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/800D12B0_script_command_decode.c.o .text 0x9e0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800D12B0_script_command_decode.c.o .rodata 0xf8 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/800D3C64_seq_point_track.c.o .text 0x3e8 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800D3C64_seq_point_track.c.o .rodata 0xc0 --alignment 4
@@ -3391,7 +3392,7 @@ if false; then
     build/us/src/code/spawn_nearest_type28.c.o \
     build/us/src/code/spawn_nearest_type31.c.o \
     build/us/src/code/spawn_counters.c.o \
-    build/us/asm/us/main_800D12B0_to_800D1C90.s.o \
+    build/us/src/code/800D12B0_script_command_decode.c.o \
     build/us/src/code/spawn_object_command.c.o \
     build/us/src/code/audio_listener_update.c.o \
     build/us/src/code/seq_script_tick.c.o \
