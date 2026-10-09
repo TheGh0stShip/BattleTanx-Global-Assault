@@ -442,7 +442,7 @@ segments:
       - [0x38B38, asm, main_800A8B38_to_800A8E3C]
       - [0x38E3C, c, code/codex_batch_next/func_800A8E3C]
       - [0x38E84, c, code/codex_batch_next2/func_800A8E84]
-      - [0x38F34, asm, main_800A8F34_to_800A9054]
+      - [0x38F34, c, code/codex_batch_next2/func_800A8F34]
       - [0x39054, c, code/object_flags]
       - [0x39080, asm, main_800A9080_to_800A9660]
       - [0x39660, c, code/codex_batch_next2/func_800A9660]

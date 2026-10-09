@@ -1396,6 +1396,7 @@ for function_name in \
         func_800A19DC \
         func_800A6B7C \
         func_800A8E84 \
+        func_800A8F34 \
         func_800A9660 \
         func_800A96B8 \
         func_800A97FC \
@@ -1422,7 +1423,7 @@ for function_name in \
         func_8008A350|func_8008B788|func_8008BEC4|func_8008E620|func_80096F48|func_800979F4|\
         func_80097CC8|func_80098334|func_8009A650|func_8009D4B0|func_8009F090|func_8009F334|func_8009F8A0|func_800A1150|func_800A1290|\
         func_8009DAB0|func_8009E0E8|func_8009E19C|func_800A140C|func_800A15F0|func_800A18D0|func_800A19DC|\
-        func_800A6B7C|func_800A8E84|func_800A9660|func_800A96B8|func_800B22F8|\
+        func_800A6B7C|func_800A8E84|func_800A8F34|func_800A9660|func_800A96B8|func_800B22F8|\
         func_800B9F44|func_800BEE0C|func_800C04C8|func_800C0564|\
         func_800C0ADC|func_800C0B78|func_800C0C38|func_800C13BC|\
         func_800C180C)
@@ -1493,6 +1494,7 @@ for function_name in \
         func_800A19DC) size=0x4C ;;
         func_800A6B7C) size=0xA4 ;;
         func_800A8E84) size=0xB0 ;;
+        func_800A8F34) size=0x120 ;;
         func_800A9660) size=0x58 ;;
         func_800A96B8) size=0x94 ;;
         func_800A97FC) size=0xBC ;;
