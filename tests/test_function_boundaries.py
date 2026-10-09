@@ -373,6 +373,20 @@ class FunctionBoundaryTests(unittest.TestCase):
         }
         self.assertNotIn(0x800ED98C, covered_words)
 
+    def test_world_loader_reference_walkers_are_independent_functions(self) -> None:
+        functions = self.load_functions()
+        by_address = {function["vram"]: function for function in functions}
+
+        self.assertEqual(0x1E8, by_address[0x800B9FD4]["size"])
+        self.assertEqual(
+            {"name": "func_800BA1BC", "vram": 0x800BA1BC, "size": 0x90},
+            by_address[0x800BA1BC],
+        )
+        self.assertEqual(
+            {"name": "func_800BA24C", "vram": 0x800BA24C, "size": 0xE4},
+            by_address[0x800BA24C],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

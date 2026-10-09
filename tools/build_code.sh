@@ -962,7 +962,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             race_popup_setup results_bar_step results_rank_label \
             results_time_text cheat_codes \
             hud_secondary hud_primary_modes hud_transition registry_lookup \
-            hud_ready hud_clear hud_navigation player_color entry_scan \
+            hud_ready hud_clear hud_navigation player_color world_loader_ref_walkers entry_scan \
             entry_flags hud_callbacks hud_panel_callback hud_list_callback \
             hud_root_callback hud_layout hud_list_trigger \
             hud_entry_values hud_list_reset hud_selection_apply \
@@ -3126,6 +3126,8 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/player_color.c.o .text 0x30 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/entry_scan.c.o .text 0x38 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/world_loader_ref_walkers.c.o .text 0x174 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_callbacks.c.o .text 0x58 --alignment 4
 python3 tools/trim_elf32_section.py \

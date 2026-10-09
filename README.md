@@ -28,10 +28,10 @@ make check
 ## Current status
 
 - ROM identity and the unusual `0x80071000` load address are verified.
-- A GPL-compatible catalogue contains 1,736 supported function boundaries after correcting false splits and aggregations, with provenance.
+- A GPL-compatible catalogue contains 1,738 supported function boundaries after correcting false splits and aggregations, with provenance.
 - Reproducible splat extraction and repository safety gates are in place.
 - The header, IPL3, and known first-MiB code region reconstruct byte-for-byte.
-- 1,446 of 1,736 catalogue functions (83.3%) are reconstructed in production C and pass the byte-exact gate. By catalogue function-body bytes, 392,404 of 630,288 bytes (62.3%) are reconstructed.
+- 1,448 of 1,738 catalogue functions (83.3%) are reconstructed in production C and pass the byte-exact gate. By catalogue function-body bytes, 392,776 of 630,288 bytes (62.3%) are reconstructed.
 - The matching LZARI codec and audited ROM tables identify 271 compressed streams: 75 game-world bundles, 195 images, and one leftover BattleTanx world. Their 1,174,975 stored bytes expand to 2,886,765 bytes and canonically re-encode to every retail byte. `tools/inventory_lzari_assets.py` inventories them, `tools/extract_lzari_images.py` converts all six observed N64 texture layouts into local PNG previews, and `tools/extract_lzari_worlds.py` emits validated fixed-record world manifests without committing ROM-derived data.
 - Normalizer-assisted units require narrowly gated, documented rules with exact fire counts; they are identified separately from pure source matches in [the normalizer-assisted record](docs/NORMALIZER_ASSISTED.md).
 - CI publishes Code and Data categories in the objdiff v2 `us_report` artifact. Data progress counts only source-owned bytes already proven identical; merely locating or extracting an opaque asset does not count as a match.
