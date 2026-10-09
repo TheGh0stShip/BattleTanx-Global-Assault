@@ -804,7 +804,6 @@ segments:
       - [0x6AAE0, c, code/800DAAE0_projectile_spawn]
       - [0x6AC34, c, code/projectile_bounce]
       - [0x6B1B0, c, code/800DB1B0_projectile_segment_spawn]
-      - [0x6B4E8, asm, main_800DB4E8_to_800DB6F0]
       - [0x6B6F0, c, code/800DB6F0_track_angle_unit]
       - [0x6C214, c, code/projectile_model_draw]
       - [0x6C3A8, c, code/projectile_model_create]

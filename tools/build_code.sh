@@ -2494,9 +2494,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800DAAE0_projectile_spawn.c.o .text 0x154 --alignment 4
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/800DB1B0_projectile_segment_spawn.c.o .text 0x338 --alignment 4
+    build/us/src/code/800DB1B0_projectile_segment_spawn.c.o .text 0x538 --alignment 4
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/800DB1B0_projectile_segment_spawn.c.o .rodata 0x5c --alignment 4
+    build/us/src/code/800DB1B0_projectile_segment_spawn.c.o .rodata 0x70 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800DB6F0_track_angle_unit.c.o .text 0xb24 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3510,7 +3510,6 @@ if false; then
     build/us/src/code/800DAAE0_projectile_spawn.c.o \
     build/us/src/code/projectile_bounce.c.o \
     build/us/src/code/800DB1B0_projectile_segment_spawn.c.o \
-    build/us/asm/us/main_800DB4E8_to_800DB6F0.s.o \
     build/us/src/code/800DB6F0_track_angle_unit.c.o \
     build/us/src/code/projectile_model_draw.c.o \
     build/us/src/code/projectile_model_create.c.o \

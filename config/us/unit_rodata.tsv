@@ -43,7 +43,7 @@ seq_level_header_load	0x80074D30	0x68
 seq_events_update	0x80074E70	0xD8
 800D3C64_seq_point_track	0x800749B0	0xC0
 800D9D50_debris_spawn	0x8007536C	0x1C
-800DB1B0_projectile_segment_spawn	0x80075418	0x5C
+800DB1B0_projectile_segment_spawn	0x80075418	0x70
 800DB6F0_track_angle_unit	0x80075490	0xFC
 800DD82C_structure_debris_spawn	0x80075668	0x70
 800DE374_structure_message	0x80075740	0xFC
