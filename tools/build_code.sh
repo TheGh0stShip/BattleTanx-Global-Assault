@@ -775,6 +775,7 @@ hazard_animation_data 0x190
 model_motion_render_data 0x270
 model_variant_runtime_data 0x20
 f3dex2_fifo_data 0x420
+libmus/audio_runtime_data 0x5B0
 controller_pak_text 0x3e4
 title_legal_text 0x120
 pal_warning_text 0x50

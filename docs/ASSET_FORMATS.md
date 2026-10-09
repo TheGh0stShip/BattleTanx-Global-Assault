@@ -16,7 +16,7 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,820 bytes: the 749,104-byte loaded
 image minus 630,284 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 49,664 bytes, or 41.798%.
+`.data` and `.rodata` currently account for 51,984 bytes, or 43.750%.
 
 The effect-definition bank at `0x80114F10–0x80116580` accounts for 5,744 of
 those bytes. It is kept as heterogeneous 32-bit record words until the matched
@@ -56,6 +56,12 @@ the initialized model-cache state. Nintendo's source-backed F3DEX FIFO 2.07
 DMEM image occupies `0x80125EC0–0x801262E0`; its matrices, render state, light
 buffers, dispatch tables, clipping state, and overlay metadata are kept in a
 separate unit from the game-owned model data.
+
+Audio runtime data at `0x801262E0–0x80126890` contains the N_audio RSP command
+dispatch addresses, vector constants and resampling coefficients, followed by
+the libmus command table, six effect-parameter presets, scheduler callbacks,
+and initialized audio-thread state. The arrays and pointers are represented as
+typed source data; the unit does not embed a ROM-extracted binary.
 
 The initialized-data reconstruction includes the complete cheat-code unit at
 `0x80121A00`: 33 input strings, their pointer table, and the associated result

@@ -1,6 +1,7 @@
 # Library fingerprints
 
-The USA Rev 0 ROM contains an **N64 OS 2.0I `libultra_rom`** runtime and the
+The USA Rev 0 ROM contains an **N64 OS 2.0I `libultra_rom`** runtime,
+**N_audio** RSP audio support, **N64 Sound Tools/libmus 3.14**, and the
 **F3DEX FIFO 2.07** graphics microcode. These identifications are based on ROM
 bytes, not solely on imported symbol names.
 
@@ -37,6 +38,11 @@ RSP Gfx ucode F3DEX       fifo 2.07  Yoshitaka Yasumoto 1998 Nintendo.
 The standalone MPAL, NTSC, and PAL low-resolution antialiased VI modes at
 `0x80126FA0–0x80127090` also rebuild exactly from the SDK `OSViMode` layouts.
 They precede the complete 2.0I VI mode table in link order.
+
+The initialized audio block at `0x801262E0–0x80126890` independently matches
+the N_audio ABI constants and the Sound Tools 3.14 command/effect tables. Its
+first `0x2B0` bytes are the RSP DMEM image; the remaining `0x300` bytes are
+libmus CPU-side initialized data.
 
 ## Compiler scope
 

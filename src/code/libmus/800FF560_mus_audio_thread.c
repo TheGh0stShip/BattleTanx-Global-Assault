@@ -39,7 +39,7 @@ extern audio_buf_t *D_803ADC24;
 extern void *D_803ADC20;
 extern u8 D_803ADA70[];
 extern u64 n_aspMainTextStart[];
-extern u64 D_801262E0[];
+extern u64 n_aspMainDataStart[];
 extern audio_callbacks_t *D_8012686C;
 extern audio_buf_t *D_80126870;
 
@@ -97,7 +97,7 @@ void func_800FF698(void *arg)
 
     info[0] = (u32)D_803ADC28;
     info[2] = (u32)n_aspMainTextStart;
-    info[3] = (u32)D_801262E0;
+    info[3] = (u32)n_aspMainDataStart;
     frame = 0;
     D_8012686C->init();
     while (1) {

@@ -55,4 +55,19 @@ data image found at `0x80125EC0`; `src/code/f3dex2_fifo_data.c` preserves its
 named matrices, render state, light buffers, dispatch tables, clipping state,
 and overlay metadata without embedding an extracted binary.
 
+The adjacent `0x801262E0–0x80126590` initialized DMEM image is the N_audio
+RSP ABI data layout. Its vector constants and 256-entry resampling table were
+cross-checked against the CC0
+[`n64decomp/sm64` audio microcode source](https://github.com/n64decomp/sm64/blob/9921382a68bb0c865e5e45eb594d9c64db59b1af/rsp/audio.s).
+Global Assault's 16-entry command dispatch table is title-specific and was
+independently verified against the retail ROM rather than copied from that
+reference.
+
+The libmus command dispatch, effect presets, scheduler callbacks, and initial
+audio state at `0x80126590–0x80126890` follow the MIT-licensed N64 Sound Tools
+3.14 sources retained by the
+[`AngheloAlf/drmario64` decompilation](https://github.com/AngheloAlf/drmario64/tree/b5526094c4b699c1718ebec510acc31ccafd4b47/lib/libmus/src).
+The typed reconstruction is linked at its retail address and all relocated
+pointers and scalar values are compared byte-for-byte with this title.
+
 The source/tooling-only distribution and eventual Vita workflow follow the project structure and legal/release boundaries established in `TheGh0stShip/VitaKart64`.

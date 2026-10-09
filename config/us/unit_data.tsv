@@ -48,6 +48,7 @@ hazard_animation_data	0x80125AA0	0x190
 model_motion_render_data	0x80125C30	0x270
 model_variant_runtime_data	0x80125EA0	0x20
 f3dex2_fifo_data	0x80125EC0	0x420
+libmus/audio_runtime_data	0x801262E0	0x5B0
 n_audio/800FFB30_n_drvrnew	0x80126890	0x190
 n_audio/80100050_n_env	0x80126A20	0x100
 libultra/al_drvrnew	0x80126B60	0x190
