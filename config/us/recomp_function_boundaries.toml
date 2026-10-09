@@ -1614,7 +1614,9 @@ functions = [
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800F6ED0", vram = 0x800f6ed0, size = 0x1bc },
     { name = "func_800F708C", vram = 0x800f708c, size = 0xc4 },
-    { name = "func_800F7150", vram = 0x800f7150, size = 0xe0 },
+    # Direct disassembly and exact C builds establish the adjacent functions.
+    { name = "func_800F7150", vram = 0x800f7150, size = 0xac },
+    { name = "func_800F71FC", vram = 0x800f71fc, size = 0x34 },
     { name = "func_800F7230", vram = 0x800f7230, size = 0x33c },
     { name = "func_800F756C", vram = 0x800f756c, size = 0x10 },
     # round 22: split -- trailing garbage word (sllv $zero,$at,$zero) right

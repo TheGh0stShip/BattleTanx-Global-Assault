@@ -679,10 +679,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800F5264_to_800F5270.s.o .text 0xc --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800F6100_to_800F6144.s.o asm/us/main_800F6100_to_800F6144.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800F6100_to_800F6144.s.o .text 0x44 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800F6344_to_800F64B8.s.o asm/us/main_800F6344_to_800F64B8.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800F6344_to_800F64B8.s.o .text 0x174 --alignment 4
@@ -694,10 +690,6 @@ python3 tools/trim_elf32_section.py \
     -o build/us/asm/us/main_800F67F0_to_800F6ED0.s.o asm/us/main_800F67F0_to_800F6ED0.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800F67F0_to_800F6ED0.s.o .text 0x6e0 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800F7150_to_800F71FC.s.o asm/us/main_800F7150_to_800F71FC.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800F7150_to_800F71FC.s.o .text 0xac --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800F7230_to_800F756C.s.o asm/us/main_800F7230_to_800F756C.s
 python3 tools/trim_elf32_section.py \
@@ -1109,11 +1101,13 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             effect_table_reset \
             generator_damage_apply \
             generator_message_damage \
+            generator_hit_query \
             generator_splash_damage \
             generator_dispatch_bonus \
             effect_expire_100 \
             wreck_debris_spawn \
             wreck_debris_update \
+            anim_colors_set \
             anim_list_create \
             anim_list_reset \
             anim_list_register \
@@ -1843,6 +1837,8 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/generator_message_damage.c.o .text 0x1f0 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/generator_hit_query.c.o .text 0x44 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/generator_splash_damage.c.o .text 0x200 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/generator_dispatch_bonus.c.o .text 0x190 --alignment 4
@@ -1852,6 +1848,8 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/wreck_debris_spawn.c.o .text 0x1bc --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/wreck_debris_update.c.o .text 0xc4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/anim_colors_set.c.o .text 0xac --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/anim_list_create.c.o .text 0x34 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3639,7 +3637,7 @@ if false; then
     build/us/src/code/effect_beam_draw.c.o \
     build/us/src/code/generator_damage_apply.c.o \
     build/us/src/code/generator_message_damage.c.o \
-    build/us/asm/us/main_800F6100_to_800F6144.s.o \
+    build/us/src/code/generator_hit_query.c.o \
     build/us/src/code/generator_splash_damage.c.o \
     build/us/asm/us/main_800F6344_to_800F64B8.s.o \
     build/us/src/code/generator_dispatch_bonus.c.o \
@@ -3649,7 +3647,7 @@ if false; then
     build/us/asm/us/main_800F67F0_to_800F6ED0.s.o \
     build/us/src/code/wreck_debris_spawn.c.o \
     build/us/src/code/wreck_debris_update.c.o \
-    build/us/asm/us/main_800F7150_to_800F71FC.s.o \
+    build/us/src/code/anim_colors_set.c.o \
     build/us/src/code/anim_list_create.c.o \
     build/us/asm/us/main_800F7230_to_800F756C.s.o \
     build/us/src/code/anim_list_reset.c.o \
