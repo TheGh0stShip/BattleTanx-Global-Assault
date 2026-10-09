@@ -1,5 +1,6 @@
 # unit	data_vram	data_size
 # C units whose initialized data must be linked and spliced at retail addresses.
+controller_pak_text	0x8011F298	0x3E4
 cheat_code_data	0x80121A00	0x2C0
 n_audio/800FFB30_n_drvrnew	0x80126890	0x190
 n_audio/80100050_n_env	0x80126A20	0x100

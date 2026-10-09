@@ -743,6 +743,15 @@ python3 tools/normalize_kmc_gcc_asm.py \
     build/us/src/code/cheat_code_data.raw.s build/us/src/code/cheat_code_data.s
 .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
     -o build/us/src/code/cheat_code_data.c.o build/us/src/code/cheat_code_data.s
+.toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+    -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
+    -o build/us/src/code/controller_pak_text.raw.s src/code/controller_pak_text.c
+python3 tools/normalize_kmc_gcc_asm.py \
+    build/us/src/code/controller_pak_text.raw.s build/us/src/code/controller_pak_text.s
+.toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+    -o build/us/src/code/controller_pak_text.c.o build/us/src/code/controller_pak_text.s
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controller_pak_text.c.o .data 0x3e4 --alignment 4
 # libmus was assembled with reorder enabled, so preserve KMC's raw assembly and
 # its assembler-scheduled delay slots instead of applying the gameplay normalizer.
 while read -r unit text_size; do
