@@ -820,11 +820,11 @@ type = "func"
 reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
 
 [[symbol]]
-name = "func_800F865C"
+name = "D_800F865C"
 vram = 0x800F865C
-size = 0xA374
-type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+size = 0x4
+type = "u8"
+reason = "The word spells ASCII DING and precedes the real function at 0x800F8660."
 
 [[symbol]]
 name = "func_800C48F0"

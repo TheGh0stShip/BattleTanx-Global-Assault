@@ -711,17 +711,13 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800F809C_to_800F80A0.s.o .text 0x4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800F80E8_to_800F8208.s.o asm/us/main_800F80E8_to_800F8208.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800F80E8_to_800F8208.s.o .text 0x120 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800F83B8_to_800F83C0.s.o asm/us/main_800F83B8_to_800F83C0.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800F83B8_to_800F83C0.s.o .text 0x8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800F865C_to_800F872C.s.o asm/us/main_800F865C_to_800F872C.s
+    -o build/us/asm/us/main_800F865C_to_800F8660.s.o asm/us/main_800F865C_to_800F8660.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800F865C_to_800F872C.s.o .text 0xd0 --alignment 4
+    build/us/asm/us/main_800F865C_to_800F8660.s.o .text 0x4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800F8AAC_to_801029D0.s.o asm/us/main_800F8AAC_to_801029D0.s
 python3 tools/trim_elf32_section.py \
@@ -1120,10 +1116,12 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             static_prop_create \
             static_prop_expire \
             static_prop_draw \
+            model_variant_get \
             model_cache_globals \
             artillery_emplacement_update \
             artillery_emplacement_disable \
             artillery_emplacement_create \
+            artillery_projectile_create \
             hud_slot_icons_update \
             hud_menu_entries_apply_settings \
             hud_entry_set_label \
@@ -1875,6 +1873,8 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/static_prop_draw.c.o .text 0x118 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_variant_get.c.o .text 0x120 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/model_cache_globals.c.o .text 0x5c --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/artillery_emplacement_update.c.o .text 0x218 --alignment 4
@@ -1882,6 +1882,8 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/artillery_emplacement_disable.c.o .text 0x18 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/artillery_emplacement_create.c.o .text 0x6c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/artillery_projectile_create.c.o .text 0xcc --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/results_status_flags.c.o .text 0x34 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3668,14 +3670,15 @@ if false; then
     build/us/src/code/static_prop_draw.c.o \
     build/us/asm/us/main_800F809C_to_800F80A0.s.o \
     build/us/src/code/static_in_radius.c.o \
-    build/us/asm/us/main_800F80E8_to_800F8208.s.o \
+    build/us/src/code/model_variant_get.c.o \
     build/us/src/code/model_cache_globals.c.o \
     build/us/src/code/model_in_draw_range.c.o \
     build/us/asm/us/main_800F83B8_to_800F83C0.s.o \
     build/us/src/code/artillery_emplacement_update.c.o \
     build/us/src/code/artillery_emplacement_disable.c.o \
     build/us/src/code/artillery_emplacement_create.c.o \
-    build/us/asm/us/main_800F865C_to_800F872C.s.o \
+    build/us/asm/us/main_800F865C_to_800F8660.s.o \
+    build/us/src/code/artillery_projectile_create.c.o \
     build/us/src/code/artillery_target_track.c.o \
     build/us/asm/us/main_800F8AAC_to_801029D0.s.o \
     build/us/src/libultra/os_ai_get_length.c.o \
