@@ -8,6 +8,7 @@ controller_pak_identity	0x80114808	0x58
 effect_axis_geometry	0x80114E30	0x64
 effect_event_table	0x80114E94	0x1C
 effect_color_presets	0x80114EB0	0x60
+effect_definition_bank	0x801150A4	0x14DC
 display_state_patches	0x80116710	0x110
 image_asset_descriptors	0x80116860	0x1570
 menu_help_text	0x80117FB4	0xA0

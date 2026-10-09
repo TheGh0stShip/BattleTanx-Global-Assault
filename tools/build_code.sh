@@ -757,6 +757,7 @@ controller_pak_identity 0x58
 effect_axis_geometry 0x64
 effect_event_table 0x1C
 effect_color_presets 0x60
+effect_definition_bank 0x14DC
 display_state_patches 0x110
 image_asset_descriptors 0x1570
 cheat_code_data 0x2c0

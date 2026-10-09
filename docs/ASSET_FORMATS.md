@@ -16,7 +16,12 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,564 bytes: the 749,104-byte loaded
 image minus 630,540 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 31,244 bytes, or 26.353%.
+`.data` and `.rodata` currently account for 36,584 bytes, or 30.856%.
+
+The effect-definition bank at `0x801150A4–0x80116580` accounts for 5,340 of
+those bytes. It is kept as heterogeneous 32-bit record words until the matched
+effect interpreter establishes every variant's field layout. Words containing
+addresses are N64 ILP32 pointer tokens, not native host pointers.
 
 The initialized-data reconstruction includes the complete cheat-code unit at
 `0x80121A00`: 33 input strings, their pointer table, and the associated result
