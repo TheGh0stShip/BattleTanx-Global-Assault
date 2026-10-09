@@ -419,7 +419,7 @@ segments:
       - [0x3140C, asm, main_800A140C_to_800A16F8]
       - [0x316F8, c, code/codex_batch_next/func_800A16F8]
       - [0x3179C, c, code/scheduler_events]
-      - [0x318D0, asm, main_800A18D0_to_800A19DC]
+      - [0x318D0, c, code/codex_batch_next2/func_800A18D0]
       - [0x319DC, c, code/codex_batch_next2/func_800A19DC]
       - [0x31A28, c, code/scheduler_queue]
       - [0x31B44, asm, main_800A1B44_to_800A2B74]
