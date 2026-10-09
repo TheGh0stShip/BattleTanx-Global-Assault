@@ -34,4 +34,11 @@ Those symbols are hypotheses and navigation aids, not matching-decomp proof. Eac
 
 The imported boundary table has been audited through its highest addresses. The last supported executable boundary currently ends at `0x80114498`. Later candidates were rejected because the ROM words are pointer tables, zero-filled records, named libultra data, strings, or repeating asset data rather than coherent control flow. Names retained in the raw seed beyond that point are navigation hints only and must not receive `type:func` annotations without new direct evidence.
 
+The libultra 2.0I video-mode table in `src/libultra/vitbl.c` comes from the
+MIT-licensed Dr. Mario 64 repository at revision
+`b5526094c4b699c1718ebec510acc31ccafd4b47`. Its 42 `OSViMode` records compile
+with IDO 5.3 to the exact 0xD20 retail bytes at `0x80127090`. The local
+compatibility header retains only the fixed-width record layout and constants
+needed to build that table.
+
 The source/tooling-only distribution and eventual Vita workflow follow the project structure and legal/release boundaries established in `TheGh0stShip/VitaKart64`.

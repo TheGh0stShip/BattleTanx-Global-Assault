@@ -101,9 +101,12 @@ def main() -> None:
     for index, (unit, vram, _size) in enumerate(data_rows, start=len(rows)):
         needle = f"{unit_object_path(unit)}(.data);"
         hits = [i for i, line in enumerate(text) if line.strip() == needle]
-        if len(hits) != 1:
+        if len(hits) > 1:
             raise SystemExit(f"expected one data line for {unit}, found {len(hits)}")
-        del text[hits[0]]
+        if hits:
+            del text[hits[0]]
+        elif not Path(unit_object_path(unit)).is_file():
+            raise SystemExit(f"data-only object for {unit} does not exist")
         section = output_section_name(unit, "data")
         extra.append(
             f"    {section} 0x{vram:08X} : AT(0x{LMA_PARK + index * 0x10000:08X})\n"
