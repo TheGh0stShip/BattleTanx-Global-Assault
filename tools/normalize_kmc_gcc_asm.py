@@ -1190,6 +1190,51 @@ def swap_script_pair_registers(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def reproduce_projectile_segment_label_hazards(text: str) -> str:
+    """Suppress two label-adjacent FP nops in ``func_800DB1B0``.
+
+    KMC ``as`` inserts a load-delay nop when ``.L21`` follows the constant
+    load and an FP-result nop when ``.L17`` follows the preceding ``add.s``.
+    The retail object has neither.  As with the established turret-sweep
+    workaround, define each branch target one instruction early as ``.+4`` so
+    the symbol keeps its retail address without exposing a label boundary to
+    the assembler's hazard pass.
+    """
+    if "func_800DB1B0:" not in text:
+        return text
+    labeled_load = "\tl.s\t$f0,$LF_lis4\n.L21:\n"
+    labeled_load_retail = (
+        "\t.set\tnoat\n"
+        "\tlui\t$1,%hi($LF_lis4)\n"
+        ".L21 = . + 4\n"
+        "\tlwc1\t$f0,%lo($LF_lis4)($1)\n"
+        "\t.set\tat\n"
+    )
+    fires = text.count(labeled_load)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800DB1B0 labeled FP load fired {fires} times (expected 1)"
+        )
+    text = text.replace(labeled_load, labeled_load_retail, 1)
+
+    labeled_add = (
+        "\tdiv.s\t$f2,$f2,$f0\n"
+        "\tadd.s\t$f4,$f4,$f2\n"
+        ".L17:\n"
+    )
+    labeled_add_retail = (
+        "\tdiv.s\t$f2,$f2,$f0\n"
+        ".L17 = . + 4\n"
+        "\tadd.s\t$f4,$f4,$f2\n"
+    )
+    fires = text.count(labeled_add)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800DB1B0 labeled FP add fired {fires} times (expected 1)"
+        )
+    return text.replace(labeled_add, labeled_add_retail, 1)
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -1247,6 +1292,8 @@ def normalize_v3(source: str) -> str:
         text = schedule_crate_list_head_store(text)
     if os.environ.get("V3_SCRIPT_PAIR_REGISTERS", "1") == "1":
         text = swap_script_pair_registers(text)
+    if os.environ.get("V3_PROJECTILE_SEGMENT_LABELS", "1") == "1":
+        text = reproduce_projectile_segment_label_hazards(text)
     return text
 
 

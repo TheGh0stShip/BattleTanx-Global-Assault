@@ -338,6 +338,33 @@ class KmcPipelineTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.swap_script_pair_registers("func_800D12B0:\n\tnop\n")
 
+    def test_projectile_segment_label_hazards_are_suppressed(self) -> None:
+        source = (
+            "func_800DB1B0:\n"
+            "\tl.s\t$f0,$LF_lis4\n"
+            ".L21:\n"
+            "\tmul.s\t$f2,$f2,$f0\n"
+            "\tdiv.s\t$f2,$f2,$f0\n"
+            "\tadd.s\t$f4,$f4,$f2\n"
+            ".L17:\n"
+            "\tmul.s\t$f2,$f20,$f10\n"
+        )
+        normalized = MODULE.reproduce_projectile_segment_label_hazards(source)
+        self.assertIn(".L21 = . + 4\n\tlwc1\t$f0,%lo($LF_lis4)($1)\n", normalized)
+        self.assertIn(".L17 = . + 4\n\tadd.s\t$f4,$f4,$f2\n", normalized)
+        self.assertNotIn(".L21:\n", normalized)
+        self.assertNotIn(".L17:\n", normalized)
+
+    def test_projectile_segment_label_hazards_require_both_fires(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "labeled FP load fired 0 times"):
+            MODULE.reproduce_projectile_segment_label_hazards(
+                "func_800DB1B0:\n\tnop\n"
+            )
+        with self.assertRaisesRegex(RuntimeError, "labeled FP add fired 0 times"):
+            MODULE.reproduce_projectile_segment_label_hazards(
+                "func_800DB1B0:\n\tl.s\t$f0,$LF_lis4\n.L21:\n"
+            )
+
     def test_turret_sweep_hazards_reproduce_retail_forms(self) -> None:
         source = (
             "func_800E1BB0:\n"
