@@ -504,6 +504,26 @@ def schedule_resource_copy_prologue(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def schedule_owner_search_prologue(text: str) -> str:
+    """Reproduce the two independent prologue stores in ``func_80083DF0``.
+
+    The C body and register allocation are otherwise exact.  The retail
+    scheduler saves ``s1`` before ``ra``; this compiler build chooses the
+    reverse order.  Gate the rewrite to the function and require one fire so
+    later source drift cannot silently broaden it.
+    """
+    if "func_80083DF0:" not in text:
+        return text
+    before = "\tsw\t$31,24($sp)\n\tsw\t$17,20($sp)\n"
+    after = "\tsw\t$17,20($sp)\n\tsw\t$31,24($sp)\n"
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_80083DF0 prologue-store reorder fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def normalize_object_phase_lookup(text: str) -> str:
     """Reproduce register allocation and expression order in ``func_800A8E84``."""
     if "func_800A8E84:" not in text:
@@ -700,6 +720,8 @@ def normalize_v3(source: str) -> str:
         text = normalize_race_map_entry(text)
     if os.environ.get("V3_RESOURCE_COPY_PROLOGUE", "1") == "1":
         text = schedule_resource_copy_prologue(text)
+    if os.environ.get("V3_OWNER_SEARCH_PROLOGUE", "1") == "1":
+        text = schedule_owner_search_prologue(text)
     if os.environ.get("V3_OBJECT_PHASE_LOOKUP", "1") == "1":
         text = normalize_object_phase_lookup(text)
     if os.environ.get("V3_DISPLAY_SLOT_WAIT", "1") == "1":

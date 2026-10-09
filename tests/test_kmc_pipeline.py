@@ -111,6 +111,22 @@ class KmcPipelineTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.normalize_v3("func_8007E118:\n\tnop\n")
 
+    def test_owner_search_prologue_reorders_once(self) -> None:
+        source = (
+            "func_80083DF0:\n"
+            "\tsw\t$31,24($sp)\n"
+            "\tsw\t$17,20($sp)\n"
+        )
+        normalized = MODULE.normalize_v3(source)
+        self.assertIn(
+            "\tsw\t$17,20($sp)\n\tsw\t$31,24($sp)\n",
+            normalized,
+        )
+
+    def test_owner_search_prologue_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.normalize_v3("func_80083DF0:\n\tnop\n")
+
     def test_object_phase_lookup_requires_all_patterns(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.normalize_object_phase_lookup("func_800A8E84:\n\tnop\n")
