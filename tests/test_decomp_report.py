@@ -27,10 +27,10 @@ class DecompReportTests(unittest.TestCase):
         self.assertEqual(measures["total_code"], "630540")
         self.assertEqual(measures["matched_code"], "370404")
         self.assertEqual(measures["total_data"], "118564")
-        self.assertEqual(measures["matched_data"], "44320")
+        self.assertEqual(measures["matched_data"], "45336")
         self.assertEqual([item["name"] for item in report["categories"]], ["Code", "Data"])
         data = report["categories"][1]["measures"]
-        self.assertAlmostEqual(data["matched_data_percent"], 44320 * 100 / 118564)
+        self.assertAlmostEqual(data["matched_data_percent"], 45336 * 100 / 118564)
         self.assertEqual(
             sum(
                 unit["measures"]["total_functions"]
@@ -44,7 +44,7 @@ class DecompReportTests(unittest.TestCase):
         ranges = REPORT.load_owned_data(
             [ROOT / "config/us/unit_rodata.tsv", ROOT / "config/us/unit_data.tsv"]
         )
-        self.assertEqual(sum(item["size"] for item in ranges), 44320)
+        self.assertEqual(sum(item["size"] for item in ranges), 45336)
         self.assertTrue(
             all(
                 left["end"] <= right["address"]
