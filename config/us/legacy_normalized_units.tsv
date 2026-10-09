@@ -1,7 +1,6 @@
 # function	vram	size	status
 func_80085C30	0x80085C30	0x94	selected
 func_80085CC4	0x80085CC4	0x94	selected
-func_8008916C	0x8008916C	0x94	selected
 func_8009790C	0x8009790C	0x94	selected
 func_8008C5BC	0x8008C5BC	0x1C	selected
 func_800996C4	0x800996C4	0x94	selected

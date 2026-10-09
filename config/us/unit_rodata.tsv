@@ -2,6 +2,19 @@
 # See tools/place_unit_rodata.py. Listed C units own [vram, vram+size) of
 # main-segment rodata; make verify-code proves the C bytes equal the ROM.
 early_memory_dispatch	0x80071040	0x28
+path_goal_check	0x800710E0	0x24
+path_collision_probe	0x80071104	0x1C
+path_waypoint_side	0x80071124	0x28
+path_route_score	0x800711A4	0x10
+path_target_reachable	0x80071264	0x1C
+ai_movement_start	0x800712A8	0x14
+ai_movement_plan	0x800712BC	0x10
+ai_target_in_range	0x800712D0	0x1C
+ai_leader_distance_check	0x80071320	0x24
+ai_goal_state_update	0x80071368	0x18
+ai_waypoint_move	0x800715E8	0x10
+ai_target_tracking	0x80071674	0x28
+ai_weapon_range_check	0x80071700	0x198
 motion_scale_curve	0x80076AD0	0x18
 slot_asset_ranges	0x80075F60	0x70
 rotated_texture_coords	0x80076E40	0xC

@@ -1533,6 +1533,24 @@ while IFS=$'\t' read -r function_name address size status; do
     python3 tools/trim_elf32_section.py \
         "build/us/src/${unit}.c.o" .text "$size" --alignment 4
 done < config/us/legacy_normalized_units_extra.tsv
+
+# Whole gameplay translation units that match with the standard production
+# normalizer. Keep these manifest-driven so new unit reconstructions do not
+# expand the legacy per-function compile table below.
+while IFS=$'\t' read -r unit address text_size status; do
+    case "$unit" in
+        \#*|unit|'') continue ;;
+    esac
+    .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+        -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
+        -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
+    python3 tools/normalize_kmc_gcc_asm.py \
+        "build/us/src/code/${unit}.raw.s" "build/us/src/code/${unit}.s"
+    .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+        -o "build/us/src/code/${unit}.c.o" "build/us/src/code/${unit}.s"
+    python3 tools/trim_elf32_section.py \
+        "build/us/src/code/${unit}.c.o" .text "$text_size" --alignment 4
+done < config/us/clean_normalized_units.tsv
 for function_name in \
         func_8007A7B4 \
         func_8007A818 \
