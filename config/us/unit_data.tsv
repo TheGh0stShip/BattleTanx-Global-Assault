@@ -1,11 +1,20 @@
 # unit	data_vram	data_size
 # C units whose initialized data must be linked and spliced at retail addresses.
 menu_help_text	0x80117FB4	0xA0
+main_menu_text	0x8011854C	0x98
+options_menu_text	0x80118E6C	0x70
 code_entry_help_text	0x80119338	0x8C
+code_entry_text	0x80119C2C	0xA4
 controls_help_text	0x8011A3F0	0xF0
 controller_binding_text	0x8011A8D4	0xC4
 campaign_map_help_text	0x8011B2D8	0x40
+gang_selection_help_text	0x8011C208	0x4C
+team_alignment_help_text	0x8011D2A4	0x40
 team_setup_text	0x8011D9E8	0x7C
+mission_result_text	0x8011DDE8	0x10
+pause_menu_text	0x8011E578	0x1C
+rumble_help_text	0x8011EA14	0x2C
+tank_selection_text	0x8011EB90	0x24
 controller_required_text	0x8011FA90	0x50
 title_legal_text	0x8011FC4C	0x120
 pal_warning_text	0x80120000	0x50

@@ -16,7 +16,7 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,560 bytes: the 749,104-byte loaded
 image minus 630,544 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 22,752 bytes, or 19.190%.
+`.data` and `.rodata` currently account for 23,444 bytes, or 19.774%.
 
 The initialized-data reconstruction includes the complete cheat-code unit at
 `0x80121A00`: 33 input strings, their pointer table, and the associated result
@@ -33,6 +33,9 @@ initialized data, matching how the original game updates some labels in place.
 Menu-help, controls-help, controller-binding, code-entry, campaign-map,
 team-setup, and missing-controller messages are also reconstructed as
 fixed-layout text structures.
+Additional fixed-layout units cover the main and options menus, code-entry
+keys, gang and team selection, mission results, pause, Rumble Pak prompts,
+and tank selection.
 
 ## LZARI bundles
 

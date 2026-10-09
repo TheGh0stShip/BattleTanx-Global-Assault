@@ -762,6 +762,15 @@ controller_required_text 0x50
 controls_help_text 0xf0
 controller_binding_text 0xc4
 campaign_map_help_text 0x40
+main_menu_text 0x98
+options_menu_text 0x70
+code_entry_text 0xa4
+gang_selection_help_text 0x4c
+team_alignment_help_text 0x40
+mission_result_text 0x10
+pause_menu_text 0x1c
+rumble_help_text 0x2c
+tank_selection_text 0x24
 EOF
 # libmus was assembled with reorder enabled, so preserve KMC's raw assembly and
 # its assembler-scheduled delay slots instead of applying the gameplay normalizer.
