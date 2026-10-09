@@ -72,6 +72,19 @@ class KmcPipelineTests(unittest.TestCase):
             MODULE.normalize(source),
         )
 
+    def test_materializes_hilo_hazard_with_one_intervening_instruction(self) -> None:
+        source = (
+            "\tmfhi\t$4\n"
+            "\t#nop\n"
+            "\taddu\t$2,$2,$17\n"
+            "\tmultu\t$2,$3\n"
+        )
+        normalized = MODULE.normalize_v3(source)
+        self.assertIn(
+            "\tmfhi\t$4\n\taddu\t$2,$2,$17\n\tnop\n\tmultu\t$2,$3\n",
+            normalized,
+        )
+
     def test_uses_at_for_indexed_symbol_load(self) -> None:
         source = "\tlbu\t$2,D_801146D4+8($5)\n"
         self.assertEqual(

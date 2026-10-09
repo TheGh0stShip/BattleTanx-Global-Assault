@@ -211,7 +211,20 @@ def hilo_nops(text: str) -> str:
             j = i + 1
             while j < len(lines) and lines[j].strip() == "#nop":
                 j += 1
-            if j > i + 1 and op(lines[j]) in HILO_USE:
+            hazard_use = j < len(lines) and op(lines[j]) in HILO_USE
+            scheduled_gap = (not hazard_use and j + 1 < len(lines)
+                    and op(lines[j]) and not op(lines[j]).startswith(".")
+                    and op(lines[j + 1]) in HILO_USE)
+            if scheduled_gap:
+                # MIPS requires two instructions between mfhi/mflo and the
+                # next mult/div.  The retail assembler schedules the one
+                # independent instruction into GCC's placeholder, then emits
+                # the remaining nop immediately before the mult/div.
+                lines[i + 1] = lines[j]
+                for k in range(i + 2, j):
+                    lines[k] = ""
+                lines[j] = "\tnop"
+            elif j > i + 1 and hazard_use:
                 for k in range(i + 1, j):
                     lines[k] = "\tnop"
     return "\n".join(lines)
