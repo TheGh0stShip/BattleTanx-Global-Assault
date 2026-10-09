@@ -270,6 +270,41 @@ class KmcPipelineTests(unittest.TestCase):
                 "func_800E1BB0:\n\tnop\n"
             )
 
+    def test_structure_slot_index_copies_are_narrowly_rewritten(self) -> None:
+        source = (
+            "func_800DE374:\n"
+            "\tbeq\t$3,$2,.L8\n"
+            "\tandi\t$4,$3,0x00ff\n"
+            "\tbne\t$3,$2,.L9\n"
+            "\tandi\t$4,$3,0x00ff\n"
+        )
+        normalized = MODULE.preserve_structure_slot_index_copy(source)
+        self.assertEqual(normalized.count("\tmove\t$4,$3\n"), 2)
+        self.assertNotIn("\tandi\t$4,$3,0x00ff\n", normalized)
+
+    def test_structure_slot_index_copy_requires_two_fires(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.preserve_structure_slot_index_copy("func_800DE374:\n\tnop\n")
+
+    def test_crate_list_head_store_is_scheduled_first(self) -> None:
+        source = (
+            "func_800E66A8:\n"
+            "\tlbu\t$3,29($17)\n"
+            "\tli\t$2,0x0000007f\t\t# 127\n"
+            "\tsw\t$16,12($17)\n"
+        )
+        normalized = MODULE.schedule_crate_list_head_store(source)
+        self.assertIn(
+            "\tsw\t$16,12($17)\n"
+            "\tlbu\t$3,29($17)\n"
+            "\tli\t$2,0x0000007f\t\t# 127\n",
+            normalized,
+        )
+
+    def test_crate_list_head_store_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.schedule_crate_list_head_store("func_800E66A8:\n\tnop\n")
+
     def test_turret_sweep_hazards_reproduce_retail_forms(self) -> None:
         source = (
             "func_800E1BB0:\n"

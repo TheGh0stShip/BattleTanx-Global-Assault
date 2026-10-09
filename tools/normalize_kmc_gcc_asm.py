@@ -1080,6 +1080,56 @@ def reproduce_color_interpolate_load_hazard(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def preserve_structure_slot_index_copy(text: str) -> str:
+    """Use the retail register copy in ``func_800DE374``.
+
+    The source's byte-narrowed index creates the required independent pseudo,
+    but KMC GCC emits a redundant zero extension even though the preceding
+    ``lbu`` already established its range.  The retail object uses a plain
+    copy at both switch arms.  Require exactly those two branch delay-slot
+    patterns so unrelated ``andi`` instructions cannot be changed.
+    """
+    if "func_800DE374:" not in text:
+        return text
+    pattern = re.compile(
+        r"(\t(?:beq|bne)\t\$3,\$2,\.L\d+\n)"
+        r"\tandi\t\$4,\$3,0x00ff\n"
+    )
+    text, fires = pattern.subn(r"\1\tmove\t$4,$3\n", text)
+    if fires != 2:
+        raise RuntimeError(
+            f"func_800DE374 slot-index copy fired {fires} times (expected 2)"
+        )
+    return text
+
+
+def schedule_crate_list_head_store(text: str) -> str:
+    """Restore the retail store/load order in ``func_800E66A8``.
+
+    KMC GCC's second scheduler moves the independent slot-byte load and its
+    comparison constant above the list-head store.  Reorder only the complete
+    three-instruction sequence, gated by the function label and one fire.
+    """
+    if "func_800E66A8:" not in text:
+        return text
+    before = (
+        "\tlbu\t$3,29($17)\n"
+        "\tli\t$2,0x0000007f\t\t# 127\n"
+        "\tsw\t$16,12($17)\n"
+    )
+    after = (
+        "\tsw\t$16,12($17)\n"
+        "\tlbu\t$3,29($17)\n"
+        "\tli\t$2,0x0000007f\t\t# 127\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800E66A8 list-head store reorder fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -1131,6 +1181,10 @@ def normalize_v3(source: str) -> str:
         text = reproduce_crate_burst_hilo_hazard(text)
     if os.environ.get("V3_COLOR_INTERPOLATE_HAZARD", "1") == "1":
         text = reproduce_color_interpolate_load_hazard(text)
+    if os.environ.get("V3_STRUCTURE_SLOT_INDEX", "1") == "1":
+        text = preserve_structure_slot_index_copy(text)
+    if os.environ.get("V3_CRATE_LIST_HEAD_STORE", "1") == "1":
+        text = schedule_crate_list_head_store(text)
     return text
 
 

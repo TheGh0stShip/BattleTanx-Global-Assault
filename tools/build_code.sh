@@ -455,10 +455,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800DD75C_to_800DDF04.s.o .text 0x7a8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800DE374_to_800DE4DC.s.o asm/us/main_800DE374_to_800DE4DC.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800DE374_to_800DE4DC.s.o .text 0x168 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800DF0C4_to_800DF0D0.s.o asm/us/main_800DF0C4_to_800DF0D0.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800DF0C4_to_800DF0D0.s.o .text 0xc --alignment 4
@@ -510,10 +506,6 @@ python3 tools/trim_elf32_section.py \
     -o build/us/asm/us/main_800E64EC_to_800E64F0.s.o asm/us/main_800E64EC_to_800E64F0.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800E64EC_to_800E64F0.s.o .text 0x4 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800E66A8_to_800E68BC.s.o asm/us/main_800E66A8_to_800E68BC.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800E66A8_to_800E68BC.s.o .text 0x214 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800E6B04_to_800E713C.s.o asm/us/main_800E6B04_to_800E713C.s
 python3 tools/trim_elf32_section.py \
@@ -1146,12 +1138,14 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             800DB6F0_track_angle_unit \
             800DD75C_structure_hit_dispatch \
             800DD82C_structure_debris_spawn \
+            800DE374_structure_message \
             8008C5D8_tank_fire_weapon \
             800E16D8_foliage_prop_destroy \
             800E1BB0_turret_sweep \
             800E2520_turret_message_handlers \
             800E2F9C_wreck_update \
             800E48A8_flag_position_query \
+            800E66A8_crate_particle_attach \
             800E6B04_crate_unit \
             800E73B0_crate_part_release \
             800E7768_crate_burst_spawn \
@@ -2471,6 +2465,10 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800DD82C_structure_debris_spawn.c.o .rodata 0x70 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/800DE374_structure_message.c.o .text 0x168 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800DE374_structure_message.c.o .rodata 0xfc --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/8008C5D8_tank_fire_weapon.c.o .text 0x2048 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/8008C5D8_tank_fire_weapon.c.o .rodata 0x16c --alignment 4
@@ -2490,6 +2488,8 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/800E2F9C_wreck_update.c.o .rodata 0x8 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800E48A8_flag_position_query.c.o .text 0x38 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E66A8_crate_particle_attach.c.o .text 0x214 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800E6B04_crate_unit.c.o .text 0x638 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3478,7 +3478,7 @@ if false; then
     build/us/src/code/800DD82C_structure_debris_spawn.c.o \
     build/us/src/code/structure_model_draw.c.o \
     build/us/src/code/structure_owner_award.c.o \
-    build/us/asm/us/main_800DE374_to_800DE4DC.s.o \
+    build/us/src/code/800DE374_structure_message.c.o \
     build/us/src/code/spawner_target_query.c.o \
     build/us/src/code/spawner_state_update.c.o \
     build/us/src/code/spawner_owner_score.c.o \
@@ -3535,7 +3535,7 @@ if false; then
     build/us/asm/us/main_800E64EC_to_800E64F0.s.o \
     build/us/src/code/crate_model_randomize.c.o \
     build/us/src/code/crate_actor_attach.c.o \
-    build/us/asm/us/main_800E66A8_to_800E68BC.s.o \
+    build/us/src/code/800E66A8_crate_particle_attach.c.o \
     build/us/src/code/crate_owner_check.c.o \
     build/us/src/code/800E6B04_crate_unit.c.o \
     build/us/src/code/crate_contents_spawn.c.o \

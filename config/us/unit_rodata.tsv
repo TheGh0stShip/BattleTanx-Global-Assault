@@ -42,6 +42,7 @@ seq_events_update	0x80074E70	0xD8
 800D9D50_debris_spawn	0x8007536C	0x1C
 800DB6F0_track_angle_unit	0x80075490	0xFC
 800DD82C_structure_debris_spawn	0x80075668	0x70
+800DE374_structure_message	0x80075740	0xFC
 800E16D8_foliage_prop_destroy	0x80075A30	0x8
 800E1BB0_turret_sweep	0x80075C40	0x18
 800E2F9C_wreck_update	0x80075C6C	0x8
