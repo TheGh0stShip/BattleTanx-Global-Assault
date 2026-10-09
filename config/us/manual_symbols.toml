@@ -1340,3 +1340,51 @@ vram = 0x800F8264
 size = 0x154
 type = "func"
 reason = "Matched C TU model_f8264; symbol_addrs size was 0x15c."
+[[symbol]]
+name = "func_80079570"
+vram = 0x80079570
+size = 0x64
+type = "func"
+reason = "Function boundary established by the byte-exact display-list interpolation unit."
+
+[[symbol]]
+name = "func_800795D4"
+vram = 0x800795D4
+size = 0x11C
+type = "func"
+reason = "Function boundary established by the byte-exact display-list interpolation unit."
+
+[[symbol]]
+name = "func_800796F0"
+vram = 0x800796F0
+size = 0x26C
+type = "func"
+reason = "Function boundary established by the byte-exact display-list interpolation unit."
+
+[[symbol]]
+name = "func_8007995C"
+vram = 0x8007995C
+size = 0xC
+type = "func"
+reason = "Function boundary established by the byte-exact display-list interpolation unit."
+
+[[symbol]]
+name = "func_80079968"
+vram = 0x80079968
+size = 0x194
+type = "func"
+reason = "Function boundary established by the byte-exact display-list interpolation unit."
+
+[[symbol]]
+name = "func_80079C00"
+vram = 0x80079C00
+size = 0x5C
+type = "func"
+reason = "Function boundary established by the byte-exact graphics-task unit."
+
+[[symbol]]
+name = "func_80079C5C"
+vram = 0x80079C5C
+size = 0x5C
+type = "func"
+reason = "Function boundary established by the byte-exact graphics-task unit."

@@ -1393,7 +1393,9 @@ for spec in \
         vehicle_steering_update:0x1B0 \
         ai_movement_dispatch:0x148 \
         target_angle_check:0xFC \
-        spawn_point_retry:0x1D8; do
+        spawn_point_retry:0x1D8 \
+        early_memory_dispatch:0x5BC \
+        display_list_interpolate:0x58C; do
     unit="${spec%%:*}"
     text_size="${spec#*:}"
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
@@ -1436,6 +1438,24 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/target_angle_check.c.o .rodata 0x4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/spawn_point_retry.c.o .rodata 0x18 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/early_memory_dispatch.c.o .rodata 0x28 --alignment 4
+
+# The graphics task and frame-builder units were compiled without optimization,
+# matching the adjacent retail graphics setup code.
+for spec in graphics_task_init:0x3F0 graphics_frame_build:0x664; do
+    unit="${spec%%:*}"
+    text_size="${spec#*:}"
+    .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+        -O0 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
+        -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
+    python3 tools/normalize_kmc_gcc_asm.py \
+        "build/us/src/code/${unit}.raw.s" "build/us/src/code/${unit}.s"
+    .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+        -o "build/us/src/code/${unit}.c.o" "build/us/src/code/${unit}.s"
+    python3 tools/trim_elf32_section.py \
+        "build/us/src/code/${unit}.c.o" .text "$text_size" --alignment 4
+done
 
 python3 tools/trim_elf32_section.py \
     build/us/src/code/80082C1C_state_activate.c.o .text 0xec --alignment 4
@@ -4164,6 +4184,9 @@ python3 tools/generate_linker_symbols.py build/us/symbols.ld \
     build/us/undefined_syms_auto.txt \
     build/us/undefined_funcs_auto.txt \
     --undefined-list build/us/undefined_object_symbols.txt \
+    --symbol rspbootTextEnd=0x800F8E80 \
+    --symbol gspF3DEX_fifoTextStart=0x800F8E80 \
+    --symbol gspF3DEX_fifoDataStart=0x80125EC0 \
     --symbol func_8E180004=0x8E180004 \
     --symbol func_80000000=0x80000000 \
     --symbol D_803A66C0=0x803A66C0

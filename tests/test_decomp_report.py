@@ -22,15 +22,15 @@ class DecompReportTests(unittest.TestCase):
         )
         measures = report["measures"]
         self.assertEqual(report["version"], 2)
-        self.assertEqual(measures["total_functions"], 1733)
-        self.assertEqual(measures["matched_functions"], 1432)
-        self.assertEqual(measures["total_code"], "630540")
-        self.assertEqual(measures["matched_code"], "386872")
-        self.assertEqual(measures["total_data"], "118564")
-        self.assertEqual(measures["matched_data"], "48232")
+        self.assertEqual(measures["total_functions"], 1736)
+        self.assertEqual(measures["matched_functions"], 1446)
+        self.assertEqual(measures["total_code"], "630288")
+        self.assertEqual(measures["matched_code"], "392404")
+        self.assertEqual(measures["total_data"], "118816")
+        self.assertEqual(measures["matched_data"], "48272")
         self.assertEqual([item["name"] for item in report["categories"]], ["Code", "Data"])
         data = report["categories"][1]["measures"]
-        self.assertAlmostEqual(data["matched_data_percent"], 48232 * 100 / 118564)
+        self.assertAlmostEqual(data["matched_data_percent"], 48272 * 100 / 118816)
         self.assertEqual(
             sum(
                 unit["measures"]["total_functions"]
@@ -44,7 +44,7 @@ class DecompReportTests(unittest.TestCase):
         ranges = REPORT.load_owned_data(
             [ROOT / "config/us/unit_rodata.tsv", ROOT / "config/us/unit_data.tsv"]
         )
-        self.assertEqual(sum(item["size"] for item in ranges), 48232)
+        self.assertEqual(sum(item["size"] for item in ranges), 48272)
         self.assertTrue(
             all(
                 left["end"] <= right["address"]
@@ -68,8 +68,8 @@ class DecompReportTests(unittest.TestCase):
         self.assertEqual(
             REPORT.MAIN_IMAGE_END
             - REPORT.MAIN_IMAGE_START
-            - 630540,
-            118564,
+            - 630288,
+            118816,
         )
 
     def test_function_catalogue_has_no_overlaps(self):
