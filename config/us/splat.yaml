@@ -219,7 +219,7 @@ segments:
       - [0x17DD4, c, code/codex_batch_next/func_80087DD4]
       - [0x17DF4, asm, main_80087DF4_to_80087EF0]
       - [0x17EF0, c, code/codex_batch/func_80087EF0]
-      - [0x17F2C, asm, main_80087F2C_to_80088000]
+      - [0x17F2C, c, code/codex_batch_next2/func_80087F2C]
       - [0x18000, c, code/codex_batch_next/func_80088000]
       - [0x18030, asm, main_80088030_to_8008865C]
       - [0x1865C, c, code/codex_batch_next2/func_8008865C]
