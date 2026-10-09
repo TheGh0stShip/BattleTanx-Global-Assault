@@ -1298,6 +1298,46 @@ def allocate_flag_dispatch_output_to_a3(text: str) -> str:
     return text
 
 
+def shape_value_decay_clamp(text: str) -> str:
+    """Reproduce func_800B6934's retail floating-point clamp tail.
+
+    GCC expresses the two-sided clamp with a likely branch and conditional
+    move into ``$f0``.  The retail object instead stores the computed value in
+    the branch delay slot and overwrites it with zero when the comparison is
+    true.  Gate the complete tail by function label and require one fire.
+    """
+    if "func_800B6934:" not in text:
+        return text
+
+    before = (
+        ".L10:\n"
+        "\t.set\tnoreorder\n"
+        "\tnop\n"
+        "\tbc1tl\t.L8\n"
+        "\tmov.s\t$f0,$f6\n"
+        "\t.set\tnoreorder\n"
+        ".L8:\n"
+        "\ts.s\t$f0,28($4)\n"
+        ".L4:\n"
+    )
+    after = (
+        ".L10:\n"
+        "\t.set\tnoreorder\n"
+        "\tnop\n"
+        "\tbc1f\t.L4\n"
+        "\ts.s\t$f0,28($4)\n"
+        "\t.set\tnoreorder\n"
+        "\ts.s\t$f6,28($4)\n"
+        ".L4:\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800B6934 value-clamp rewrite fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -1359,6 +1399,8 @@ def normalize_v3(source: str) -> str:
         text = reproduce_projectile_segment_label_hazards(text)
     if os.environ.get("V3_FLAG_DISPATCH_OUTPUT", "1") == "1":
         text = allocate_flag_dispatch_output_to_a3(text)
+    if os.environ.get("V3_VALUE_DECAY_CLAMP", "1") == "1":
+        text = shape_value_decay_clamp(text)
     return text
 
 

@@ -388,6 +388,32 @@ class KmcPipelineTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "output prologue fired 0 times"):
             MODULE.allocate_flag_dispatch_output_to_a3("func_800E4DA0:\n\tnop\n")
 
+    def test_value_decay_clamp_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.shape_value_decay_clamp("func_800B6934:\n\tnop\n")
+
+    def test_value_decay_clamp_rewrites_branch_and_stores(self) -> None:
+        source = (
+            "func_800B6934:\n"
+            ".L10:\n"
+            "\t.set\tnoreorder\n"
+            "\tnop\n"
+            "\tbc1tl\t.L8\n"
+            "\tmov.s\t$f0,$f6\n"
+            "\t.set\tnoreorder\n"
+            ".L8:\n"
+            "\ts.s\t$f0,28($4)\n"
+            ".L4:\n"
+        )
+        normalized = MODULE.shape_value_decay_clamp(source)
+        self.assertIn(
+            "\tbc1f\t.L4\n"
+            "\ts.s\t$f0,28($4)\n"
+            "\t.set\tnoreorder\n"
+            "\ts.s\t$f6,28($4)\n",
+            normalized,
+        )
+
     def test_turret_sweep_hazards_reproduce_retail_forms(self) -> None:
         source = (
             "func_800E1BB0:\n"
