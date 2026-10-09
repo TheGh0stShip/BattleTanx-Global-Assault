@@ -122,8 +122,10 @@ Within `synthesizer.o`, `__allocParam` occupies object offsets
 `0x110`-`0x13F`, followed by another independent eight-byte no-op static
 routine at offset `0x140`; `alAudioFrame` begins at offset `0x148`. Thus the
 ROM boundaries are `0x80110870`-`0x8011089F`, `0x801108A0`-`0x801108A7`, and
-`0x801108A8` onward respectively. The stripped static names of the two no-op
-routines remain unproven, so they retain address-derived names.
+`0x801108A8` onward respectively. Whole-object source reconstruction now
+identifies the two no-op out-of-line bodies as `__nextSampleTime` and
+`_timeToSamplesNoRound`; IDO inlines both routines into their callers while
+retaining those eight-byte static bodies.
 
 ## Formatted I/O and compiler-runtime tail
 
@@ -154,3 +156,7 @@ matrix expressions, text, constant pool, and local static storage match
 `guRotateF` and `guRotate` exactly under the SDK's `-O3 -mips2
 -Wab,-r4300_mul` build. The earlier imported `guAlignF` and `guAlign` names
 were incorrect and have been replaced in the function catalogue.
+
+The main-bus parameter handler at `0x80107D60` is `alMainBusParam`, not a
+second `alAuxBusParam`. Calls from the 2.0I synthesizer and FX allocation
+objects independently confirm that identity.

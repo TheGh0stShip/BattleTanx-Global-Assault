@@ -132,9 +132,9 @@ class FunctionBoundaryTests(unittest.TestCase):
 
         expected = {
             0x80110750: ("alSynDelete_80110750", 0x10),
-            0x80110760: ("func_80110760", 0x8),
+            0x80110760: ("__nextSampleTime", 0x8),
             0x80110870: ("__allocParam_80110870", 0x30),
-            0x801108A0: ("func_801108A0", 0x8),
+            0x801108A0: ("_timeToSamplesNoRound", 0x8),
             0x801108A8: ("alAudioFrame", 0x298),
         }
         for address, (name, size) in expected.items():

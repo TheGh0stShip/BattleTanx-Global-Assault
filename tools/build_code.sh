@@ -2840,6 +2840,10 @@ python3 tools/trim_elf32_section.py \
     -o build/us/src/libultra/al_resample.c.o src/libultra/al_resample.c
 .toolchain/ido5.3/cc -c -O3 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
     -o build/us/src/libultra/al_reverb.c.o src/libultra/al_reverb.c
+.toolchain/ido5.3/cc -c -O3 -mips2 -Wab,-r4300_mul -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/al_synthesizer.c.o src/libultra/al_synthesizer.c
+.toolchain/ido5.3/cc -c -O3 -mips2 -Wab,-r4300_mul -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/al_syn_alloc_fx.c.o src/libultra/al_syn_alloc_fx.c
 # Retail kept the final multiply before `jr ra` and aligned the following
 # function to eight bytes. Apply that verified assembler layout exactly once.
 python3 tools/insert_elf32_section_bytes.py \
@@ -3796,7 +3800,8 @@ if false; then
     build/us/src/libultra/os_start_thread.c.o \
     build/us/src/libultra/string.c.o \
     build/us/src/libultra/al_syn_delete.c.o \
-    build/us/asm/us/main_80110760_to_80110EE0.s.o \
+    build/us/src/libultra/al_synthesizer.c.o \
+    build/us/src/libultra/al_syn_alloc_fx.c.o \
     build/us/src/libultra/os_dequeue_thread.c.o \
     build/us/src/libultra/os_timer.c.o \
     build/us/asm/us/main_80111320_to_80111330.s.o \
