@@ -655,9 +655,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800F2184_to_800F2288.s.o .text 0x104 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800F24F8_to_800F265C.s.o asm/us/main_800F24F8_to_800F265C.s
+    -o build/us/asm/us/main_800F2558_to_800F265C.s.o asm/us/main_800F2558_to_800F265C.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800F24F8_to_800F265C.s.o .text 0x164 --alignment 4
+    build/us/asm/us/main_800F2558_to_800F265C.s.o .text 0x104 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800F2BB8_to_800F2BC0.s.o asm/us/main_800F2BB8_to_800F2BC0.s
 python3 tools/trim_elf32_section.py \
@@ -678,10 +678,6 @@ python3 tools/trim_elf32_section.py \
     -o build/us/asm/us/main_800F5264_to_800F5270.s.o asm/us/main_800F5264_to_800F5270.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800F5264_to_800F5270.s.o .text 0xc --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800F6344_to_800F64B8.s.o asm/us/main_800F6344_to_800F64B8.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800F6344_to_800F64B8.s.o .text 0x174 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800F6648_to_800F6650.s.o asm/us/main_800F6648_to_800F6650.s
 python3 tools/trim_elf32_section.py \
@@ -1086,6 +1082,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             anim_list_register_global \
             hazard_actor_spawn \
             hazard_actor_spawn_simple \
+            object_state_query \
             mine_message_handlers \
             powerup_pad_create \
             powerup_pad_draw \
@@ -1099,6 +1096,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             generator_message_damage \
             generator_hit_query \
             generator_splash_damage \
+            generator_damage_tick \
             generator_dispatch_bonus \
             effect_expire_100 \
             wreck_debris_spawn \
@@ -1839,6 +1837,8 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/generator_splash_damage.c.o .text 0x200 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/generator_damage_tick.c.o .text 0x174 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/generator_dispatch_bonus.c.o .text 0x190 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/effect_expire_100.c.o .text 0x28 --alignment 4
@@ -2017,6 +2017,8 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/hazard_message_handler.c.o .text 0x270 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hazard_message_handler.c.o .rodata 0x18 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_state_query.c.o .text 0x60 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hazard_model_draw.c.o .text 0x134 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3611,7 +3613,8 @@ if false; then
     build/us/src/code/hazard_model_draw.c.o \
     build/us/asm/us/main_800F2184_to_800F2288.s.o \
     build/us/src/code/hazard_message_handler.c.o \
-    build/us/asm/us/main_800F24F8_to_800F265C.s.o \
+    build/us/src/code/object_state_query.c.o \
+    build/us/asm/us/main_800F2558_to_800F265C.s.o \
     build/us/src/code/mine_message_handlers.c.o \
     build/us/src/code/mine_trigger_update.c.o \
     build/us/asm/us/main_800F2BB8_to_800F2BC0.s.o \
@@ -3641,7 +3644,7 @@ if false; then
     build/us/src/code/generator_message_damage.c.o \
     build/us/src/code/generator_hit_query.c.o \
     build/us/src/code/generator_splash_damage.c.o \
-    build/us/asm/us/main_800F6344_to_800F64B8.s.o \
+    build/us/src/code/generator_damage_tick.c.o \
     build/us/src/code/generator_dispatch_bonus.c.o \
     build/us/asm/us/main_800F6648_to_800F6650.s.o \
     build/us/src/code/generator_spawn.c.o \
