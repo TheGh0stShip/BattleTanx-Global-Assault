@@ -1,0 +1,47 @@
+#include "types.h"
+
+typedef struct DisplayCommand {
+    u32 word0;
+    u32 word1;
+} DisplayCommand;
+
+/* Commands replaced while world render-state chunks are relocated. */
+DisplayCommand gOriginalDisplayState[17] = {
+    { 0xE3000A01, 0x00000000 },
+    { 0xE200001C, 0x00552230 },
+    { 0xE200001C, 0x00553078 },
+    { 0xE200001C, 0x005049D8 },
+    { 0xE200001C, 0x00552078 },
+    { 0xE200001C, 0x00504A50 },
+    { 0xE200001C, 0x0C196230 },
+    { 0xE200001C, 0x00504E50 },
+    { 0xE200001C, 0x00504240 },
+    { 0xFCFFFFFF, 0xFFFCF279 },
+    { 0xFC121824, 0xFF33FFFF },
+    { 0xFC5096A1, 0x332DFEFF },
+    { 0xFC127E24, 0xFFFFF3F9 },
+    { 0xFCFFFFFF, 0xFFFDF6FB },
+    { 0xE200001C, 0x0C193078 },
+    { 0xFC127E24, 0xFFFFF9FC },
+    { 0xFC323864, 0xFF73FFFF },
+};
+
+DisplayCommand gPatchedDisplayState[17] = {
+    { 0xE3000A01, 0x00100000 },
+    { 0xE200001C, 0xC8112078 },
+    { 0xE200001C, 0xC8113078 },
+    { 0xE200001C, 0xC8104A50 },
+    { 0xE200001C, 0xC8112078 },
+    { 0xE200001C, 0xC81049D8 },
+    { 0xE200001C, 0xC8112230 },
+    { 0xE200001C, 0xC8104E50 },
+    { 0xE200001C, 0xC8104240 },
+    { 0xFCFFFFFF, 0xFFFCF238 },
+    { 0xFC127FFF, 0xFFFFF238 },
+    { 0xFC5097FF, 0x3FFDFE38 },
+    { 0xFC127FFF, 0xFFFFF238 },
+    { 0xFCFFFFFF, 0xFFFDF638 },
+    { 0xE200001C, 0xC8112078 },
+    { 0xFC127FFF, 0xFFFFF838 },
+    { 0xFC3239FF, 0xFFFFFE38 },
+};

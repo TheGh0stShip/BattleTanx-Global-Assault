@@ -16,7 +16,7 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,564 bytes: the 749,104-byte loaded
 image minus 630,540 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 28,932 bytes, or 24.402%.
+`.data` and `.rodata` currently account for 30,244 bytes, or 25.509%.
 
 The initialized-data reconstruction includes the complete cheat-code unit at
 `0x80121A00`: 33 input strings, their pointer table, and the associated result
@@ -85,6 +85,10 @@ Each ignored output directory contains `world.json` plus the seven original
 decoded components. Keeping those components unchanged means they can already
 be passed to `pack_lzari_bundle.py` for an exact rebuild while the structured
 formats are progressively named.
+
+The world loader's two 17-command render-state replacement tables are also
+reconstructed as typed initialized data at `0x80116710`. These are the exact
+original/replacement command pairs used when state chunks are relocated.
 
 The complete ROM organization and structure names were cross-checked against
 [`nviewer` revision

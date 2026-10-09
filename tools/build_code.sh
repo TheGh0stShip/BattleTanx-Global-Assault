@@ -749,6 +749,8 @@ while read -r unit data_size; do
     python3 tools/trim_elf32_section.py \
         "build/us/src/code/${unit}.c.o" .data "$data_size" --alignment 4
 done <<'EOF'
+angle_sine_table 0x410
+display_state_patches 0x110
 image_asset_descriptors 0x1570
 cheat_code_data 0x2c0
 controller_pak_text 0x3e4
