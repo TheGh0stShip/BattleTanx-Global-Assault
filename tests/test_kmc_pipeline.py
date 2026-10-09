@@ -127,6 +127,26 @@ class KmcPipelineTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.normalize_v3("func_80083DF0:\n\tnop\n")
 
+    def test_region_early_exit_renames_one_branch(self) -> None:
+        source = (
+            "func_800AA5D0:\n"
+            "\tc.le.s\t$f4,$f6\n"
+            "\tnop\n"
+            "\t.set\tnoreorder\n"
+            "\tbc1t\t.L7\n"
+            "\tmove\t$2,$0\n"
+        )
+        normalized = MODULE.normalize_v3(source)
+        self.assertIn("\tbc1tl\t.L7\n\tmove\t$2,$0\n", normalized)
+
+    def test_region_early_exit_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.normalize_v3("func_800AA5D0:\n\tnop\n")
+
+    def test_vector_angle_prologue_requires_all_patterns(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.normalize_v3("func_8009DFAC:\n\tnop\n")
+
     def test_object_phase_lookup_requires_all_patterns(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.normalize_object_phase_lookup("func_800A8E84:\n\tnop\n")

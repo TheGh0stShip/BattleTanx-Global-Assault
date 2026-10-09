@@ -524,6 +524,61 @@ def schedule_owner_search_prologue(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def select_region_early_exit_likely(text: str) -> str:
+    """Use the retail branch-likely encoding in ``func_800AA5D0``.
+
+    GCC emits an ordinary ``bc1t`` for the first early exit even though its
+    delay-slot zero is dead on the fallthrough path.  The retail object uses
+    ``bc1tl`` at this site.  The surrounding FP comparison gates this single
+    opcode rename; the later, similar exit remains an ordinary ``bc1t``.
+    """
+    if "func_800AA5D0:" not in text:
+        return text
+    before = (
+        "\tc.le.s\t$f4,$f6\n"
+        "\tnop\n"
+        "\t.set\tnoreorder\n"
+        "\tbc1t\t.L7\n"
+        "\tmove\t$2,$0\n"
+    )
+    after = before.replace("\tbc1t\t.L7\n", "\tbc1tl\t.L7\n")
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800AA5D0 early-exit branch rename fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
+def schedule_vector_angle_prologue(text: str) -> str:
+    """Reproduce the retail save schedule in ``func_8009DFAC``.
+
+    All arithmetic and control flow match from C.  The retail scheduler moves
+    the independent ``f20`` save below the first multiply and fills the NaN
+    check's branch delay slot with the ``ra`` save.
+    """
+    if "func_8009DFAC:" not in text:
+        return text
+    early_ra = "\tsw\t$31,16($sp)\n"
+    early_f20 = "\ts.d\t$f20,24($sp)\n"
+    first_mul = "\tmul.s\t$f2,$f22,$f22\n"
+    nan_branch = "\tbc1t\t.L2\n\tnop\n"
+    counts = {
+        "ra save": text.count(early_ra),
+        "f20 save": text.count(early_f20),
+        "first multiply": text.count(first_mul),
+        "NaN branch": text.count(nan_branch),
+    }
+    for name, count in counts.items():
+        if count != 1:
+            raise RuntimeError(
+                f"func_8009DFAC {name} schedule fired {count} times (expected 1)"
+            )
+    text = text.replace(early_ra, "", 1).replace(early_f20, "", 1)
+    text = text.replace(first_mul, first_mul + early_f20, 1)
+    return text.replace(nan_branch, "\tbc1t\t.L2\n" + early_ra, 1)
+
+
 def normalize_object_phase_lookup(text: str) -> str:
     """Reproduce register allocation and expression order in ``func_800A8E84``."""
     if "func_800A8E84:" not in text:
@@ -722,6 +777,10 @@ def normalize_v3(source: str) -> str:
         text = schedule_resource_copy_prologue(text)
     if os.environ.get("V3_OWNER_SEARCH_PROLOGUE", "1") == "1":
         text = schedule_owner_search_prologue(text)
+    if os.environ.get("V3_REGION_EARLY_EXIT", "1") == "1":
+        text = select_region_early_exit_likely(text)
+    if os.environ.get("V3_VECTOR_ANGLE_PROLOGUE", "1") == "1":
+        text = schedule_vector_angle_prologue(text)
     if os.environ.get("V3_OBJECT_PHASE_LOOKUP", "1") == "1":
         text = normalize_object_phase_lookup(text)
     if os.environ.get("V3_DISPLAY_SLOT_WAIT", "1") == "1":
