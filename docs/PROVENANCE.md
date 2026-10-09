@@ -6,6 +6,8 @@ The source shapes for libmus `__MusIntRemapPtrBank` (`func_800FD2A0`) and `__Mus
 
 The libultra 2.0I `osCreatePiManager`, `__osDevMgrMain`, scheduler, audio resampler, reverb, synthesizer, FX allocation, `guRotate`, `sinf`, SP task, `osStartThread`, `_Printf`, `_Putfld`, `_Ldtob`, `_Ldunscale`, and `_Genld` source shapes were likewise adapted from that MIT-licensed project. Their text, owned read-only and initialized data, and local BSS layout are independently placed and checked against this title.
 
+The N_audio `n_alAdpcmPull`, `n_alLoadParam`, and `_decodeChunk` translation unit was reconstructed from the MIT-licensed [Mario Golf 64 `n_load.c`](https://github.com/monde-lointain/mariogolf64/blob/5014056b8ac5c26178e299bbdaede70c0d318910/src/libnaudio/n_load.c). Its declaration order and original `inp` local uses are required for the retail KMC allocation. The complete unit is independently compiled and compared byte-for-byte against this ROM.
+
 The predecessor-game project `bdragoncore/battle-tanx-recomp`, commit `52c92319766e24b0c7244f76952325bece0f59ab`, is a secondary reference for shared engine, libultra, audio, and runtime behavior. BattleTanx and Global Assault are distinct games; symbols or conclusions are never transferred between them without binary evidence.
 
 Those symbols are hypotheses and navigation aids, not matching-decomp proof. Each function boundary, name, type, and implementation must be independently verified against the supported ROM and recorded through this repository's diff workflow.

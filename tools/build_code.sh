@@ -848,8 +848,7 @@ while read -r unit text_size; do
 done <<'N_AUDIO_UNITS'
 800FFB30_n_drvrnew 0x520
 80100050_n_env 0x9D0
-80100E68_n_load_param 0x18C
-80100FF4_decode_chunk 0x14C
+80100A20_n_load 0x720
 80101140_n_resample 0x1E0
 80101320_n_reverb 0x9F0
 80101D10_n_alinit 0x80
