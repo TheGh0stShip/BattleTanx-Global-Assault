@@ -765,6 +765,7 @@ hud_runtime_defaults 0x40
 image_asset_descriptors 0x1570
 frontend_runtime_defaults 0x1E4
 cheat_code_data 0x2c0
+campaign_mission_text 0xCF0
 controller_pak_text 0x3e4
 title_legal_text 0x120
 pal_warning_text 0x50
