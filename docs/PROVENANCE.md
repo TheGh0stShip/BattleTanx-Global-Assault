@@ -41,4 +41,10 @@ with IDO 5.3 to the exact 0xD20 retail bytes at `0x80127090`. The local
 compatibility header retains only the fixed-width record layout and constants
 needed to build that table.
 
+The libultra `__osRcpImTable` reconstruction follows `setintmask.s` from
+`decompals/ultralib` revision `e24c8367`. Rather than copying an extracted byte
+array, `src/libultra/os_rcp_im_table.c` expresses the documented conversion
+from six MI interrupt-enable bits to the RCP's paired clear/set mask fields.
+IDO 5.3 evaluates the table to the exact 0x80 retail bytes at `0x80077A00`.
+
 The source/tooling-only distribution and eventual Vita workflow follow the project structure and legal/release boundaries established in `TheGh0stShip/VitaKart64`.

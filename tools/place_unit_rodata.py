@@ -87,9 +87,12 @@ def main() -> None:
     for index, (unit, vram, _size) in enumerate(rows):
         needle = f"{unit_object_path(unit)}(.rodata);"
         hits = [i for i, line in enumerate(text) if line.strip() == needle]
-        if len(hits) != 1:
+        if len(hits) > 1:
             raise SystemExit(f"expected one rodata line for {unit}, found {len(hits)}")
-        del text[hits[0]]
+        if hits:
+            del text[hits[0]]
+        elif not Path(unit_object_path(unit)).is_file():
+            raise SystemExit(f"rodata-only object for {unit} does not exist")
         section = output_section_name(unit)
         extra.append(
             # This section deliberately aliases .main's VMA range, so the link

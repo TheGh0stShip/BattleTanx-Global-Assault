@@ -1,0 +1,28 @@
+#include "types.h"
+
+/* Convert the six MI interrupt-enable bits into the RCP's paired clear/set
+ * mask fields.  This is the table consumed by osSetIntMask and the exception
+ * handler in libultra 2.0I. */
+#define RCP_MASK_ENTRY(mask)                                                   \
+    ((((mask) & 0x01) ? 2 : 1) << 0  | (((mask) & 0x02) ? 2 : 1) << 2  |     \
+     (((mask) & 0x04) ? 2 : 1) << 4  | (((mask) & 0x08) ? 2 : 1) << 6  |     \
+     (((mask) & 0x10) ? 2 : 1) << 8  | (((mask) & 0x20) ? 2 : 1) << 10)
+
+const u16 __osRcpImTable[64] = {
+    RCP_MASK_ENTRY(0x00), RCP_MASK_ENTRY(0x01), RCP_MASK_ENTRY(0x02), RCP_MASK_ENTRY(0x03),
+    RCP_MASK_ENTRY(0x04), RCP_MASK_ENTRY(0x05), RCP_MASK_ENTRY(0x06), RCP_MASK_ENTRY(0x07),
+    RCP_MASK_ENTRY(0x08), RCP_MASK_ENTRY(0x09), RCP_MASK_ENTRY(0x0A), RCP_MASK_ENTRY(0x0B),
+    RCP_MASK_ENTRY(0x0C), RCP_MASK_ENTRY(0x0D), RCP_MASK_ENTRY(0x0E), RCP_MASK_ENTRY(0x0F),
+    RCP_MASK_ENTRY(0x10), RCP_MASK_ENTRY(0x11), RCP_MASK_ENTRY(0x12), RCP_MASK_ENTRY(0x13),
+    RCP_MASK_ENTRY(0x14), RCP_MASK_ENTRY(0x15), RCP_MASK_ENTRY(0x16), RCP_MASK_ENTRY(0x17),
+    RCP_MASK_ENTRY(0x18), RCP_MASK_ENTRY(0x19), RCP_MASK_ENTRY(0x1A), RCP_MASK_ENTRY(0x1B),
+    RCP_MASK_ENTRY(0x1C), RCP_MASK_ENTRY(0x1D), RCP_MASK_ENTRY(0x1E), RCP_MASK_ENTRY(0x1F),
+    RCP_MASK_ENTRY(0x20), RCP_MASK_ENTRY(0x21), RCP_MASK_ENTRY(0x22), RCP_MASK_ENTRY(0x23),
+    RCP_MASK_ENTRY(0x24), RCP_MASK_ENTRY(0x25), RCP_MASK_ENTRY(0x26), RCP_MASK_ENTRY(0x27),
+    RCP_MASK_ENTRY(0x28), RCP_MASK_ENTRY(0x29), RCP_MASK_ENTRY(0x2A), RCP_MASK_ENTRY(0x2B),
+    RCP_MASK_ENTRY(0x2C), RCP_MASK_ENTRY(0x2D), RCP_MASK_ENTRY(0x2E), RCP_MASK_ENTRY(0x2F),
+    RCP_MASK_ENTRY(0x30), RCP_MASK_ENTRY(0x31), RCP_MASK_ENTRY(0x32), RCP_MASK_ENTRY(0x33),
+    RCP_MASK_ENTRY(0x34), RCP_MASK_ENTRY(0x35), RCP_MASK_ENTRY(0x36), RCP_MASK_ENTRY(0x37),
+    RCP_MASK_ENTRY(0x38), RCP_MASK_ENTRY(0x39), RCP_MASK_ENTRY(0x3A), RCP_MASK_ENTRY(0x3B),
+    RCP_MASK_ENTRY(0x3C), RCP_MASK_ENTRY(0x3D), RCP_MASK_ENTRY(0x3E), RCP_MASK_ENTRY(0x3F),
+};

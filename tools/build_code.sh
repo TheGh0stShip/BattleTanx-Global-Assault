@@ -21,7 +21,7 @@ for asm_source in asm/us/*.s; do
     sed -i 's/beql       \$s2, \$a1, \.\?L80099664/.word      0x52454D41/' \
         "$asm_source"
     sed -i -E \
-        's/^dlabel (osViClock|__osShutdown|__OSGlobalIntMask|osClockRate|D_80126F80|xlitob_data_0000|xlitob_data_0014)$/dlabel __retail_\1/' \
+        's/^dlabel (osViClock|__osShutdown|__OSGlobalIntMask|__osRcpImTable|osClockRate|D_80126F80|xlitob_data_0000|xlitob_data_0014)$/dlabel __retail_\1/' \
         "$asm_source"
 done
 
@@ -3005,6 +3005,8 @@ python3 tools/trim_elf32_section.py \
 mkdir -p build/us/src/libultra
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Xcpluscomm \
     -Isrc/libultra -o build/us/src/libultra/vitbl.c.o src/libultra/vitbl.c
+.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
+    -o build/us/src/libultra/os_rcp_im_table.c.o src/libultra/os_rcp_im_table.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_pi_manager.c.o src/libultra/os_pi_manager.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
