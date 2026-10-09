@@ -626,6 +626,23 @@ class KmcPipelineTests(unittest.TestCase):
             normalized,
         )
 
+    def test_lzari_hazards_require_one_pattern_per_function(self) -> None:
+        source = (
+            "func_800A0BA8:\n\tnop\n\t.end\tfunc_800A0BA8\n"
+            "func_800A0E00:\n\tnop\n\t.end\tfunc_800A0E00\n"
+        )
+        with self.assertRaisesRegex(RuntimeError, "func_800A0BA8.*fired 0"):
+            MODULE.reproduce_lzari_load_hazards(source)
+
+    def test_lzari_hazards_materialize_one_nop_per_function(self) -> None:
+        hazard = "\tlw\t$2,0($17)\n\t#nop\n\tdivu\t$4,$4,$2\n"
+        source = (
+            f"func_800A0BA8:\n{hazard}\t.end\tfunc_800A0BA8\n"
+            f"func_800A0E00:\n{hazard}\t.end\tfunc_800A0E00\n"
+        )
+        normalized = MODULE.reproduce_lzari_load_hazards(source)
+        self.assertEqual(normalized.count("\tlw\t$2,0($17)\n\tnop\n\tdivu"), 2)
+
 
 if __name__ == "__main__":
     unittest.main()

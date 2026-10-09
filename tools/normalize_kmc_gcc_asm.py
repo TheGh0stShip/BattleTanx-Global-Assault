@@ -1080,6 +1080,35 @@ def reproduce_color_interpolate_load_hazard(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def reproduce_lzari_load_hazards(text: str) -> str:
+    """Restore the retail LZARI decoder's two load-delay nops.
+
+    KMC GCC leaves a ``#nop`` placeholder between the cumulative-frequency
+    load and ``divu`` in both arithmetic-decoder functions. The retail
+    assembler materialized it. Require one fire inside each named function so
+    this rule cannot silently affect another division with the same shape.
+    """
+    pattern = "\tlw\t$2,0($17)\n\t#nop\n\tdivu\t$4,$4,$2\n"
+    replacement = pattern.replace("\t#nop\n", "\tnop\n")
+    for name in ("func_800A0BA8", "func_800A0E00"):
+        if f"{name}:" not in text:
+            continue
+        match = re.search(
+            rf"{name}:.*?\n\s*\.end\s+{name}\b", text, flags=re.S
+        )
+        if match is None:
+            raise RuntimeError(f"{name} body not found for LZARI load hazard")
+        body = match.group(0)
+        fires = body.count(pattern)
+        if fires != 1:
+            raise RuntimeError(
+                f"{name} load-delay hazard fired {fires} times (expected 1)"
+            )
+        body = body.replace(pattern, replacement, 1)
+        text = text[:match.start()] + body + text[match.end():]
+    return text
+
+
 def reproduce_entity_model_draw_label_hazard(text: str) -> str:
     """Suppress the label-adjacent HI/LO nop in ``func_800E3FDC``.
 
@@ -1694,6 +1723,8 @@ def normalize_v3(source: str) -> str:
         text = reproduce_crate_burst_hilo_hazard(text)
     if os.environ.get("V3_COLOR_INTERPOLATE_HAZARD", "1") == "1":
         text = reproduce_color_interpolate_load_hazard(text)
+    if os.environ.get("V3_LZARI_LOAD_HAZARDS", "1") == "1":
+        text = reproduce_lzari_load_hazards(text)
     if os.environ.get("V3_ENTITY_MODEL_DRAW_LABEL_HAZARD", "1") == "1":
         text = reproduce_entity_model_draw_label_hazard(text)
     if os.environ.get("V3_CRATE_LIST_HEAD_STORE", "1") == "1":

@@ -8,6 +8,13 @@ The libultra 2.0I `osCreatePiManager`, `__osDevMgrMain`, scheduler, audio resamp
 
 The N_audio `n_alAdpcmPull`, `n_alLoadParam`, and `_decodeChunk` translation unit was reconstructed from the MIT-licensed [Mario Golf 64 `n_load.c`](https://github.com/monde-lointain/mariogolf64/blob/5014056b8ac5c26178e299bbdaede70c0d318910/src/libnaudio/n_load.c). Its declaration order and original `inp` local uses are required for the retail KMC allocation. The complete unit is independently compiled and compared byte-for-byte against this ROM.
 
+The asset decompressor at `0x800A0750` is Haruhiko Okumura's LZARI algorithm
+(`N=4096`, `F=60`, `THRESHOLD=2`) adapted to the game's global decoder state
+and big-endian stream header. The public reference source permits free use,
+distribution, and modification. All nine functions in the recovered unit and
+the repository decoder are independently checked against this ROM; the N64
+unit requires two documented retail-assembler load-delay nops.
+
 The predecessor-game project `bdragoncore/battle-tanx-recomp`, commit `52c92319766e24b0c7244f76952325bece0f59ab`, is a secondary reference for shared engine, libultra, audio, and runtime behavior. BattleTanx and Global Assault are distinct games; symbols or conclusions are never transferred between them without binary evidence.
 
 Those symbols are hypotheses and navigation aids, not matching-decomp proof. Each function boundary, name, type, and implementation must be independently verified against the supported ROM and recorded through this repository's diff workflow.
