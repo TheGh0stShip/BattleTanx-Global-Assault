@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import struct
+from dataclasses import dataclass
 from pathlib import Path
 
 
@@ -21,6 +22,13 @@ MAX_CUM = Q1 - 1
 
 class LzariError(ValueError):
     pass
+
+
+@dataclass(frozen=True)
+class DecompressionResult:
+    data: bytes
+    consumed_bytes: int
+    padding_bits: int
 
 
 class Decoder:
@@ -142,12 +150,14 @@ class Decoder:
         return position
 
 
-def decompress(stream: bytes, *, max_output: int = 64 * 1024 * 1024) -> bytes:
+def decompress_with_info(
+    stream: bytes, *, max_output: int = 64 * 1024 * 1024
+) -> DecompressionResult:
     if len(stream) < 7:
         raise LzariError("stream is too short")
     output_size = struct.unpack_from(">I", stream)[0]
     if output_size == 0:
-        return b""
+        return DecompressionResult(b"", 4, 0)
     if output_size > max_output:
         raise LzariError(
             f"declared output size 0x{output_size:X} exceeds limit 0x{max_output:X}"
@@ -178,7 +188,13 @@ def decompress(stream: bytes, *, max_output: int = 64 * 1024 * 1024) -> bytes:
             ring[ring_offset] = character
             ring_offset = (ring_offset + 1) & (N - 1)
 
-    return bytes(output)
+    return DecompressionResult(
+        bytes(output), 4 + decoder.offset, decoder.padding_bits
+    )
+
+
+def decompress(stream: bytes, *, max_output: int = 64 * 1024 * 1024) -> bytes:
+    return decompress_with_info(stream, max_output=max_output).data
 
 
 def main() -> None:
