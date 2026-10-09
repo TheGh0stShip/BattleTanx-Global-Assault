@@ -1,5 +1,6 @@
 # unit	data_vram	data_size
 # C units whose initialized data must be linked and spliced at retail addresses.
+image_asset_descriptors	0x80116860	0x1570
 menu_help_text	0x80117FB4	0xA0
 main_menu_text	0x8011854C	0x98
 options_menu_text	0x80118E6C	0x70

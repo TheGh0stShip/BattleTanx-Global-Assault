@@ -16,7 +16,7 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,564 bytes: the 749,104-byte loaded
 image minus 630,540 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 23,444 bytes, or 19.773%.
+`.data` and `.rodata` currently account for 28,932 bytes, or 24.402%.
 
 The initialized-data reconstruction includes the complete cheat-code unit at
 `0x80121A00`: 33 input strings, their pointer table, and the associated result
@@ -99,6 +99,11 @@ The image descriptor table contains 195 populated entries. Its format and size
 fields use the standard N64 `G_IM_FMT_*` and `G_IM_SIZ_*` values. All decoded
 payloads fall into six layouts, and their byte lengths agree with the table's
 dimensions:
+
+The complete 196-entry table (including one descriptor with no ROM payload) is
+reconstructed as typed initialized data at `0x80116860`. Its 5,488 bytes include
+the two runtime pointers initially set to null and the exact cartridge start/end
+tokens consumed by the matching loader.
 
 | Format | Size | Decoded layout |
 | --- | --- | --- |
