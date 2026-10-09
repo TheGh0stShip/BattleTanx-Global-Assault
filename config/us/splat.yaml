@@ -394,7 +394,7 @@ segments:
       - [0x2EF4C, c, code/codex_batch/func_8009EF4C]
       - [0x2EFD4, c, code/codex_batch/func_8009EFD4]
       - [0x2F064, c, code/matrix_state]
-      - [0x2F090, asm, main_8009F090_to_8009F1F4]
+      - [0x2F090, c, code/codex_batch_next2/func_8009F090]
       - [0x2F1F4, c, code/matrix_vector]
       - [0x2F334, asm, main_8009F334_to_8009F444]
       - [0x2F444, c, code/codex_batch/func_8009F444]
