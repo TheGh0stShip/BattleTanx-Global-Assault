@@ -2836,6 +2836,8 @@ mkdir -p build/us/src/libultra
     -o build/us/src/libultra/os_dev_mgr.c.o src/libultra/os_dev_mgr.c
 python3 tools/trim_elf32_section.py \
     build/us/src/libultra/os_dev_mgr.c.o .text 0x490 --alignment 16
+.toolchain/ido5.3/cc -c -O3 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
+    -o build/us/src/libultra/al_resample.c.o src/libultra/al_resample.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_set_frequency.c.o src/libultra/os_ai_set_frequency.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \

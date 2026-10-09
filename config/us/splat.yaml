@@ -1170,7 +1170,7 @@ segments:
       - [0x9D740, c, libultra/os_pi_raw_start_dma]
       - [0x9D820, c, libultra/os_pi_raw_read_io]
       - [0x9D880, c, libultra/os_recv_mesg]
-      - [0x9D9C0, asm, main_8010D9C0_to_8010DCC0]
+      - [0x9D9C0, c, libultra/al_resample]
       - [0x9DCC0, c, libultra/os_reset_global_int_mask]
       - [0x9DD20, asm, main_8010DD20_to_8010E614]
       - [0x9E614, c, libultra/al_fx_param]

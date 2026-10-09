@@ -4,7 +4,7 @@ The initial ROM map and symbol seeds were adapted from the GPL-3.0 project `woot
 
 The source shape for libmus `__MusIntRemapPtrBank` (`func_800FD2A0`) was adapted from the MIT-licensed [Dr. Mario 64 decompilation](https://github.com/AngheloAlf/drmario64/blob/master/lib/libmus/src/player.c). The implementation is compiled with this project's identified KMC toolchain and independently compared byte-for-byte with the BattleTanx: Global Assault ROM.
 
-The libultra 2.0I `osCreatePiManager` and `__osDevMgrMain` source shapes were likewise adapted from that MIT-licensed project. Their text, owned read-only and initialized data, and local BSS layout are independently placed and checked against this title.
+The libultra 2.0I `osCreatePiManager`, `__osDevMgrMain`, and audio resampler source shapes were likewise adapted from that MIT-licensed project. Their text, owned read-only and initialized data, and local BSS layout are independently placed and checked against this title.
 
 The predecessor-game project `bdragoncore/battle-tanx-recomp`, commit `52c92319766e24b0c7244f76952325bece0f59ab`, is a secondary reference for shared engine, libultra, audio, and runtime behavior. BattleTanx and Global Assault are distinct games; symbols or conclusions are never transferred between them without binary evidence.
 
