@@ -20,10 +20,69 @@ from lzari import LzariError, compress, decompress_with_info
 
 ROM_SHA1 = "805248fb0a0ee694cad8d7dc927b631d860dd8cf"
 SYMBOL = re.compile(r"\bD_B0([0-9A-Fa-f]{6})\b")
+IMAGE_TABLE_ROM = 0xA6860
+IMAGE_RECORD_COUNT = 196
+IMAGE_RECORD_SIZE = 28
 
 
 def load_boundaries(path: Path) -> list[int]:
     return sorted({int(match, 16) for match in SYMBOL.findall(path.read_text())})
+
+
+def level_world_ranges(path: Path) -> list[dict]:
+    boundaries = load_boundaries(path)
+    return [
+        {"kind": "world", "name": f"level_world_{index:03d}", "start": start, "end": end}
+        for index, (start, end) in enumerate(zip(boundaries, boundaries[1:]))
+    ]
+
+
+def image_ranges(rom: bytes) -> list[dict]:
+    ranges = []
+    record = struct.Struct(">BBHHHHHIIII")
+    for index in range(IMAGE_RECORD_COUNT):
+        offset = IMAGE_TABLE_ROM + index * IMAGE_RECORD_SIZE
+        fields = record.unpack_from(rom, offset)
+        start = fields[-2] & 0x0FFFFFFF
+        inclusive_end = fields[-1] & 0x0FFFFFFF
+        if start == 0:
+            continue
+        # func_8007BCF0 rounds the inclusive range down to an even DMA size.
+        stored_size = (inclusive_end - start + 1) & ~1
+        ranges.append(
+            {
+                "kind": "image",
+                "name": f"image_{index:03d}",
+                "table_index": index,
+                "start": start,
+                "end": start + stored_size,
+                "format": fields[0],
+                "flags": fields[1],
+                "width": fields[2],
+                "height": fields[3],
+            }
+        )
+    return ranges
+
+
+def known_ranges(rom: bytes, boundary_path: Path) -> list[dict]:
+    ranges = [
+        {
+            "kind": "leftover",
+            "name": "btx1_world_leftover",
+            "start": 0x100000,
+            "end": 0x102068,
+        },
+        {
+            "kind": "world",
+            "name": "common_world",
+            "start": 0x3F6EE8,
+            "end": 0x3F9B5C,
+        },
+    ]
+    ranges.extend(level_world_ranges(boundary_path))
+    ranges.extend(image_ranges(rom))
+    return ranges
 
 
 def bundle_offsets(data: bytes) -> tuple[int, ...] | None:
@@ -53,21 +112,33 @@ def bundle_layout(data: bytes) -> dict | None:
     table_count = struct.unpack_from(">I", data, offsets[0])[0]
     if sizes[1] != table_count * 16:
         return None
-    if sizes[2] % 12 or sizes[4] % 4 or sizes[5] % 4 or sizes[6] % 24:
+    if sizes[2] % 12 or sizes[4] % 16 or sizes[5] % 4 or sizes[6] % 24:
         return None
+    placement_count = sizes[2] // 12
+    model_count = sizes[4] // 16
+    part_count = sizes[5] // 4
+    pool_ref_count = sizes[6] // 24
+    for index in range(table_count):
+        count, first = struct.unpack_from(">HH", data, offsets[1] + index * 16)
+        if first + count > placement_count:
+            return None
+    for index in range(model_count):
+        count, zero, first = struct.unpack_from(">BBH", data, offsets[4] + index * 16)
+        if zero != 0 or first + count > part_count:
+            return None
+    for index in range(part_count):
+        count, zero, first = struct.unpack_from(">BBH", data, offsets[5] + index * 4)
+        if zero != 0 or first + count > pool_ref_count:
+            return None
     return {
         "offsets": list(offsets),
         "component_sizes": sizes,
-        "component_counts": [
-            1,
-            table_count,
-            sizes[2] // 12,
-            sizes[3] // 16,
-            sizes[4] // 4,
-            None,
-            sizes[6] // 24,
-        ],
-        "component_3_tail_bytes": sizes[3] % 16,
+        "group_count": table_count,
+        "placement_count": placement_count,
+        "object_definition_bytes": sizes[3],
+        "model_count": model_count,
+        "part_count": part_count,
+        "pool_ref_count": pool_ref_count,
     }
 
 
@@ -80,19 +151,30 @@ def format_hint(data: bytes) -> str:
     return "unknown"
 
 
-def inventory(rom: bytes, boundary_path: Path) -> list[dict]:
-    boundaries = load_boundaries(boundary_path)
+def inventory_ranges(rom: bytes, ranges: list[dict]) -> list[dict]:
     streams = []
-    for start, end in zip(boundaries, boundaries[1:]):
+    for declared in ranges:
+        start, end = declared["start"], declared["end"]
         packed = rom[start:end]
         try:
             result = decompress_with_info(packed)
         except LzariError:
             continue
-        if result.consumed_bytes != len(packed) or result.padding_bits not in (8, 16):
+        # Image DMA records can append one zero alignment byte, leaving the
+        # arithmetic reader exactly byte-aligned (0 bits) instead of with its
+        # usual 8- or 16-bit coder tail.
+        valid_padding = (0, 8, 16) if declared["kind"] == "image" else (8, 16)
+        if result.consumed_bytes != len(packed) or result.padding_bits not in valid_padding:
             continue
         layout = bundle_layout(result.data)
+        canonical = compress(result.data)
+        storage_padding = packed[len(canonical) :]
         record = {
+            **{
+                key: value
+                for key, value in declared.items()
+                if key not in ("start", "end")
+            },
             "index": len(streams),
             "rom_start": start,
             "rom_end": end,
@@ -101,13 +183,25 @@ def inventory(rom: bytes, boundary_path: Path) -> list[dict]:
             "padding_bits": result.padding_bits,
             "format_hint": format_hint(result.data),
             "sha256": hashlib.sha256(result.data).hexdigest(),
-            "reencode_exact": compress(result.data) == packed,
+            "codec_size": len(canonical),
+            "storage_padding_bytes": len(storage_padding),
+            "reencode_exact": canonical + storage_padding == packed
+            and not storage_padding.strip(b"\0"),
             "data": result.data,
         }
         if layout is not None:
             record.update(layout)
         streams.append(record)
     return streams
+
+
+def inventory(rom: bytes, boundary_path: Path) -> list[dict]:
+    """Inventory the original 74 level ranges (compatibility API)."""
+    return inventory_ranges(rom, level_world_ranges(boundary_path))
+
+
+def inventory_known(rom: bytes, boundary_path: Path) -> list[dict]:
+    return inventory_ranges(rom, known_ranges(rom, boundary_path))
 
 
 def public_record(stream: dict) -> dict:
@@ -133,7 +227,7 @@ def main() -> None:
     actual_sha1 = hashlib.sha1(rom).hexdigest()
     if actual_sha1 != ROM_SHA1:
         raise SystemExit(f"base ROM SHA-1 mismatch: expected {ROM_SHA1}, got {actual_sha1}")
-    streams = inventory(rom, args.boundaries)
+    streams = inventory_known(rom, args.boundaries)
 
     if args.extract_dir:
         args.extract_dir.mkdir(parents=True, exist_ok=True)
@@ -149,7 +243,7 @@ def main() -> None:
                     )
 
     document = {
-        "format": "BattleTanx Global Assault LZARI asset inventory v1",
+        "format": "BattleTanx Global Assault LZARI asset inventory v2",
         "rom_sha1": actual_sha1,
         "stream_count": len(streams),
         "packed_bytes": sum(item["packed_size"] for item in streams),

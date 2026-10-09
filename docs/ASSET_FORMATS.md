@@ -7,30 +7,42 @@ Data.
 
 ## LZARI bundles
 
-`func_800E8380` selects the compressed ROM ranges and `func_800BA6C0` DMA-loads
-and expands them with the matching LZARI decoder at `0x800A0750`. The currently
-known boundary table identifies 74 streams. They occupy 481,785 ROM bytes and
-expand to 1,570,628 bytes.
+The matching decoder at `0x800A0750` is used by the level, common-world, and
+image loaders. The audited ROM tables identify 271 streams: 74 level worlds,
+one common world, 195 images, and one unreferenced world left over from the
+first BattleTanx. The inventory independently decodes and canonically
+re-encodes their 1,174,975 stored bytes into 2,886,765 decoded bytes. Image
+records store an inclusive cart end and their
+loader rounds the transfer down to an even byte count; where that adds a zero
+DMA-alignment byte, the repacker restores it after the canonical LZARI payload.
 
-Every decoded stream begins with eight big-endian 32-bit offsets. The first is
+Every decoded GA world stream begins with eight big-endian 32-bit offsets. The first is
 always `0x20`, offsets never decrease, and the eighth equals the decoded size.
 They delimit seven components:
 
 | Component | Proven layout |
 | --- | --- |
-| 0 | One big-endian 32-bit count |
-| 1 | Exactly that many 16-byte records |
-| 2 | 12-byte records |
-| 3 | 16-byte records followed by 0, 4, 8, or 12 tail bytes |
-| 4 | 4-byte records |
-| 5 | An unknown 4-byte-aligned region |
-| 6 | 24-byte records |
+| 0 | One big-endian `u32` group count |
+| 1 | 16-byte groups: placement count, first placement, and six signed bounds |
+| 2 | 12-byte placements: XYZ, yaw, and an object-definition offset |
+| 3 | Variable-size object definitions, dispatched by kind byte |
+| 4 | 16-byte models: part count, first part, and six signed bounds |
+| 5 | 4-byte parts: pool-reference count and first pool reference |
+| 6 | 24-byte pool references: offsets and sizes in GEO, PB, and TEX pools |
 
-The record widths are not guesses. At `0x800BA78C–0x800BA848`, the loader
-relocates the eight offsets and derives counts from the differences using
-division by 12, 16, 4, and 24. Component 0 agrees with the size of component 1
-in every stream. Component 5 is relocated but its internal semantics remain
-open.
+The widths and relationships are established by the matching loader and are
+checked against every decoded world. Each group range must stay within the
+placement array, each model's part range within the part array, and each
+part's pool-reference range within the pool-reference array. Object
+definitions remain variable length and are therefore recorded as bytes rather
+than misreported as fixed-width records.
+
+The complete ROM organization and structure names were cross-checked against
+[`nviewer` revision
+`700432e9bf368caebbe3150e86e987e246c851a8`](https://github.com/DSLL32/nviewer/tree/700432e9bf368caebbe3150e86e987e246c851a8).
+That repository does not publish a license, so no source code was copied; the
+format facts were independently validated against this ROM and the matching
+game loader.
 
 Run the inventory without writing extracted data:
 
@@ -48,11 +60,11 @@ python3 tools/inventory_lzari_assets.py \
 ```
 
 The tool verifies the base-ROM SHA-1, requires each stream to consume its exact
-declared ROM range, validates the bundle invariants above, and records decoded
+declared ROM range, validates world-bundle invariants, and records decoded
 SHA-256 values. Its encoder uses the original 1989 LZARI match parser and
-arithmetic coder with the game's big-endian size header. Re-encoding all 74
-decoded bundles reproduces all 481,785 retail compressed bytes exactly; this is
-also a test gate. ROM-derived output stays untracked.
+arithmetic coder with the game's big-endian size header. Re-encoding all 271
+known streams, including explicit image DMA padding, reproduces every stored
+byte exactly; this is also a test gate. ROM-derived output stays untracked.
 
 After editing the seven extracted components, rebuild their offset table and
 compressed stream with:

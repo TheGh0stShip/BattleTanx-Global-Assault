@@ -10,7 +10,9 @@ from inventory_lzari_assets import (  # noqa: E402
     bundle_layout,
     bundle_offsets,
     format_hint,
+    image_ranges,
     inventory,
+    inventory_known,
     load_boundaries,
 )
 from pack_lzari_bundle import pack_bundle  # noqa: E402
@@ -36,7 +38,11 @@ class LzariAssetInventoryTests(unittest.TestCase):
         )
         layout = bundle_layout(data)
         self.assertIsNotNone(layout)
-        self.assertEqual(layout["component_counts"], [1, 0, 0, 0, 0, None, 0])
+        self.assertEqual(layout["group_count"], 0)
+        self.assertEqual(layout["placement_count"], 0)
+        self.assertEqual(layout["model_count"], 0)
+        self.assertEqual(layout["part_count"], 0)
+        self.assertEqual(layout["pool_ref_count"], 0)
         self.assertEqual(format_hint(data), "btga_7_component_bundle")
 
     def test_current_rom_inventory(self):
@@ -55,7 +61,7 @@ class LzariAssetInventoryTests(unittest.TestCase):
         self.assertTrue(all(len(item["component_sizes"]) == 7 for item in streams))
         self.assertTrue(
             all(
-                item["component_sizes"][1] == item["component_counts"][1] * 16
+                item["component_sizes"][1] == item["group_count"] * 16
                 for item in streams
             )
         )
@@ -67,6 +73,24 @@ class LzariAssetInventoryTests(unittest.TestCase):
             for left, right in zip(offsets, offsets[1:])
         ]
         self.assertEqual(pack_bundle(components), first["data"])
+
+    def test_image_table_and_complete_known_inventory(self):
+        rom_path = ROOT / "baseroms/us/baserom.z64"
+        if not rom_path.exists():
+            self.skipTest("base ROM is unavailable")
+        rom = rom_path.read_bytes()
+        images = image_ranges(rom)
+        self.assertEqual(len(images), 195)
+        self.assertEqual(images[0]["start"], 0x46F660)
+        self.assertEqual(images[-1]["end"], 0x514714)
+        streams = inventory_known(rom, ROOT / "src/code/slot_asset_ranges.c")
+        self.assertEqual(len(streams), 271)
+        self.assertEqual(sum(item["kind"] == "world" for item in streams), 75)
+        self.assertEqual(sum(item["kind"] == "image" for item in streams), 195)
+        self.assertEqual(sum(item["packed_size"] for item in streams), 1174975)
+        self.assertEqual(sum(item["decoded_size"] for item in streams), 2886765)
+        self.assertTrue(all(item["reencode_exact"] for item in streams))
+        self.assertTrue(all(item["storage_padding_bytes"] in (0, 1) for item in streams))
 
 
 if __name__ == "__main__":
