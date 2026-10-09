@@ -1,5 +1,12 @@
 # unit	data_vram	data_size
 # C units whose initialized data must be linked and spliced at retail addresses.
+menu_help_text	0x80117FB4	0xA0
+code_entry_help_text	0x80119338	0x8C
+controls_help_text	0x8011A3F0	0xF0
+controller_binding_text	0x8011A8D4	0xC4
+campaign_map_help_text	0x8011B2D8	0x40
+team_setup_text	0x8011D9E8	0x7C
+controller_required_text	0x8011FA90	0x50
 title_legal_text	0x8011FC4C	0x120
 pal_warning_text	0x80120000	0x50
 results_text	0x8012012C	0xB4
