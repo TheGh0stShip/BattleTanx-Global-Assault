@@ -44,6 +44,8 @@ projectile_particle_data	0x80125580	0xD8
 projectile_billboard_geometry	0x80125658	0x320
 effect_billboard_geometry	0x80125978	0x128
 hazard_animation_data	0x80125AA0	0x190
+model_motion_render_data	0x80125C30	0x270
+model_variant_runtime_data	0x80125EA0	0xE0
 n_audio/800FFB30_n_drvrnew	0x80126890	0x190
 n_audio/80100050_n_env	0x80126A20	0x100
 libultra/al_drvrnew	0x80126B60	0x190
