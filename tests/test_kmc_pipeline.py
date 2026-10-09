@@ -264,6 +264,49 @@ class KmcPipelineTests(unittest.TestCase):
         )
         self.assertEqual(normalized.count("\tmove\t$6,$3\n"), 1)
 
+    def test_turret_sweep_hazards_require_both_patterns(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.reproduce_turret_sweep_assembler_hazards(
+                "func_800E1BB0:\n\tnop\n"
+            )
+
+    def test_turret_sweep_hazards_reproduce_retail_forms(self) -> None:
+        source = (
+            "func_800E1BB0:\n"
+            "\tmul.s\t$f20,$f0,$f2\n"
+            "\t.set\tnoreorder\n"
+            "\tjal\tfunc_8009D4B0\n"
+            "\tnop\n"
+            "\t.set\tnoreorder\n"
+            "\tmul.s\t$f0,$f20,$f0\n"
+            "\tl.s\t$f0,$LF_lis4\n"
+            ".L37:\n"
+        )
+        normalized = MODULE.reproduce_turret_sweep_assembler_hazards(source)
+        self.assertIn(
+            "\tjal\tfunc_8009D4B0\n\tnop\n\tnop\n\t.set\tnoreorder\n",
+            normalized,
+        )
+        self.assertIn(
+            "\tlui\t$1,%hi($LF_lis4)\n"
+            ".L37 = . + 4\n"
+            "\tlwc1\t$f0,%lo($LF_lis4)($1)\n",
+            normalized,
+        )
+
+    def test_crate_burst_hazard_requires_one_pattern(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.reproduce_crate_burst_hilo_hazard("func_800E7768:\n\tnop\n")
+
+    def test_crate_burst_hazard_inserts_two_nops(self) -> None:
+        normalized = MODULE.reproduce_crate_burst_hilo_hazard(
+            "func_800E7768:\n\tdiv\t$16,$21,$18\n\tmult\t$16,$20\n"
+        )
+        self.assertIn(
+            "\tdiv\t$16,$21,$18\n\tnop\n\tnop\n\tmult\t$16,$20\n",
+            normalized,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -19,6 +19,9 @@ its instruction pattern fires exactly once.
 | `func_800C7C10` | `lhu $2,D_8011F1F4; beq $2,$0,label` | Insert the unsigned nonzero result retained by the retail combine pass. | At `0x800C7CE8`: `0002102B` (`sltu $2,$0,$2`). |
 | `func_800C1938` | Three exact load/copy patterns documented in `shape_controls_config` | Reorder two loads and copy the lookup index through `$2`/`$10`. | Reproduces the retail sequences at `0x800C1A04`, `0x800C1A28`, and the corresponding branch/load words; disabling the rule leaves 50 C-body word differences. |
 | `func_800C1938` | Loop tail immediately before `li $2,0x50000000` | Insert the unexplained dead indexed load `andi; sll; lui/addu/lw` of `D_80117F24[player]`. | `30C2FFFF 00021080 3C018011 00220821 8C237F24`. |
+| `func_800E1BB0` | The exact `mul.s $f20,$f0,$f2; jal func_8009D4B0; nop; mul.s $f0,$f20,$f0` chain | Insert the second FP-result hazard nop emitted by the retail assembler. The function label and complete instruction sequence are gated and must fire once. | At `0x800E1C60`–`0x800E1C70`: `46020502 0C02752C 00000000 00000000 4600A002`. |
+| `func_800E1BB0` | The exact `$LF_lis4` load immediately followed by `.L37` | Expand the load explicitly and define `.L37 = . + 4` before `lwc1`, preserving the retail target address without triggering KMC `as`'s extra load-delay nop. The label-gated pattern must fire once. | At `0x800E1F30`–`0x800E1F38`: `3C018007 C4205C50 46001082`. |
+| `func_800E7768` | The exact three-operand `div $16,$21,$18` immediately followed by `mult $16,$20` | Insert the two HI/LO hazard nops that the retail assembler placed after the division macro's `mflo`. The function label and exact operands are gated and must fire once. | At `0x800E789C`–`0x800E78A8`: `00008012 00000000 00000000 02140018`. |
 
 The `func_800C1938` dead load remains an open compiler/source-shape question.
 The normalizer restores the bytes; it does not explain why the retail compiler

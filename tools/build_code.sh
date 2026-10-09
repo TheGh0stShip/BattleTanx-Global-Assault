@@ -1147,7 +1147,24 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             seq_script_load \
             seq_level_header_load \
             seq_events_update \
-            model_height_to_angle \
+            800D3C64_seq_point_track \
+            800D5E2C_script_particle_update \
+            800D9D50_debris_spawn \
+            800DA1D8_debris_piece_update \
+            800DA7D0_debris_group_spawn \
+            800DAAE0_projectile_spawn \
+            800DB6F0_track_angle_unit \
+            800DD75C_structure_hit_dispatch \
+            800DD82C_structure_debris_spawn \
+            800E16D8_foliage_prop_destroy \
+            800E1BB0_turret_sweep \
+            800E2520_turret_message_handlers \
+            800E2F9C_wreck_update \
+            800E48A8_flag_position_query \
+            800E6B04_crate_unit \
+            800E73B0_crate_part_release \
+            800E7768_crate_burst_spawn \
+            800E7A10_powerup_flag_messages \
             slot_condition_check \
             player_message_hit \
             player_dispatch \
@@ -2423,9 +2440,61 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/slot_condition_check.c.o .rodata 0xb8 --alignment 4
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/model_height_to_angle.c.o .text 0x160 --alignment 4
+    build/us/src/code/800D3C64_seq_point_track.c.o .text 0x3e8 --alignment 4
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/model_height_to_angle.c.o .rodata 0x2c --alignment 4
+    build/us/src/code/800D3C64_seq_point_track.c.o .rodata 0xc0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800D5E2C_script_particle_update.c.o .text 0x6dc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800D9D50_debris_spawn.c.o .text 0x488 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800D9D50_debris_spawn.c.o .rodata 0x1c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800DA1D8_debris_piece_update.c.o .text 0x168 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800DA7D0_debris_group_spawn.c.o .text 0x1b4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800DAAE0_projectile_spawn.c.o .text 0x154 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800DB6F0_track_angle_unit.c.o .text 0xb24 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800DB6F0_track_angle_unit.c.o .rodata 0xfc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800DD75C_structure_hit_dispatch.c.o .text 0xd0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800DD82C_structure_debris_spawn.c.o .text 0x6d8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800DD82C_structure_debris_spawn.c.o .rodata 0x70 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E16D8_foliage_prop_destroy.c.o .text 0x200 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E16D8_foliage_prop_destroy.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E1BB0_turret_sweep.c.o .text 0x468 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E1BB0_turret_sweep.c.o .rodata 0x18 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E2520_turret_message_handlers.c.o .text 0x188 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E2F9C_wreck_update.c.o .text 0x468 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E2F9C_wreck_update.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E48A8_flag_position_query.c.o .text 0x38 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E6B04_crate_unit.c.o .text 0x638 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E6B04_crate_unit.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E73B0_crate_part_release.c.o .text 0x1ec --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E7768_crate_burst_spawn.c.o .text 0x200 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E7768_crate_burst_spawn.c.o .rodata 0xc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E7A10_powerup_flag_messages.c.o .text 0x3e8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E7A10_powerup_flag_messages.c.o .rodata 0x1c --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/seq_events_update.c.o .text 0x1f4 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3284,7 +3353,7 @@ if false; then
     build/us/src/code/seq_spawn_script_tick.c.o \
     build/us/src/code/seq_event_script_tick.c.o \
     build/us/src/code/seq_event_spawn_tick.c.o \
-    build/us/asm/us/main_800D3C64_to_800D404C.s.o \
+    build/us/src/code/800D3C64_seq_point_track.c.o \
     build/us/src/code/seq_spawn_events_update.c.o \
     build/us/src/code/seq_command_dispatch.c.o \
     build/us/src/code/seq_event_start.c.o \
@@ -3296,7 +3365,8 @@ if false; then
     build/us/src/code/hud_draw_list.c.o \
     build/us/asm/us/main_800D5C7C_to_800D5C80.s.o \
     build/us/src/code/script_particle_spawn.c.o \
-    build/us/asm/us/main_800D5E2C_to_800D67F0.s.o \
+    build/us/src/code/800D5E2C_script_particle_update.c.o \
+    build/us/asm/us/main_800D6508_to_800D67F0.s.o \
     build/us/src/code/effect_draw.c.o \
     build/us/src/code/effect_code_table.c.o \
     build/us/src/code/effect_code_parse.c.o \
@@ -3334,17 +3404,17 @@ if false; then
     build/us/asm/us/main_800D9B48_to_800D9B50.s.o \
     build/us/src/code/model_bounds_compute.c.o \
     build/us/src/code/model_bounds_center.c.o \
-    build/us/asm/us/main_800D9D50_to_800DA340.s.o \
+    build/us/src/code/800D9D50_debris_spawn.c.o \
+    build/us/src/code/800DA1D8_debris_piece_update.c.o \
     build/us/src/code/debris_piece_draw.c.o \
     build/us/src/code/debris_burst_spawn.c.o \
     build/us/src/code/debris_burst_spawn_tinted.c.o \
-    build/us/asm/us/main_800DA7D0_to_800DA984.s.o \
+    build/us/src/code/800DA7D0_debris_group_spawn.c.o \
     build/us/src/code/debris_scatter_spawn.c.o \
-    build/us/asm/us/main_800DAAE0_to_800DAC34.s.o \
+    build/us/src/code/800DAAE0_projectile_spawn.c.o \
     build/us/src/code/projectile_bounce.c.o \
     build/us/asm/us/main_800DB1B0_to_800DB6F0.s.o \
-    build/us/src/code/model_height_to_angle.c.o \
-    build/us/asm/us/main_800DB850_to_800DC214.s.o \
+    build/us/src/code/800DB6F0_track_angle_unit.c.o \
     build/us/src/code/projectile_model_draw.c.o \
     build/us/src/code/projectile_model_create.c.o \
     build/us/src/code/projectile_model_matrix.c.o \
@@ -3359,7 +3429,8 @@ if false; then
     build/us/src/code/model_mesh_partition.c.o \
     build/us/src/code/structure_create.c.o \
     build/us/src/code/structure_flicker_roll.c.o \
-    build/us/asm/us/main_800DD75C_to_800DDF04.s.o \
+    build/us/src/code/800DD75C_structure_hit_dispatch.c.o \
+    build/us/src/code/800DD82C_structure_debris_spawn.c.o \
     build/us/src/code/structure_model_draw.c.o \
     build/us/src/code/structure_owner_award.c.o \
     build/us/asm/us/main_800DE374_to_800DE4DC.s.o \
@@ -3379,27 +3450,28 @@ if false; then
     build/us/src/code/level_prop_points_find.c.o \
     build/us/asm/us/main_800DF89C_to_800E1540.s.o \
     build/us/src/code/foliage_prop_create.c.o \
-    build/us/asm/us/main_800E16D8_to_800E18D8.s.o \
+    build/us/src/code/800E16D8_foliage_prop_destroy.c.o \
     build/us/src/code/player_message_hit.c.o \
     build/us/src/code/foliage_prop_handlers.c.o \
     build/us/src/code/player_dispatch.c.o \
-    build/us/asm/us/main_800E1BA4_to_800E2018.s.o \
+    build/us/asm/us/main_800E1BA4_to_800E1BB0.s.o \
+    build/us/src/code/800E1BB0_turret_sweep.c.o \
     build/us/src/code/turret_destroy.c.o \
     build/us/src/code/turret_draw_create.c.o \
-    build/us/asm/us/main_800E2520_to_800E26A8.s.o \
+    build/us/src/code/800E2520_turret_message_handlers.c.o \
     build/us/src/code/turret_message_handler.c.o \
     build/us/src/code/target_search.c.o \
     build/us/src/code/wreck_spawn.c.o \
     build/us/src/code/turret_spawn_at.c.o \
     build/us/src/code/turret_line_of_sight.c.o \
     build/us/src/code/wreck_ctl.c.o \
-    build/us/asm/us/main_800E2F9C_to_800E3404.s.o \
+    build/us/src/code/800E2F9C_wreck_update.c.o \
     build/us/src/code/wreck_timer_duration.c.o \
     build/us/asm/us/main_800E3460_to_800E44C8.s.o \
     build/us/src/code/wreck_message_hit.c.o \
     build/us/src/code/object_damage.c.o \
     build/us/src/code/flag_capture_attempt.c.o \
-    build/us/asm/us/main_800E48A8_to_800E48E0.s.o \
+    build/us/src/code/800E48A8_flag_position_query.c.o \
     build/us/src/code/flag_owner_capture.c.o \
     build/us/src/code/flag_owner_score.c.o \
     build/us/asm/us/main_800E4DA0_to_800E4ECC.s.o \
@@ -3420,14 +3492,14 @@ if false; then
     build/us/src/code/crate_actor_attach.c.o \
     build/us/asm/us/main_800E66A8_to_800E68BC.s.o \
     build/us/src/code/crate_owner_check.c.o \
-    build/us/asm/us/main_800E6B04_to_800E713C.s.o \
+    build/us/src/code/800E6B04_crate_unit.c.o \
     build/us/src/code/crate_contents_spawn.c.o \
-    build/us/asm/us/main_800E73B0_to_800E759C.s.o \
+    build/us/src/code/800E73B0_crate_part_release.c.o \
     build/us/src/code/pending_list_flush.c.o \
     build/us/src/code/pending_spawns_flush.c.o \
-    build/us/asm/us/main_800E7768_to_800E7968.s.o \
+    build/us/src/code/800E7768_crate_burst_spawn.c.o \
     build/us/src/code/powerup_flag_players.c.o \
-    build/us/asm/us/main_800E7A10_to_800E7DF8.s.o \
+    build/us/src/code/800E7A10_powerup_flag_messages.c.o \
     build/us/src/code/powerup_count_refresh.c.o \
     build/us/src/code/pickup_actor_count.c.o \
     build/us/asm/us/main_800E7F5C_to_800E7F60.s.o \

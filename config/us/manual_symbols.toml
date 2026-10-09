@@ -232,11 +232,11 @@ type = "func"
 reason = "Function boundary established by the byte-exact C build (make verify-code)."
 
 [[symbol]]
-name = "func_800D7DD4"
+name = "D_800D7DD4"
 vram = 0x800D7DD4
 size = 0xC
-type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+type = "u8"
+reason = "Boundary audit identified non-code words between functions."
 
 [[symbol]]
 name = "func_800D8050"
@@ -281,11 +281,11 @@ type = "func"
 reason = "Function boundary established by the byte-exact C build (make verify-code)."
 
 [[symbol]]
-name = "func_800D92D4"
+name = "D_800D92D4"
 vram = 0x800D92D4
 size = 0xC
-type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+type = "u8"
+reason = "Boundary audit identified stray data words between functions."
 
 [[symbol]]
 name = "func_800D9A88"
@@ -295,11 +295,11 @@ type = "func"
 reason = "Function boundary established by the byte-exact C build (make verify-code)."
 
 [[symbol]]
-name = "func_800D9B48"
+name = "D_800D9B48"
 vram = 0x800D9B48
 size = 0x8
-type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+type = "u8"
+reason = "Boundary audit identified non-code words between functions."
 
 [[symbol]]
 name = "func_800D9C38"
@@ -337,11 +337,11 @@ type = "func"
 reason = "Function boundary established by the byte-exact C build (make verify-code)."
 
 [[symbol]]
-name = "func_800DC7A4"
+name = "D_800DC7A4"
 vram = 0x800DC7A4
 size = 0xC
-type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+type = "u8"
+reason = "Boundary audit identified non-code words between functions."
 
 [[symbol]]
 name = "func_800DD1C0"
@@ -351,11 +351,11 @@ type = "func"
 reason = "Function boundary established by the byte-exact C build (make verify-code)."
 
 [[symbol]]
-name = "func_800DD28C"
+name = "D_800DD28C"
 vram = 0x800DD28C
 size = 0x4
-type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+type = "u8"
+reason = "Boundary audit identified a stray data word between functions."
 
 [[symbol]]
 name = "func_800DD3A0"
@@ -379,11 +379,11 @@ type = "func"
 reason = "Function boundary established by the byte-exact C build (make verify-code)."
 
 [[symbol]]
-name = "func_800DF0C4"
+name = "D_800DF0C4"
 vram = 0x800DF0C4
 size = 0xC
-type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+type = "u8"
+reason = "Boundary audit identified stray data words between functions."
 
 [[symbol]]
 name = "func_800DF33C"
@@ -409,9 +409,9 @@ reason = "Function boundary established by the byte-exact C build (make verify-c
 [[symbol]]
 name = "func_800E2520"
 vram = 0x800E2520
-size = 0x188
+size = 0xAC
 type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+reason = "Boundary audit split this function from three following message handlers; the whole unit is byte-exact C."
 
 [[symbol]]
 name = "func_800E2D74"
@@ -449,11 +449,11 @@ type = "func"
 reason = "Function boundary established by the byte-exact C build (make verify-code)."
 
 [[symbol]]
-name = "func_800E56C8"
+name = "D_800E56C8"
 vram = 0x800E56C8
 size = 0x8
-type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+type = "u8"
+reason = "Boundary audit identified stray data words between functions."
 
 [[symbol]]
 name = "func_800E56D0"
@@ -470,18 +470,18 @@ type = "func"
 reason = "Function boundary established by the byte-exact C build (make verify-code)."
 
 [[symbol]]
-name = "func_800E58C4"
+name = "D_800E58C4"
 vram = 0x800E58C4
 size = 0xC
-type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+type = "u8"
+reason = "Boundary audit identified stray data words between functions."
 
 [[symbol]]
-name = "func_800E64EC"
+name = "D_800E64EC"
 vram = 0x800E64EC
 size = 0x4
-type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+type = "u8"
+reason = "Boundary audit identified a stray data word between functions."
 
 [[symbol]]
 name = "func_800E7968"
@@ -491,11 +491,11 @@ type = "func"
 reason = "Function boundary established by the byte-exact C build (make verify-code)."
 
 [[symbol]]
-name = "func_800E7F5C"
+name = "D_800E7F5C"
 vram = 0x800E7F5C
 size = 0x4
-type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+type = "u8"
+reason = "Boundary audit identified a stray data word between functions."
 
 [[symbol]]
 name = "func_800E804C"

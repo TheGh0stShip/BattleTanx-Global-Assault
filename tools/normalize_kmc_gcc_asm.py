@@ -1003,6 +1003,64 @@ def schedule_free_list_rebucket(text: str) -> str:
     return text.replace(duplicate, "\t.set\tnoreorder\n\tla\t$7,D_80224E68\n", 1)
 
 
+def reproduce_turret_sweep_assembler_hazards(text: str) -> str:
+    """Reproduce two retail-assembler hazards in ``func_800E1BB0``.
+
+    The first preserves the retail second FP-result hazard nop after a call.
+    The second gives the branch target after a constant-pool load its retail
+    address without presenting the label immediately after ``lwc1`` to KMC
+    ``as``, which would insert an unwanted load-delay nop.
+    """
+    if "func_800E1BB0:" not in text:
+        return text
+    call_hazard = (
+        "\tmul.s\t$f20,$f0,$f2\n"
+        "\t.set\tnoreorder\n"
+        "\tjal\tfunc_8009D4B0\n"
+        "\tnop\n"
+        "\t.set\tnoreorder\n"
+        "\tmul.s\t$f0,$f20,$f0\n"
+    )
+    call_hazard_retail = call_hazard.replace(
+        "\tnop\n\t.set\tnoreorder\n", "\tnop\n\tnop\n\t.set\tnoreorder\n", 1
+    )
+    fires = text.count(call_hazard)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800E1BB0 FP call hazard fired {fires} times (expected 1)"
+        )
+    text = text.replace(call_hazard, call_hazard_retail, 1)
+
+    labeled_load = "\tl.s\t$f0,$LF_lis4\n.L37:\n"
+    labeled_load_retail = (
+        "\t.set\tnoat\n"
+        "\tlui\t$1,%hi($LF_lis4)\n"
+        ".L37 = . + 4\n"
+        "\tlwc1\t$f0,%lo($LF_lis4)($1)\n"
+        "\t.set\tat\n"
+    )
+    fires = text.count(labeled_load)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800E1BB0 labeled FP load fired {fires} times (expected 1)"
+        )
+    return text.replace(labeled_load, labeled_load_retail, 1)
+
+
+def reproduce_crate_burst_hilo_hazard(text: str) -> str:
+    """Restore the two retail HI/LO hazard nops in ``func_800E7768``."""
+    if "func_800E7768:" not in text:
+        return text
+    before = "\tdiv\t$16,$21,$18\n\tmult\t$16,$20\n"
+    after = "\tdiv\t$16,$21,$18\n\tnop\n\tnop\n\tmult\t$16,$20\n"
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800E7768 div/mult hazard fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -1048,6 +1106,10 @@ def normalize_v3(source: str) -> str:
         text = schedule_display_record_prefix(text)
     if os.environ.get("V3_FREE_LIST_REBUCKET", "1") == "1":
         text = schedule_free_list_rebucket(text)
+    if os.environ.get("V3_TURRET_SWEEP_HAZARDS", "1") == "1":
+        text = reproduce_turret_sweep_assembler_hazards(text)
+    if os.environ.get("V3_CRATE_BURST_HAZARD", "1") == "1":
+        text = reproduce_crate_burst_hilo_hazard(text)
     return text
 
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import re
 import subprocess
+from pathlib import Path
 
 FORBIDDEN_SUFFIXES = {
     ".z64", ".n64", ".v64", ".elf", ".vpk", ".self", ".velf", ".psp2dmp"
@@ -24,7 +25,12 @@ def main() -> None:
         if any(name.lower().endswith(suffix) for suffix in FORBIDDEN_SUFFIXES):
             failures.append(f"forbidden tracked artifact: {name}")
             continue
-        data = open(name, "rb").read()
+        path = Path(name)
+        if not path.is_file():
+            # A tracked file may be intentionally deleted in the current
+            # worktree before the deletion is staged or committed.
+            continue
+        data = path.read_bytes()
         if any(pattern.search(data) for pattern in FORBIDDEN_PATTERNS):
             failures.append(f"private path or token pattern: {name}")
     if failures:
