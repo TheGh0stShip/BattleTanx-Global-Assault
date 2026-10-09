@@ -1146,6 +1146,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             800DB6F0_track_angle_unit \
             800DD75C_structure_hit_dispatch \
             800DD82C_structure_debris_spawn \
+            8008C5D8_tank_fire_weapon \
             800E16D8_foliage_prop_destroy \
             800E1BB0_turret_sweep \
             800E2520_turret_message_handlers \
@@ -2469,6 +2470,10 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/800DD82C_structure_debris_spawn.c.o .text 0x6d8 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800DD82C_structure_debris_spawn.c.o .rodata 0x70 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/8008C5D8_tank_fire_weapon.c.o .text 0x2048 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/8008C5D8_tank_fire_weapon.c.o .rodata 0x16c --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800E16D8_foliage_prop_destroy.c.o .text 0x200 --alignment 4
 python3 tools/trim_elf32_section.py \

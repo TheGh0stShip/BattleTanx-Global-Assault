@@ -264,7 +264,7 @@ segments:
       - [0x1BEC4, c, code/codex_batch_next2/func_8008BEC4]
       - [0x1BF5C, asm, main_8008BF5C_to_8008C5BC]
       - [0x1C5BC, c, code/codex_batch/func_8008C5BC]
-      - [0x1C5D8, asm, main_8008C5D8_to_8008E620]
+      - [0x1C5D8, c, code/8008C5D8_tank_fire_weapon]
       - [0x1E620, c, code/codex_batch_next2/func_8008E620]
       - [0x1E6BC, c, code/codex_batch_next/func_8008E6BC]
       - [0x1E6E0, asm, main_8008E6E0_to_8008EC40]

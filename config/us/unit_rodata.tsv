@@ -23,6 +23,7 @@ cheat_codes	0x80074140	0x84
 hud_slot_icons_update	0x80073B88	0xE0
 hud_menu_entries_apply_settings	0x80073AC8	0x60
 hud_entry_set_label	0x80073B28	0x20
+8008C5D8_tank_fire_weapon	0x80071988	0x16C
 race_player_set_vehicle_label	0x80073DB8	0x30
 race_type_name_lookup	0x80073DE8	0x40
 race_player_set_layout	0x80073E28	0x40
