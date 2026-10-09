@@ -2935,8 +2935,6 @@ python3 tools/insert_elf32_section_bytes.py \
     -o build/us/src/libultra/os_set_global_int_mask.c.o src/libultra/os_set_global_int_mask.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
     -o build/us/src/libultra/os_si_access_queue.c.o src/libultra/os_si_access_queue.c
-.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
-    -o build/us/src/libultra/sched_empty_callbacks.c.o src/libultra/sched_empty_callbacks.c
 .toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/al_save_param.c.o src/libultra/al_save_param.c
 python3 tools/trim_elf32_section.py \
@@ -3032,8 +3030,13 @@ python3 tools/trim_elf32_section.py \
 .toolchain/ido5.3/cc -c -O1 -mips3 -32 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/ll.c.o src/libultra/ll.c
 python3 tools/set_elf32_mips_o32.py build/us/src/libultra/ll.c.o
-.toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
-    -o build/us/src/libultra/sched.c.o src/libultra/sched.c
+.toolchain/ido5.3/cc -c -Wab,-r4300_mul -G 0 -nostdinc -Xcpluscomm \
+    -fullwarn -woff 516,649,838,712 -mips2 -o32 -D_MIPS_SZLONG=32 \
+    -DF3DEX_GBI -DBUILD_VERSION=VERSION_I \
+    -DBUILD_VERSION_STRING=\"2.0I\" -non_shared -DNDEBUG -D_FINALROM -O3 \
+    -Isrc/libultra -o build/us/src/libultra/sched.c.o src/libultra/sched.c
+python3 tools/trim_elf32_section.py \
+    build/us/src/libultra/sched.c.o .text 0x940 --alignment 4
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_get_thread_pri.c.o src/libultra/os_get_thread_pri.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
@@ -3777,9 +3780,6 @@ if false; then
     build/us/src/libultra/gu_normalize.c.o \
     build/us/src/libultra/al_save_param.c.o \
     build/us/src/libultra/al_save_pull.c.o \
-    build/us/asm/us/main_8010ECB0_to_8010F014.s.o \
-    build/us/src/libultra/sched_empty_callbacks.c.o \
-    build/us/asm/us/main_8010F034_to_8010F3E0.s.o \
     build/us/src/libultra/sched.c.o \
     build/us/src/libultra/os_dp_set_next_buffer.c.o \
     build/us/src/libultra/os_dp_device_busy.c.o \

@@ -101,8 +101,10 @@ eight-byte no-op static routines at object offsets `0x364`, `0x36C`, `0x374`,
 and `0x37C` (`0x8010F014`, `0x8010F01C`, `0x8010F024`, and `0x8010F02C`). Each
 is exactly `jr $ra; nop`. The imported `ptstart` label incorrectly aggregated
 all four; `ptstart` belongs to the SDK initialization unit, not the scheduler.
-Until the stripped static names are proven, keep address-derived names for
-these four boundaries.
+Whole-object source reconstruction proves the surrounding routines as
+`__scExec`, `__scSchedule`, `__scTaskComplete`, `__scHandleRetrace`, and
+`__scMain`. Until the stripped static names are proven, keep address-derived
+names for the four no-op boundaries.
 
 ## Late SDK object and static-function corrections
 
