@@ -12,3 +12,4 @@ ai_goal_state_update	0x800859E4	0x24C	matched
 ai_waypoint_move	0x80087570	0x228	matched
 ai_target_tracking	0x80088030	0x62C	matched
 ai_weapon_range_check	0x8008916C	0x4A0	matched
+world_resource_aggregate	0x800BA330	0x390	matched
