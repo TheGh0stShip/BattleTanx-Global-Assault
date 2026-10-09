@@ -16,7 +16,7 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,564 bytes: the 749,104-byte loaded
 image minus 630,540 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 30,244 bytes, or 25.509%.
+`.data` and `.rodata` currently account for 31,244 bytes, or 26.353%.
 
 The initialized-data reconstruction includes the complete cheat-code unit at
 `0x80121A00`: 33 input strings, their pointer table, and the associated result
@@ -89,6 +89,15 @@ formats are progressively named.
 The world loader's two 17-command render-state replacement tables are also
 reconstructed as typed initialized data at `0x80116710`. These are the exact
 original/replacement command pairs used when state chunks are relocated.
+
+Four baseline renderer display lists at `0x80114520` are reconstructed as
+typed command arrays. They establish the opaque, textured, translucent, and
+modulated RDP/RSP states selected by the renderer.
+
+The 26-entry compressed resource-bank directory at `0x80114710` is represented
+as address/size records. Its addresses form a contiguous chain through the
+cartridge resource region, providing an independent boundary check for every
+listed bank.
 
 The complete ROM organization and structure names were cross-checked against
 [`nviewer` revision
