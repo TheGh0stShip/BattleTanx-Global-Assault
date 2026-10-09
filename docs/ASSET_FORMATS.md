@@ -16,7 +16,12 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,560 bytes: the 749,104-byte loaded
 image minus 630,544 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 19,336 bytes, or 16.309%.
+`.data` and `.rodata` currently account for 20,040 bytes, or 16.903%.
+
+The initialized-data reconstruction includes the complete cheat-code unit at
+`0x80121A00`: 33 input strings, their pointer table, and the associated result
+labels. It is represented as one typed C structure so the KMC compiler and
+linker reproduce the original padding and relocated pointers.
 
 ## LZARI bundles
 

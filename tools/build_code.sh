@@ -736,6 +736,13 @@ tools/bootstrap_ido.sh
 tools/bootstrap_kmc_gcc.sh
 mkdir -p build/us/src/code
 mkdir -p build/us/src/code/libmus
+.toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+    -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
+    -o build/us/src/code/cheat_code_data.raw.s src/code/cheat_code_data.c
+python3 tools/normalize_kmc_gcc_asm.py \
+    build/us/src/code/cheat_code_data.raw.s build/us/src/code/cheat_code_data.s
+.toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+    -o build/us/src/code/cheat_code_data.c.o build/us/src/code/cheat_code_data.s
 # libmus was assembled with reorder enabled, so preserve KMC's raw assembly and
 # its assembler-scheduled delay slots instead of applying the gameplay normalizer.
 while read -r unit text_size; do
