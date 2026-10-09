@@ -517,6 +517,15 @@ class KmcPipelineTests(unittest.TestCase):
         self.assertIn(".L5:\n\tmove\t$3,$0\n\tmove\t$9,$11\n", normalized)
         self.assertIn("\taddu\t$2,$11,$3\n", normalized)
 
+    def test_record_index_copy_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.preserve_record_index_copy("func_800E82AC:\n\tnop\n")
+
+    def test_record_index_copy_uses_a2(self) -> None:
+        source = "func_800E82AC:\n.L2:\n\tsll\t$2,$3,3\n"
+        normalized = MODULE.preserve_record_index_copy(source)
+        self.assertIn(".L2:\n\tsll\t$2,$6,3\n", normalized)
+
     def test_turret_sweep_hazards_reproduce_retail_forms(self) -> None:
         source = (
             "func_800E1BB0:\n"

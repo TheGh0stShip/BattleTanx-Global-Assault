@@ -1452,7 +1452,8 @@ for function_name in \
         func_800C0C38 \
         func_800C13BC \
         func_800C180C \
-        func_800C1E48; do
+        func_800C1E48 \
+        func_800E82AC; do
     case "$function_name" in
         func_80079FF0|func_8007A7B4|func_8007A818|func_8007A8F0|func_8007A9EC|func_8007AAA8|func_8007AB64|func_8007ADF0|func_8007AF84|func_8007B0E4|func_8007B8EC|func_8007D33C|func_8007D39C|func_8007D7C4|func_8007D884|func_8007D998|func_8007DACC|func_8007DD54|func_8007DE3C|func_8007E024|func_8007E118|func_8007E7A8|func_8007E8C8|\
         func_80080818|func_80080C04|func_80082A90|func_80083DF0|func_80083EBC|func_8008518C|func_80085250|func_80085DA8|func_80085F7C|func_80086700|func_8008865C|func_80088ABC|func_80089E84|\
@@ -1462,7 +1463,7 @@ for function_name in \
         func_800A1B44|func_800A2B9C|func_800A4924|func_800A49D0|func_800A60E0|func_800A6B7C|func_800A8E84|func_800A8F34|func_800A9660|func_800A96B8|func_800A9A98|func_800ACF20|func_800ACFE0|func_800AD088|func_800AA5D0|func_800ABE6C|func_800B22F8|\
         func_800B0D70|func_800B6934|func_800B9F44|func_800BEE0C|func_800C04C8|func_800C0564|\
         func_800C0ADC|func_800C0B78|func_800C0C38|func_800C13BC|\
-        func_800C180C)
+        func_800C180C|func_800E82AC)
             unit="code/codex_batch_next2/${function_name}" ;;
         *) unit="code/${function_name}" ;;
     esac
@@ -1594,6 +1595,7 @@ for function_name in \
         func_800C13BC) size=0x64 ;;
         func_800C180C) size=0x12C ;;
         func_800C1E48) size=0xC0 ;;
+        func_800E82AC) size=0x6C ;;
     esac
     python3 tools/trim_elf32_section.py \
         "build/us/src/${unit}.c.o" .text "$size" --alignment 4

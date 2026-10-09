@@ -1521,6 +1521,21 @@ def schedule_matrix_basis_inverse(text: str) -> str:
     return text
 
 
+def preserve_record_index_copy(text: str) -> str:
+    """Use func_800E82AC's retained a2 index copy for address scaling."""
+    if "func_800E82AC:" not in text:
+        return text
+
+    before = ".L2:\n\tsll\t$2,$3,3\n"
+    after = ".L2:\n\tsll\t$2,$6,3\n"
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800E82AC index-copy rewrite fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -1592,6 +1607,8 @@ def normalize_v3(source: str) -> str:
         text = schedule_object_distance_probe(text)
     if os.environ.get("V3_MATRIX_BASIS_INVERSE", "1") == "1":
         text = schedule_matrix_basis_inverse(text)
+    if os.environ.get("V3_RECORD_INDEX_COPY", "1") == "1":
+        text = preserve_record_index_copy(text)
     return text
 
 
