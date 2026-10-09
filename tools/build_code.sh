@@ -1466,8 +1466,12 @@ for function_name in \
         func_800C13BC \
         func_800C180C \
         func_800C1E48 \
+        func_800EB838 \
+        func_800ED4F4 \
         func_800E82AC; do
     case "$function_name" in
+        func_800EB838) unit="code/impact_debris_emit" ;;
+        func_800ED4F4) unit="code/destructible_prop_destroy" ;;
         func_80079FF0|func_8007A7B4|func_8007A818|func_8007A8F0|func_8007A9EC|func_8007AAA8|func_8007AB64|func_8007ADF0|func_8007AF84|func_8007B0E4|func_8007B8EC|func_8007D33C|func_8007D39C|func_8007D7C4|func_8007D884|func_8007D998|func_8007DACC|func_8007DD54|func_8007DE3C|func_8007E024|func_8007E118|func_8007E7A8|func_8007E8C8|\
         func_80080818|func_80080C04|func_80082A90|func_80083CC0|func_80083DF0|func_80083EBC|func_8008518C|func_80085250|func_80085DA8|func_80085F7C|func_80086700|func_80087F2C|func_8008865C|func_8008875C|func_80088ABC|func_80089E84|\
         func_8008A350|func_8008B6D0|func_8008B788|func_8008BEC4|func_8008E6E0|func_8008E620|func_8008F3FC|func_800947C4|func_8009660C|func_80096F48|func_800976AC|func_80097844|func_800979F4|func_80098F24|\
@@ -1623,6 +1627,8 @@ for function_name in \
         func_800C13BC) size=0x64 ;;
         func_800C180C) size=0x12C ;;
         func_800C1E48) size=0xC0 ;;
+        func_800EB838) size=0xFC ;;
+        func_800ED4F4) size=0x148 ;;
         func_800E82AC) size=0x6C ;;
     esac
     python3 tools/trim_elf32_section.py \
