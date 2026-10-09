@@ -948,6 +948,61 @@ def schedule_display_record_prefix(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def schedule_free_list_rebucket(text: str) -> str:
+    """Reproduce two retail scheduling choices in ``func_800A1B44``.
+
+    The C emits the exact instruction set and registers.  Retail KMC ``as``
+    moves the frame allocation ahead of the early-exit branch and hoists the
+    independent bucket-index reload ahead of the free-list-head store.  Keep
+    both reorders label-gated and require each complete pattern exactly once.
+    """
+    if "func_800A1B44:" not in text:
+        return text
+    patterns = (
+        (
+            "\tlh\t$3,D_80235EF0\n"
+            "\tli\t$2,-1\t\t\t# 0xffffffff\n"
+            "\t.set\tnoreorder\n"
+            "\tbeq\t$3,$2,.L2\n"
+            "\tsubu\t$sp,$sp,8\n",
+            "\tlh\t$3,D_80235EF0\n"
+            "\tsubu\t$sp,$sp,8\n"
+            "\tli\t$2,-1\t\t\t# 0xffffffff\n"
+            "\t.set\tnoreorder\n"
+            "\tbeq\t$3,$2,.L2\n"
+            "\tmove\t$6,$3\n",
+            "prologue",
+        ),
+        (
+            "\tsh\t$5,D_80235EF0\n"
+            "\tlui\t$at,%hi(D_80224EF4)\n"
+            "\taddu\t$at,$at,$3\n"
+            "\tlw\t$2,%lo(D_80224EF4)($at)\n",
+            "\tlui\t$at,%hi(D_80224EF4)\n"
+            "\taddu\t$at,$at,$3\n"
+            "\tlw\t$2,%lo(D_80224EF4)($at)\n"
+            "\tsh\t$5,D_80235EF0\n",
+            "bucket reload",
+        ),
+    )
+    for before, after, name in patterns:
+        fires = text.count(before)
+        if fires != 1:
+            raise RuntimeError(
+                f"func_800A1B44 {name} reorder fired {fires} times (expected 1)"
+            )
+        text = text.replace(before, after, 1)
+    # The prologue replacement fills the branch slot itself; remove the old
+    # post-branch copy that immediately follows GCC's second noreorder marker.
+    duplicate = "\t.set\tnoreorder\n\tmove\t$6,$3\n\tla\t$7,D_80224E68\n"
+    fires = text.count(duplicate)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800A1B44 duplicate prologue copy fired {fires} times (expected 1)"
+        )
+    return text.replace(duplicate, "\t.set\tnoreorder\n\tla\t$7,D_80224E68\n", 1)
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -991,6 +1046,8 @@ def normalize_v3(source: str) -> str:
         text = normalize_display_slot_wait(text)
     if os.environ.get("V3_DISPLAY_RECORD_PREFIX", "1") == "1":
         text = schedule_display_record_prefix(text)
+    if os.environ.get("V3_FREE_LIST_REBUCKET", "1") == "1":
+        text = schedule_free_list_rebucket(text)
     return text
 
 

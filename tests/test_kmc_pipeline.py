@@ -225,6 +225,45 @@ class KmcPipelineTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.schedule_display_record_prefix("func_8007A8F0:\n\tnop\n")
 
+    def test_free_list_rebucket_requires_all_patterns(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.schedule_free_list_rebucket("func_800A1B44:\n\tnop\n")
+
+    def test_free_list_rebucket_reorders_each_pattern_once(self) -> None:
+        source = (
+            "func_800A1B44:\n"
+            "\tlh\t$3,D_80235EF0\n"
+            "\tli\t$2,-1\t\t\t# 0xffffffff\n"
+            "\t.set\tnoreorder\n"
+            "\tbeq\t$3,$2,.L2\n"
+            "\tsubu\t$sp,$sp,8\n"
+            "\t.set\tnoreorder\n"
+            "\tmove\t$6,$3\n"
+            "\tla\t$7,D_80224E68\n"
+            "\tsh\t$5,D_80235EF0\n"
+            "\tlui\t$at,%hi(D_80224EF4)\n"
+            "\taddu\t$at,$at,$3\n"
+            "\tlw\t$2,%lo(D_80224EF4)($at)\n"
+        )
+        normalized = MODULE.schedule_free_list_rebucket(source)
+        self.assertIn(
+            "\tlh\t$3,D_80235EF0\n"
+            "\tsubu\t$sp,$sp,8\n"
+            "\tli\t$2,-1\t\t\t# 0xffffffff\n"
+            "\t.set\tnoreorder\n"
+            "\tbeq\t$3,$2,.L2\n"
+            "\tmove\t$6,$3\n",
+            normalized,
+        )
+        self.assertIn(
+            "\tlui\t$at,%hi(D_80224EF4)\n"
+            "\taddu\t$at,$at,$3\n"
+            "\tlw\t$2,%lo(D_80224EF4)($at)\n"
+            "\tsh\t$5,D_80235EF0\n",
+            normalized,
+        )
+        self.assertEqual(normalized.count("\tmove\t$6,$3\n"), 1)
+
 
 if __name__ == "__main__":
     unittest.main()
