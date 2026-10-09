@@ -4,6 +4,7 @@
 codex_batch_next2/func_800A1290	0x80072680	0x14
 codex_batch_next2/func_8007D7C4	0x800710C0	0x18
 codex_batch_next2/func_8008E6E0	0x80071AF8	0x3C
+codex_batch_next2/func_8009D1CC	0x80072560	0x30
 hud_tree_draw	0x80073288	0x8
 hud_frame	0x80073290	0x10
 hud_mode_table	0x80073608	0x20
