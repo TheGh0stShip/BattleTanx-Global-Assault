@@ -806,6 +806,132 @@ type = "func"
 reason = "Function boundary established by the byte-exact C build (make verify-code)."
 
 [[symbol]]
+name = "func_800BF484"
+vram = 0x800BF484
+size = 0x194
+type = "func"
+reason = "Corrected boundary established by the byte-exact hud_tree_draw translation unit."
+
+[[symbol]]
+name = "func_800BF618"
+vram = 0x800BF618
+size = 0x180
+type = "func"
+reason = "Second function in the byte-exact hud_tree_draw translation unit; previously swallowed by func_800BF484."
+
+[[symbol]]
+name = "func_800C16B0"
+vram = 0x800C16B0
+size = 0xE0
+type = "func"
+reason = "Corrected boundary established by the byte-exact hud_slots_layout translation unit."
+
+[[symbol]]
+name = "func_800C1790"
+vram = 0x800C1790
+size = 0x38
+type = "func"
+reason = "Second function in the byte-exact hud_slots_layout translation unit; previously swallowed by func_800C16B0."
+
+[[symbol]]
+name = "func_800C4BB4"
+vram = 0x800C4BB4
+size = 0x15C
+type = "func"
+reason = "Function boundary established by the byte-exact hud_player_page translation unit."
+
+[[symbol]]
+name = "func_800C4D10"
+vram = 0x800C4D10
+size = 0x114
+type = "func"
+reason = "Second function in the byte-exact hud_player_page translation unit."
+
+[[symbol]]
+name = "func_800C7594"
+vram = 0x800C7594
+size = 0xBC
+type = "func"
+reason = "Function boundary established by the byte-exact race_mode_query translation unit."
+
+[[symbol]]
+name = "func_800CBE40"
+vram = 0x800CBE40
+size = 0x1FC
+type = "func"
+reason = "Corrected boundary established by the byte-exact controller_save_slots translation unit."
+
+[[symbol]]
+name = "func_800CC03C"
+vram = 0x800CC03C
+size = 0x1C
+type = "func"
+reason = "Function boundary established by the byte-exact controller_save_slots translation unit."
+
+[[symbol]]
+name = "func_800CC058"
+vram = 0x800CC058
+size = 0x14
+type = "func"
+reason = "Function boundary established by the byte-exact controller_save_slots translation unit."
+
+[[symbol]]
+name = "func_800CC06C"
+vram = 0x800CC06C
+size = 0x44
+type = "func"
+reason = "Function boundary established by the byte-exact controller_save_slots translation unit."
+
+[[symbol]]
+name = "func_800CC0B0"
+vram = 0x800CC0B0
+size = 0x128
+type = "func"
+reason = "Corrected boundary established by the byte-exact controller_save_slots translation unit."
+
+[[symbol]]
+name = "func_800CC1D8"
+vram = 0x800CC1D8
+size = 0x98
+type = "func"
+reason = "Function boundary established by the byte-exact controller_save_slots translation unit."
+
+[[symbol]]
+name = "func_800CC270"
+vram = 0x800CC270
+size = 0x88
+type = "func"
+reason = "Function boundary established by the byte-exact controller_save_slots translation unit."
+
+[[symbol]]
+name = "func_800CDBE0"
+vram = 0x800CDBE0
+size = 0xEC
+type = "func"
+reason = "Function boundary established by the byte-exact results_time_text translation unit."
+
+[[symbol]]
+name = "func_800CFD18"
+vram = 0x800CFD18
+size = 0xB8
+type = "func"
+reason = "Function boundary established by the byte-exact results_rank_label translation unit."
+
+[[symbol]]
+name = "__ll_lshift"
+vram = 0x80106CC4
+size = 0x2C
+type = "func"
+reason = "Corrected boundary established by the byte-exact libultra ll translation unit."
+
+[[symbol]]
+name = "__ll_rem"
+vram = 0x80106CF0
+size = 0x3C
+type = "func"
+reason = "Function boundary established by the byte-exact libultra ll translation unit; previously swallowed by __ll_lshift."
+
+[[symbol]]
 name = "func_800F7EB8"
 vram = 0x800F7EB8
 size = 0x8

@@ -14,9 +14,9 @@ and terminal ROM padding. Those excluded regions still need documented formats
 and exact reconstruction for the project, but adding their bytes to the Data
 denominator would conflate asset extraction with linked program-data matching.
 
-The current denominator is therefore 118,560 bytes: the 749,104-byte loaded
-image minus 630,544 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 23,444 bytes, or 19.774%.
+The current denominator is therefore 118,564 bytes: the 749,104-byte loaded
+image minus 630,540 non-overlapping catalogued function bytes. Source-owned
+`.data` and `.rodata` currently account for 23,444 bytes, or 19.773%.
 
 The initialized-data reconstruction includes the complete cheat-code unit at
 `0x80121A00`: 33 input strings, their pointer table, and the associated result

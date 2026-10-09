@@ -22,15 +22,15 @@ class DecompReportTests(unittest.TestCase):
         )
         measures = report["measures"]
         self.assertEqual(report["version"], 2)
-        self.assertEqual(measures["total_functions"], 1707)
-        self.assertEqual(measures["matched_functions"], 1371)
-        self.assertEqual(measures["total_code"], "630544")
-        self.assertEqual(measures["matched_code"], "370168")
-        self.assertEqual(measures["total_data"], "118560")
+        self.assertEqual(measures["total_functions"], 1723)
+        self.assertEqual(measures["matched_functions"], 1388)
+        self.assertEqual(measures["total_code"], "630540")
+        self.assertEqual(measures["matched_code"], "370404")
+        self.assertEqual(measures["total_data"], "118564")
         self.assertEqual(measures["matched_data"], "23444")
         self.assertEqual([item["name"] for item in report["categories"]], ["Code", "Data"])
         data = report["categories"][1]["measures"]
-        self.assertAlmostEqual(data["matched_data_percent"], 23444 * 100 / 118560)
+        self.assertAlmostEqual(data["matched_data_percent"], 23444 * 100 / 118564)
         self.assertEqual(
             sum(
                 unit["measures"]["total_functions"]
@@ -68,8 +68,8 @@ class DecompReportTests(unittest.TestCase):
         self.assertEqual(
             REPORT.MAIN_IMAGE_END
             - REPORT.MAIN_IMAGE_START
-            - 630544,
-            118560,
+            - 630540,
+            118564,
         )
 
     def test_function_catalogue_has_no_overlaps(self):
