@@ -689,9 +689,9 @@ reason = "Function boundary established by the byte-exact C build (make verify-c
 [[symbol]]
 name = "func_800F0A20"
 vram = 0x800F0A20
-size = 0xD50
+size = 0xE8
 type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+reason = "Function boundary established by the byte-exact C build; the next function begins at 0x800F0B08."
 
 [[symbol]]
 name = "func_800F17AC"

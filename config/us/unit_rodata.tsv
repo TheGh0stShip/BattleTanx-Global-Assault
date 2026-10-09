@@ -2,6 +2,8 @@
 # See tools/place_unit_rodata.py. Listed C units own [vram, vram+size) of
 # main-segment rodata; make verify-code proves the C bytes equal the ROM.
 motion_scale_curve	0x80076AD0	0x18
+slot_asset_ranges	0x80075F60	0x70
+rotated_texture_coords	0x80076E40	0xC
 codex_batch_next2/func_800A1290	0x80072680	0x14
 codex_batch_next2/func_8007D7C4	0x800710C0	0x18
 codex_batch_next2/func_8008E6E0	0x80071AF8	0x3C

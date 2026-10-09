@@ -515,9 +515,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800E7F5C_to_800E7F60.s.o .text 0x4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800E8378_to_800E8C88.s.o asm/us/main_800E8378_to_800E8C88.s
+    -o build/us/asm/us/main_800E8378_to_800E8380.s.o asm/us/main_800E8378_to_800E8380.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800E8378_to_800E8C88.s.o .text 0x910 --alignment 4
+    build/us/asm/us/main_800E8378_to_800E8380.s.o .text 0x8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800E92E8_to_800E92F0.s.o asm/us/main_800E92E8_to_800E92F0.s
 python3 tools/trim_elf32_section.py \
@@ -610,10 +610,6 @@ python3 tools/trim_elf32_section.py \
     -o build/us/asm/us/main_800F01F0_to_800F0618.s.o asm/us/main_800F01F0_to_800F0618.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800F01F0_to_800F0618.s.o .text 0x428 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800F0A20_to_800F0B08.s.o asm/us/main_800F0A20_to_800F0B08.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800F0A20_to_800F0B08.s.o .text 0xe8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800F1278_to_800F1770.s.o asm/us/main_800F1278_to_800F1770.s
 python3 tools/trim_elf32_section.py \
@@ -1144,6 +1140,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             player_dispatch \
             wreck_message_hit \
             slot_mode_name_get \
+            slot_asset_ranges \
             slot_mode_title_get \
             slot_mode_subtitle_get \
             slot_mode_description_get \
@@ -1260,6 +1257,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             shockwave_expand \
             prop_spawn_child \
             motion_scale_curve \
+            rotated_texture_coords \
             prop_spawn_pickup \
             prop_height_update \
             particle_emitter_free \
@@ -2104,6 +2102,10 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/motion_scale_curve.c.o .rodata 0x18 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/rotated_texture_coords.c.o .text 0xe8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/rotated_texture_coords.c.o .rodata 0xc --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/shockwave_expand.c.o .text 0x104 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/projectile_shell_draw.c.o .text 0x154 --alignment 4
@@ -2475,6 +2477,10 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/slot_mode_name_get.c.o .text 0x1ac --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/slot_mode_name_get.c.o .rodata 0x70 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_asset_ranges.c.o .text 0x908 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/slot_asset_ranges.c.o .rodata 0x70 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/wreck_message_hit.c.o .text 0x68 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3624,7 +3630,8 @@ if false; then
     build/us/src/code/multiplayer_actor_spawn.c.o \
     build/us/src/code/codex_batch_next2/func_800E82AC.c.o \
     build/us/src/code/slist_remove_count.c.o \
-    build/us/asm/us/main_800E8378_to_800E8C88.s.o \
+    build/us/asm/us/main_800E8378_to_800E8380.s.o \
+    build/us/src/code/slot_asset_ranges.c.o \
     build/us/src/code/slot_mode_name_get.c.o \
     build/us/src/code/slot_mode_title_get.c.o \
     build/us/src/code/slot_mode_subtitle_get.c.o \
@@ -3713,7 +3720,7 @@ if false; then
     build/us/src/code/particle_free_list.c.o \
     build/us/src/code/particle_smoke_update.c.o \
     build/us/src/code/particle_node_list.c.o \
-    build/us/asm/us/main_800F0A20_to_800F0B08.s.o \
+    build/us/src/code/rotated_texture_coords.c.o \
     build/us/src/code/particle_hit_spawn.c.o \
     build/us/src/code/particle_system_create.c.o \
     build/us/src/code/particle_owner_message.c.o \
