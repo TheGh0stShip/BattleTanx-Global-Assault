@@ -1303,6 +1303,13 @@ done
 # scheduling, so use the narrow libgcc postprocessor rather than the gameplay
 # normalizer.
 mkdir -p build/us/src/libgcc
+.toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+    -O2 -G0 -mips3 -mgp32 -mfp32 \
+    -o build/us/src/libgcc/cmpdi2.s src/libgcc/cmpdi2.c
+.toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+    -o build/us/src/libgcc/cmpdi2.c.o build/us/src/libgcc/cmpdi2.s
+python3 tools/trim_elf32_section.py \
+    build/us/src/libgcc/cmpdi2.c.o .text 0x40 --alignment 4
 for spec in udivdi3:0x20 udivmoddi4:0x63c umoddi3:0x2c; do
     unit="${spec%%:*}"
     text_size="${spec#*:}"
