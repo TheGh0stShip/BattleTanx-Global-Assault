@@ -1076,7 +1076,6 @@ segments:
       - [0x8D438, c, code/libmus/800FD438_random_range]
       - [0x8D4CC, c, code/libmus/func_800FD4CC]
       - [0x8D608, c, code/libmus/800FD608_player_start_pre]
-      - [0x8DA60, asm, main_800FDA60_to_800FDCCC]
       - [0x8DCCC, c, code/libmus/800FDCCC_channel_flags]
       - [0x8DD20, c, code/libmus/800FDD20_player_commands]
       - [0x8E710, c, code/libmus/800FE710_n_syn_custom_fx]

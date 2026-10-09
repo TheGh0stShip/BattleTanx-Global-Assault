@@ -805,7 +805,7 @@ func_800FBDC8 0x64
 800FD2A0_remap_ptr_bank 0x198
 800FD438_random_range 0x94
 func_800FD4CC 0x13C
-800FD608_player_start_pre 0x458
+800FD608_player_start_pre 0x6C4
 800FDCCC_channel_flags 0x54
 800FDD20_player_commands 0x9F0
 800FE710_n_syn_custom_fx 0x850
