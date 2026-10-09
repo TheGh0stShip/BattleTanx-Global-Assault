@@ -455,9 +455,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800DF0C4_to_800DF0D0.s.o .text 0xc --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800DF89C_to_800E1540.s.o asm/us/main_800DF89C_to_800E1540.s
+    -o build/us/asm/us/main_800DFA5C_to_800E1540.s.o asm/us/main_800DFA5C_to_800E1540.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800DF89C_to_800E1540.s.o .text 0x1ca4 --alignment 4
+    build/us/asm/us/main_800DFA5C_to_800E1540.s.o .text 0x1ae4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800E16D8_to_800E18D8.s.o asm/us/main_800E16D8_to_800E18D8.s
 python3 tools/trim_elf32_section.py \
@@ -1133,6 +1133,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             800DD75C_structure_hit_dispatch \
             800DD82C_structure_debris_spawn \
             800DE374_structure_message \
+            800DF89C_entry_helpers \
             8008C5D8_tank_fire_weapon \
             800E16D8_foliage_prop_destroy \
             800E1BB0_turret_sweep \
@@ -2472,6 +2473,8 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800DE374_structure_message.c.o .rodata 0xfc --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/800DF89C_entry_helpers.c.o .text 0x1c0 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/8008C5D8_tank_fire_weapon.c.o .text 0x2048 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/8008C5D8_tank_fire_weapon.c.o .rodata 0x16c --alignment 4
@@ -3501,7 +3504,8 @@ if false; then
     build/us/src/code/slot_angle_classify.c.o \
     build/us/src/code/slot_entry_lookup.c.o \
     build/us/src/code/level_prop_points_find.c.o \
-    build/us/asm/us/main_800DF89C_to_800E1540.s.o \
+    build/us/src/code/800DF89C_entry_helpers.c.o \
+    build/us/asm/us/main_800DFA5C_to_800E1540.s.o \
     build/us/src/code/foliage_prop_create.c.o \
     build/us/src/code/800E16D8_foliage_prop_destroy.c.o \
     build/us/src/code/player_message_hit.c.o \

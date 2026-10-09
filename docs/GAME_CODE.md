@@ -40,3 +40,12 @@ filenames:
 Do not turn these proposed seams into matching claims without object or ROM
 diff evidence. Game compiler flags also remain subject to matching experiments;
 SDK compile settings are not evidence for these translation units.
+
+## Compiler-constrained source matches
+
+Some exact C sources use GCC's local register-variable extension where the
+retail allocation cannot otherwise be expressed through declaration order.
+The paired helpers at `0x800DF89C` and `0x800DF988`, for example, constrain
+their eighth parameter to `$a0`; compiling both together then reproduces all
+`0x1C0` text bytes without any normalizer rewrite. These constraints remain
+source-level matching evidence and must still pass the same object/ROM diff.
