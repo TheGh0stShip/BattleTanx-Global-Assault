@@ -711,10 +711,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800F865C_to_800F8660.s.o .text 0x4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800F8AAC_to_801029D0.s.o asm/us/main_800F8AAC_to_801029D0.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800F8AAC_to_801029D0.s.o .text 0x9f24 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_801029F0_to_80103160.s.o asm/us/main_801029F0_to_80103160.s
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_80103190_to_801037B0.s.o asm/us/main_80103190_to_801037B0.s
@@ -806,6 +802,7 @@ while read -r unit text_size; do
                 "build/us/src/code/libmus/${unit}.c.o" .rodata 0x10 --alignment 4 ;;
     esac
 done <<'LIBMUS_UNITS'
+800FB244_master_volume 0x2C
 func_800FB4F0 0x80
 800FB570_player_api 0x264
 800FB7D4_player_api_handles 0x5AC
