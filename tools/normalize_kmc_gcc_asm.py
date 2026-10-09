@@ -1390,6 +1390,81 @@ def schedule_pool_type4_removal(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def schedule_object_distance_probe(text: str) -> str:
+    """Reproduce func_80080C04's prologue and floating-point schedule."""
+    if "func_80080C04:" not in text:
+        return text
+
+    prologue_before = (
+        "\tsw\t$16,16($sp)\n"
+        "\taddu\t$16,$4,296\n"
+        "\tsw\t$31,20($sp)\n"
+        " #APP\n"
+        " #NO_APP\n"
+        "\tlw\t$3,268($4)\n"
+        "\tli\t$2,0x00000002\t\t# 2\n"
+        "\tbne\t$3,$2,.L2\n"
+        "\tnop\n"
+    )
+    prologue_after = (
+        "\tsw\t$31,20($sp)\n"
+        "\tsw\t$16,16($sp)\n"
+        " #APP\n"
+        " #NO_APP\n"
+        "\tlw\t$3,268($4)\n"
+        "\tli\t$2,0x00000002\t\t# 2\n"
+        "\t.set\tnoreorder\n"
+        "\tbne\t$3,$2,.L2\n"
+        "\taddu\t$16,$4,296\n"
+        "\t.set\tnoreorder\n"
+    )
+    zero_before = (
+        "\tsub.s\t$f4,$f2,$f0\n"
+        "\tc.lt.s\t$f6,$f4\n"
+    )
+    zero_after = (
+        "\tsub.s\t$f4,$f2,$f0\n"
+        "\tmtc1\t$0,$f6\n"
+        "\tc.lt.s\t$f6,$f4\n"
+    )
+    tail_before = (
+        "\tsub.s\t$f0,$f2,$f0\n"
+        " #APP\n"
+        " #NO_APP\n"
+        "\tlbu\t$3,364($4)\n"
+        "\t#nop\n"
+        "\tandi\t$2,$3,0x0001\n"
+        "\t.set\tnoreorder\n"
+        "\tbeq\t$2,$0,.L5\n"
+        "\tandi\t$2,$3,0x00fb\n"
+    )
+    tail_after = (
+        " #APP\n"
+        " #NO_APP\n"
+        "\tlbu\t$3,364($4)\n"
+        "\t#nop\n"
+        "\tandi\t$2,$3,0x0001\n"
+        "\t.set\tnoreorder\n"
+        "\tbeq\t$2,$0,.L5\n"
+        "\tsub.s\t$f0,$f2,$f0\n"
+        "\t.set\tnoreorder\n"
+        "\tandi\t$2,$3,0x00fb\n"
+    )
+    patterns = (
+        ("prologue", prologue_before, prologue_after),
+        ("zero reload", zero_before, zero_after),
+        ("branch delay", tail_before, tail_after),
+    )
+    for name, before, after in patterns:
+        fires = text.count(before)
+        if fires != 1:
+            raise RuntimeError(
+                f"func_80080C04 {name} rewrite fired {fires} times (expected 1)"
+            )
+        text = text.replace(before, after, 1)
+    return text
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -1457,6 +1532,8 @@ def normalize_v3(source: str) -> str:
         text = preserve_mask_value_magnitude_copy(text)
     if os.environ.get("V3_POOL_TYPE4_REMOVAL", "1") == "1":
         text = schedule_pool_type4_removal(text)
+    if os.environ.get("V3_OBJECT_DISTANCE_PROBE", "1") == "1":
+        text = schedule_object_distance_probe(text)
     return text
 
 

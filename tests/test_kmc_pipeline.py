@@ -456,6 +456,39 @@ class KmcPipelineTests(unittest.TestCase):
             normalized,
         )
 
+    def test_object_distance_probe_requires_all_patterns(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "prologue rewrite fired 0 times"):
+            MODULE.schedule_object_distance_probe("func_80080C04:\n\tnop\n")
+
+    def test_object_distance_probe_rewrites_each_pattern_once(self) -> None:
+        source = (
+            "func_80080C04:\n"
+            "\tsw\t$16,16($sp)\n"
+            "\taddu\t$16,$4,296\n"
+            "\tsw\t$31,20($sp)\n"
+            " #APP\n"
+            " #NO_APP\n"
+            "\tlw\t$3,268($4)\n"
+            "\tli\t$2,0x00000002\t\t# 2\n"
+            "\tbne\t$3,$2,.L2\n"
+            "\tnop\n"
+            "\tsub.s\t$f4,$f2,$f0\n"
+            "\tc.lt.s\t$f6,$f4\n"
+            "\tsub.s\t$f0,$f2,$f0\n"
+            " #APP\n"
+            " #NO_APP\n"
+            "\tlbu\t$3,364($4)\n"
+            "\t#nop\n"
+            "\tandi\t$2,$3,0x0001\n"
+            "\t.set\tnoreorder\n"
+            "\tbeq\t$2,$0,.L5\n"
+            "\tandi\t$2,$3,0x00fb\n"
+        )
+        normalized = MODULE.schedule_object_distance_probe(source)
+        self.assertIn("\tbne\t$3,$2,.L2\n\taddu\t$16,$4,296\n", normalized)
+        self.assertIn("\tmtc1\t$0,$f6\n\tc.lt.s\t$f6,$f4\n", normalized)
+        self.assertIn("\tbeq\t$2,$0,.L5\n\tsub.s\t$f0,$f2,$f0\n", normalized)
+
     def test_turret_sweep_hazards_reproduce_retail_forms(self) -> None:
         source = (
             "func_800E1BB0:\n"
