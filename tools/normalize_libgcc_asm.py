@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reproduce the retail assembler's unfilled libgcc return delay slot."""
+"""Reproduce the retail assembler's unfilled libgcc return delay slots."""
 
 from __future__ import annotations
 
@@ -9,13 +9,16 @@ from pathlib import Path
 
 
 EPILOGUE = re.compile(
-    r"(?m)^(\s*addu\s+\$sp,\$sp,8\s*\n)(\s*j\s+\$31\s*\n)"
+    r"(?m)^(\s*addu\s+\$sp,\$sp,(?:8|32|40)\s*\n)(\s*j\s+\$31\s*\n)"
 )
+
+SUPPORTED = ("__udivdi3", "__udivmoddi4", "__umoddi3")
 
 
 def normalize(source: str) -> str:
-    if "__udivmoddi4:" not in source:
-        raise RuntimeError("expected __udivmoddi4 label")
+    labels = [name for name in SUPPORTED if name + ":" in source]
+    if len(labels) != 1:
+        raise RuntimeError("expected exactly one supported libgcc function label")
 
     output, fires = EPILOGUE.subn(
         r"\1\t.set\tnoreorder\n\2\tnop\n\t.set\treorder\n",
@@ -23,7 +26,7 @@ def normalize(source: str) -> str:
     )
     if fires != 1:
         raise RuntimeError(
-            f"__udivmoddi4 return rewrite fired {fires} times (expected 1)"
+            f"{labels[0]} return rewrite fired {fires} times (expected 1)"
         )
     return output
 

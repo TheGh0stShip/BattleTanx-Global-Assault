@@ -1298,20 +1298,24 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
         -o "build/us/src/code/${unit}.c.o" "build/us/src/code/${unit}.s"
 done
 
-# The compiler-runtime tail uses GCC 2.7.2's libgcc implementation.  Its
-# assembler retained the return-slot nop while keeping the compiler's other
+# The compiler-runtime tail uses GCC 2.7.2's libgcc implementation. Its retail
+# assembler retained the return-slot nops while keeping the compiler's other
 # scheduling, so use the narrow libgcc postprocessor rather than the gameplay
 # normalizer.
 mkdir -p build/us/src/libgcc
-.toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
-    -O2 -G0 -mips3 -mgp32 -mfp32 \
-    -o build/us/src/libgcc/udivmoddi4.raw.s src/libgcc/udivmoddi4.c
-python3 tools/normalize_libgcc_asm.py \
-    build/us/src/libgcc/udivmoddi4.raw.s build/us/src/libgcc/udivmoddi4.s
-.toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
-    -o build/us/src/libgcc/udivmoddi4.c.o build/us/src/libgcc/udivmoddi4.s
-python3 tools/trim_elf32_section.py \
-    build/us/src/libgcc/udivmoddi4.c.o .text 0x63c --alignment 4
+for spec in udivdi3:0x20 udivmoddi4:0x63c umoddi3:0x2c; do
+    unit="${spec%%:*}"
+    text_size="${spec#*:}"
+    .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+        -O2 -G0 -mips3 -mgp32 -mfp32 \
+        -o "build/us/src/libgcc/${unit}.raw.s" "src/libgcc/${unit}.c"
+    python3 tools/normalize_libgcc_asm.py \
+        "build/us/src/libgcc/${unit}.raw.s" "build/us/src/libgcc/${unit}.s"
+    .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+        -o "build/us/src/libgcc/${unit}.c.o" "build/us/src/libgcc/${unit}.s"
+    python3 tools/trim_elf32_section.py \
+        "build/us/src/libgcc/${unit}.c.o" .text "$text_size" --alignment 4
+done
 python3 tools/trim_elf32_section.py \
     build/us/src/libgcc/udivmoddi4.c.o .rodata 0x100 --alignment 4
 
@@ -3950,7 +3954,7 @@ if false; then
     build/us/src/libultra/ldiv.c.o \
     build/us/src/libultra/litob.c.o \
     build/us/src/libultra/os_yield_thread.c.o \
-    build/us/asm/us/main_8011446C_to_80171000.s.o \
+    build/us/asm/us/main_8011449C_to_80171000.s.o \
     > build/us/undefined_object_symbols.txt
 fi
 find build/us/asm build/us/src -type f -name '*.o' -print0 \
