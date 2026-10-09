@@ -109,6 +109,19 @@ class FunctionBoundaryTests(unittest.TestCase):
         for address, size in expected.items():
             self.assertEqual(size, by_address[address]["size"])
 
+    def test_toggle_and_record_allocator_are_independent_functions(self) -> None:
+        functions = self.load_functions()
+        by_address = {function["vram"]: function for function in functions}
+
+        self.assertEqual(
+            {"name": "func_800A2EF0", "vram": 0x800A2EF0, "size": 0x1C},
+            by_address[0x800A2EF0],
+        )
+        self.assertEqual(
+            {"name": "func_800A2F0C", "vram": 0x800A2F0C, "size": 0xB0},
+            by_address[0x800A2F0C],
+        )
+
     def test_scheduler_noop_stubs_are_independent_functions(self) -> None:
         functions = self.load_functions()
         by_address = {function["vram"]: function for function in functions}

@@ -28,10 +28,10 @@ make check
 ## Current status
 
 - ROM identity and the unusual `0x80071000` load address are verified.
-- A GPL-compatible catalogue contains 1,698 supported function boundaries after correcting false splits and aggregations, with provenance.
+- A GPL-compatible catalogue contains 1,699 supported function boundaries after correcting false splits and aggregations, with provenance.
 - Reproducible splat extraction and repository safety gates are in place.
 - The header, IPL3, and known first-MiB code region reconstruct byte-for-byte.
-- 1,324 of 1,698 functions (78.0%) are reconstructed in production C and pass the full byte-exact region gate. By function-body bytes, 349,848 of 630,580 bytes (55.5%) are reconstructed.
+- 1,326 of 1,699 functions (78.0%) are reconstructed in production C and pass the full byte-exact region gate. By function-body bytes, 350,052 of 630,580 bytes (55.5%) are reconstructed.
 - Normalizer-assisted units require narrowly gated, documented rules with exact fire counts; they are identified separately from pure source matches in [the normalizer-assisted record](docs/NORMALIZER_ASSISTED.md).
 - CI publishes an objdiff v2 `us_report` artifact for decomp.dev progress tracking.
 - Matching C reconstruction, compiler identification, linker layout, asset format mapping, and ROM rebuild are not complete.

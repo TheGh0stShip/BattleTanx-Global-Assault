@@ -668,7 +668,8 @@ functions = [
     # round 22: split -- trailing garbage word (srlv $zero,$zero,$zero) right
     # after this one's real jr $ra return; real code resumes at 0x800a2ef0.
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
-    { name = "func_800A2EF0", vram = 0x800a2ef0, size = 0xcc },
+    { name = "func_800A2EF0", vram = 0x800a2ef0, size = 0x1c },
+    { name = "func_800A2F0C", vram = 0x800a2f0c, size = 0xb0 },
     { name = "func_800A2FBC", vram = 0x800a2fbc, size = 0x3ac },
     { name = "func_800A3368", vram = 0x800a3368, size = 0x1f8 },
     { name = "func_800A3560", vram = 0x800a3560, size = 0x1f8 },
