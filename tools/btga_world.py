@@ -6,6 +6,13 @@ from __future__ import annotations
 import struct
 
 
+POOL_LIMITS = {
+    "geometry": 0x3F6EE8 - 0x3013F0,
+    "state": 0x3013F0 - 0x2F8070,
+    "texture": 0x2F8070 - 0x102C70,
+}
+
+
 class WorldError(ValueError):
     """Raised when a decoded world violates its loader-established layout."""
 
@@ -43,18 +50,58 @@ def parse_world(data: bytes) -> dict:
     for count, zero, first in parts_raw:
         if zero != 0 or first + count > len(refs_raw):
             raise WorldError("part pool-reference range exceeds the reference section")
+    for row in refs_raw:
+        for index, name in enumerate(("geometry", "state", "texture")):
+            offset, size = row[index * 2 : index * 2 + 2]
+            if name == "texture" and (offset, size) == (-1, -1):
+                continue
+            if offset < 0 or size < 0 or offset + size > POOL_LIMITS[name]:
+                raise WorldError(f"{name} reference exceeds its raw ROM pool")
 
     definition_size = offsets[4] - offsets[3]
-    definition_offsets = sorted({item[4] for item in placements_raw})
+    placement_definition_offsets = [item[4] for item in placements_raw]
+    definition_offsets = set(placement_definition_offsets)
     if any(offset >= definition_size for offset in definition_offsets):
         raise WorldError("placement points outside the object-definition section")
+    # Kind 39 is a conditional indirection: byte condition, u16 flag, then a
+    # component-relative u32 definition offset. Follow the graph so definitions
+    # reachable only through an include are not hidden from the inventory.
+    pending = list(definition_offsets)
+    while pending:
+        start = pending.pop()
+        absolute = offsets[3] + start
+        if data[absolute] != 39:
+            continue
+        if start + 8 > definition_size:
+            raise WorldError("conditional definition is truncated")
+        target = struct.unpack_from(">I", data, absolute + 4)[0]
+        if target >= definition_size:
+            raise WorldError("conditional definition points outside its section")
+        if target not in definition_offsets:
+            definition_offsets.add(target)
+            pending.append(target)
+    definition_offsets = sorted(definition_offsets)
     definition_ends = definition_offsets[1:] + [definition_size]
     definitions = []
     for start, end in zip(definition_offsets, definition_ends):
         if end <= start:
             raise WorldError("object-definition offsets overlap")
         payload = data[offsets[3] + start : offsets[3] + end]
-        definitions.append({"offset": start, "size": len(payload), "kind": payload[0]})
+        definition = {
+            "offset": start,
+            "size": len(payload),
+            "kind": payload[0],
+            "placement_references": placement_definition_offsets.count(start),
+        }
+        if payload[0] == 39:
+            definition.update(
+                {
+                    "condition": payload[1],
+                    "flag": struct.unpack_from(">H", payload, 2)[0],
+                    "target_offset": struct.unpack_from(">I", payload, 4)[0],
+                }
+            )
+        definitions.append(definition)
 
     bounds = ("min_x", "min_y", "min_z", "max_x", "max_y", "max_z")
     groups = [

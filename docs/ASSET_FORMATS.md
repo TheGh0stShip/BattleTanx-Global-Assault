@@ -71,10 +71,11 @@ than misreported as fixed-width records.
 
 The structured extractor validates and emits the fixed records for all 75 GA
 worlds: 90 groups, 43,939 placements, 4,635 models, 4,718 parts, and 39,103
-pool references. It also identifies 4,877 uniquely referenced object-definition
-records by their file-relative offsets and kind bytes. Their kind-specific
-payloads remain binary until the corresponding loader switch establishes each
-layout.
+pool references. It also identifies 5,372 reachable object-definition records
+by their file-relative offsets and kind bytes. Of those, 495 are reachable only
+through kind-39 conditional indirections rather than directly from placements;
+the parser follows and validates that graph. Kind-specific payloads remain
+binary until the corresponding loader switch establishes each layout.
 
 ```sh
 python3 tools/extract_lzari_worlds.py assets/extracted/us/worlds

@@ -106,7 +106,7 @@ class LzariAssetInventoryTests(unittest.TestCase):
         worlds = [parse_world(item["data"]) for item in streams if item["kind"] == "world"]
         self.assertEqual(sum(len(item["groups"]) for item in worlds), 90)
         self.assertEqual(sum(len(item["placements"]) for item in worlds), 43939)
-        self.assertEqual(sum(len(item["definitions"]) for item in worlds), 4877)
+        self.assertEqual(sum(len(item["definitions"]) for item in worlds), 5372)
         self.assertEqual(sum(len(item["models"]) for item in worlds), 4635)
         self.assertEqual(sum(len(item["parts"]) for item in worlds), 4718)
         self.assertEqual(sum(len(item["references"]) for item in worlds), 39103)
