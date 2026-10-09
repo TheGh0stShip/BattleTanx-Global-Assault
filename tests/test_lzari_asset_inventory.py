@@ -17,6 +17,7 @@ from inventory_lzari_assets import (  # noqa: E402
 )
 from pack_lzari_bundle import pack_bundle  # noqa: E402
 from n64_texture import decode_texture  # noqa: E402
+from btga_world import parse_world  # noqa: E402
 
 
 class LzariAssetInventoryTests(unittest.TestCase):
@@ -102,6 +103,13 @@ class LzariAssetInventoryTests(unittest.TestCase):
                 item["data"], item["format"], item["flags"], item["width"], item["height"]
             )
             self.assertEqual(len(pixels), item["width"] * item["height"] * 4)
+        worlds = [parse_world(item["data"]) for item in streams if item["kind"] == "world"]
+        self.assertEqual(sum(len(item["groups"]) for item in worlds), 90)
+        self.assertEqual(sum(len(item["placements"]) for item in worlds), 43939)
+        self.assertEqual(sum(len(item["definitions"]) for item in worlds), 4877)
+        self.assertEqual(sum(len(item["models"]) for item in worlds), 4635)
+        self.assertEqual(sum(len(item["parts"]) for item in worlds), 4718)
+        self.assertEqual(sum(len(item["references"]) for item in worlds), 39103)
 
 
 if __name__ == "__main__":
