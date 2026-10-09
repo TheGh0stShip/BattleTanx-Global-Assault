@@ -162,7 +162,7 @@ segments:
       - [0x1341C, c, code/codex_batch_next/func_8008341C]
       - [0x13464, asm, main_80083464_to_80083C70]
       - [0x13C70, c, code/codex_batch_next/func_80083C70]
-      - [0x13CC0, asm, main_80083CC0_to_80083DA8]
+      - [0x13CC0, c, code/codex_batch_next2/func_80083CC0]
       - [0x13DA8, c, code/codex_batch_next/func_80083DA8]
       - [0x13DF0, c, code/codex_batch_next2/func_80083DF0]
       - [0x13EBC, c, code/codex_batch_next2/func_80083EBC]
