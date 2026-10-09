@@ -1,5 +1,47 @@
 #include "vitbl_compat.h"
 
+OSViMode osViModeMpalLan1 = {
+    OS_VI_MPAL_LAN1,
+    {
+        VI_CTRL_TYPE_16 | VI_CTRL_GAMMA_DITHER_ON | VI_CTRL_GAMMA_ON |
+            VI_CTRL_DIVOT_ON | VI_CTRL_ANTIALIAS_MODE_1 | VI_CTRL_PIXEL_ADV_3,
+        WIDTH(320), BURST(57, 30, 5, 70), VSYNC(525), HSYNC(3089, 4),
+        LEAP(3097, 3098), HSTART(108, 748), SCALE(2, 0), VCURRENT(0),
+    },
+    {
+        {ORIGIN(640), SCALE(1, 0), HSTART(37, 511), BURST(4, 2, 14, 0), VINTR(2)},
+        {ORIGIN(640), SCALE(1, 0), HSTART(37, 511), BURST(4, 2, 14, 0), VINTR(2)},
+    },
+};
+
+OSViMode osViModeNtscLan1 = {
+    OS_VI_NTSC_LAN1,
+    {
+        VI_CTRL_TYPE_16 | VI_CTRL_GAMMA_DITHER_ON | VI_CTRL_GAMMA_ON |
+            VI_CTRL_DIVOT_ON | VI_CTRL_ANTIALIAS_MODE_1 | VI_CTRL_PIXEL_ADV_3,
+        WIDTH(320), BURST(57, 34, 5, 62), VSYNC(525), HSYNC(3093, 0),
+        LEAP(3093, 3093), HSTART(108, 748), SCALE(2, 0), VCURRENT(0),
+    },
+    {
+        {ORIGIN(640), SCALE(1, 0), HSTART(37, 511), BURST(4, 2, 14, 0), VINTR(2)},
+        {ORIGIN(640), SCALE(1, 0), HSTART(37, 511), BURST(4, 2, 14, 0), VINTR(2)},
+    },
+};
+
+OSViMode osViModePalLan1 = {
+    OS_VI_PAL_LAN1,
+    {
+        VI_CTRL_TYPE_16 | VI_CTRL_GAMMA_DITHER_ON | VI_CTRL_GAMMA_ON |
+            VI_CTRL_DIVOT_ON | VI_CTRL_ANTIALIAS_MODE_1 | VI_CTRL_PIXEL_ADV_3,
+        WIDTH(320), BURST(58, 30, 4, 69), VSYNC(625), HSYNC(3177, 23),
+        LEAP(3183, 3181), HSTART(128, 768), SCALE(2, 0), VCURRENT(0),
+    },
+    {
+        {ORIGIN(640), SCALE(1, 0), HSTART(95, 569), BURST(107, 2, 9, 0), VINTR(2)},
+        {ORIGIN(640), SCALE(1, 0), HSTART(95, 569), BURST(107, 2, 9, 0), VINTR(2)},
+    },
+};
+
 static OSViMode osViModeTable[] = {
     { OS_VI_NTSC_LPN1, // type
       {

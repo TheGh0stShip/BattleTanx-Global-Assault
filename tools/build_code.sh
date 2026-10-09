@@ -21,7 +21,7 @@ for asm_source in asm/us/*.s; do
     sed -i 's/beql       \$s2, \$a1, \.\?L80099664/.word      0x52454D41/' \
         "$asm_source"
     sed -i -E \
-        's/^dlabel (osViClock|__osShutdown|__OSGlobalIntMask|__osRcpImTable|osClockRate|D_80126F80|xlitob_data_0000|xlitob_data_0014)$/dlabel __retail_\1/' \
+        's/^dlabel (osViClock|__osShutdown|__OSGlobalIntMask|__osRcpImTable|osClockRate|D_80126F80|osViModeMpalLan1|osViModeNtscLan1|osViModePalLan1|xlitob_data_0000|xlitob_data_0014)$/dlabel __retail_\1/' \
         "$asm_source"
 done
 

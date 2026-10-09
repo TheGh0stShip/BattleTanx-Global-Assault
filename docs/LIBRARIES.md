@@ -34,6 +34,10 @@ identification string is:
 RSP Gfx ucode F3DEX       fifo 2.07  Yoshitaka Yasumoto 1998 Nintendo.
 ```
 
+The standalone MPAL, NTSC, and PAL low-resolution antialiased VI modes at
+`0x80126FA0–0x80127090` also rebuild exactly from the SDK `OSViMode` layouts.
+They precede the complete 2.0I VI mode table in link order.
+
 ## Compiler scope
 
 The exact SDK object matches prove that the linked library code is compatible
