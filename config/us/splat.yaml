@@ -1059,7 +1059,7 @@ segments:
       - [0x88AAC, asm, main_800F8AAC_to_800FB244]
       - [0x8B244, c, code/libmus/800FB244_master_volume]
       - [0x8B270, c, code/libmus/800FB270_start_song]
-      - [0x8B2A0, asm, main_800FB2A0_to_800FB4F0]
+      - [0x8B2A0, c, code/libmus/800FB2A0_start_song_marker]
       - [0x8B4F0, c, code/libmus/func_800FB4F0]
       - [0x8B570, c, code/libmus/800FB570_player_api]
       - [0x8B7D4, c, code/libmus/800FB7D4_player_api_handles]

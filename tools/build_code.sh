@@ -804,6 +804,7 @@ while read -r unit text_size; do
 done <<'LIBMUS_UNITS'
 800FB244_master_volume 0x2C
 800FB270_start_song 0x30
+800FB2A0_start_song_marker 0x250
 func_800FB4F0 0x80
 800FB570_player_api 0x264
 800FB7D4_player_api_handles 0x5AC
