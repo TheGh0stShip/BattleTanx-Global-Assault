@@ -22,8 +22,8 @@ class DecompReportTests(unittest.TestCase):
         )
         measures = report["measures"]
         self.assertEqual(report["version"], 2)
-        self.assertEqual(measures["total_functions"], 1723)
-        self.assertEqual(measures["matched_functions"], 1388)
+        self.assertEqual(measures["total_functions"], 1733)
+        self.assertEqual(measures["matched_functions"], 1398)
         self.assertEqual(measures["total_code"], "630540")
         self.assertEqual(measures["matched_code"], "370404")
         self.assertEqual(measures["total_data"], "118564")
