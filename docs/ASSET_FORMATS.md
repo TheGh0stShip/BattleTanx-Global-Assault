@@ -16,7 +16,7 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,564 bytes: the 749,104-byte loaded
 image minus 630,540 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 45,336 bytes, or 38.238%.
+`.data` and `.rodata` currently account for 46,032 bytes, or 38.825%.
 
 The effect-definition bank at `0x80114F10–0x80116580` accounts for 5,744 of
 those bytes. It is kept as heterogeneous 32-bit record words until the matched
@@ -44,6 +44,11 @@ model and effect identifiers, motion parameters, interpolation curve, rotated
 texture coordinates, four billboard vertex sets, and their F3DEX draw and
 texture-setup display lists. Display-list and asset addresses are retained as
 32-bit N64 tokens.
+
+The following `0x80125978–0x80125C30` block contains a second billboard's
+vertices and render state plus three mutable hazard-animation display lists.
+The lists retain the retail F3DEX command words while exposing their role and
+unit boundaries in source.
 
 The initialized-data reconstruction includes the complete cheat-code unit at
 `0x80121A00`: 33 input strings, their pointer table, and the associated result

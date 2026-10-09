@@ -42,6 +42,8 @@ campaign_mission_config	0x80124B30	0x990
 mission_selection_data	0x801254C0	0xC0
 projectile_particle_data	0x80125580	0xD8
 projectile_billboard_geometry	0x80125658	0x320
+effect_billboard_geometry	0x80125978	0x128
+hazard_animation_data	0x80125AA0	0x190
 n_audio/800FFB30_n_drvrnew	0x80126890	0x190
 n_audio/80100050_n_env	0x80126A20	0x100
 libultra/al_drvrnew	0x80126B60	0x190
