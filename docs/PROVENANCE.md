@@ -47,4 +47,12 @@ array, `src/libultra/os_rcp_im_table.c` expresses the documented conversion
 from six MI interrupt-enable bits to the RCP's paired clear/set mask fields.
 IDO 5.3 evaluates the table to the exact 0x80 retail bytes at `0x80077A00`.
 
+The initialized RSP DMEM layout for F3DEX FIFO 2.07 follows the matching,
+documented CC0 disassembly in
+[`Mr-Wiseguy/f3dex2`](https://github.com/Mr-Wiseguy/f3dex2/tree/bd31393fd02b89e024b043c8c50c9a5a10143fb6).
+The upstream 2.07 configuration independently assembles to the same 0x420-byte
+data image found at `0x80125EC0`; `src/code/f3dex2_fifo_data.c` preserves its
+named matrices, render state, light buffers, dispatch tables, clipping state,
+and overlay metadata without embedding an extracted binary.
+
 The source/tooling-only distribution and eventual Vita workflow follow the project structure and legal/release boundaries established in `TheGh0stShip/VitaKart64`.

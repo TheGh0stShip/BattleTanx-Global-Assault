@@ -21,7 +21,7 @@ for asm_source in asm/us/*.s; do
     sed -i 's/beql       \$s2, \$a1, \.\?L80099664/.word      0x52454D41/' \
         "$asm_source"
     sed -i -E \
-        's/^dlabel (osViClock|__osShutdown|__OSGlobalIntMask|__osRcpImTable|osClockRate|D_80126F80|osViModeMpalLan1|osViModeNtscLan1|osViModePalLan1|xlitob_data_0000|xlitob_data_0014)$/dlabel __retail_\1/' \
+        's/^dlabel (osViClock|__osShutdown|__OSGlobalIntMask|__osRcpImTable|osClockRate|D_80126F80|gspF3DEX_fifoDataStart|osViModeMpalLan1|osViModeNtscLan1|osViModePalLan1|xlitob_data_0000|xlitob_data_0014)$/dlabel __retail_\1/' \
         "$asm_source"
 done
 
@@ -773,7 +773,8 @@ projectile_billboard_geometry 0x320
 effect_billboard_geometry 0x128
 hazard_animation_data 0x190
 model_motion_render_data 0x270
-model_variant_runtime_data 0xE0
+model_variant_runtime_data 0x20
+f3dex2_fifo_data 0x420
 controller_pak_text 0x3e4
 title_legal_text 0x120
 pal_warning_text 0x50

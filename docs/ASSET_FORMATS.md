@@ -50,10 +50,12 @@ vertices and render state plus three mutable hazard-animation display lists.
 The lists retain the retail F3DEX command words while exposing their role and
 unit boundaries in source.
 
-Model setup data at `0x80125C30–0x80125F80` contains eleven fixed 24-byte
+Model setup data at `0x80125C30–0x80125EC0` contains eleven fixed 24-byte
 motion presets, four selectable F3DEX material lists, their pointer table, and
-the initialized model-cache state. The following bytes begin Nintendo's F3DEX
-RSP data and are deliberately kept outside the game-owned model unit.
+the initialized model-cache state. Nintendo's source-backed F3DEX FIFO 2.07
+DMEM image occupies `0x80125EC0–0x801262E0`; its matrices, render state, light
+buffers, dispatch tables, clipping state, and overlay metadata are kept in a
+separate unit from the game-owned model data.
 
 The initialized-data reconstruction includes the complete cheat-code unit at
 `0x80121A00`: 33 input strings, their pointer table, and the associated result
