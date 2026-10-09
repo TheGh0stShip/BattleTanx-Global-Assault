@@ -165,6 +165,8 @@ libgcc/floatdisf	0x800774E0	0x18
 libgcc/udivmoddi4	0x80077500	0x100
 800EB308_object_handlers	0x80076500	0x100
 800ED804_message_dispatch	0x800768C0	0xFC
+func_800EDDCC	0x800769C0	0x44
 800EED90_segment_update	0x80076AE8	0x20
 800F2184_hazard_trigger	0x80077004	0xC
 800F67F0_sway_model_draw	0x80077280	0x14
+func_800F7230	0x800772F0	0x5C

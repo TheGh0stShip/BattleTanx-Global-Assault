@@ -539,10 +539,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800EAC2C_to_800EAC30.s.o .text 0x4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800EAEB4_to_800EAF6C.s.o asm/us/main_800EAEB4_to_800EAF6C.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800EAEB4_to_800EAF6C.s.o .text 0xb8 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800EB308_to_800EB4FC.s.o asm/us/main_800EB308_to_800EB4FC.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800EB308_to_800EB4FC.s.o .text 0x1f4 --alignment 4
@@ -559,13 +555,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800EBA98_to_800EBCA8.s.o .text 0x210 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800EBDA0_to_800EC1C0.s.o asm/us/main_800EBDA0_to_800EC1C0.s
+    -o build/us/asm/us/main_800EBDA0_to_800EBF80.s.o asm/us/main_800EBDA0_to_800EBF80.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800EBDA0_to_800EC1C0.s.o .text 0x420 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800EC1F8_to_800EC4A8.s.o asm/us/main_800EC1F8_to_800EC4A8.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800EC1F8_to_800EC4A8.s.o .text 0x2b0 --alignment 4
+    build/us/asm/us/main_800EBDA0_to_800EBF80.s.o .text 0x1e0 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800EC788_to_800EC790.s.o asm/us/main_800EC788_to_800EC790.s
 python3 tools/trim_elf32_section.py \
@@ -586,10 +578,6 @@ python3 tools/trim_elf32_section.py \
     -o build/us/asm/us/main_800ED804_to_800EDC00.s.o asm/us/main_800ED804_to_800EDC00.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800ED804_to_800EDC00.s.o .text 0x3fc --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800EDDCC_to_800EDF14.s.o asm/us/main_800EDDCC_to_800EDF14.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800EDDCC_to_800EDF14.s.o .text 0x148 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800EE288_to_800EE490.s.o asm/us/main_800EE288_to_800EE490.s
 python3 tools/trim_elf32_section.py \
@@ -654,10 +642,6 @@ python3 tools/trim_elf32_section.py \
     -o build/us/asm/us/main_800F67F0_to_800F6C70.s.o asm/us/main_800F67F0_to_800F6C70.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800F67F0_to_800F6C70.s.o .text 0x480 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800F7230_to_800F756C.s.o asm/us/main_800F7230_to_800F756C.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800F7230_to_800F756C.s.o .text 0x33c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800F7648_to_800F7650.s.o asm/us/main_800F7648_to_800F7650.s
 python3 tools/trim_elf32_section.py \
@@ -1037,12 +1021,15 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             building_damage_apply \
             building_create \
             building_anim_frame_tick \
+            func_800EAEB4 \
             building_destroy \
             800EB308_object_handlers \
             impact_flash_spawn \
             impact_flash_expire \
             player_projectile_launch \
+            func_800EBF80 \
             mission_counter_release \
+            func_800EC1F8 \
             splash_damage_falloff \
             projectile_spawn_typed \
             shockwave_ring_spawn \
@@ -1054,6 +1041,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             destructible_prop_on_hit_alt \
             800ED804_message_dispatch \
             prop_destroy_slot_release \
+            func_800EDDCC \
             prop_target_query \
             prop_debris_burst_on_hit \
             prop_debris_burst_on_hit_alt \
@@ -1093,6 +1081,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             wreck_debris_update \
             anim_colors_set \
             anim_list_create \
+            func_800F7230 \
             anim_list_reset \
             anim_list_register \
             spark_spawn \
@@ -2926,6 +2915,18 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_option_select.c.o .rodata 0x18 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800EAEB4.c.o .text 0xb8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800EBF80.c.o .text 0x240 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800EC1F8.c.o .text 0x2b0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800EDDCC.c.o .text 0x148 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800F7230.c.o .text 0x33c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800F7230.c.o .rodata 0x5c --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_list_select_full.c.o .text 0x77c --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_list_select_full.c.o .rodata 0xc0 --alignment 4
@@ -3757,7 +3758,7 @@ if false; then
     build/us/asm/us/main_800EAC2C_to_800EAC30.s.o \
     build/us/src/code/building_create.c.o \
     build/us/src/code/building_anim_frame_tick.c.o \
-    build/us/asm/us/main_800EAEB4_to_800EAF6C.s.o \
+    build/us/src/code/func_800EAEB4.c.o \
     build/us/src/code/building_destroy.c.o \
     build/us/asm/us/main_800EB308_to_800EB4FC.s.o \
     build/us/src/code/model_shielded_dispatch.c.o \
@@ -3768,9 +3769,10 @@ if false; then
     build/us/src/code/impact_flash_expire.c.o \
     build/us/asm/us/main_800EBA98_to_800EBCA8.s.o \
     build/us/src/code/player_projectile_launch.c.o \
-    build/us/asm/us/main_800EBDA0_to_800EC1C0.s.o \
+    build/us/asm/us/main_800EBDA0_to_800EBF80.s.o \
+    build/us/src/code/func_800EBF80.c.o \
     build/us/src/code/mission_counter_release.c.o \
-    build/us/asm/us/main_800EC1F8_to_800EC4A8.s.o \
+    build/us/src/code/func_800EC1F8.c.o \
     build/us/src/code/mission_objectives_update.c.o \
     build/us/src/code/splash_damage_falloff.c.o \
     build/us/asm/us/main_800EC788_to_800EC790.s.o \
@@ -3790,7 +3792,7 @@ if false; then
     build/us/src/code/destructible_prop_on_hit_alt.c.o \
     build/us/asm/us/main_800ED804_to_800EDC00.s.o \
     build/us/src/code/prop_destroy_slot_release.c.o \
-    build/us/asm/us/main_800EDDCC_to_800EDF14.s.o \
+    build/us/src/code/func_800EDDCC.c.o \
     build/us/src/code/prop_message_shatter.c.o \
     build/us/src/code/prop_target_query.c.o \
     build/us/src/code/prop_debris_burst_on_hit.c.o \
@@ -3874,7 +3876,7 @@ if false; then
     build/us/src/code/wreck_debris_update.c.o \
     build/us/src/code/anim_colors_set.c.o \
     build/us/src/code/anim_list_create.c.o \
-    build/us/asm/us/main_800F7230_to_800F756C.s.o \
+    build/us/src/code/func_800F7230.c.o \
     build/us/src/code/anim_list_reset.c.o \
     build/us/src/code/anim_list_register.c.o \
     build/us/asm/us/main_800F7648_to_800F7650.s.o \

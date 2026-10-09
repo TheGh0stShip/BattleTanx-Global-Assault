@@ -1473,7 +1473,8 @@ functions = [
     # just needed the trailing word trimmed off, no new symbol required.
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800EAC30", vram = 0x800eac30, size = 0x228 },
-    { name = "func_800EAE58", vram = 0x800eae58, size = 0x114 },
+    { name = "func_800EAE58", vram = 0x800eae58, size = 0x5c },
+    { name = "func_800EAEB4", vram = 0x800eaeb4, size = 0xb8 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800EAF6C", vram = 0x800eaf6c, size = 0x39c },
     { name = "func_800EB308", vram = 0x800eb308, size = 0xe0 },
