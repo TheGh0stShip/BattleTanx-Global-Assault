@@ -483,10 +483,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800E48A8_to_800E48E0.s.o .text 0x38 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800E4DA0_to_800E4ECC.s.o asm/us/main_800E4DA0_to_800E4ECC.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800E4DA0_to_800E4ECC.s.o .text 0x12c --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800E56C8_to_800E56D0.s.o asm/us/main_800E56C8_to_800E56D0.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800E56C8_to_800E56D0.s.o .text 0x8 --alignment 4
@@ -1143,6 +1139,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             800E2520_turret_message_handlers \
             800E2F9C_wreck_update \
             800E48A8_flag_position_query \
+            800E4DA0_flag_message_dispatch \
             800E66A8_crate_particle_attach \
             800E6B04_crate_unit \
             800E73B0_crate_part_release \
@@ -2495,6 +2492,10 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800E48A8_flag_position_query.c.o .text 0x38 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E4DA0_flag_message_dispatch.c.o .text 0x12c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800E4DA0_flag_message_dispatch.c.o .rodata 0xbc --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/800E66A8_crate_particle_attach.c.o .text 0x214 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800E6B04_crate_unit.c.o .text 0x638 --alignment 4
@@ -3526,7 +3527,7 @@ if false; then
     build/us/src/code/800E48A8_flag_position_query.c.o \
     build/us/src/code/flag_owner_capture.c.o \
     build/us/src/code/flag_owner_score.c.o \
-    build/us/asm/us/main_800E4DA0_to_800E4ECC.s.o \
+    build/us/src/code/800E4DA0_flag_message_dispatch.c.o \
     build/us/src/code/actor_kind16_link_clear.c.o \
     build/us/src/code/actor_wreck_spawn_at.c.o \
     build/us/src/code/sound_emitter_delayed_spawn.c.o \

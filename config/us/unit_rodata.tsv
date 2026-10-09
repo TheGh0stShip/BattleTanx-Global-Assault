@@ -48,6 +48,7 @@ seq_events_update	0x80074E70	0xD8
 800E16D8_foliage_prop_destroy	0x80075A30	0x8
 800E1BB0_turret_sweep	0x80075C40	0x18
 800E2F9C_wreck_update	0x80075C6C	0x8
+800E4DA0_flag_message_dispatch	0x80075DB0	0xBC
 800E6B04_crate_unit	0x80075F28	0x8
 800E7768_crate_burst_spawn	0x80075F34	0xC
 800E7A10_powerup_flag_messages	0x80075F40	0x1C

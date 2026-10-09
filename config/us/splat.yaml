@@ -850,7 +850,7 @@ segments:
       - [0x748A8, c, code/800E48A8_flag_position_query]
       - [0x748E0, c, code/flag_owner_capture]
       - [0x74B84, c, code/flag_owner_score]
-      - [0x74DA0, asm, main_800E4DA0_to_800E4ECC]
+      - [0x74DA0, c, code/800E4DA0_flag_message_dispatch]
       - [0x74ECC, c, code/actor_kind16_link_clear]
       - [0x74F3C, c, code/actor_wreck_spawn_at]
       - [0x75164, c, code/sound_emitter_delayed_spawn]

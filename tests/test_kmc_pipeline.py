@@ -365,6 +365,29 @@ class KmcPipelineTests(unittest.TestCase):
                 "func_800DB1B0:\n\tl.s\t$f0,$LF_lis4\n.L21:\n"
             )
 
+    def test_flag_dispatch_output_is_allocated_to_a3(self) -> None:
+        source = (
+            "func_800E4DA0:\n"
+            "\tsubu\t$sp,$sp,32\n\tlw\t$8,48($sp)\n"
+            "\tsw\t$16,16($sp)\n\tmove\t$16,$4\n"
+            "\tsw\t$31,28($sp)\n\tsw\t$18,24($sp)\n"
+            "\tsw\t$17,20($sp)\n\tlbu\t$2,10($16)\n"
+            "\tmove\t$18,$7\n\tandi\t$2,$2,0x0002\n"
+            "\t.set\tnoreorder\n\tbne\t$2,$0,.L1\n\tmove\t$17,$5\n"
+            "\tsw\t$2,0($8)\n\tsw\t$2,0($8)\n"
+            "\tsb\t$2,0($8)\n\ts.s\t$f0,4($8)\n\ts.s\t$f0,8($8)\n"
+        )
+        normalized = MODULE.allocate_flag_dispatch_output_to_a3(source)
+        self.assertIn("\tmove\t$18,$7\n\tlw\t$7,48($sp)\n", normalized)
+        self.assertEqual(normalized.count("\tsw\t$2,0($7)\n"), 2)
+        self.assertIn("\tsb\t$2,0($7)\n", normalized)
+        self.assertIn("\ts.s\t$f0,4($7)\n", normalized)
+        self.assertIn("\ts.s\t$f0,8($7)\n", normalized)
+
+    def test_flag_dispatch_output_requires_exact_fire_counts(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "output prologue fired 0 times"):
+            MODULE.allocate_flag_dispatch_output_to_a3("func_800E4DA0:\n\tnop\n")
+
     def test_turret_sweep_hazards_reproduce_retail_forms(self) -> None:
         source = (
             "func_800E1BB0:\n"

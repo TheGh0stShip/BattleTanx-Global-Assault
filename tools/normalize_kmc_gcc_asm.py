@@ -1235,6 +1235,69 @@ def reproduce_projectile_segment_label_hazards(text: str) -> str:
     return text.replace(labeled_add, labeled_add_retail, 1)
 
 
+def allocate_flag_dispatch_output_to_a3(text: str) -> str:
+    """Reproduce the retail fifth-parameter allocation in ``func_800E4DA0``.
+
+    GCC launches the stack-parameter load before the saved-register setup and
+    assigns it to ``$8``.  Retail saves the incoming ``$7`` first, loads the
+    parameter into the now-dead ``$7``, and uses that register for the five
+    output stores.  Require the complete prologue and every exact store form.
+    """
+    if "func_800E4DA0:" not in text:
+        return text
+    prologue = (
+        "\tsubu\t$sp,$sp,32\n"
+        "\tlw\t$8,48($sp)\n"
+        "\tsw\t$16,16($sp)\n"
+        "\tmove\t$16,$4\n"
+        "\tsw\t$31,28($sp)\n"
+        "\tsw\t$18,24($sp)\n"
+        "\tsw\t$17,20($sp)\n"
+        "\tlbu\t$2,10($16)\n"
+        "\tmove\t$18,$7\n"
+        "\tandi\t$2,$2,0x0002\n"
+        "\t.set\tnoreorder\n"
+        "\tbne\t$2,$0,.L1\n"
+        "\tmove\t$17,$5\n"
+    )
+    prologue_retail = (
+        "\tsubu\t$sp,$sp,32\n"
+        "\tsw\t$17,20($sp)\n"
+        "\tsw\t$16,16($sp)\n"
+        "\tmove\t$16,$4\n"
+        "\tsw\t$31,28($sp)\n"
+        "\tsw\t$18,24($sp)\n"
+        "\tlbu\t$2,10($16)\n"
+        "\tmove\t$18,$7\n"
+        "\tlw\t$7,48($sp)\n"
+        "\tandi\t$2,$2,0x0002\n"
+        "\t.set\tnoreorder\n"
+        "\tbne\t$2,$0,.L1\n"
+        "\tmove\t$17,$5\n"
+    )
+    fires = text.count(prologue)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800E4DA0 output prologue fired {fires} times (expected 1)"
+        )
+    text = text.replace(prologue, prologue_retail, 1)
+    stores = (
+        ("\tsw\t$2,0($8)\n", "\tsw\t$2,0($7)\n", 2, "word"),
+        ("\tsb\t$2,0($8)\n", "\tsb\t$2,0($7)\n", 1, "byte"),
+        ("\ts.s\t$f0,4($8)\n", "\ts.s\t$f0,4($7)\n", 1, "x"),
+        ("\ts.s\t$f0,8($8)\n", "\ts.s\t$f0,8($7)\n", 1, "y"),
+    )
+    for before, after, expected, name in stores:
+        fires = text.count(before)
+        if fires != expected:
+            raise RuntimeError(
+                f"func_800E4DA0 output {name} store fired {fires} times "
+                f"(expected {expected})"
+            )
+        text = text.replace(before, after)
+    return text
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -1294,6 +1357,8 @@ def normalize_v3(source: str) -> str:
         text = swap_script_pair_registers(text)
     if os.environ.get("V3_PROJECTILE_SEGMENT_LABELS", "1") == "1":
         text = reproduce_projectile_segment_label_hazards(text)
+    if os.environ.get("V3_FLAG_DISPATCH_OUTPUT", "1") == "1":
+        text = allocate_flag_dispatch_output_to_a3(text)
     return text
 
 
