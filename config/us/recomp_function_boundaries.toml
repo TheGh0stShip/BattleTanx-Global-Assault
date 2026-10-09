@@ -1098,7 +1098,9 @@ functions = [
     # as a branch leaving the function rather than part of it. The very next
     # symbol (0x800caed0) starts immediately after this corrected end with
     # no overlap, confirming the fix.
-    { name = "osSetTime", vram = 0x800caeb8, size = 0x18 },
+    # 0x800CAEB8 was formerly catalogued as osSetTime after a signature false
+    # positive. It is the a2 == 3 case inside func_800CAE10: 0x800CAE60
+    # branches to it and it falls through to that function's sole jr ra.
     { name = "func_800CAED0", vram = 0x800caed0, size = 0xd8 },
     { name = "func_800CAFA8", vram = 0x800cafa8, size = 0x118 },
     { name = "func_800CB0C0", vram = 0x800cb0c0, size = 0x4c },

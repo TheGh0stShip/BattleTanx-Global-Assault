@@ -951,7 +951,6 @@ func_800CABB0 = 0x800CABB0; // type:func size:0x10
 func_800CABC0 = 0x800CABC0; // type:func size:0x1DC
 func_800CAD9C = 0x800CAD9C; // type:func size:0x74
 func_800CAE10 = 0x800CAE10; // type:func size:0xC0
-osSetTime = 0x800CAEB8; // type:func size:0x18
 func_800CAED0 = 0x800CAED0; // type:func size:0xD8
 func_800CAFA8 = 0x800CAFA8; // type:func size:0x118
 func_800CB0C0 = 0x800CB0C0; // type:func size:0x4C

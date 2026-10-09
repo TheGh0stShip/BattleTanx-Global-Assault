@@ -14,9 +14,9 @@ and terminal ROM padding. Those excluded regions still need documented formats
 and exact reconstruction for the project, but adding their bytes to the Data
 denominator would conflate asset extraction with linked program-data matching.
 
-The current denominator is therefore 118,536 bytes: the 749,104-byte loaded
-image minus 630,568 catalogued function bytes. Source-owned `.data` and
-`.rodata` currently account for 15,032 bytes, or 12.681%.
+The current denominator is therefore 118,560 bytes: the 749,104-byte loaded
+image minus 630,544 non-overlapping catalogued function bytes. Source-owned
+`.data` and `.rodata` currently account for 15,032 bytes, or 12.679%.
 
 ## LZARI bundles
 

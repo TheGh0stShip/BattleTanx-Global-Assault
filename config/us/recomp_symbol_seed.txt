@@ -771,7 +771,6 @@ func_800CAB44 = 0x800cab44;
 func_800CABC0 = 0x800cabc0;
 func_800CAD9C = 0x800cad9c;
 func_800CAE10 = 0x800cae10;
-osSetTime = 0x800caeb8;
 func_800CAED0 = 0x800caed0;
 func_800CAFA8 = 0x800cafa8;
 func_800CB0C0 = 0x800cb0c0;

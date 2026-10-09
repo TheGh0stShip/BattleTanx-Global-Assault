@@ -145,7 +145,15 @@ def load_functions(path: Path) -> list[dict]:
                     "size": function["size"],
                 }
             )
-    return sorted(functions, key=lambda item: item["vram"])
+    functions.sort(key=lambda item: item["vram"])
+    for previous, current in zip(functions, functions[1:]):
+        previous_end = previous["vram"] + previous["size"]
+        if current["vram"] < previous_end:
+            raise ValueError(
+                "catalogue functions overlap: "
+                f"{previous['name']} and {current['name']}"
+            )
+    return functions
 
 
 def load_segments(path: Path) -> list[dict]:
