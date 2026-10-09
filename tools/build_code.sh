@@ -1412,6 +1412,7 @@ for function_name in \
         func_800A15F0 \
         func_800A18D0 \
         func_800A19DC \
+        func_800A2B9C \
         func_800A4924 \
         func_800A49D0 \
         func_800A6B7C \
@@ -1424,6 +1425,7 @@ for function_name in \
         func_800A9A44 \
         func_800A9A98 \
         func_800AA5D0 \
+        func_800ABE6C \
         func_800B22F8 \
         func_800B9F44 \
         func_800BEE0C \
@@ -1446,7 +1448,7 @@ for function_name in \
         func_8008A350|func_8008B788|func_8008BEC4|func_8008E620|func_8008F3FC|func_800947C4|func_8009660C|func_80096F48|func_80097844|func_800979F4|func_80098F24|\
         func_80097CC8|func_80098334|func_8009836C|func_8009A650|func_8009ACDC|func_8009AD7C|func_8009D4B0|func_8009F090|func_8009F334|func_8009F8A0|func_800A1150|func_800A1290|\
         func_8009DAB0|func_8009DFAC|func_8009E0E8|func_8009E19C|func_800A140C|func_800A15F0|func_800A18D0|func_800A19DC|\
-        func_800A4924|func_800A49D0|func_800A6B7C|func_800A8E84|func_800A8F34|func_800A9660|func_800A96B8|func_800A9A98|func_800ACF20|func_800AA5D0|func_800B22F8|\
+        func_800A2B9C|func_800A4924|func_800A49D0|func_800A6B7C|func_800A8E84|func_800A8F34|func_800A9660|func_800A96B8|func_800A9A98|func_800ACF20|func_800AA5D0|func_800ABE6C|func_800B22F8|\
         func_800B9F44|func_800BEE0C|func_800C04C8|func_800C0564|\
         func_800C0ADC|func_800C0B78|func_800C0C38|func_800C13BC|\
         func_800C180C)
@@ -1539,6 +1541,7 @@ for function_name in \
         func_800A15F0) size=0x108 ;;
         func_800A18D0) size=0x10C ;;
         func_800A19DC) size=0x4C ;;
+        func_800A2B9C) size=0xD0 ;;
         func_800A6B7C) size=0xA4 ;;
         func_800A8E84) size=0xB0 ;;
         func_800A8F34) size=0x120 ;;
@@ -1546,6 +1549,7 @@ for function_name in \
         func_800A96B8) size=0x94 ;;
         func_800A9A98) size=0xCC ;;
         func_800ACF20) size=0xC0 ;;
+        func_800ABE6C) size=0xCC ;;
         func_800A97FC) size=0xBC ;;
         func_800A9A44) size=0x54 ;;
         func_800AA5D0) size=0x94 ;;

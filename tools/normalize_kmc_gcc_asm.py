@@ -692,6 +692,37 @@ def shape_snapshot_record_address(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def schedule_large_search_prologue(text: str) -> str:
+    """Reproduce independent argument setup before the local-buffer address.
+
+    In ``func_800A2B9C`` the C body, frame, and loop are exact.  The retail
+    scheduler prepares ``a0``/``a1`` before saving and forming ``s0``; GCC's
+    emitted order is the reverse.  Keep this label-gated and exactly-once.
+    """
+    if "func_800A2B9C:" not in text:
+        return text
+    before = (
+        "\tsw\t$16,1184($sp)\n"
+        "\taddu\t$16,$sp,24\n"
+        "\tandi\t$4,$4,0xffff\n"
+        "\tli\t$5,0x00400000\t\t# 4194304\n"
+        "\tori\t$5,$5,0x1100\n"
+    )
+    after = (
+        "\tandi\t$4,$4,0xffff\n"
+        "\tli\t$5,0x00400000\t\t# 4194304\n"
+        "\tori\t$5,$5,0x1100\n"
+        "\tsw\t$16,1184($sp)\n"
+        "\taddu\t$16,$sp,24\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800A2B9C search-prologue reorder fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def normalize_object_phase_lookup(text: str) -> str:
     """Reproduce register allocation and expression order in ``func_800A8E84``."""
     if "func_800A8E84:" not in text:
@@ -898,6 +929,8 @@ def normalize_v3(source: str) -> str:
         text = shape_selection_state_dispatch(text)
     if os.environ.get("V3_SNAPSHOT_RECORD_ADDRESS", "1") == "1":
         text = shape_snapshot_record_address(text)
+    if os.environ.get("V3_LARGE_SEARCH_PROLOGUE", "1") == "1":
+        text = schedule_large_search_prologue(text)
     if os.environ.get("V3_OBJECT_PHASE_LOOKUP", "1") == "1":
         text = normalize_object_phase_lookup(text)
     if os.environ.get("V3_DISPLAY_SLOT_WAIT", "1") == "1":
