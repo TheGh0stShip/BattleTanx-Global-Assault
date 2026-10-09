@@ -12,6 +12,15 @@ SPEC.loader.exec_module(MODULE)
 
 
 class KmcPipelineTests(unittest.TestCase):
+    def test_search_record_address_uses_retained_index_copy(self) -> None:
+        source = "func_8008875C:\n.L5:\n\tsll\t$2,$2,3\n"
+        normalized = MODULE.normalize_v3(source)
+        self.assertIn(".L5:\n\tsll\t$2,$3,3\n", normalized)
+
+    def test_search_record_address_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.normalize_v3("func_8008875C:\n\tnop\n")
+
     def test_preserves_compiler_filled_delay_slot(self) -> None:
         source = (
             "\t.set\tnoreorder\n"

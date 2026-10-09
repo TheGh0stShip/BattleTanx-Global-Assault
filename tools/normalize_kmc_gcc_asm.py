@@ -1536,6 +1536,21 @@ def preserve_record_index_copy(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def preserve_search_record_index_copy(text: str) -> str:
+    """Use func_8008875C's retained v1 copy for record address scaling."""
+    if "func_8008875C:" not in text:
+        return text
+
+    before = ".L5:\n\tsll\t$2,$2,3\n"
+    after = ".L5:\n\tsll\t$2,$3,3\n"
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_8008875C index-copy rewrite fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -1609,6 +1624,8 @@ def normalize_v3(source: str) -> str:
         text = schedule_matrix_basis_inverse(text)
     if os.environ.get("V3_RECORD_INDEX_COPY", "1") == "1":
         text = preserve_record_index_copy(text)
+    if os.environ.get("V3_SEARCH_RECORD_INDEX_COPY", "1") == "1":
+        text = preserve_search_record_index_copy(text)
     return text
 
 
