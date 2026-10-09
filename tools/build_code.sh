@@ -762,9 +762,17 @@ while read -r unit text_size; do
     .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
         -o "build/us/src/code/libmus/${unit}.c.o" \
         "build/us/src/code/libmus/${unit}.raw.s"
+    if [[ "$unit" == 800FAE70_fenvelope ]]; then
+        "${tool_prefix}objcopy" --set-section-flags \
+            .rodata=alloc,load,readonly,data \
+            "build/us/src/code/libmus/${unit}.c.o"
+    fi
     python3 tools/trim_elf32_section.py \
         "build/us/src/code/libmus/${unit}.c.o" .text "$text_size" --alignment 4
     case "$unit" in
+        800FAE70_fenvelope)
+            python3 tools/trim_elf32_section.py \
+                "build/us/src/code/libmus/${unit}.c.o" .rodata 0x8 --alignment 8 ;;
         800FBF94_player_main)
             python3 tools/trim_elf32_section.py \
                 "build/us/src/code/libmus/${unit}.c.o" .rodata 0x8 --alignment 8 ;;
@@ -779,6 +787,7 @@ while read -r unit text_size; do
                 "build/us/src/code/libmus/${unit}.c.o" .rodata 0x10 --alignment 4 ;;
     esac
 done <<'LIBMUS_UNITS'
+800FAE70_fenvelope 0x14C
 800FAFBC_mus_initialize 0x288
 800FB244_master_volume 0x2C
 800FB270_start_song 0x30
