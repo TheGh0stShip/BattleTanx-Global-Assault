@@ -1162,7 +1162,7 @@ segments:
       - [0x9CE60, c, libultra/os_pi_start_dma]
       - [0x9CF70, c, libultra/os_pi_get_cmd_queue]
       - [0x9CFA0, c, libultra/os_pi_manager]
-      - [0x9D130, asm, main_8010D130_to_8010D5C0]
+      - [0x9D130, c, libultra/os_dev_mgr]
       - [0x9D5C0, c, libultra/os_epi_raw_read_io]
       - [0x9D610, c, libultra/os_epi_raw_write_io]
       - [0x9D660, c, libultra/os_get_thread_pri]
