@@ -1368,6 +1368,7 @@ for function_name in \
         func_80085DA8 \
         func_80085F7C \
         func_80086700 \
+        func_80088ABC \
         func_80089DBC \
         func_8008A350 \
         func_8008A5E4 \
@@ -1379,6 +1380,7 @@ for function_name in \
         func_80097BC4 \
         func_80097CC8 \
         func_80098334 \
+        func_80098F24 \
         func_80098B58 \
         func_8009A650 \
         func_8009D4B0 \
@@ -1422,8 +1424,8 @@ for function_name in \
         func_800C1E48; do
     case "$function_name" in
         func_8007A7B4|func_8007A818|func_8007A8F0|func_8007A9EC|func_8007AAA8|func_8007AB64|func_8007ADF0|func_8007AF84|func_8007B0E4|func_8007B8EC|func_8007D33C|func_8007D39C|func_8007D7C4|func_8007D884|func_8007D998|func_8007DACC|func_8007DD54|func_8007DE3C|func_8007E024|func_8007E118|func_8007E8C8|\
-        func_80080818|func_80082A90|func_8008518C|func_80085250|func_80085DA8|func_80085F7C|func_80086700|\
-        func_8008A350|func_8008B788|func_8008BEC4|func_8008E620|func_80096F48|func_800979F4|\
+        func_80080818|func_80082A90|func_8008518C|func_80085250|func_80085DA8|func_80085F7C|func_80086700|func_80088ABC|\
+        func_8008A350|func_8008B788|func_8008BEC4|func_8008E620|func_80096F48|func_800979F4|func_80098F24|\
         func_80097CC8|func_80098334|func_8009A650|func_8009D4B0|func_8009F090|func_8009F334|func_8009F8A0|func_800A1150|func_800A1290|\
         func_8009DAB0|func_8009E0E8|func_8009E19C|func_800A140C|func_800A15F0|func_800A18D0|func_800A19DC|\
         func_800A6B7C|func_800A8E84|func_800A8F34|func_800A9660|func_800A96B8|func_800B22F8|\
@@ -1469,6 +1471,7 @@ for function_name in \
         func_80085DA8) size=0xA4 ;;
         func_80085F7C) size=0xB8 ;;
         func_80086700) size=0xC4 ;;
+        func_80088ABC) size=0x5C ;;
         func_80089DBC) size=0x64 ;;
         func_8008A350) size=0x50 ;;
         func_8008A5E4) size=0x48 ;;
@@ -1480,6 +1483,7 @@ for function_name in \
         func_80097BC4) size=0x58 ;;
         func_80097CC8) size=0x4C ;;
         func_80098334) size=0x38 ;;
+        func_80098F24) size=0x98 ;;
         func_80098B58) size=0x70 ;;
         func_8009A650) size=0xA0 ;;
         func_8009D4B0) size=0x60 ;;
