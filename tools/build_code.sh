@@ -779,6 +779,7 @@ title_legal_text 0x120
 pal_warning_text 0x50
 results_text 0xb4
 ending_text 0xa4
+ending_results_layout 0x1a0
 menu_help_text 0xa0
 code_entry_help_text 0x8c
 team_setup_text 0x7c

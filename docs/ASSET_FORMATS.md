@@ -16,7 +16,7 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,820 bytes: the 749,104-byte loaded
 image minus 630,284 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 49,008 bytes, or 41.246%.
+`.data` and `.rodata` currently account for 49,424 bytes, or 41.596%.
 
 The effect-definition bank at `0x80114F10–0x80116580` accounts for 5,744 of
 those bytes. It is kept as heterogeneous 32-bit record words until the matched
@@ -67,6 +67,8 @@ newlines, field boundaries, and alignment used by the save-game menu.
 Other reconstructed text units cover the title and legal notices, PAL-system
 warning, results-screen labels, and ending/rating labels. Each remains mutable
 initialized data, matching how the original game updates some labels in place.
+The ending results scene is represented as its score-source tokens, 23 typed
+front-end element records, and root-node links rather than an opaque byte dump.
 Menu-help, controls-help, controller-binding, code-entry, campaign-map,
 team-setup, and missing-controller messages are also reconstructed as
 fixed-layout text structures.
