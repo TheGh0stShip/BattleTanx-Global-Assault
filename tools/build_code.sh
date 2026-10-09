@@ -1402,6 +1402,7 @@ for function_name in \
         func_8009AD7C \
         func_8009D1CC \
         func_8009D4B0 \
+        func_8009D960 \
         func_8009DAB0 \
         func_8009DFAC \
         func_8009E0E8 \
@@ -1461,7 +1462,7 @@ for function_name in \
         func_80080818|func_80080C04|func_80082A90|func_80083DF0|func_80083EBC|func_8008518C|func_80085250|func_80085DA8|func_80085F7C|func_80086700|func_8008865C|func_80088ABC|func_80089E84|\
         func_8008A350|func_8008B6D0|func_8008B788|func_8008BEC4|func_8008E6E0|func_8008E620|func_8008F3FC|func_800947C4|func_8009660C|func_80096F48|func_800976AC|func_80097844|func_800979F4|func_80098F24|\
         func_80097CC8|func_80098334|func_8009836C|func_80098454|func_80098BF8|func_80099028|func_8009A650|func_8009ACDC|func_8009AD7C|func_8009D1CC|func_8009D4B0|func_8009F090|func_8009F334|func_8009F5AC|func_8009F8A0|func_800A1150|func_800A1290|\
-        func_8009DAB0|func_8009DFAC|func_8009E0E8|func_8009E19C|func_800A140C|func_800A15F0|func_800A18D0|func_800A19DC|\
+        func_8009D960|func_8009DAB0|func_8009DFAC|func_8009E0E8|func_8009E19C|func_800A140C|func_800A15F0|func_800A18D0|func_800A19DC|\
         func_800A1B44|func_800A2B9C|func_800A4924|func_800A49D0|func_800A60E0|func_800A6B7C|func_800A8E84|func_800A8F34|func_800A9660|func_800A96B8|func_800A9A98|func_800ACF20|func_800ACFE0|func_800AD088|func_800AA5D0|func_800ABE6C|func_800B22F8|\
         func_800B0D70|func_800B6934|func_800B9F44|func_800BEE0C|func_800C04C8|func_800C0564|\
         func_800C0ADC|func_800C0B78|func_800C0C38|func_800C13BC|\
@@ -1549,6 +1550,7 @@ for function_name in \
         func_800A60E0) size=0xBC ;;
         func_8009D1CC) size=0x9C ;;
         func_8009D4B0) size=0x60 ;;
+        func_8009D960) size=0xD4 ;;
         func_8009DAB0) size=0x5C ;;
         func_8009DFAC) size=0x98 ;;
         func_8009E0E8) size=0xB4 ;;

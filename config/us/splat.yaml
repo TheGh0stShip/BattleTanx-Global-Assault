@@ -392,7 +392,7 @@ segments:
       - [0x2D850, c, code/angle_direction]
       - [0x2D8A0, c, code/codex_batch/func_8009D8A0]
       - [0x2D914, c, code/random_integer]
-      - [0x2D960, asm, main_8009D960_to_8009DA34]
+      - [0x2D960, c, code/codex_batch_next2/func_8009D960]
       - [0x2DA34, c, code/vector2]
       - [0x2DAB0, c, code/codex_batch_next2/func_8009DAB0]
       - [0x2DB0C, c, code/vector2_scale]
