@@ -50,6 +50,22 @@ class LibgccPipelineTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "exactly one"):
             MODULE.normalize("__udivdi3:\n__umoddi3:\n")
 
+    def test_floatdisf_expands_three_big_endian_double_loads(self) -> None:
+        source = "__floatdisf:\n" + "".join(
+            f"\tl.d\t$f0,$LF_lis{i}\n" for i in range(3)
+        )
+        normalized = MODULE.normalize(source)
+        self.assertEqual(normalized.count("\tlui\t$1,%hi("), 3)
+        self.assertEqual(normalized.count("\tlwc1\t$f1,"), 3)
+        self.assertEqual(normalized.count("\tlwc1\t$f0,"), 3)
+        self.assertNotIn("\tl.d\t", normalized)
+
+    def test_floatdisf_requires_three_double_loads(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 2 times"):
+            MODULE.normalize(
+                "__floatdisf:\n\tl.d\t$f0,$LF_lis0\n\tl.d\t$f0,$LF_lis1\n"
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

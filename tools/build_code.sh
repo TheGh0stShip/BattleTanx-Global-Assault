@@ -1310,6 +1310,19 @@ mkdir -p build/us/src/libgcc
     -o build/us/src/libgcc/cmpdi2.c.o build/us/src/libgcc/cmpdi2.s
 python3 tools/trim_elf32_section.py \
     build/us/src/libgcc/cmpdi2.c.o .text 0x40 --alignment 4
+.toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+    -O2 -G0 -mips3 -mgp32 -mfp32 \
+    -o build/us/src/libgcc/floatdisf.raw.s src/libgcc/floatdisf.c
+python3 tools/normalize_kmc_gcc_asm.py \
+    build/us/src/libgcc/floatdisf.raw.s build/us/src/libgcc/floatdisf.base.s
+python3 tools/normalize_libgcc_asm.py \
+    build/us/src/libgcc/floatdisf.base.s build/us/src/libgcc/floatdisf.s
+.toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+    -o build/us/src/libgcc/floatdisf.c.o build/us/src/libgcc/floatdisf.s
+python3 tools/trim_elf32_section.py \
+    build/us/src/libgcc/floatdisf.c.o .text 0xbc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/libgcc/floatdisf.c.o .rodata 0x18 --alignment 8
 for spec in udivdi3:0x20 udivmoddi4:0x63c umoddi3:0x2c; do
     unit="${spec%%:*}"
     text_size="${spec#*:}"
