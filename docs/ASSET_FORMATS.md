@@ -16,7 +16,7 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,564 bytes: the 749,104-byte loaded
 image minus 630,540 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 48,008 bytes, or 40.491%.
+`.data` and `.rodata` currently account for 48,100 bytes, or 40.569%.
 
 The effect-definition bank at `0x80114F10–0x80116580` accounts for 5,744 of
 those bytes. It is kept as heterogeneous 32-bit record words until the matched

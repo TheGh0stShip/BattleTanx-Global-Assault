@@ -1376,7 +1376,17 @@ for spec in \
         ai_target_refresh:0x2DC \
         tank_damage_motion:0x860 \
         weapon_inventory:0xD1C \
-        collision_query:0x390; do
+        collision_query:0x390 \
+        path_target_acquire:0x12C \
+        collision_hit_query:0x134 \
+        ai_target_state_update:0x1F0 \
+        zone_spawn_query:0x1B8 \
+        unit_command_state:0x18C \
+        ai_weapon_fire_update:0x174 \
+        visibility_mask_clear:0x108 \
+        tank_mode_transition:0x264 \
+        waypoint_stack_pop:0x138 \
+        waypoint_stack_update:0x35C; do
     unit="${spec%%:*}"
     text_size="${spec#*:}"
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
@@ -1399,6 +1409,16 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/tank_damage_motion.c.o .rodata 0x6C --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/weapon_inventory.c.o .rodata 0x2AC --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/ai_target_state_update.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/zone_spawn_query.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/unit_command_state.c.o .rodata 0x20 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/ai_weapon_fire_update.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/tank_mode_transition.c.o .rodata 0x2C --alignment 4
 
 python3 tools/trim_elf32_section.py \
     build/us/src/code/80082C1C_state_activate.c.o .text 0xec --alignment 4
