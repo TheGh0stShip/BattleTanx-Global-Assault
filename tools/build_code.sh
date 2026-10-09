@@ -591,9 +591,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800EDDCC_to_800EDF14.s.o .text 0x148 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800EE288_to_800EE688.s.o asm/us/main_800EE288_to_800EE688.s
+    -o build/us/asm/us/main_800EE288_to_800EE490.s.o asm/us/main_800EE288_to_800EE490.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800EE288_to_800EE688.s.o .text 0x400 --alignment 4
+    build/us/asm/us/main_800EE288_to_800EE490.s.o .text 0x208 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800EED90_to_800EF400.s.o asm/us/main_800EED90_to_800EF400.s
 python3 tools/trim_elf32_section.py \
@@ -1259,6 +1259,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             projectile_shell_draw \
             shockwave_expand \
             prop_spawn_child \
+            motion_scale_curve \
             prop_spawn_pickup \
             prop_height_update \
             particle_emitter_free \
@@ -2098,6 +2099,10 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/prop_spawn_pickup.c.o .text 0xc8 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/prop_spawn_child.c.o .text 0x170 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/motion_scale_curve.c.o .text 0x1f8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/motion_scale_curve.c.o .rodata 0x18 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/shockwave_expand.c.o .text 0x104 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3686,7 +3691,8 @@ if false; then
     build/us/src/code/prop_target_query.c.o \
     build/us/src/code/prop_debris_burst_on_hit.c.o \
     build/us/src/code/prop_debris_burst_on_hit_alt.c.o \
-    build/us/asm/us/main_800EE288_to_800EE688.s.o \
+    build/us/asm/us/main_800EE288_to_800EE490.s.o \
+    build/us/src/code/motion_scale_curve.c.o \
     build/us/src/code/prop_spawn_child.c.o \
     build/us/src/code/prop_spawn_pickup.c.o \
     build/us/src/code/prop_height_update.c.o \
