@@ -179,10 +179,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8009EF4C_to_8009F064.s.o .text 0x118 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8009F334_to_8009F4B4.s.o asm/us/main_8009F334_to_8009F4B4.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8009F334_to_8009F4B4.s.o .text 0x180 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8009F5AC_to_8009F768.s.o asm/us/main_8009F5AC_to_8009F768.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8009F5AC_to_8009F768.s.o .text 0x1bc --alignment 4
@@ -1394,6 +1390,7 @@ for function_name in \
         func_8009EA70 \
         func_8009ED00 \
         func_8009F090 \
+        func_8009F334 \
         func_800A19DC \
         func_800A6B7C \
         func_800A8E84 \
@@ -1421,7 +1418,7 @@ for function_name in \
         func_8007A7B4|func_8007A818|func_8007A8F0|func_8007A9EC|func_8007AAA8|func_8007AB64|func_8007ADF0|func_8007AF84|func_8007B0E4|func_8007B8EC|func_8007D33C|func_8007D39C|func_8007D7C4|func_8007D884|func_8007D998|func_8007DACC|func_8007DD54|func_8007DE3C|func_8007E024|func_8007E118|func_8007E8C8|\
         func_80080818|func_80082A90|func_8008518C|func_80085250|\
         func_8008A350|func_8008B788|func_8008BEC4|func_8008E620|func_80096F48|func_800979F4|\
-        func_80097CC8|func_80098334|func_8009A650|func_8009D4B0|func_8009F090|\
+        func_80097CC8|func_80098334|func_8009A650|func_8009D4B0|func_8009F090|func_8009F334|\
         func_8009DAB0|func_8009E0E8|func_8009E19C|func_800A19DC|\
         func_800A6B7C|func_800A8E84|func_800A9660|func_800A96B8|func_800B22F8|\
         func_800B9F44|func_800BEE0C|func_800C04C8|func_800C0564|\
@@ -1484,6 +1481,7 @@ for function_name in \
         func_8009EA70) size=0xF8 ;;
         func_8009ED00) size=0x9C ;;
         func_8009F090) size=0x164 ;;
+        func_8009F334) size=0x110 ;;
         func_800A19DC) size=0x4C ;;
         func_800A6B7C) size=0xA4 ;;
         func_800A8E84) size=0xB0 ;;
@@ -2990,7 +2988,7 @@ if false; then
     build/us/src/code/matrix_state.c.o \
     build/us/src/code/codex_batch_next2/func_8009F090.c.o \
     build/us/src/code/matrix_vector.c.o \
-    build/us/asm/us/main_8009F334_to_8009F4B4.s.o \
+    build/us/src/code/codex_batch_next2/func_8009F334.c.o \
     build/us/src/code/matrix_multiply.c.o \
     build/us/asm/us/main_8009F5AC_to_8009F768.s.o \
     build/us/src/code/matrix_transform.c.o \
