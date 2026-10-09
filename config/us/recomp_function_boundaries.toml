@@ -881,9 +881,19 @@ functions = [
     # underlying cause as func_8007E118/func_800A10E0/func_800B95C8 above
     # (gaps our original round-11 splat scan just never got symbols for).
     { name = "func_800BB53C", vram = 0x800bb53c, size = 0x880 },
-    { name = "func_800BBDC0", vram = 0x800bbdc0, size = 0x260 },
-    { name = "func_800BC020", vram = 0x800bc020, size = 0x6cc },
-    { name = "func_800BC6EC", vram = 0x800bc6ec, size = 0x308 },
+    { name = "func_800BBDC4", vram = 0x800bbdc4, size = 0x60 },
+    { name = "func_800BBE24", vram = 0x800bbe24, size = 0x150 },
+    { name = "func_800BBF74", vram = 0x800bbf74, size = 0xac },
+    { name = "func_800BC020", vram = 0x800bc020, size = 0x1b4 },
+    { name = "func_800BC1D4", vram = 0x800bc1d4, size = 0xd0 },
+    { name = "func_800BC2A4", vram = 0x800bc2a4, size = 0xcc },
+    { name = "func_800BC370", vram = 0x800bc370, size = 0xa0 },
+    { name = "func_800BC410", vram = 0x800bc410, size = 0xf0 },
+    { name = "func_800BC500", vram = 0x800bc500, size = 0xc0 },
+    { name = "func_800BC5C0", vram = 0x800bc5c0, size = 0xe0 },
+    { name = "func_800BC6A0", vram = 0x800bc6a0, size = 0x4c },
+    { name = "func_800BC6EC", vram = 0x800bc6ec, size = 0x188 },
+    { name = "func_800BC874", vram = 0x800bc874, size = 0x180 },
     { name = "func_800BC9F4", vram = 0x800bc9f4, size = 0xe8c },
     { name = "func_800BD880", vram = 0x800bd880, size = 0x38 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.

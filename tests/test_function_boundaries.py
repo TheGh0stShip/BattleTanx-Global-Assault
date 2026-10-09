@@ -387,6 +387,39 @@ class FunctionBoundaryTests(unittest.TestCase):
             by_address[0x800BA24C],
         )
 
+    def test_world_loader_unit_does_not_merge_renderer_helpers(self) -> None:
+        functions = self.load_functions()
+        by_address = {function["vram"]: function for function in functions}
+        expected = {
+            0x800BBDC4: 0x60,
+            0x800BBE24: 0x150,
+            0x800BBF74: 0xAC,
+            0x800BC020: 0x1B4,
+            0x800BC1D4: 0xD0,
+            0x800BC2A4: 0xCC,
+            0x800BC370: 0xA0,
+            0x800BC410: 0xF0,
+            0x800BC500: 0xC0,
+            0x800BC5C0: 0xE0,
+            0x800BC6A0: 0x4C,
+            0x800BC6EC: 0x188,
+            0x800BC874: 0x180,
+        }
+        for address, size in expected.items():
+            self.assertEqual(size, by_address[address]["size"])
+
+        covered_words = {
+            address
+            for function in functions
+            for address in range(
+                int(function["vram"]),
+                int(function["vram"]) + int(function["size"]),
+                4,
+            )
+        }
+        self.assertNotIn(0x800BBDBC, covered_words)
+        self.assertNotIn(0x800BBDC0, covered_words)
+
 
 if __name__ == "__main__":
     unittest.main()
