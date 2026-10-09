@@ -26,11 +26,11 @@ class DecompReportTests(unittest.TestCase):
         self.assertEqual(measures["matched_functions"], 1367)
         self.assertEqual(measures["total_code"], "630568")
         self.assertEqual(measures["matched_code"], "367772")
-        self.assertEqual(measures["total_data"], "7753944")
+        self.assertEqual(measures["total_data"], "118536")
         self.assertEqual(measures["matched_data"], "15032")
         self.assertEqual([item["name"] for item in report["categories"]], ["Code", "Data"])
         data = report["categories"][1]["measures"]
-        self.assertAlmostEqual(data["matched_data_percent"], 15032 * 100 / 7753944)
+        self.assertAlmostEqual(data["matched_data_percent"], 15032 * 100 / 118536)
         self.assertEqual(
             sum(
                 unit["measures"]["total_functions"]
@@ -61,6 +61,16 @@ class DecompReportTests(unittest.TestCase):
         decoded = json.loads(encoded)
         self.assertIsInstance(decoded["measures"]["total_code"], str)
         self.assertIsInstance(decoded["units"][0]["functions"][0]["address"], str)
+
+    def test_data_scope_is_the_loaded_main_image(self):
+        self.assertEqual(REPORT.MAIN_IMAGE_START, 0x1000)
+        self.assertEqual(REPORT.MAIN_IMAGE_END, 0xB7E30)
+        self.assertEqual(
+            REPORT.MAIN_IMAGE_END
+            - REPORT.MAIN_IMAGE_START
+            - 630568,
+            118536,
+        )
 
 
 if __name__ == "__main__":

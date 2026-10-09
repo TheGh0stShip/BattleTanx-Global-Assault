@@ -5,6 +5,19 @@ and cross-stream validation. Semantic names will be added after the consuming
 code establishes them; extracted bytes alone are not counted as decompiled
 Data.
 
+## Progress accounting scope
+
+decomp.dev's Data category covers initialized non-function bytes in the loaded
+main executable image, ROM `0x001000–0x0B7E30`. It excludes the cartridge asset
+store, the raw RSP payload beginning at `0x0B7E30`, stale-build material, BSS,
+and terminal ROM padding. Those excluded regions still need documented formats
+and exact reconstruction for the project, but adding their bytes to the Data
+denominator would conflate asset extraction with linked program-data matching.
+
+The current denominator is therefore 118,536 bytes: the 749,104-byte loaded
+image minus 630,568 catalogued function bytes. Source-owned `.data` and
+`.rodata` currently account for 15,032 bytes, or 12.681%.
+
 ## LZARI bundles
 
 The matching decoder at `0x800A0750` is used by the level, common-world, and

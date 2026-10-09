@@ -5,6 +5,11 @@ The report is derived from the reviewed function catalogue and the production
 splat layout. A function counts as matched only when its entry point belongs to
 a production C subsegment; the byte-exact reconstruction gate separately
 proves that those C subsegments reproduce the supported ROM.
+
+Data progress covers initialized bytes in the main executable image. Cartridge
+assets, RSP payloads, stale build material, padding outside that image, and BSS
+are separate reconstruction concerns and are not part of decomp.dev's Data
+denominator.
 """
 
 from __future__ import annotations
@@ -18,8 +23,8 @@ from pathlib import Path
 
 ROM_VRAM_DELTA = 0x80070000
 ROM_CODE_END = 0x101000
-ROM_SIZE = 0x800000
-ROM_CONTENT_START = 0x1000
+MAIN_IMAGE_START = 0x1000
+MAIN_IMAGE_END = 0xB7E30
 SUBSEGMENT = re.compile(
     r"^\s*- \[(0x[0-9A-Fa-f]+),\s*([^,\]]+)(?:,\s*([^\]]+))?\]\s*(?:#.*)?$"
 )
@@ -226,8 +231,22 @@ def build_report(
         config_dir = functions_path.parent
         data_paths = [config_dir / "unit_rodata.tsv", config_dir / "unit_data.tsv"]
     owned_data = load_owned_data(data_paths)
+    tracked_vram_start = ROM_VRAM_DELTA + MAIN_IMAGE_START
+    tracked_vram_end = ROM_VRAM_DELTA + MAIN_IMAGE_END
+    for item in owned_data:
+        if not (
+            tracked_vram_start <= item["address"]
+            and item["end"] <= tracked_vram_end
+        ):
+            raise ValueError(
+                f"owned data range is outside the loaded main image: {item['unit']}"
+            )
     matched_data = sum(item["size"] for item in owned_data)
-    total_data = ROM_SIZE - ROM_CONTENT_START - sum(item["size"] for item in all_functions)
+    total_data = (
+        MAIN_IMAGE_END
+        - MAIN_IMAGE_START
+        - sum(item["size"] for item in all_functions)
+    )
     if matched_data > total_data:
         raise ValueError("source-owned data exceeds total non-function ROM bytes")
 
