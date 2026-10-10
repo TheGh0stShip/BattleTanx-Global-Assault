@@ -1574,6 +1574,12 @@ while IFS=$'\t' read -r unit address text_size status; do
         -o "build/us/src/code/${unit}.c.o" "build/us/src/code/${unit}.s"
     python3 tools/trim_elf32_section.py \
         "build/us/src/code/${unit}.c.o" .text "$text_size" --alignment 4
+    rodata_size="$(awk -v wanted="$unit" '$1 == wanted { print $3 }' \
+        config/us/unit_rodata.tsv)"
+    if [[ -n "$rodata_size" ]]; then
+        python3 tools/trim_elf32_section.py \
+            "build/us/src/code/${unit}.c.o" .rodata "$rodata_size" --alignment 4
+    fi
 done < config/us/clean_normalized_units.tsv
 for function_name in \
         func_8007A7B4 \
