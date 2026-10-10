@@ -1,0 +1,3 @@
+# unit	vram	text_size	status
+800B4684_collision_query	0x800B4684	0x35C	normalizer-assisted
+800B5B8C_mover_reflect	0x800B5B8C	0xBC	normalizer-assisted

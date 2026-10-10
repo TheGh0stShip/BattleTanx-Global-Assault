@@ -569,6 +569,49 @@ class KmcPipelineTests(unittest.TestCase):
         normalized = MODULE.preserve_record_index_copy(source)
         self.assertIn(".L2:\n\tsll\t$2,$6,3\n", normalized)
 
+    def test_collision_query_label_hazard_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.reproduce_collision_query_label_hazard(
+                "func_800B4684:\n\tnop\n"
+            )
+
+    def test_collision_query_label_hazard_preserves_target(self) -> None:
+        source = (
+            "func_800B4684:\n"
+            "\tj\t.L40\n"
+            "\tadd.s\t$f2,$f4,$f0\n"
+            "\t.set\tnoreorder\n"
+            ".L39:\n"
+            "\tmul.s\t$f2,$f2,$f2\n"
+        )
+        normalized = MODULE.reproduce_collision_query_label_hazard(source)
+        self.assertIn(
+            "\tj\t.L40\n.L39 = . + 4\n"
+            "\tadd.s\t$f2,$f4,$f0\n\t.set\tnoreorder\n"
+            "\tmul.s\t$f2,$f2,$f2\n",
+            normalized,
+        )
+
+    def test_mover_reflect_likely_multiply_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.hoist_mover_reflect_likely_multiply(
+                "func_800B5B8C:\n\tnop\n"
+            )
+
+    def test_mover_reflect_likely_multiply_is_hoisted(self) -> None:
+        source = (
+            "func_800B5B8C:\n"
+            "\t.set\tnoreorder\n"
+            "\tbc1fl\t.L25\n"
+            "\tmul.s\t$f4,$f4,$f6\n"
+        )
+        normalized = MODULE.hoist_mover_reflect_likely_multiply(source)
+        self.assertIn(
+            "\tmul.s\t$f4,$f4,$f6\n\t.set\tnoreorder\n"
+            "\tbc1fl\t.L25\n\tnop\n",
+            normalized,
+        )
+
     def test_turret_sweep_hazards_reproduce_retail_forms(self) -> None:
         source = (
             "func_800E1BB0:\n"

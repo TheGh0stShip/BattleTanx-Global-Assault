@@ -1141,6 +1141,65 @@ def reproduce_entity_model_draw_label_hazard(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def reproduce_collision_query_label_hazard(text: str) -> str:
+    """Suppress the retail assembler's label-adjacent ``mul.s`` nop.
+
+    The branch target remains the address of the multiply; defining it one
+    instruction earlier as ``. + 4`` only prevents KMC ``as`` from treating
+    the target as a multiply-hazard boundary.
+    """
+    if "func_800B4684:" not in text:
+        return text
+    before = (
+        "\tj\t.L40\n"
+        "\tadd.s\t$f2,$f4,$f0\n"
+        "\t.set\tnoreorder\n"
+        ".L39:\n"
+        "\tmul.s\t$f2,$f2,$f2\n"
+    )
+    after = (
+        "\tj\t.L40\n"
+        ".L39 = . + 4\n"
+        "\tadd.s\t$f2,$f4,$f0\n"
+        "\t.set\tnoreorder\n"
+        "\tmul.s\t$f2,$f2,$f2\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800B4684 label-adjacent multiply fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
+def hoist_mover_reflect_likely_multiply(text: str) -> str:
+    """Apply the retail multiply-delay-slot workaround to ``bc1fl``.
+
+    The general multiply hoister handles ordinary branches but not
+    branch-likely instructions. This exact function-gated pattern moves the
+    existing multiply before the branch and leaves a nop in its likely slot.
+    """
+    if "func_800B5B8C:" not in text:
+        return text
+    before = (
+        "\t.set\tnoreorder\n"
+        "\tbc1fl\t.L25\n"
+        "\tmul.s\t$f4,$f4,$f6\n"
+    )
+    after = (
+        "\tmul.s\t$f4,$f4,$f6\n"
+        "\t.set\tnoreorder\n"
+        "\tbc1fl\t.L25\n"
+        "\tnop\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800B5B8C likely-slot multiply fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def schedule_crate_list_head_store(text: str) -> str:
     """Restore the retail store/load order in ``func_800E66A8``.
 
@@ -1727,6 +1786,10 @@ def normalize_v3(source: str) -> str:
         text = reproduce_lzari_load_hazards(text)
     if os.environ.get("V3_ENTITY_MODEL_DRAW_LABEL_HAZARD", "1") == "1":
         text = reproduce_entity_model_draw_label_hazard(text)
+    if os.environ.get("V3_COLLISION_QUERY_LABEL_HAZARD", "1") == "1":
+        text = reproduce_collision_query_label_hazard(text)
+    if os.environ.get("V3_MOVER_REFLECT_LIKELY_MUL", "1") == "1":
+        text = hoist_mover_reflect_likely_multiply(text)
     if os.environ.get("V3_CRATE_LIST_HEAD_STORE", "1") == "1":
         text = schedule_crate_list_head_store(text)
     if os.environ.get("V3_SCRIPT_PAIR_REGISTERS", "1") == "1":

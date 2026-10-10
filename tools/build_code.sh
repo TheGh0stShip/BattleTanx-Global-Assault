@@ -1581,6 +1581,30 @@ while IFS=$'\t' read -r unit address text_size status; do
             "build/us/src/code/${unit}.c.o" .rodata "$rodata_size" --alignment 4
     fi
 done < config/us/clean_normalized_units.tsv
+
+# Whole gameplay units whose C is exact apart from narrowly gated, documented
+# retail-assembler behavior reproduced by the production normalizer.
+while IFS=$'\t' read -r unit address text_size status; do
+    case "$unit" in
+        \#*|unit|'') continue ;;
+    esac
+    .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+        -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
+        -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
+    python3 tools/normalize_kmc_gcc_asm.py \
+        "build/us/src/code/${unit}.raw.s" "build/us/src/code/${unit}.s"
+    .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+        -o "build/us/src/code/${unit}.c.o" "build/us/src/code/${unit}.s"
+    python3 tools/trim_elf32_section.py \
+        "build/us/src/code/${unit}.c.o" .text "$text_size" --alignment 4
+    rodata_size="$(awk -v wanted="$unit" '$1 == wanted { print $3 }' \
+        config/us/unit_rodata.tsv)"
+    if [[ -n "$rodata_size" ]]; then
+        python3 tools/trim_elf32_section.py \
+            "build/us/src/code/${unit}.c.o" .rodata "$rodata_size" --alignment 4
+    fi
+done < config/us/normalizer_assisted_units.tsv
+
 for function_name in \
         func_8007A7B4 \
         func_8007A818 \
