@@ -231,6 +231,33 @@ while the geometry, display-list, and texture subformats are still being
 named. Extracted files remain ROM-derived build artifacts and must not be
 committed.
 
+The command-stream inventory independently identifies a terminating F3DEX2
+display list in every one of the 5,783 referenced chunks:
+
+```sh
+python3 tools/inventory_world_display_lists.py \
+  --output /tmp/btga-world-display-lists.json
+```
+
+| Pool | Command bytes | Relocatable commands | Payload bytes before/after commands |
+| --- | ---: | ---: | ---: |
+| Texture | 42,528 | 886 `G_SETTIMG` | 2,480 / 1,889,168 |
+| State | 33,696 | 0 | 0 / 48 |
+| Geometry | 231,584 | 4,899 `G_VTX` | 64 / 671,872 |
+
+The inventory accepts only the opcodes appropriate to each pool, requires a
+zero-argument `G_ENDDL`, and checks every chunk-relative texture and vertex
+address against its containing range. Geometry contains 19,411 `G_TRI1`
+commands. The state lists contain the expected geometry, texture, tile,
+combiner, colour, synchronization, and other-mode commands.
+
+Two singly referenced overlapping ranges have their display list after
+leading payload rather than at byte zero: texture offset `0x94740` starts its
+list at `+0x9B0`, and geometry offset `0x5D40` starts it at `+0x40`. One state
+range at offset `0x1088` owns 48 bytes after its end command. These exceptions
+are retained explicitly instead of forcing every pool reference into the
+usual command-first layout.
+
 The complete ROM organization and structure names were cross-checked against
 [`nviewer` revision
 `700432e9bf368caebbe3150e86e987e246c851a8`](https://github.com/DSLL32/nviewer/tree/700432e9bf368caebbe3150e86e987e246c851a8).
