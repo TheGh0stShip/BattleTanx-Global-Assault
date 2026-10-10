@@ -1037,6 +1037,10 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             scheduler_context scheduler_state scheduler_events \
             scheduler_queue scheduler_misc object_range object_timing object_setters \
             object_init func_800A16F8 800A1BE0 task_message_broadcast \
+            func_800B044C 800B04E0 func_800B05F4 800B06E0 grid_node_remove \
+            800B109C 800B14A8 func_800B1610 800B1668 800B1DA8 800B2364 \
+            800B2890 800B3368 800B3504 800B4684_collision_query 800B5A10 \
+            800B5B8C_mover_reflect func_800B5D1C 800B5DA8 \
             800AAAE0 800AB4DC 800AC0F4 func_800ACE70 func_800ACEB4 \
             func_800ACEFC 800AD14C 800AE710 800AF364 func_800B0268 func_800B03F4 \
             func_800A8E3C 800A9080 func_800A977C func_800A98B8 func_800A9B64 \
@@ -3222,6 +3226,50 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/object_init.c.o .text 0x30 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800B044C.c.o .text 0x94 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B04E0.c.o .text 0x114 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800B05F4.c.o .text 0xb4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B06E0.c.o .text 0x690 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B06E0.c.o .rodata 0xe4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/grid_node_remove.c.o .text 0x150 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B109C.c.o .text 0x200 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B14A8.c.o .text 0x168 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800B1610.c.o .text 0x58 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B1668.c.o .text 0x230 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B1DA8.c.o .text 0x550 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B2364.c.o .text 0x124 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B2890.c.o .text 0x788 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B3368.c.o .text 0x94 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B3504.c.o .text 0x244 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B4684_collision_query.c.o .text 0x35c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B4684_collision_query.c.o .rodata 0x10 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B5A10.c.o .text 0x17c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B5A10.c.o .rodata 0xc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B5B8C_mover_reflect.c.o .text 0xbc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800B5D1C.c.o .text 0x8c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B5DA8.c.o .text 0x188 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/800AAAE0.c.o .text 0x134 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800AAAE0.c.o .rodata 0x4 --alignment 4
@@ -4054,9 +4102,38 @@ if false; then
     build/us/asm/us/main_800B02D4_to_800B03F4.s.o \
     build/us/src/code/func_800B03F4.c.o \
     build/us/src/code/gameplay_stub.c.o \
-    build/us/asm/us/main_800B044C_to_800B06A8.s.o \
+    build/us/src/code/func_800B044C.c.o \
+    build/us/src/code/800B04E0.c.o \
+    build/us/src/code/func_800B05F4.c.o \
     build/us/src/code/player_color.c.o \
-    build/us/asm/us/main_800B06D8_to_800B5F30.s.o \
+    build/us/asm/us/main_800B06D8_to_800B06E0.s.o \
+    build/us/src/code/800B06E0.c.o \
+    build/us/src/code/func_800B0D70.c.o \
+    build/us/asm/us/main_800B0E38_to_800B0F4C.s.o \
+    build/us/src/code/grid_node_remove.c.o \
+    build/us/src/code/800B109C.c.o \
+    build/us/asm/us/main_800B129C_to_800B14A8.s.o \
+    build/us/src/code/800B14A8.c.o \
+    build/us/src/code/func_800B1610.c.o \
+    build/us/src/code/800B1668.c.o \
+    build/us/asm/us/main_800B1898_to_800B1DA8.s.o \
+    build/us/src/code/800B1DA8.c.o \
+    build/us/src/code/func_800B22F8.c.o \
+    build/us/src/code/800B2364.c.o \
+    build/us/asm/us/main_800B2488_to_800B2890.s.o \
+    build/us/src/code/800B2890.c.o \
+    build/us/asm/us/main_800B3018_to_800B3368.s.o \
+    build/us/src/code/800B3368.c.o \
+    build/us/asm/us/main_800B33FC_to_800B3504.s.o \
+    build/us/src/code/800B3504.c.o \
+    build/us/asm/us/main_800B3748_to_800B4684.s.o \
+    build/us/src/code/800B4684_collision_query.c.o \
+    build/us/asm/us/main_800B49E0_to_800B5A10.s.o \
+    build/us/src/code/800B5A10.c.o \
+    build/us/src/code/800B5B8C_mover_reflect.c.o \
+    build/us/asm/us/main_800B5C48_to_800B5D1C.s.o \
+    build/us/src/code/func_800B5D1C.c.o \
+    build/us/src/code/800B5DA8.c.o \
     build/us/src/code/turn_adjust.c.o \
     build/us/src/code/mover_collision_response.c.o \
     build/us/asm/us/main_800B66E0_to_800B6934.s.o \
