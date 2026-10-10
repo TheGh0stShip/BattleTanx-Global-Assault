@@ -13,6 +13,191 @@ from inventory_lzari_assets import ROM_SHA1
 from inventory_rom_layout import script_ranges
 
 
+BYTE_VALUE_OPCODES = {8, 12, 16, 26, 28, 31, 32, 37, 41, 47}
+RGB_OPCODES = {13, 14, 15, 48, 49}
+PAIR_OPCODES = {22, 33}
+U16_OPCODES = {6, 34, 35, 38, 42, 43, 44}
+NO_PARAMETER_OPCODES = {0, 2, 17, 18, 29, 30, 36, 39, 45, 46}
+
+
+def _signed24(data: bytes, offset: int) -> int:
+    value = int.from_bytes(data[offset : offset + 3], "big")
+    return value - 0x1000000 if value & 0x800000 else value
+
+
+def _pack_signed24(value: int) -> bytes:
+    if not -0x800000 <= value <= 0x7FFFFF:
+        raise ValueError(f"signed 24-bit value out of range: {value}")
+    return (value & 0xFFFFFF).to_bytes(3, "big")
+
+
+def _signed_width(data: bytes, offset: int, width: int) -> int:
+    return int.from_bytes(data[offset : offset + width], "big", signed=True)
+
+
+def _pack_signed_width(value: int, width: int) -> bytes:
+    minimum = -(1 << (width * 8 - 1))
+    maximum = (1 << (width * 8 - 1)) - 1
+    if not minimum <= value <= maximum:
+        raise ValueError(f"signed {width * 8}-bit value out of range: {value}")
+    return int(value).to_bytes(width, "big", signed=True)
+
+
+def decode_command_fields(opcode: int, payload: bytes) -> dict:
+    if opcode in (3, 4):
+        mode = payload[1]
+        fields = {"mode": mode}
+        offset = 2
+        for name, shift in (("x", 0), ("y", 2), ("z", 4)):
+            width = (mode >> shift) & 3
+            if width:
+                fields[name] = _signed_width(payload, offset, width)
+                offset += width
+        if mode & 0x40:
+            fields["parameter_40"] = int.from_bytes(payload[offset : offset + 2], "big")
+            offset += 2
+        if mode & 0x80:
+            fields["parameter_80"] = int.from_bytes(payload[offset : offset + 2], "big")
+        return fields
+    if opcode == 5:
+        mode = payload[1]
+        fields = {"mode": mode}
+        offset = 2
+        for name, mask in (("x", 3), ("y", 0xC), ("z", 0x30)):
+            if mode & mask:
+                fields[name] = int.from_bytes(payload[offset : offset + 2], "big", signed=True)
+                offset += 2
+        return fields
+    if opcode == 7:
+        mode = payload[1]
+        fields = {"mode": mode}
+        offset = 2
+        for name, mask in (("x", 1), ("y", 4), ("z", 0x10)):
+            if mode & mask:
+                fields[name] = payload[offset]
+                offset += 1
+        return fields
+    if opcode == 1:
+        return {"ticks": int.from_bytes(payload[1:3], "big")}
+    if opcode in BYTE_VALUE_OPCODES or (opcode in (9, 10, 11) and len(payload) == 2):
+        return {"value": payload[1]}
+    if opcode in RGB_OPCODES:
+        return {"red": payload[1], "green": payload[2], "blue": payload[3]}
+    if opcode == 25:
+        return {
+            "red": payload[1],
+            "green": payload[2],
+            "blue": payload[3],
+            "alpha": payload[4],
+        }
+    if opcode in U16_OPCODES:
+        return {"value": int.from_bytes(payload[1:3], "big")}
+    if opcode == 19:
+        return {"value": _signed24(payload, 1)}
+    if opcode == 20:
+        return {"x": _signed24(payload, 1), "y": _signed24(payload, 4)}
+    if opcode in PAIR_OPCODES:
+        return {
+            "first": int.from_bytes(payload[1:3], "big"),
+            "second": int.from_bytes(payload[3:5], "big"),
+        }
+    if opcode == 23:
+        return {
+            "first": int.from_bytes(payload[1:3], "big"),
+            "second": int.from_bytes(payload[3:5], "big"),
+            "value": int.from_bytes(payload[5:7], "big"),
+        }
+    if opcode == 24:
+        return {
+            "red": payload[1],
+            "green": payload[2],
+            "blue": payload[3],
+            "alpha": payload[4],
+            "value": int.from_bytes(payload[5:7], "big"),
+        }
+    if opcode == 27:
+        return {"alpha": payload[1], "value": int.from_bytes(payload[2:4], "big")}
+    if opcode == 40:
+        return {
+            "x": int.from_bytes(payload[1:3], "big", signed=True),
+            "y": int.from_bytes(payload[3:5], "big", signed=True),
+        }
+    return {}
+
+
+def encode_command_fields(command: dict, payload: bytes) -> bytes:
+    fields = command.get("fields", {})
+    if not fields:
+        return payload
+    opcode = command["opcode"]
+    result = bytearray(payload)
+
+    def put_u16(offset: int, value: int) -> None:
+        result[offset : offset + 2] = int(value).to_bytes(2, "big")
+
+    if opcode in (3, 4):
+        mode = fields["mode"]
+        result = bytearray((opcode, mode))
+        for name, shift in (("x", 0), ("y", 2), ("z", 4)):
+            width = (mode >> shift) & 3
+            if width:
+                result.extend(_pack_signed_width(fields[name], width))
+        if mode & 0x40:
+            result.extend(int(fields["parameter_40"]).to_bytes(2, "big"))
+        if mode & 0x80:
+            result.extend(int(fields["parameter_80"]).to_bytes(2, "big"))
+    elif opcode == 5:
+        mode = fields["mode"]
+        result = bytearray((opcode, mode))
+        for name, mask in (("x", 3), ("y", 0xC), ("z", 0x30)):
+            if mode & mask:
+                result.extend(int(fields[name]).to_bytes(2, "big", signed=True))
+    elif opcode == 7:
+        mode = fields["mode"]
+        result = bytearray((opcode, mode))
+        for name, mask in (("x", 1), ("y", 4), ("z", 0x10)):
+            if mode & mask:
+                result.append(fields[name])
+    elif opcode == 1:
+        put_u16(1, fields["ticks"])
+    elif opcode in BYTE_VALUE_OPCODES or (opcode in (9, 10, 11) and len(payload) == 2):
+        result[1] = fields["value"]
+    elif opcode in RGB_OPCODES:
+        result[1:4] = bytes((fields["red"], fields["green"], fields["blue"]))
+    elif opcode == 25:
+        result[1:5] = bytes(
+            (fields["red"], fields["green"], fields["blue"], fields["alpha"])
+        )
+    elif opcode in U16_OPCODES:
+        put_u16(1, fields["value"])
+    elif opcode == 19:
+        result[1:4] = _pack_signed24(fields["value"])
+    elif opcode == 20:
+        result[1:4] = _pack_signed24(fields["x"])
+        result[4:7] = _pack_signed24(fields["y"])
+    elif opcode in PAIR_OPCODES:
+        put_u16(1, fields["first"])
+        put_u16(3, fields["second"])
+    elif opcode == 23:
+        put_u16(1, fields["first"])
+        put_u16(3, fields["second"])
+        put_u16(5, fields["value"])
+    elif opcode == 24:
+        result[1:5] = bytes(
+            (fields["red"], fields["green"], fields["blue"], fields["alpha"])
+        )
+        put_u16(5, fields["value"])
+    elif opcode == 27:
+        result[1] = fields["alpha"]
+        put_u16(2, fields["value"])
+    elif opcode == 40:
+        result[1:3] = int(fields["x"]).to_bytes(2, "big", signed=True)
+        result[3:5] = int(fields["y"]).to_bytes(2, "big", signed=True)
+    else:
+        raise ValueError(f"opcode {opcode} has no editable fixed-field schema")
+    return bytes(result)
+
+
 def require(data: bytes, offset: int, size: int, what: str) -> None:
     if offset < 0 or size < 0 or offset + size > len(data):
         raise ValueError(f"truncated {what} at script offset 0x{offset:X}")
@@ -106,6 +291,11 @@ def parse_script(data: bytes) -> dict:
                 size = command_size(data, offset, stream_type)
             command = {"offset": offset, "opcode": opcode, "size": size}
             command["raw_hex"] = data[offset : offset + size].hex()
+            fields = decode_command_fields(opcode, data[offset : offset + size])
+            if fields:
+                command["fields"] = fields
+            elif opcode in NO_PARAMETER_OPCODES:
+                command["fields"] = {}
             if opcode == 21:
                 command["text"] = data[offset + 1 : offset + size - 1].decode(
                     "ascii", errors="backslashreplace"
@@ -153,6 +343,8 @@ def build_script(script: dict) -> bytes:
             payload = bytes.fromhex(command["raw_hex"])
             if command["opcode"] == 21 and "text" in command:
                 payload = bytes((21,)) + command["text"].encode("ascii") + b"\0"
+            else:
+                payload = encode_command_fields(command, payload)
             if not payload or payload[0] != command["opcode"]:
                 raise ValueError("script command payload disagrees with opcode")
             rebuilt.extend(payload)

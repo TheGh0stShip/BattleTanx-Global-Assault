@@ -84,6 +84,10 @@ python3 tools/pack_script_json.py script.json rebuilt-script.bin
 ```
 
 `make verify-assets` performs this JSON round trip for all 17 retail scripts.
+All 144,298 commands now have structured representations: 82,183 carry typed
+parameters or text, and the remaining 62,115 are explicitly parameterless
+opcodes. Values preserve their encoded signedness and widths, including the
+mode-selected 8-, 16-, and 24-bit coordinates used by opcodes 3 and 4.
 
 Rebuild and retail-gate the split files with:
 

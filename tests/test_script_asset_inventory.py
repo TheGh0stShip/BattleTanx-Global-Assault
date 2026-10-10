@@ -41,6 +41,42 @@ class ScriptAssetInventoryTests(unittest.TestCase):
         self.assertIn(b"NEW TEXT\0", rebuilt)
         self.assertEqual(parse_script(rebuilt)["streams"][0]["commands"][1]["text"], "NEW TEXT")
 
+    def test_fixed_width_command_fields_are_editable(self):
+        data = bytes((1, 2, 0, 1, 8, 10, 20, 0xFF, 0xFF, 0x00, 0, 0, 2, 0))
+        parsed = parse_script(data)
+        command = parsed["streams"][0]["commands"][1]
+        self.assertEqual(command["fields"], {"x": -256, "y": 2})
+        command["fields"]["x"] = 0x12345
+        rebuilt = build_script(parsed)
+        self.assertEqual(
+            parse_script(rebuilt)["streams"][0]["commands"][1]["fields"]["x"],
+            0x12345,
+        )
+
+    def test_variable_width_command_fields_are_editable(self):
+        # Opcode 3: x is signed 8-bit, y signed 16-bit, z signed 24-bit,
+        # followed by both optional 16-bit parameters.
+        data = bytes.fromhex("01020001080A03F9FEFFFDFFFFFC1234567800")
+        parsed = parse_script(data)
+        command = parsed["streams"][0]["commands"][1]
+        self.assertEqual(
+            command["fields"],
+            {
+                "mode": 0xF9,
+                "x": -2,
+                "y": -3,
+                "z": -4,
+                "parameter_40": 0x1234,
+                "parameter_80": 0x5678,
+            },
+        )
+        command["fields"]["z"] = 0x12345
+        rebuilt = build_script(parsed)
+        self.assertEqual(
+            parse_script(rebuilt)["streams"][0]["commands"][1]["fields"]["z"],
+            0x12345,
+        )
+
     def test_current_rom_scripts(self):
         rom_path = ROOT / "baseroms/us/baserom.z64"
         if not rom_path.exists():
