@@ -1,6 +1,6 @@
-typedef struct { int a; int b; unsigned short c; char ext[4]; char name[16]; char pad[2]; } Save;
+#include "controller_save_slot.h"
 typedef struct { char text[4]; char name[16]; char term; char pad[11]; } Disp;
-extern Save D_803A6360[16];
+extern ControllerSaveSlot D_803A6360[16];
 extern Disp D_803A62D0[4];
 extern unsigned short D_8011F236;
 extern char D_8011F9EC[][16];
@@ -10,7 +10,7 @@ extern int sprintf(char *, const char *, ...);
 extern void func_80099160(void *, char *, int);
 extern void func_80097508(char *, int);
 
-int func_800CC2F8(int base) {
+unsigned short func_800CC2F8(int base) {
     unsigned short i;
     unsigned char buf[16];
     unsigned char *p;
@@ -53,3 +53,5 @@ int func_800CC2F8(int base) {
     }
     return 0;
 }
+
+static char D_8007403C[36] __attribute__((section(".rodata"))) = "Delete Controller Pak File %s?";

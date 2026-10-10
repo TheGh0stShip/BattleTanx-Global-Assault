@@ -26,7 +26,6 @@ func_8007B190	0x8007B190	0x60	selected
 func_80080AF4	0x80080AF4	0x64	selected
 func_80080B58	0x80080B58	0x64	selected
 func_8009025C	0x8009025C	0x64	selected
-func_8009D168	0x8009D168	0x64	selected
 func_800A702C	0x800A702C	0x64	selected
 func_8007D69C	0x8007D69C	0x68	selected
 func_800977DC	0x800977DC	0x68	selected

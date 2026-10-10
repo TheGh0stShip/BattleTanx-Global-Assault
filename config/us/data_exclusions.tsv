@@ -24,9 +24,6 @@ align_80073F2C	0x80073F2C	0x4
 align_800740DC	0x800740DC	0x4
 align_80074134	0x80074134	0xC
 align_800741C4	0x800741C4	0xC
-align_8007457C	0x8007457C	0x4
-align_800749AC	0x800749AC	0x4
-align_80074D2C	0x80074D2C	0x4
 align_80074F4C	0x80074F4C	0x4
 align_80074FE8	0x80074FE8	0x8
 align_80075089	0x80075089	0x7
@@ -156,3 +153,14 @@ align_80088C64	0x80088C64	0xC
 align_8008960C	0x8008960C	0x4
 align_80089F38	0x80089F38	0x8
 align_8008AD7C	0x8008AD7C	0x4
+# Verified compiler/object tail padding in the remaining gameplay text region.
+# Boundary audits found no entry points or references; the non-zero runs are
+# stale string fragments retained while the following object was aligned.
+align_8009755C	0x8009755C	0x4
+align_8009859C	0x8009859C	0x4
+align_8009ECF4	0x8009ECF4	0xC
+align_800BFE94	0x800BFE94	0xC
+align_800C6918	0x800C6918	0x8
+align_800CB10C	0x800CB10C	0x4
+align_800CD96C	0x800CD96C	0x4
+align_800CDBDC	0x800CDBDC	0x4

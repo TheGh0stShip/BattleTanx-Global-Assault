@@ -1,5 +1,5 @@
-typedef struct { int a; int b; unsigned short c; char ext[4]; unsigned char name[16]; char pad[2]; } Save;
-extern Save D_803A6360[16];
+#include "controller_save_slot.h"
+extern ControllerSaveSlot D_803A6360[16];
 extern char D_80116EB8[], D_80116E80[];
 extern void *D_8011F82C, *D_8011F830, *D_8011F834, *D_8011F83C, *D_8011F844, *D_8011F84C;
 extern char D_8011F4A0[], D_8011F4D8[], D_8011F2A8[], D_8011F4F8[], D_8011F434[], D_8011F3FC[];

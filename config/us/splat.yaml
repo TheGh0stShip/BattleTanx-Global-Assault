@@ -418,7 +418,6 @@ segments:
       - [0x2C524, asm, main_8009C524_to_8009D144]
       - [0x2D144, c, code/mode_range]
       - [0x2D168, c, code/func_8009D168]
-      - [0x2D1CC, c, code/func_8009D1CC]
       - [0x2D268, asm, main_8009D268_to_8009D270]
       - [0x2D270, c, code/8009D270]
       - [0x2D4AC, asm, main_8009D4AC_to_8009D4B0]

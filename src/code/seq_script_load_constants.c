@@ -1,0 +1,12 @@
+static float sSequenceAspectWide __attribute__((section(".rodata"))) = 2.1913044f;
+static float sSequenceAspectNormalA __attribute__((section(".rodata"))) = 2.6666667f;
+static float sSequenceAspectNormalB __attribute__((section(".rodata"))) = 2.6666667f;
+static float sSequenceAspectHalfA __attribute__((section(".rodata"))) = 1.3333334f;
+static float sSequenceAspectHalfB __attribute__((section(".rodata"))) = 1.3333334f;
+static float sSequenceAspectHalfC __attribute__((section(".rodata"))) = 1.3333334f;
+static float sSequenceAspectHalfD __attribute__((section(".rodata"))) = 1.3333334f;
+static float sSequenceAspectDefault __attribute__((section(".rodata"))) = 1.3333334f;
+static float sSequenceLoadFovScale __attribute__((section(".rodata"))) = -0.064545f;
+static float sSequenceLoadFovBias __attribute__((section(".rodata"))) = 4.67818f;
+static double sSequenceLoadFovHalfScale __attribute__((section(".rodata"))) = 0.5;
+static unsigned int sSequenceLoadPadding __attribute__((section(".rodata"))) = 0;

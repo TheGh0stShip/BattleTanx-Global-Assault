@@ -1562,8 +1562,6 @@ done < config/us/legacy_normalized_units_extra.tsv
 python3 tools/trim_elf32_section.py \
     build/us/src/code/func_80090218.c.o .rodata 0x4 --alignment 4
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/func_8009D168.c.o .rodata 0x4 --alignment 4
-python3 tools/trim_elf32_section.py \
     build/us/src/code/func_8009D510.c.o .rodata 0x4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/func_8009D8A0.c.o .rodata 0xC --alignment 4
@@ -1573,6 +1571,28 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/func_8009EFD4.c.o .rodata 0x4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/effect_draw.c.o .rodata 0x4 --alignment 4
+
+# Typed constants split from compiler-generated sequence-script pools. Keeping
+# these in companion objects preserves the owning units' retail jump-table order.
+for spec in \
+        seq_script_tick_constants:0x20 \
+        seq_event_spawn_constants:0x4 \
+        seq_target_search_constants:0x8 \
+        seq_point_track_constants:0x8 \
+        seq_script_load_constants:0x30 \
+        spawn_object_command_constants:0x4; do
+    unit="${spec%%:*}"
+    rodata_size="${spec#*:}"
+    .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+        -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
+        -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
+    python3 tools/normalize_kmc_gcc_asm.py \
+        "build/us/src/code/${unit}.raw.s" "build/us/src/code/${unit}.s"
+    .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+        -o "build/us/src/code/${unit}.c.o" "build/us/src/code/${unit}.s"
+    python3 tools/trim_elf32_section.py \
+        "build/us/src/code/${unit}.c.o" .rodata "$rodata_size" --alignment 4
+done
 
 # Whole gameplay translation units that match with the standard production
 # normalizer. Keep these manifest-driven so new unit reconstructions do not
@@ -1690,7 +1710,6 @@ for function_name in \
         func_8009A650 \
         func_8009ACDC \
         func_8009AD7C \
-        func_8009D1CC \
         func_8009D4B0 \
         func_8009D75C \
         func_8009D960 \
@@ -1758,7 +1777,7 @@ for function_name in \
         func_80079FF0|func_8007A7B4|func_8007A818|func_8007A8F0|func_8007A9EC|func_8007AAA8|func_8007AB64|func_8007ADF0|func_8007AF84|func_8007B0E4|func_8007B8EC|func_8007D33C|func_8007D39C|func_8007D7C4|func_8007D884|func_8007D998|func_8007DACC|func_8007DD54|func_8007DE3C|func_8007E024|func_8007E118|func_8007E7A8|func_8007E8C8|\
         func_80080818|func_80080C04|func_80082A90|func_80083CC0|func_80083DF0|func_80083EBC|func_8008518C|func_80085250|func_80085DA8|func_80085F7C|func_80086700|func_80087F2C|func_8008865C|func_8008875C|func_80088ABC|func_80089E84|\
         func_8008A350|func_8008B6D0|func_8008B788|func_8008BEC4|func_8008E6E0|func_8008E620|func_8008F3FC|func_800947C4|func_8009660C|func_80096F48|func_800976AC|func_80097844|func_800979F4|func_80098F24|\
-        func_80097CC8|func_80097EE4|func_80098250|func_80098334|func_8009836C|func_80098454|func_80098BF8|func_80099028|func_8009A650|func_8009ACDC|func_8009AD7C|func_8009D1CC|func_8009D4B0|func_8009D75C|func_8009F090|func_8009F334|func_8009F5AC|func_8009F8A0|func_800A1150|func_800A1290|\
+        func_80097CC8|func_80097EE4|func_80098250|func_80098334|func_8009836C|func_80098454|func_80098BF8|func_80099028|func_8009A650|func_8009ACDC|func_8009AD7C|func_8009D4B0|func_8009D75C|func_8009F090|func_8009F334|func_8009F5AC|func_8009F8A0|func_800A1150|func_800A1290|\
         func_8009D960|func_8009DAB0|func_8009DFAC|func_8009E0E8|func_8009E19C|func_8009EC0C|func_800A140C|func_800A15F0|func_800A18D0|func_800A19DC|\
         func_800A1B44|func_800A2B9C|func_800A2EF0|func_800A2F0C|func_800A60E0|func_800A6B7C|func_800A8D54|func_800A8E84|func_800A8F34|func_800A9660|func_800A96B8|func_800A9A98|func_800ACF20|func_800ACFE0|func_800AD088|func_800AA5D0|func_800ABE6C|func_800B22F8|\
         func_800B0D70|func_800B6934|func_800B9F44|func_800BDA30|func_800C04C8|func_800C0564|\
@@ -1849,7 +1868,6 @@ for function_name in \
         func_8009AD7C) size=0xBC ;;
         func_800A60E0) size=0xBC ;;
         func_800A8D54) size=0xE8 ;;
-        func_8009D1CC) size=0x9C ;;
         func_8009D4B0) size=0x60 ;;
         func_8009D75C) size=0xC0 ;;
         func_8009D960) size=0xD4 ;;
@@ -1918,7 +1936,7 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/func_8008E6E0.c.o .rodata 0x3C --alignment 4
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/func_8009D1CC.c.o .rodata 0x30 --alignment 4
+    build/us/src/code/func_8009D168.c.o .rodata 0x38 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/controller_layout_data.c.o .rodata 0xE0 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -4799,7 +4817,7 @@ done <<'RODATA_UNITS'
 800D5E2C_script_particle_update 0x38
 800E3FDC_entity_model_draw 0x48
 actor_model_draw 0x44
-controller_slots_scan 0x7
+controller_slots_scan 0x2C
 debris_piece_draw 0x44
 debris_scatter_spawn 0x4
 func_800C0C38 0x4

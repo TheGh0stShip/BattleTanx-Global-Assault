@@ -86,3 +86,4 @@ common_model_loader	0x800BB53C	0x880	matched
 func_800A9EC0	0x800A9EC0	0x50	matched
 func_800BF130	0x800BF130	0x74	matched
 func_800BFDA4	0x800BFDA4	0xA8	matched
+func_8009D168	0x8009D168	0x100	matched
