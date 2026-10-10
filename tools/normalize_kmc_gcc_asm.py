@@ -3850,6 +3850,10 @@ def normalize_v3(source: str) -> str:
         text = schedule_tank_color_fade(text)
     if os.environ.get("V3_TANK_EVENT_CONSTANT_SCHEDULE", "1") == "1":
         text = schedule_tank_event_constants(text)
+    if os.environ.get("V3_TASK_CLASS_INIT_SHAPE", "1") == "1":
+        text = shape_task_class_init(text)
+    if os.environ.get("V3_PARTICLE_COLOR_COMMAND_REGISTERS", "1") == "1":
+        text = shape_particle_color_command_registers(text)
     return text
 
 
@@ -3919,6 +3923,168 @@ def schedule_tank_event_constants(text: str) -> str:
             f"func_8009060C constant schedule fired {fires} times (expected 1)"
         )
     return text.replace(before, after, 1)
+
+
+def shape_particle_color_command_registers(text: str) -> str:
+    """Match the tied command temporaries in ``func_800F01F0``.
+
+    The six switch arms have identical dependencies, but local allocation
+    rotates the primitive colour, display-buffer index, and environment colour
+    through ``a0/v0/v1`` instead of retail's ``v0/v1/a0``.  Restrict the
+    register cycle to the switch region, assert every instruction-family fire
+    count, and also reproduce two independent load/copy scheduler ties.
+    """
+    if "func_800F01F0:" not in text:
+        return text
+    match = re.search(
+        r"func_800F01F0:.*?\n\s*\.end\s+func_800F01F0\b", text, flags=re.S
+    )
+    if match is None:
+        raise RuntimeError("func_800F01F0 body not found")
+    body = match.group(0)
+    switch_match = re.search(r"(?ms)^\.L19:\n(.*?)^\.L8:\n", body)
+    if switch_match is None:
+        raise RuntimeError("func_800F01F0 switch region not found")
+    switch = switch_match.group(1)
+
+    rewrites = (
+        ("\tli\t$4,", "\tli\t$2,", 6),
+        ("\tori\t$4,$4,", "\tori\t$2,$2,", 6),
+        ("\tlw\t$2,D_80125630\n", "\tlw\t$3,D_80125630\n", 6),
+        ("\tli\t$3,", "\tli\t$4,", 6),
+        ("\tori\t$3,$3,", "\tori\t$4,$4,", 6),
+        ("\tsw\t$4,116($sp)\n", "\tsw\t$2,116($sp)\n", 5),
+        ("\tsw\t$3,124($sp)\n", "\tsw\t$4,124($sp)\n", 5),
+        ("\tandi\t$2,$2,0x0001\n", "\tandi\t$3,$3,0x0001\n", 5),
+        ("\tsll\t$2,$2,3\n", "\tsll\t$3,$3,3\n", 5),
+        ("\taddu\t$at,$at,$2\n", "\taddu\t$at,$at,$3\n", 5),
+    )
+    for before, after, expected in rewrites:
+        fires = switch.count(before)
+        if fires != expected:
+            raise RuntimeError(
+                "func_800F01F0 register shape changed for "
+                f"{before.strip()!r}: {fires} fires (expected {expected})"
+            )
+        switch = switch.replace(before, after)
+
+    for symbol in ("D_80125970", "D_8012596C"):
+        before = f"\tmove\t$5,$2\n\tlw\t$4,{symbol}\n"
+        after = f"\tlw\t$4,{symbol}\n\tmove\t$5,$2\n"
+        fires = switch.count(before)
+        if fires != 1:
+            raise RuntimeError(
+                f"func_800F01F0 {symbol} schedule fired {fires} times (expected 1)"
+            )
+        switch = switch.replace(before, after)
+
+    start, end = switch_match.span(1)
+    body = body[:start] + switch + body[end:]
+    return text[:match.start()] + body + text[match.end():]
+
+
+def shape_task_class_init(text: str) -> str:
+    """Reproduce retail allocation/scheduling in ``func_800A22CC``.
+
+    The C source emits the exact task-class assignments and initialization
+    loops.  GCC nevertheless chooses a different callback-address reuse and a
+    counter-based form for the backwards clear loop.  Retail uses the address
+    itself as that loop's induction variable and schedules the list terminator
+    store before it.  Rewrite only those exact normalized-assembly regions;
+    every pattern is function-local and required to fire once.
+    """
+    if "func_800A22CC:" not in text:
+        return text
+    match = re.search(
+        r"func_800A22CC:.*?\n\s*\.end\s+func_800A22CC\b", text, flags=re.S
+    )
+    if match is None:
+        raise RuntimeError("func_800A22CC body not found")
+    body = match.group(0)
+
+    callback_load = "\tla\t$3,func_800ED804\n"
+    if body.count(callback_load) != 1:
+        raise RuntimeError(
+            f"func_800A22CC initial callback load fired {body.count(callback_load)} times (expected 1)"
+        )
+    body = body.replace(callback_load, "\tla\t$3,func_800EB4FC\n", 1)
+
+    callback_tail = (
+        "\tla\t$2,func_800ED63C\n"
+        "\tsw\t$3,D_80224B58+292\n"
+        "\tsw\t$3,D_80224B58+304\n"
+        "\tla\t$3,func_800EB4FC\n"
+        "\tsw\t$2,D_80224B58+308\n"
+    )
+    callback_retail = (
+        "\tla\t$2,func_800ED804\n"
+        "\tsw\t$2,D_80224B58+292\n"
+        "\tsw\t$2,D_80224B58+304\n"
+        "\tla\t$2,func_800ED63C\n"
+        "\tsw\t$2,D_80224B58+308\n"
+    )
+    if body.count(callback_tail) != 1:
+        raise RuntimeError(
+            f"func_800A22CC callback tail fired {body.count(callback_tail)} times (expected 1)"
+        )
+    body = body.replace(callback_tail, callback_retail, 1)
+
+    branch_before = "\tbnel\t$2,$0,.L17\n\tsll\t$2,$4,4\n"
+    branch_after = "\tbne\t$2,$0,.L17\n\tsll\t$2,$4,4\n"
+    if body.count(branch_before) != 1:
+        raise RuntimeError(
+            f"func_800A22CC forward-loop branch fired {body.count(branch_before)} times (expected 1)"
+        )
+    body = body.replace(branch_before, branch_after, 1)
+
+    clear_before = (
+        "\tli\t$3,0x000003ff\t\t# 1023\n"
+        "\tli\t$2,0x00010000\t\t# 65536\n"
+        "\tori\t$2,$2,0x0fbc\n"
+        ".L10:\n"
+        "\t.set\tnoat\n"
+        "\tlui\t$1,%hi(D_80224EF0)\n"
+        "\taddu\t$1,$1,$2\n"
+        "\tsw\t$0,%lo(D_80224EF0)($1)\n"
+        "\t.set\tat\n"
+        "\taddu\t$3,$3,-1\n"
+        "\t.set\tnoreorder\n"
+        "\tbgez\t$3,.L10\n"
+        "\taddu\t$2,$2,-68\n"
+        "\t.set\tnoreorder\n"
+        "\tli\t$4,0x00000040\t\t# 64\n"
+        "\tli\t$5,-1\t\t\t# 0xffffffff\n"
+        "\tla\t$3,D_80224E68+128\n"
+        "\tli\t$2,-1\t\t\t# 0xffffffff\n"
+        "\tsh\t$2,D_80224EF0+69572\n"
+    )
+    clear_retail = (
+        "\tli\t$2,-1\t\t\t# 0xffffffff\n"
+        "\tsh\t$2,D_80224EF0+69572\n"
+        "\tli\t$2,0x00010000\t\t# 65536\n"
+        "\tori\t$2,$2,0x0fbc\n"
+        ".L10:\n"
+        "\t.set\tnoat\n"
+        "\tlui\t$1,%hi(D_80224EF0)\n"
+        "\taddu\t$1,$1,$2\n"
+        "\tsw\t$0,%lo(D_80224EF0)($1)\n"
+        "\t.set\tat\n"
+        "\taddu\t$2,$2,-68\n"
+        "\t.set\tnoreorder\n"
+        "\tbgez\t$2,.L10\n"
+        "\tnop\n"
+        "\t.set\tnoreorder\n"
+        "\tli\t$5,-1\t\t\t# 0xffffffff\n"
+        "\tli\t$4,0x00000040\t\t# 64\n"
+        "\tla\t$3,D_80224E68+128\n"
+        "\tli\t$2,-1\t\t\t# 0xffffffff\n"
+    )
+    if body.count(clear_before) != 1:
+        raise RuntimeError(
+            f"func_800A22CC clear loop fired {body.count(clear_before)} times (expected 1)"
+        )
+    body = body.replace(clear_before, clear_retail, 1)
+    return text[:match.start()] + body + text[match.end():]
 
 
 def schedule_path_sequence_final_call(text: str) -> str:

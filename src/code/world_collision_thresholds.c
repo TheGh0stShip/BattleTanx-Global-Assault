@@ -1,0 +1,11 @@
+const float D_80072F64 = 65536.0f;
+const float D_80072F68 = 90000.0f;
+const float D_80072F6C = 2890000.0f;
+const float D_80072F70 = 1000000.0f;
+const float D_80072F74 = 65536.0f;
+const float D_80072F78 = 90000.0f;
+const float D_80072F7C = 2890000.0f;
+const float D_80072F80 = 1000000.0f;
+const float D_80072F84 = 90000.0f;
+const float D_80072F88 = 2890000.0f;
+const float D_80072F8C = 1000000.0f;

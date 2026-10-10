@@ -1,0 +1,15 @@
+const float D_80072C8C = 2.29f;
+const float D_80072C90 = 1.12f;
+const float D_80072C94 = 1.12f;
+const float D_80072C98 = 1.12f;
+const float D_80072C9C = 2.2f;
+const float D_80072CA0 = 2.2f;
+const float D_80072CA4 = 2.2f;
+const float D_80072CA8 = 2.2f;
+const float D_80072CAC = 2.6666667f;
+const float D_80072CB0 = 1.3333334f;
+const float D_80072CB4 = 4096.0f;
+const float D_80072CB8 = 37.0f;
+const float D_80072CBC = 30.0f;
+const float D_80072CC0 = 16.0f;
+const float D_80072CC4 = 1.0f;

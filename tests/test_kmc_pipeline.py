@@ -12,6 +12,85 @@ SPEC.loader.exec_module(MODULE)
 
 
 class KmcPipelineTests(unittest.TestCase):
+    def _task_class_init_fixture(self) -> str:
+        return (
+            "func_800A22CC:\n"
+            "\tla\t$3,func_800ED804\n"
+            "\tla\t$2,func_800ED63C\n"
+            "\tsw\t$3,D_80224B58+292\n"
+            "\tsw\t$3,D_80224B58+304\n"
+            "\tla\t$3,func_800EB4FC\n"
+            "\tsw\t$2,D_80224B58+308\n"
+            "\tbnel\t$2,$0,.L17\n\tsll\t$2,$4,4\n"
+            "\tli\t$3,0x000003ff\t\t# 1023\n"
+            "\tli\t$2,0x00010000\t\t# 65536\n"
+            "\tori\t$2,$2,0x0fbc\n.L10:\n"
+            "\t.set\tnoat\n\tlui\t$1,%hi(D_80224EF0)\n"
+            "\taddu\t$1,$1,$2\n\tsw\t$0,%lo(D_80224EF0)($1)\n"
+            "\t.set\tat\n\taddu\t$3,$3,-1\n\t.set\tnoreorder\n"
+            "\tbgez\t$3,.L10\n\taddu\t$2,$2,-68\n\t.set\tnoreorder\n"
+            "\tli\t$4,0x00000040\t\t# 64\n"
+            "\tli\t$5,-1\t\t\t# 0xffffffff\n"
+            "\tla\t$3,D_80224E68+128\n"
+            "\tli\t$2,-1\t\t\t# 0xffffffff\n"
+            "\tsh\t$2,D_80224EF0+69572\n"
+            "\t.end\tfunc_800A22CC\n"
+        )
+
+    def test_task_class_init_shape_is_gated_and_counted(self) -> None:
+        source = self._task_class_init_fixture()
+        normalized = MODULE.shape_task_class_init(source)
+        self.assertIn("\tla\t$3,func_800EB4FC\n", normalized)
+        self.assertIn("\tla\t$2,func_800ED804\n", normalized)
+        self.assertIn("\tbne\t$2,$0,.L17\n", normalized)
+        self.assertIn("\tbgez\t$2,.L10\n\tnop\n", normalized)
+        self.assertLess(
+            normalized.index("\tsh\t$2,D_80224EF0+69572\n"),
+            normalized.index(".L10:\n"),
+        )
+
+        unrelated = source.replace("func_800A22CC", "func_800A22C8")
+        self.assertEqual(unrelated, MODULE.shape_task_class_init(unrelated))
+
+    def test_task_class_init_shape_rejects_drift(self) -> None:
+        source = self._task_class_init_fixture().replace("\tbnel\t$2,$0,.L17\n", "\tbne\t$2,$0,.L17\n")
+        with self.assertRaisesRegex(RuntimeError, "forward-loop branch fired 0 times"):
+            MODULE.shape_task_class_init(source)
+
+    def test_particle_color_command_registers_are_gated_and_counted(self) -> None:
+        block = (
+            "\tli\t$4,1\n\tori\t$4,$4,2\n"
+            "\tlw\t$2,D_80125630\n\tli\t$3,3\n\tori\t$3,$3,4\n"
+        )
+        tail = (
+            "\tsw\t$4,116($sp)\n\tsw\t$3,124($sp)\n"
+            "\tandi\t$2,$2,0x0001\n\tsll\t$2,$2,3\n"
+            "\taddu\t$at,$at,$2\n"
+        )
+        source = (
+            "func_800F01F0:\n.L19:\n"
+            + block * 6
+            + tail * 5
+            + "\tmove\t$5,$2\n\tlw\t$4,D_80125970\n"
+            + "\tmove\t$5,$2\n\tlw\t$4,D_8012596C\n"
+            + ".L8:\n\tnop\n\t.end\tfunc_800F01F0\n"
+        )
+        normalized = MODULE.shape_particle_color_command_registers(source)
+        self.assertEqual(normalized.count("\tli\t$2,1\n"), 6)
+        self.assertEqual(normalized.count("\tlw\t$3,D_80125630\n"), 6)
+        self.assertIn("\tlw\t$4,D_80125970\n\tmove\t$5,$2\n", normalized)
+
+        unrelated = source.replace("func_800F01F0", "func_800F01EC")
+        self.assertEqual(
+            unrelated, MODULE.shape_particle_color_command_registers(unrelated)
+        )
+
+    def test_particle_color_command_registers_reject_drift(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "switch region not found"):
+            MODULE.shape_particle_color_command_registers(
+                "func_800F01F0:\n\tnop\n\t.end\tfunc_800F01F0\n"
+            )
+
     def test_tank_event_constant_schedule_moves_complete_chunks(self) -> None:
         source = (
             "func_8009060C:\n"

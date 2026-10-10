@@ -24,6 +24,25 @@ for asm_source in asm/us/*.s; do
         's/^(glabel|dlabel|endlabel|enddlabel) (osViClock|__osShutdown|__OSGlobalIntMask|__osRcpImTable|osClockRate|D_80126F80|rspbootTextStart|gspF3DEX_fifoDataStart|n_aspMainTextStart|__libm_qnan_f|osViModeMpalLan1|osViModeNtscLan1|osViModePalLan1|xlitob_data_0000|xlitob_data_0014|n_alGlobals|alGlobals|__osContinitialized|__osHwIntTable|__osPiAccessQueueEnabled|D_80126EC0|alGlobals_80126ED0|__osThreadTail|__osRunQueue|__osActiveQueue|__osRunningThread|__osFaultedThread|__osTimerList|vi_data_0000|__osViCurr|__osViNext)$/\1 __retail_\2/' \
         "$asm_source"
 done
+
+# Typed standalone rodata objects replace labels that splat also emits inside
+# the aggregate retail-data assembly.  Rename only the generated definitions;
+# references keep their original names and therefore resolve to the typed C
+# objects.  Deriving this list from the manifest sources avoids a second,
+# hand-maintained symbol catalogue whenever another pool is recovered.
+while IFS=$'\t' read -r typed_unit address size; do
+    case "$typed_unit" in
+        \#*|unit|'') continue ;;
+    esac
+    while IFS= read -r typed_symbol; do
+        for asm_source in asm/us/*.s; do
+            sed -i -E \
+                "s/^(glabel|dlabel|endlabel|enddlabel) ${typed_symbol}$/\\1 __retail_${typed_symbol}/" \
+                "$asm_source"
+        done
+    done < <(grep -oE 'D_[0-9A-Fa-f]{8}' "src/code/${typed_unit}.c" | sort -u)
+done < config/us/typed_rodata_units.tsv
+
 for boot_exception_source in asm/us/main_8007*.s; do
     [[ -f "$boot_exception_source" ]] || continue
     sed -i \
@@ -518,10 +537,6 @@ python3 tools/trim_elf32_section.py \
     -o build/us/asm/us/main_800EFC68_to_800EFC70.s.o asm/us/main_800EFC68_to_800EFC70.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800EFC68_to_800EFC70.s.o .text 0x8 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800F01F0_to_800F0618.s.o asm/us/main_800F01F0_to_800F0618.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800F01F0_to_800F0618.s.o .text 0x428 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800F1278_to_800F1770.s.o asm/us/main_800F1278_to_800F1770.s
 python3 tools/trim_elf32_section.py \
@@ -1664,6 +1679,24 @@ while IFS=$'\t' read -r unit address text_size status; do
             "build/us/src/code/${unit}.c.o" .rodata "$rodata_size" --alignment 4
     fi
 done < config/us/normalizer_assisted_units.tsv
+
+# Typed rodata whose original text owners remain assembly.  Standalone objects
+# make the recovered types explicit and can be merged into their original
+# translation units as those functions close.
+while IFS=$'\t' read -r unit address rodata_size; do
+    case "$unit" in
+        \#*|unit|'') continue ;;
+    esac
+    .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
+        -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
+        -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
+    python3 tools/normalize_kmc_gcc_asm.py \
+        "build/us/src/code/${unit}.raw.s" "build/us/src/code/${unit}.s"
+    .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
+        -o "build/us/src/code/${unit}.c.o" "build/us/src/code/${unit}.s"
+    python3 tools/trim_elf32_section.py \
+        "build/us/src/code/${unit}.c.o" .rodata "$rodata_size" --alignment 4
+done < config/us/typed_rodata_units.tsv
 
 for function_name in \
         func_8007A7B4 \
@@ -4268,6 +4301,7 @@ if false; then
     build/us/asm/us/main_8009DAB0_to_8009DB0C.s.o \
     build/us/src/code/vector2_scale.c.o \
     build/us/asm/us/main_8009DB2C_to_8009E044.s.o \
+    build/us/src/code/distance_metric_constants.c.o \
     build/us/src/code/vector2_motion.c.o \
     build/us/asm/us/main_8009E0E8_to_8009EEA0.s.o \
     build/us/src/code/game_queue.c.o \
@@ -4285,6 +4319,7 @@ if false; then
     build/us/asm/us/main_8009FCCC_to_8009FF1C.s.o \
     build/us/src/code/vector2_rotate.c.o \
     build/us/asm/us/main_8009FFB8_to_800A0750.s.o \
+    build/us/src/code/matrix_operation_constants.c.o \
     build/us/src/code/lzari_decode.c.o \
     build/us/asm/us/main_800A1144_to_800A1150.s.o \
     build/us/src/code/func_800A1150.c.o \
@@ -4302,7 +4337,7 @@ if false; then
     build/us/src/code/func_800A1B44.c.o \
     build/us/src/code/800A1BE0.c.o \
     build/us/src/code/task_message_broadcast.c.o \
-    build/us/asm/us/main_800A22CC_to_800A2B74.s.o \
+    build/us/src/code/task_class_init.c.o \
     build/us/src/code/object_range.c.o \
     build/us/src/code/func_800A2B9C.c.o \
     build/us/asm/us/main_800A2C6C_to_800A2DFC.s.o \
@@ -4332,6 +4367,7 @@ if false; then
     build/us/src/code/spotter_frame_setup.c.o \
     build/us/src/code/func_800A702C.c.o \
     build/us/asm/us/main_800A7090_to_800A7290.s.o \
+    build/us/src/code/camera_perspective_constants.c.o \
     build/us/src/code/object_init.c.o \
     build/us/asm/us/main_800A72C0_to_800A7664.s.o \
     build/us/src/code/player_perspective_update.c.o \
@@ -4368,10 +4404,12 @@ if false; then
     build/us/asm/us/main_800A9EC0_to_800A9F10.s.o \
     build/us/src/code/800A9F10.c.o \
     build/us/asm/us/main_800AA058_to_800AA598.s.o \
+    build/us/src/code/object_transform_constants.c.o \
     build/us/src/code/object_table_lookup.c.o \
     build/us/asm/us/main_800AA5C4_to_800AA5D0.s.o \
     build/us/src/code/func_800AA5D0.c.o \
     build/us/asm/us/main_800AA664_to_800AAAE0.s.o \
+    build/us/src/code/object_distance_constants.c.o \
     build/us/src/code/800AAAE0.c.o \
     build/us/src/code/func_800AAC14.c.o \
     build/us/asm/us/main_800AAEA0_to_800AB4DC.s.o \
@@ -4391,6 +4429,8 @@ if false; then
     build/us/asm/us/main_800AD6A8_to_800AE710.s.o \
     build/us/src/code/800AE710.c.o \
     build/us/asm/us/main_800AE8EC_to_800AF364.s.o \
+    build/us/src/code/collision_bounds_constants.c.o \
+    build/us/src/code/world_collision_thresholds.c.o \
     build/us/src/code/800AF364.c.o \
     build/us/asm/us/main_800AF43C_to_800B0268.s.o \
     build/us/src/code/func_800B0268.c.o \
@@ -4416,6 +4456,7 @@ if false; then
     build/us/src/code/func_800B22F8.c.o \
     build/us/src/code/800B2364.c.o \
     build/us/src/code/grid_collision_push.c.o \
+    build/us/src/code/grid_collision_constants.c.o \
     build/us/src/code/800B2890.c.o \
     build/us/asm/us/main_800B3018_to_800B3368.s.o \
     build/us/src/code/800B3368.c.o \
@@ -4424,6 +4465,7 @@ if false; then
     build/us/asm/us/main_800B3748_to_800B4684.s.o \
     build/us/src/code/800B4684_collision_query.c.o \
     build/us/asm/us/main_800B49E0_to_800B5A10.s.o \
+    build/us/src/code/hud_coordinate_constants.c.o \
     build/us/src/code/800B5A10.c.o \
     build/us/src/code/800B5B8C_mover_reflect.c.o \
     build/us/asm/us/main_800B5C48_to_800B5D1C.s.o \
@@ -4435,8 +4477,11 @@ if false; then
     build/us/asm/us/main_800B66E0_to_800B6934.s.o \
     build/us/src/code/func_800B6934.c.o \
     build/us/asm/us/main_800B69F4_to_800B739C.s.o \
+    build/us/src/code/hud_layout_constants.c.o \
+    build/us/src/code/hud_timing_constants.c.o \
     build/us/src/code/contact_side_test.c.o \
     build/us/asm/us/main_800B74B4_to_800B8310.s.o \
+    build/us/src/code/hud_animation_limits.c.o \
     build/us/src/code/vector_angle_from_xy.c.o \
     build/us/asm/us/main_800B83A8_to_800B87A0.s.o \
     build/us/src/code/800B87A0.c.o \
@@ -4672,6 +4717,7 @@ if false; then
     build/us/src/code/script_particle_spawn.c.o \
     build/us/src/code/800D5E2C_script_particle_update.c.o \
     build/us/asm/us/main_800D6508_to_800D67F0.s.o \
+    build/us/src/code/model_ring_identity.c.o \
     build/us/src/code/effect_draw.c.o \
     build/us/src/code/effect_code_table.c.o \
     build/us/src/code/effect_code_parse.c.o \
@@ -4903,7 +4949,7 @@ if false; then
     build/us/src/code/particle_pool_init.c.o \
     build/us/src/code/particle_emitter_free.c.o \
     build/us/src/code/particle_emitter_update.c.o \
-    build/us/asm/us/main_800F01F0_to_800F0618.s.o \
+    build/us/src/code/func_800F01F0.c.o \
     build/us/src/code/particle_free_list.c.o \
     build/us/src/code/particle_smoke_update.c.o \
     build/us/src/code/particle_node_list.c.o \

@@ -1,4 +1,8 @@
 # unit	rodata_vram	rodata_size
+model_ring_identity	0x80074F94	0x50
+camera_perspective_constants	0x80072C8C	0x3C
+collision_bounds_constants	0x80072F04	0x60
+world_collision_thresholds	0x80072F64	0x2C
 # See tools/place_unit_rodata.py. Listed C units own [vram, vram+size) of
 # main-segment rodata; make verify-code proves the C bytes equal the ROM.
 800902C0	0x80071DCC	0x8
@@ -7,6 +11,7 @@ func_8009060C	0x80071DF8	0x5C
 func_800909CC	0x80071E54	0x4
 func_8009299C	0x80071FD8	0x4
 func_800F1278	0x80076EC0	0xD0
+func_800F01F0	0x80076D98	0x90
 func_800AD6A8	0x80072EB8	0xC
 func_800AD9A8	0x80072EC4	0x10
 func_800ADCA0	0x80072ED4	0x10
@@ -392,3 +397,12 @@ camera_mode_update	0x80072D28	0x3C
 effect_runtime_tables	0x80072BA0	0xEC
 mission_actor_spawn	0x800761C0	0x38
 matrix_scale_curve	0x80071F90	0x48
+distance_metric_constants	0x800725DC	0x30
+hud_coordinate_constants	0x800730A0	0x24
+hud_layout_constants	0x800730F8	0x24
+hud_timing_constants	0x80073120	0x38
+hud_animation_limits	0x8007317C	0x8
+matrix_operation_constants	0x80072660	0x20
+object_transform_constants	0x80072D80	0x14
+object_distance_constants	0x80072DA0	0x1C
+grid_collision_constants	0x80073074	0x1C

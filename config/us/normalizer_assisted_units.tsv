@@ -1,4 +1,6 @@
 # unit	vram	text_size	status
+task_class_init	0x800A22CC	0x8A8	normalizer-assisted
+func_800F01F0	0x800F01F0	0x428	normalizer-assisted
 func_800904C8	0x800904C8	0x144	normalizer-assisted
 func_8009060C	0x8009060C	0x3C0	normalizer-assisted
 func_8009299C	0x8009299C	0x29C	normalizer-assisted

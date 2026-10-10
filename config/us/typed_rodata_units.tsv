@@ -1,0 +1,14 @@
+unit	address	size
+model_ring_identity	0x80074F94	0x50
+camera_perspective_constants	0x80072C8C	0x3C
+collision_bounds_constants	0x80072F04	0x60
+world_collision_thresholds	0x80072F64	0x2C
+distance_metric_constants	0x800725DC	0x30
+hud_coordinate_constants	0x800730A0	0x24
+hud_layout_constants	0x800730F8	0x24
+hud_timing_constants	0x80073120	0x38
+hud_animation_limits	0x8007317C	0x8
+matrix_operation_constants	0x80072660	0x20
+object_transform_constants	0x80072D80	0x14
+object_distance_constants	0x80072DA0	0x1C
+grid_collision_constants	0x80073074	0x1C
