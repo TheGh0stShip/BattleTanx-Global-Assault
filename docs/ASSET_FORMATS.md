@@ -258,6 +258,37 @@ range at offset `0x1088` owns 48 bytes after its end command. These exceptions
 are retained explicitly instead of forcing every pool reference into the
 usual command-first layout.
 
+Texture metadata comes from pairing each texture list with the state list in
+the same world reference. `G_SETTILE` supplies the N64 format and size,
+`G_SETTILESIZE` supplies the sampled dimensions, and the relocated
+`G_SETTIMG` commands identify palettes and texels. Across 38,910 textured
+references there are 1,351 unique texture/state pairings:
+
+| Format | Pairings |
+| --- | ---: |
+| RGBA16 | 1,219 |
+| RGBA32 | 2 |
+| CI4 | 108 |
+| I4 | 14 |
+| I8 | 7 |
+
+For 1,347 pairings the derived image ends exactly at the referenced chunk
+boundary. Their palette banks produce 1,556 independently decodable frames.
+Three pairings deliberately sample a larger tile than their stored payload,
+and the overlapping texture/state exception lacks the normal tile commands;
+the extractor records but does not guess previews for those four cases.
+
+Generate the metadata inventory, with optional PNG inspection output:
+
+```sh
+python3 tools/inventory_world_textures.py \
+  --output /tmp/btga-world-textures.json \
+  --preview-dir assets/extracted/us/world-textures
+```
+
+PNG output is a visual check, not a reconstruction input. The original pool
+bytes, command words, palette order, and range metadata remain authoritative.
+
 The complete ROM organization and structure names were cross-checked against
 [`nviewer` revision
 `700432e9bf368caebbe3150e86e987e246c851a8`](https://github.com/DSLL32/nviewer/tree/700432e9bf368caebbe3150e86e987e246c851a8).

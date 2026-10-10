@@ -34,7 +34,8 @@ def decode_texture(data: bytes, format_id: int, size_id: int, width: int, height
     """Return row-major RGBA8888 pixels for one decoded image stream.
 
     The descriptor values use the standard N64 G_IM_FMT/G_IM_SIZ numbers:
-    format 0 is RGBA, 2 is CI, and 3 is IA; sizes 0..3 are 4/8/16/32-bit.
+    format 0 is RGBA, 2 is CI, 3 is IA, and 4 is I; sizes 0..3 are
+    4/8/16/32-bit.
     CI payloads place their RGBA16 palette before the packed indices.
     """
 
@@ -91,6 +92,23 @@ def decode_texture(data: bytes, format_id: int, size_id: int, width: int, height
             raise TextureError(f"IA16 payload is {len(data)} bytes, expected {expected}")
         for intensity, alpha in zip(data[::2], data[1::2]):
             output.extend((intensity, intensity, intensity, alpha))
+    elif (format_id, size_id) == (4, 0):
+        expected = (pixels + 1) // 2
+        if len(data) != expected:
+            raise TextureError(f"I4 payload is {len(data)} bytes, expected {expected}")
+        emitted = 0
+        for value in data:
+            for nibble in (value >> 4, value & 0xF):
+                if emitted == pixels:
+                    break
+                intensity = nibble * 17
+                output.extend((intensity, intensity, intensity, 0xFF))
+                emitted += 1
+    elif (format_id, size_id) == (4, 1):
+        if len(data) != pixels:
+            raise TextureError(f"I8 payload is {len(data)} bytes, expected {pixels}")
+        for intensity in data:
+            output.extend((intensity, intensity, intensity, 0xFF))
     else:
         raise TextureError(f"unsupported N64 texture format/size: {format_id}/{size_id}")
 

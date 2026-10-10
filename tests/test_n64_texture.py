@@ -35,6 +35,16 @@ class N64TextureTests(unittest.TestCase):
         self.assertEqual(decode_texture(b"\x8F", 3, 1, 1, 1), bytes((136, 136, 136, 255)))
         self.assertEqual(decode_texture(b"\x12\x34", 3, 2, 1, 1), bytes((18, 18, 18, 52)))
 
+    def test_intensity_formats(self):
+        self.assertEqual(
+            decode_texture(bytes((0x1F,)), 4, 0, 2, 1),
+            bytes((0x11, 0x11, 0x11, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF)),
+        )
+        self.assertEqual(
+            decode_texture(bytes((0x12, 0xA0)), 4, 1, 2, 1),
+            bytes((0x12, 0x12, 0x12, 0xFF, 0xA0, 0xA0, 0xA0, 0xFF)),
+        )
+
     def test_rgba32(self):
         pixel = bytes((1, 2, 3, 4))
         self.assertEqual(decode_texture(pixel, 0, 3, 1, 1), pixel)
