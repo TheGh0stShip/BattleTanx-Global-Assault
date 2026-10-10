@@ -1,0 +1,322 @@
+#include "types.h"
+
+/*
+ * Race HUD graph records consumed by race_hud_init and the race player
+ * panel helpers. Retail 0x8011DE9C-0x8011E578.
+ * Words are 32-bit N64 tokens (packed UI commands, coordinates, float bit
+ * patterns, callback addresses and graph links), not native host pointers.
+ */
+
+/* Retail 0x8011DE9C-0x8011DEAC. Consumers: graph links only. */
+u32 gRaceHudLayout_8011DE9C[4] = {
+    0x00070000, 0x00000000, 0x800C98E8, 0x00000000, /* 0x8011DE9C */
+};
+
+/* Retail 0x8011DEAC-0x8011DEB8. Consumers: main_800C98E8_to_800CA1A8, race_hud_init. */
+u32 gRaceHudLayout_8011DEAC[3] = {
+    0x8011752C, 0x00000000, 0x00410009, /* 0x8011DEAC */
+};
+
+/* Retail 0x8011DEB8-0x8011DEC4. Consumers: main_800C98E8_to_800CA1A8, race_hud_init. */
+u32 gRaceHudLayout_8011DEB8[3] = {
+    0x8011752C, 0x00000000, 0x00410009, /* 0x8011DEB8 */
+};
+
+/* Retail 0x8011DEC4-0x8011DED0. Consumers: main_800C98E8_to_800CA1A8, race_hud_init. */
+u32 gRaceHudLayout_8011DEC4[3] = {
+    0x8011752C, 0x00000000, 0x00410009, /* 0x8011DEC4 */
+};
+
+/* Retail 0x8011DED0-0x8011DF18. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011DED0[18] = {
+    0x8011752C, 0x00000000, 0x00410009, 0x8011DE9C, /* 0x8011DED0 */
+    0x00000000, 0x00000000, 0x00000000, 0x00000000, /* 0x8011DEE0 */
+    0x02000000, 0x00000000, 0x80117E0C, 0x00000000, /* 0x8011DEF0 */
+    0x03000083, 0x00D90000, 0x8011DDD8, 0x00000000, /* 0x8011DF00 */
+    0x10010081, 0x00D80000, /* 0x8011DF10 */
+};
+
+/* Retail 0x8011DF18-0x8011DF58. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011DF18[16] = {
+    0x8011DEAC, 0x8011DEDC, 0x0A000081, 0x00D80000, /* 0x8011DF18 */
+    0x80117564, 0x00000000, 0x03000106, 0x00A10000, /* 0x8011DF28 */
+    0x8011DDC8, 0x00000000, 0x0A000104, 0x009F0000, /* 0x8011DF38 */
+    0x80117548, 0x00000000, 0x08040112, 0x00B20000, /* 0x8011DF48 */
+};
+
+/* Retail 0x8011DF58-0x8011DF68. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011DF58[4] = {
+    0x8011DE18, 0x00000000, 0x0E000113, 0x00A30000, /* 0x8011DF58 */
+};
+
+/* Retail 0x8011DF68-0x8011DF98. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011DF68[12] = {
+    0x8011DE68, 0x00000000, 0x03000106, 0x00C30000, /* 0x8011DF68 */
+    0x8011DDC8, 0x00000000, 0x0A000104, 0x00C10000, /* 0x8011DF78 */
+    0x80117548, 0x00000000, 0x08040112, 0x00D40000, /* 0x8011DF88 */
+};
+
+/* Retail 0x8011DF98-0x8011DFA8. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011DF98[4] = {
+    0x8011DDF8, 0x00000000, 0x0E000113, 0x00C50000, /* 0x8011DF98 */
+};
+
+/* Retail 0x8011DFA8-0x8011DFB8. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011DFA8[4] = {
+    0x8011DE58, 0x00000000, 0x08040032, 0x00D40000, /* 0x8011DFA8 */
+};
+
+/* Retail 0x8011DFB8-0x8011DFE4. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011DFB8[11] = {
+    0x8011DE38, 0x00000000, 0x17000108, 0x00150000, /* 0x8011DFB8 */
+    0x800C9A3C, 0x00000000, 0x17000000, 0x00000000, /* 0x8011DFC8 */
+    0x800C8484, 0x00000000, 0x00000000, /* 0x8011DFD8 */
+};
+
+/* Retail 0x8011DFE4-0x8011DFE8. Consumers: race_hud_init, race_player_panel, race_player_set_layout. */
+u32 gRaceHudLayout_8011DFE4[1] = {
+    0x8011F1F8, /* 0x8011DFE4 */
+};
+
+/* Retail 0x8011DFE8-0x8011E028. Consumers: race_hud_layout. */
+u32 gRaceHudLayout_8011DFE8[16] = {
+    0x8011DEF0, 0x8011DD68, 0x8011DD4C, 0x8011DD38, /* 0x8011DFE8 */
+    0x00000000, 0x00000000, 0x02000000, 0x00000000, /* 0x8011DFF8 */
+    0x80117E0C, 0x00000000, 0x03000036, 0x00650000, /* 0x8011E008 */
+    0x8011DDE0, 0x00000000, 0x10010034, 0x00630000, /* 0x8011E018 */
+};
+
+/* Retail 0x8011E028-0x8011E068. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E028[16] = {
+    0x8011DEAC, 0x8011DEDC, 0x0A000034, 0x00630000, /* 0x8011E028 */
+    0x80117580, 0x00000000, 0x0300006E, 0x00390000, /* 0x8011E038 */
+    0x8011DDD0, 0x00000000, 0x0A00006B, 0x00360000, /* 0x8011E048 */
+    0x8011759C, 0x00000000, 0x08040079, 0x00450000, /* 0x8011E058 */
+};
+
+/* Retail 0x8011E068-0x8011E078. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E068[4] = {
+    0x8011DE18, 0x00000000, 0x0E000079, 0x00380000, /* 0x8011E068 */
+};
+
+/* Retail 0x8011E078-0x8011E0A8. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E078[12] = {
+    0x8011DE68, 0x00000000, 0x0300006E, 0x00550000, /* 0x8011E078 */
+    0x8011DDD0, 0x00000000, 0x0A00006B, 0x00520000, /* 0x8011E088 */
+    0x8011759C, 0x00000000, 0x08040079, 0x00610000, /* 0x8011E098 */
+};
+
+/* Retail 0x8011E0A8-0x8011E0B8. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E0A8[4] = {
+    0x8011DDF8, 0x00000000, 0x0E000079, 0x00540000, /* 0x8011E0A8 */
+};
+
+/* Retail 0x8011E0B8-0x8011E0E4. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E0B8[11] = {
+    0x8011DE58, 0x00000000, 0x1700006E, 0x00180000, /* 0x8011E0B8 */
+    0x800C9A3C, 0x00000000, 0x17000000, 0x00000000, /* 0x8011E0C8 */
+    0x800C8484, 0x00000000, 0x00000000, /* 0x8011E0D8 */
+};
+
+/* Retail 0x8011E0E4-0x8011E128. Consumers: main_800C98E8_to_800CA1A8, race_hud_init, race_mode_query, race_player_panel, race_player_set_layout, race_timer_update. */
+u32 gRaceHudLayout_8011E0E4[17] = {
+    0x8011F1F8, 0x8011E000, 0x8011DD68, 0x8011DD4C, /* 0x8011E0E4 */
+    0x8011DD38, 0x000000A0, 0x00000000, 0x02000000, /* 0x8011E0F4 */
+    0x00000000, 0x80117E0C, 0x00000000, 0x03000036, /* 0x8011E104 */
+    0x00600000, 0x8011DDE0, 0x00000000, 0x10010034, /* 0x8011E114 */
+    0x005E0000, /* 0x8011E124 */
+};
+
+/* Retail 0x8011E128-0x8011E168. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E128[16] = {
+    0x8011DEB8, 0x8011DEDC, 0x0A000034, 0x005E0000, /* 0x8011E128 */
+    0x80117580, 0x00000000, 0x0300006E, 0x00340000, /* 0x8011E138 */
+    0x8011DDD0, 0x00000000, 0x0A00006B, 0x00310000, /* 0x8011E148 */
+    0x8011759C, 0x00000000, 0x08040079, 0x00400000, /* 0x8011E158 */
+};
+
+/* Retail 0x8011E168-0x8011E178. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E168[4] = {
+    0x8011DE20, 0x00000000, 0x0E000079, 0x00330000, /* 0x8011E168 */
+};
+
+/* Retail 0x8011E178-0x8011E1A8. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E178[12] = {
+    0x8011DE6C, 0x00000000, 0x0300006E, 0x00500000, /* 0x8011E178 */
+    0x8011DDD0, 0x00000000, 0x0A00006B, 0x004D0000, /* 0x8011E188 */
+    0x8011759C, 0x00000000, 0x08040079, 0x005C0000, /* 0x8011E198 */
+};
+
+/* Retail 0x8011E1A8-0x8011E1B8. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E1A8[4] = {
+    0x8011DE00, 0x00000000, 0x0E000079, 0x004F0000, /* 0x8011E1A8 */
+};
+
+/* Retail 0x8011E1B8-0x8011E1E4. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E1B8[11] = {
+    0x8011DE5C, 0x00000000, 0x1700006E, 0x000C0000, /* 0x8011E1B8 */
+    0x800C9A3C, 0x00000000, 0x17000000, 0x00000000, /* 0x8011E1C8 */
+    0x800C8484, 0x00000000, 0x00000000, /* 0x8011E1D8 */
+};
+
+/* Retail 0x8011E1E4-0x8011E228. Consumers: race_hud_init, race_player_panel, race_player_set_layout. */
+u32 gRaceHudLayout_8011E1E4[17] = {
+    0x8011F1FA, 0x8011E100, 0x8011DD68, 0x8011DD4C, /* 0x8011E1E4 */
+    0x8011DD38, 0x000000A0, 0x00780000, 0x02000000, /* 0x8011E1F4 */
+    0x00000000, 0x80117E0C, 0x00000000, 0x03000038, /* 0x8011E204 */
+    0x00660000, 0x8011DDE0, 0x00000000, 0x10010036, /* 0x8011E214 */
+    0x00640000, /* 0x8011E224 */
+};
+
+/* Retail 0x8011E228-0x8011E248. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E228[8] = {
+    0x8011DEAC, 0x8011DEDC, 0x0300001D, 0x00390000, /* 0x8011E228 */
+    0x8011DDD0, 0x00000000, 0x08040027, 0x00460000, /* 0x8011E238 */
+};
+
+/* Retail 0x8011E248-0x8011E258. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E248[4] = {
+    0x8011DE18, 0x00000000, 0x0E000027, 0x00390000, /* 0x8011E248 */
+};
+
+/* Retail 0x8011E258-0x8011E278. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E258[8] = {
+    0x8011DE68, 0x00000000, 0x0300001D, 0x00580000, /* 0x8011E258 */
+    0x8011DDD0, 0x00000000, 0x08040027, 0x00650000, /* 0x8011E268 */
+};
+
+/* Retail 0x8011E278-0x8011E288. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E278[4] = {
+    0x8011DDF8, 0x00000000, 0x0E000027, 0x00570000, /* 0x8011E278 */
+};
+
+/* Retail 0x8011E288-0x8011E2B4. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E288[11] = {
+    0x8011DE58, 0x00000000, 0x1700001D, 0x00150000, /* 0x8011E288 */
+    0x800C9A3C, 0x00000000, 0x17000000, 0x00000000, /* 0x8011E298 */
+    0x800C8484, 0x00000000, 0x00000000, /* 0x8011E2A8 */
+};
+
+/* Retail 0x8011E2B4-0x8011E2F8. Consumers: main_800C98E8_to_800CA1A8, race_hud_init, race_mode_query, race_player_panel, race_player_set_layout, race_timer_update. */
+u32 gRaceHudLayout_8011E2B4[17] = {
+    0x8011F1F8, 0x8011E200, 0x8011DD68, 0x8011DD4C, /* 0x8011E2B4 */
+    0x8011DD38, 0x00000000, 0x00000000, 0x02000000, /* 0x8011E2C4 */
+    0x00000000, 0x80117E0C, 0x00000000, 0x03000036, /* 0x8011E2D4 */
+    0x00660000, 0x8011DDE0, 0x00000000, 0x10010034, /* 0x8011E2E4 */
+    0x00640000, /* 0x8011E2F4 */
+};
+
+/* Retail 0x8011E2F8-0x8011E318. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E2F8[8] = {
+    0x8011DEB8, 0x8011DEDC, 0x0300006E, 0x00390000, /* 0x8011E2F8 */
+    0x8011DDD0, 0x00000000, 0x08040078, 0x00460000, /* 0x8011E308 */
+};
+
+/* Retail 0x8011E318-0x8011E328. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E318[4] = {
+    0x8011DE20, 0x00000000, 0x0E000078, 0x00390000, /* 0x8011E318 */
+};
+
+/* Retail 0x8011E328-0x8011E348. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E328[8] = {
+    0x8011DE6C, 0x00000000, 0x0300006E, 0x00580000, /* 0x8011E328 */
+    0x8011DDD0, 0x00000000, 0x08040078, 0x00650000, /* 0x8011E338 */
+};
+
+/* Retail 0x8011E348-0x8011E358. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E348[4] = {
+    0x8011DE00, 0x00000000, 0x0E000078, 0x00570000, /* 0x8011E348 */
+};
+
+/* Retail 0x8011E358-0x8011E384. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E358[11] = {
+    0x8011DE5C, 0x00000000, 0x1700006E, 0x00150000, /* 0x8011E358 */
+    0x800C9A3C, 0x00000000, 0x17000000, 0x00000000, /* 0x8011E368 */
+    0x800C8484, 0x00000000, 0x00000000, /* 0x8011E378 */
+};
+
+/* Retail 0x8011E384-0x8011E3C8. Consumers: main_800C98E8_to_800CA1A8, race_hud_init, race_mode_query, race_player_panel, race_player_set_layout, race_timer_update. */
+u32 gRaceHudLayout_8011E384[17] = {
+    0x8011F1FA, 0x8011E2D0, 0x8011DD68, 0x8011DD4C, /* 0x8011E384 */
+    0x8011DD38, 0x000000A0, 0x00000000, 0x02000000, /* 0x8011E394 */
+    0x00000000, 0x80117E0C, 0x00000000, 0x03000038, /* 0x8011E3A4 */
+    0x00610000, 0x8011DDE0, 0x00000000, 0x10010036, /* 0x8011E3B4 */
+    0x005F0000, /* 0x8011E3C4 */
+};
+
+/* Retail 0x8011E3C8-0x8011E3E8. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E3C8[8] = {
+    0x8011DEC4, 0x8011DEDC, 0x0300001D, 0x00340000, /* 0x8011E3C8 */
+    0x8011DDD0, 0x00000000, 0x08040027, 0x00410000, /* 0x8011E3D8 */
+};
+
+/* Retail 0x8011E3E8-0x8011E3F8. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E3E8[4] = {
+    0x8011DE28, 0x00000000, 0x0E000027, 0x00340000, /* 0x8011E3E8 */
+};
+
+/* Retail 0x8011E3F8-0x8011E418. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E3F8[8] = {
+    0x8011DE70, 0x00000000, 0x0300001D, 0x00530000, /* 0x8011E3F8 */
+    0x8011DDD0, 0x00000000, 0x08040027, 0x00600000, /* 0x8011E408 */
+};
+
+/* Retail 0x8011E418-0x8011E428. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E418[4] = {
+    0x8011DE08, 0x00000000, 0x0E000027, 0x00520000, /* 0x8011E418 */
+};
+
+/* Retail 0x8011E428-0x8011E454. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E428[11] = {
+    0x8011DE60, 0x00000000, 0x1700001D, 0x000C0000, /* 0x8011E428 */
+    0x800C9A3C, 0x00000000, 0x17000000, 0x00000000, /* 0x8011E438 */
+    0x800C8484, 0x00000000, 0x00000000, /* 0x8011E448 */
+};
+
+/* Retail 0x8011E454-0x8011E498. Consumers: main_800C98E8_to_800CA1A8, race_hud_init, race_mode_query, race_player_panel, race_player_set_layout, race_timer_update. */
+u32 gRaceHudLayout_8011E454[17] = {
+    0x8011F1FC, 0x8011E3A0, 0x8011DD68, 0x8011DD4C, /* 0x8011E454 */
+    0x8011DD38, 0x00000000, 0x00780000, 0x02000000, /* 0x8011E464 */
+    0x00000000, 0x80117E0C, 0x00000000, 0x03000036, /* 0x8011E474 */
+    0x00610000, 0x8011DDE0, 0x00000000, 0x10010034, /* 0x8011E484 */
+    0x005F0000, /* 0x8011E494 */
+};
+
+/* Retail 0x8011E498-0x8011E4B8. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E498[8] = {
+    0x8011DED0, 0x8011DEDC, 0x0300006E, 0x00340000, /* 0x8011E498 */
+    0x8011DDD0, 0x00000000, 0x08040078, 0x00410000, /* 0x8011E4A8 */
+};
+
+/* Retail 0x8011E4B8-0x8011E4C8. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E4B8[4] = {
+    0x8011DE30, 0x00000000, 0x0E000078, 0x00340000, /* 0x8011E4B8 */
+};
+
+/* Retail 0x8011E4C8-0x8011E4E8. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E4C8[8] = {
+    0x8011DE74, 0x00000000, 0x0300006E, 0x00530000, /* 0x8011E4C8 */
+    0x8011DDD0, 0x00000000, 0x08040078, 0x00600000, /* 0x8011E4D8 */
+};
+
+/* Retail 0x8011E4E8-0x8011E4F8. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E4E8[4] = {
+    0x8011DE10, 0x00000000, 0x0E000078, 0x00520000, /* 0x8011E4E8 */
+};
+
+/* Retail 0x8011E4F8-0x8011E524. Consumers: race_hud_init. */
+u32 gRaceHudLayout_8011E4F8[11] = {
+    0x8011DE64, 0x00000000, 0x1700006E, 0x000C0000, /* 0x8011E4F8 */
+    0x800C9A3C, 0x00000000, 0x17000000, 0x00000000, /* 0x8011E508 */
+    0x800C8484, 0x00000000, 0x00000000, /* 0x8011E518 */
+};
+
+/* Retail 0x8011E524-0x8011E578. Consumers: race_hud_init, race_player_panel, race_player_set_layout. */
+u32 gRaceHudLayout_8011E524[21] = {
+    0x8011F1FE, 0x8011E470, 0x8011DD68, 0x8011DD4C, /* 0x8011E524 */
+    0x8011DD38, 0x000000A0, 0x00780000, 0x40000808, /* 0x8011E534 */
+    0x10000404, 0x00000000, 0x00000000, 0x00009000, /* 0x8011E544 */
+    0x80000202, 0x20000101, 0x00000000, 0x800BD93C, /* 0x8011E554 */
+    0x800BDA30, 0x00000000, 0x00000000, 0x0084004A, /* 0x8011E564 */
+    0x00000080, /* 0x8011E574 */
+};

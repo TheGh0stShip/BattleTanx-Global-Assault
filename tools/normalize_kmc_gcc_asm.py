@@ -1578,6 +1578,160 @@ def shape_unit_command_candidate_prologue(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def swap_unit_command_search_registers(text: str) -> str:
+    """Exchange tied ``used``/unit-search allocnos in ``func_80086FF4``."""
+    if "func_80086FF4:" not in text:
+        return text
+    match = re.search(
+        r"func_80086FF4:.*?\n\s*\.end\s+func_80086FF4\b", text, flags=re.S
+    )
+    if match is None:
+        raise RuntimeError("func_80086FF4 body not found")
+    body = match.group(0)
+    counts = {r: len(re.findall(re.escape(r), body)) for r in ("$16", "$17")}
+    if counts != {"$16": 22, "$17": 9}:
+        raise RuntimeError(f"func_80086FF4 register counts changed: {counts}")
+    body = body.replace("$16", "$__swap").replace("$17", "$16").replace("$__swap", "$17")
+    frame = (
+        ("\tsw\t$16,28($sp)\n", "\tsw\t$17,28($sp)\n"),
+        ("\tsw\t$17,24($sp)\n", "\tsw\t$16,24($sp)\n"),
+        ("\tlw\t$16,28($sp)\n", "\tlw\t$17,28($sp)\n"),
+        ("\tlw\t$17,24($sp)\n", "\tlw\t$16,24($sp)\n"),
+    )
+    for before, after in frame:
+        if body.count(before) != 1:
+            raise RuntimeError("func_80086FF4 frame pattern changed")
+        body = body.replace(before, after, 1)
+    return text[:match.start()] + body + text[match.end():]
+
+
+def shape_tank_aim_refresh_registers(text: str) -> str:
+    """Match the scheduler and FPR tie choices in ``func_80082198``."""
+    if "func_80082198:" not in text:
+        return text
+    before = (
+        "\tsw\t$31,64($sp)\n\tsw\t$19,60($sp)\n\tsw\t$18,56($sp)\n"
+        "\tsw\t$16,48($sp)\n\tlw\t$3,312($17)\n\tlw\t$2,D_8021945C\n"
+        "\tmove\t$19,$0\n"
+    )
+    after = (
+        "\tsw\t$19,60($sp)\n\tmove\t$19,$0\n\tsw\t$18,56($sp)\n"
+        "\tsw\t$31,64($sp)\n\tsw\t$16,48($sp)\n\tlw\t$2,D_8021945C\n"
+        "\tlw\t$3,312($17)\n"
+    )
+    if text.count(before) != 1:
+        raise RuntimeError("func_80082198 prologue pattern changed")
+    text = text.replace(before, after, 1)
+    match = re.search(
+        r"func_80082198:.*?\n\s*\.end\s+func_80082198\b", text, flags=re.S
+    )
+    if match is None:
+        raise RuntimeError("func_80082198 body not found")
+    body = match.group(0)
+    counts = {r: len(re.findall(re.escape(r), body)) for r in ("$f8", "$f10")}
+    if counts != {"$f8": 4, "$f10": 3}:
+        raise RuntimeError(f"func_80082198 FPR counts changed: {counts}")
+    body = body.replace("$f8", "$__swap").replace("$f10", "$f8").replace("$__swap", "$f10")
+    return text[:match.start()] + body + text[match.end():]
+
+
+def reproduce_vector_angle_join_label(text: str) -> str:
+    """Prevent KMC ``as`` from adding a non-retail nop before ``mul.s``."""
+    if "func_800B8310:" not in text:
+        return text
+    match = re.search(
+        r"func_800B8310:.*?\n\s*\.end\s+func_800B8310\b", text, flags=re.S
+    )
+    if match is None:
+        raise RuntimeError("func_800B8310 body not found")
+    body = match.group(0)
+    pattern = re.compile(
+        r"(\t\.set\tnoreorder\n\.L\d+:\n)\tmove\t\$16,\$0\n"
+        r"(\.L\d+):\n(\tmul\.s\t\$f2,\$f20,\$f20\n)"
+    )
+    body, fires = pattern.subn(
+        r"\1\2 = . + 4\n\tmove\t$16,$0\n\3", body
+    )
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800B8310 join-label rewrite fired {fires} times (expected 1)"
+        )
+    before = (
+        "\tsrl\t$3,$2,1\n\tandi\t$2,$16,0xffff\n"
+        "\t.set\tnoreorder\n\tbne\t$2,$0,.L6\n"
+        "\txori\t$2,$3,0xffff\n\t.set\tnoreorder\n\tandi\t$2,$3,0xffff\n"
+        ".L6:\n"
+    )
+    if body.count(before) != 1:
+        raise RuntimeError("func_800B8310 result-select pattern changed")
+    after = (
+        "\tsrl\t$4,$2,1\n\tandi\t$2,$16,0xffff\n\t.set\tnoreorder\n"
+        "\tbeq\t$2,$0,.L6\n\tmove\t$3,$4\n\t.set\tnoreorder\n"
+        "\txori\t$3,$4,0xffff\n.L6:\n\tandi\t$2,$3,0xffff\n"
+    )
+    body = body.replace(before, after, 1)
+    return text[:match.start()] + body + text[match.end():]
+
+
+def shape_effect_mesh_draw_registers(text: str) -> str:
+    """Match saved constant allocation and first-call scheduling in 800F8AAC."""
+    if "func_800F8AAC:" not in text:
+        return text
+    match = re.search(
+        r"func_800F8AAC:.*?\n\s*\.end\s+func_800F8AAC\b", text, flags=re.S
+    )
+    if match is None:
+        raise RuntimeError("func_800F8AAC body not found")
+    body = match.group(0)
+    counts = {r: len(re.findall(re.escape(r), body)) for r in ("$19", "$20")}
+    if counts != {"$19": 6, "$20": 6}:
+        raise RuntimeError(f"func_800F8AAC register counts changed: {counts}")
+    body = body.replace("$19", "$__swap").replace("$20", "$19").replace("$__swap", "$20")
+    frame = (
+        ("\tsw\t$19,80($sp)\n", "\tsw\t$20,80($sp)\n"),
+        ("\tsw\t$20,76($sp)\n", "\tsw\t$19,76($sp)\n"),
+        ("\tlw\t$19,80($sp)\n", "\tlw\t$20,80($sp)\n"),
+        ("\tlw\t$20,76($sp)\n", "\tlw\t$19,76($sp)\n"),
+    )
+    for before, after in frame:
+        if body.count(before) != 1:
+            raise RuntimeError("func_800F8AAC frame pattern changed")
+        body = body.replace(before, after, 1)
+    before = (
+        "\tli\t$3,-428343296\t\t\t# 0xe6780000\n\tori\t$3,$3,0x7800\n"
+        "\taddu\t$fp,$16,12\n\tmove\t$5,$fp\n\tli\t$23,-100663296\t\t\t# 0xfa000000\n"
+        "\tlw\t$16,D_8021945C\n\tandi\t$18,$18,0x00ff\n"
+        "\tli\t$2,0x78000000\t\t# 2013265920\n\tor\t$2,$18,$2\n"
+        "\tli\t$19,-83886080\t\t\t# 0xfb000000\n\tandi\t$22,$22,0x00ff\n"
+        "\taddu\t$21,$sp,48\n\tlw\t$4,D_803A56D4\n\tli\t$20,0x00000002\t\t# 2\n"
+    )
+    after = (
+        "\tli\t$3,-428343296\t\t\t# 0xe6780000\n"
+        "\tori\t$3,$3,0x7800\n\tlw\t$4,D_803A56D4\n"
+        "\taddu\t$fp,$16,12\n\tmove\t$5,$fp\n"
+        "\tli\t$23,-100663296\t\t\t# 0xfa000000\n\tlw\t$16,D_8021945C\n"
+        "\tandi\t$18,$18,0x00ff\n\tli\t$2,0x78000000\t\t# 2013265920\n"
+        "\tor\t$2,$18,$2\n\tli\t$19,-83886080\t\t\t# 0xfb000000\n"
+        "\tandi\t$22,$22,0x00ff\n\taddu\t$21,$sp,48\n"
+        "\tli\t$20,0x00000002\t\t# 2\n"
+    )
+    if body.count(before) != 1:
+        raise RuntimeError("func_800F8AAC first-call setup changed")
+    body = body.replace(before, after, 1)
+    before = (
+        "\tli\t$3,0x78e60000\t\t# 2028339200\n"
+        "\tori\t$3,$3,0x7800\n\tmove\t$5,$fp\n\tlw\t$4,D_803A56D4\n"
+    )
+    after = (
+        "\tli\t$3,0x78e60000\t\t# 2028339200\n"
+        "\tlw\t$4,D_803A56D4\n\tori\t$3,$3,0x7800\n\tmove\t$5,$fp\n"
+    )
+    if body.count(before) != 1:
+        raise RuntimeError("func_800F8AAC second-call setup changed")
+    body = body.replace(before, after, 1)
+    return text[:match.start()] + body + text[match.end():]
+
+
 def order_spotter_frame_setup_prologue(text: str) -> str:
     """Match the retail prologue ordering in ``func_800A6FD0``.
 
@@ -2154,6 +2308,99 @@ def allocate_flag_dispatch_output_to_a3(text: str) -> str:
     return text
 
 
+def shape_contact_side_test_frame(text: str) -> str:
+    """Reproduce func_800B739C's retail 56-byte saved-register frame.
+
+    The C body already emits the retail instruction stream.  GCC allocates an
+    otherwise unused eight-byte frame slot, shifting only the prologue and
+    epilogue.  Keep this gated to the function label and require both complete
+    frame patterns exactly once so source or compiler drift fails loudly.
+    """
+    if "func_800B739C:" not in text:
+        return text
+
+    patterns = (
+        (
+            "\tsubu\t$sp,$sp,64\n"
+            "\tsw\t$18,32($sp)\n\tmove\t$18,$4\n"
+            "\tsw\t$19,36($sp)\n\tmove\t$19,$0\n"
+            "\tsw\t$20,40($sp)\n\tmove\t$20,$0\n"
+            "\tandi\t$5,$5,0xffff\n"
+            "\tsw\t$31,60($sp)\n\tsw\t$fp,56($sp)\n"
+            "\tsw\t$23,52($sp)\n\tsw\t$22,48($sp)\n"
+            "\tsw\t$21,44($sp)\n\tsw\t$17,28($sp)\n",
+            "\tsubu\t$sp,$sp,56\n"
+            "\tsw\t$20,32($sp)\n\tmove\t$20,$0\n"
+            "\tsw\t$18,24($sp)\n\tmove\t$18,$4\n"
+            "\tsw\t$19,28($sp)\n\tmove\t$19,$0\n"
+            "\tandi\t$5,$5,0xffff\n"
+            "\tsw\t$31,52($sp)\n\tsw\t$fp,48($sp)\n"
+            "\tsw\t$23,44($sp)\n\tsw\t$22,40($sp)\n"
+            "\tsw\t$21,36($sp)\n\tsw\t$17,20($sp)\n",
+            "prologue",
+        ),
+        (
+            "\tlw\t$31,60($sp)\n\tlw\t$fp,56($sp)\n"
+            "\tlw\t$23,52($sp)\n\tlw\t$22,48($sp)\n"
+            "\tlw\t$21,44($sp)\n\tlw\t$20,40($sp)\n"
+            "\tlw\t$19,36($sp)\n\tlw\t$18,32($sp)\n"
+            "\tlw\t$17,28($sp)\n\tlw\t$16,24($sp)\n"
+            "\taddu\t$sp,$sp,64\n",
+            "\tlw\t$31,52($sp)\n\tlw\t$fp,48($sp)\n"
+            "\tlw\t$23,44($sp)\n\tlw\t$22,40($sp)\n"
+            "\tlw\t$21,36($sp)\n\tlw\t$20,32($sp)\n"
+            "\tlw\t$19,28($sp)\n\tlw\t$18,24($sp)\n"
+            "\tlw\t$17,20($sp)\n\tlw\t$16,16($sp)\n"
+            "\taddu\t$sp,$sp,56\n",
+            "epilogue",
+        ),
+    )
+    for old, new, name in patterns:
+        count = text.count(old)
+        if count != 1:
+            raise RuntimeError(
+                f"func_800B739C {name} rule fired {count} times; expected 1"
+            )
+        text = text.replace(old, new, 1)
+    delay_save = "\tsw\t$16,24($sp)\n"
+    if text.count(delay_save) != 1:
+        raise RuntimeError(
+            f"func_800B739C delay-save rule fired {text.count(delay_save)} times; expected 1"
+        )
+    text = text.replace(delay_save, "\tsw\t$16,16($sp)\n", 1)
+    return text
+
+
+def shape_curve_mode_dispatches(text: str) -> str:
+    """Reproduce the retail case-2 switch layout in the curve helpers."""
+    if "func_80079AFC:" not in text:
+        return text
+    patterns = (
+        (
+            "\tbne\t$5,$2,.L5\n\tmov.s\t$f0,$f12\n\t.set\tnoreorder\n"
+            "\tmul.s\t$f0,$f12,$f12\n\t.set\tnoreorder\n\tj\t.L2\n\tnop\n",
+            "\tmul.s\t$f0,$f12,$f12\n\t.set\tnoreorder\n"
+            "\tbeql\t$5,$2,.L5\n\tnop\n\t.set\tnoreorder\n"
+            "\tj\t.L2\n\tmov.s\t$f0,$f12\n",
+            "func_80079AFC",
+        ),
+        (
+            "\tbne\t$7,$2,.L19\n\tmov.s\t$f0,$f6\n\t.set\tnoreorder\n"
+            "\tmul.s\t$f0,$f6,$f6\n\t.set\tnoreorder\n\tj\t.L16\n\tnop\n",
+            "\tmul.s\t$f0,$f6,$f6\n\t.set\tnoreorder\n"
+            "\tbeql\t$7,$2,.L19\n\tnop\n\t.set\tnoreorder\n"
+            "\tj\t.L16\n\tmov.s\t$f0,$f6\n",
+            "func_80079B34",
+        ),
+    )
+    for old, new, name in patterns:
+        count = text.count(old)
+        if count != 1:
+            raise RuntimeError(f"{name} curve-dispatch rule fired {count} times; expected 1")
+        text = text.replace(old, new, 1)
+    return text
+
+
 def shape_value_decay_clamp(text: str) -> str:
     """Reproduce func_800B6934's retail floating-point clamp tail.
 
@@ -2571,6 +2818,18 @@ def normalize_v3(source: str) -> str:
         text = shape_wave_mesh_copy_registers(text)
     if os.environ.get("V3_UNIT_COMMAND_CANDIDATE_PROLOGUE", "1") == "1":
         text = shape_unit_command_candidate_prologue(text)
+    if os.environ.get("V3_UNIT_COMMAND_SEARCH_REGISTERS", "1") == "1":
+        text = swap_unit_command_search_registers(text)
+    if os.environ.get("V3_TANK_AIM_REFRESH_REGISTERS", "1") == "1":
+        text = shape_tank_aim_refresh_registers(text)
+    if os.environ.get("V3_VECTOR_ANGLE_JOIN_LABEL", "1") == "1":
+        text = reproduce_vector_angle_join_label(text)
+    if os.environ.get("V3_EFFECT_MESH_DRAW_REGISTERS", "1") == "1":
+        text = shape_effect_mesh_draw_registers(text)
+    if os.environ.get("V3_CONTACT_SIDE_TEST_FRAME", "1") == "1":
+        text = shape_contact_side_test_frame(text)
+    if os.environ.get("V3_CURVE_MODE_DISPATCHES", "1") == "1":
+        text = shape_curve_mode_dispatches(text)
     if os.environ.get("V3_SPOTTER_FRAME_SETUP_PROLOGUE", "1") == "1":
         text = order_spotter_frame_setup_prologue(text)
     if os.environ.get("V3_FONT_GLYPH_DRAW_PROLOGUE", "1") == "1":

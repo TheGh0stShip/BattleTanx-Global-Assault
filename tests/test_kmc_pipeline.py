@@ -860,6 +860,18 @@ class KmcPipelineTests(unittest.TestCase):
              "func_800F1900:\n\tnop\n\t.end\tfunc_800F1900\n", "counts"),
             (MODULE.shape_unit_command_candidate_prologue,
              "func_80086CEC:\n\tnop\n", "prologue"),
+            (MODULE.swap_unit_command_search_registers,
+             "func_80086FF4:\n\tnop\n\t.end\tfunc_80086FF4\n", "counts"),
+            (MODULE.shape_tank_aim_refresh_registers,
+             "func_80082198:\n\tnop\n", "prologue"),
+            (MODULE.reproduce_vector_angle_join_label,
+             "func_800B8310:\n\tnop\n\t.end\tfunc_800B8310\n", "join-label"),
+            (MODULE.shape_effect_mesh_draw_registers,
+             "func_800F8AAC:\n\tnop\n\t.end\tfunc_800F8AAC\n", "counts"),
+            (MODULE.shape_contact_side_test_frame,
+             "func_800B739C:\n\tnop\n\t.end\tfunc_800B739C\n", "prologue"),
+            (MODULE.shape_curve_mode_dispatches,
+             "func_80079AFC:\n\tnop\n\t.end\tfunc_80079AFC\n", "curve-dispatch"),
         )
         for function, source, message in cases:
             with self.subTest(function=function.__name__):

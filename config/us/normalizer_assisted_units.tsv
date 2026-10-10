@@ -3,6 +3,10 @@ nearest_live_entity	0x80083230	0x1EC	normalizer-assisted
 path_waypoint_side_select	0x8007F59C	0x1D8	normalizer-assisted
 waypoint_stack_reset	0x8008A764	0x12C	normalizer-assisted
 unit_command_candidate	0x80086CEC	0x308	normalizer-assisted
+unit_command_search	0x80086FF4	0x248	normalizer-assisted
+tank_aim_refresh	0x80082198	0x3C8	normalizer-assisted
+vector_angle_from_xy	0x800B8310	0x98	normalizer-assisted
+effect_mesh_draw	0x800F8AAC	0x2F8	normalizer-assisted
 model_vertex_offset_copy	0x800EBA98	0x210	normalizer-assisted
 entity_selection_create	0x800ED990	0x270	normalizer-assisted
 turret_ai_update	0x800E3460	0xB7C	normalizer-assisted
@@ -20,3 +24,5 @@ progress_level_advance	0x8009C31C	0x208	normalizer-assisted
 800B4684_collision_query	0x800B4684	0x35C	normalizer-assisted
 800B5B8C_mover_reflect	0x800B5B8C	0xBC	normalizer-assisted
 grid_node_remove	0x800B0F4C	0x150	normalizer-assisted
+contact_side_test	0x800B739C	0x118	normalizer-assisted
+curve_mode	0x80079AFC	0xFC	normalizer-assisted

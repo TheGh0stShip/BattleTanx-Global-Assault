@@ -826,6 +826,28 @@ mission_result_text 0x10
 pause_menu_text 0x1c
 rumble_help_text 0x2c
 tank_selection_text 0x24
+options_menu_layout 0x45C
+controls_menu_layout 0x3F4
+team_setup_layout 0x384
+rumble_menu_layout 0x150
+controller_pak_layout 0x414
+controller_required_layout 0x16C
+title_legal_layout 0x294
+pal_warning_layout 0xDC
+hud_flip_state 0x10
+audio_scheduler_data 0x20
+game_state_counters 0x8
+frame_buffer_state 0x10
+main_menu_layout_tail 0x888
+code_entry_help_layout 0x868
+code_entry_layout 0x720
+team_alignment_layout 0x704
+race_hud_state 0xA4
+race_hud_layout_data 0x6DC
+pause_menu_layout 0x480
+race_widget_layout 0x640
+race_state_vars 0x3C
+controller_menu_state_data 0x68
 EOF
 # libmus was assembled with reorder enabled, so preserve KMC's raw assembly and
 # its assembler-scheduled delay slots instead of applying the gameplay normalizer.
