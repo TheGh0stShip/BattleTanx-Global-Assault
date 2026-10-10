@@ -282,13 +282,13 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800BD93C_to_800BFD40.s.o .text 0x2404 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800BFDA4_to_800BFEA0.s.o asm/us/main_800BFDA4_to_800BFEA0.s
+    -o build/us/asm/us/main_800BFDA4_to_800BFE4C.s.o asm/us/main_800BFDA4_to_800BFE4C.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800BFDA4_to_800BFEA0.s.o .text 0xfc --alignment 4
+    build/us/asm/us/main_800BFDA4_to_800BFE4C.s.o .text 0xa8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C0C38_to_800C0D00.s.o asm/us/main_800C0C38_to_800C0D00.s
+    -o build/us/asm/us/main_800BFE94_to_800BFEA0.s.o asm/us/main_800BFE94_to_800BFEA0.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C0C38_to_800C0D00.s.o .text 0xc8 --alignment 4
+    build/us/asm/us/main_800BFE94_to_800BFEA0.s.o .text 0xc --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800C11B8_to_800C12B4.s.o asm/us/main_800C11B8_to_800C12B4.s
 python3 tools/trim_elf32_section.py \
@@ -1928,15 +1928,7 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/func_800A9A98.c.o .rodata 0x19 --alignment 4
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/func_800A9A98.c.o .text 0 --alignment 4
-"${tool_prefix}objcopy" --localize-symbol=func_800A9A98 \
-    build/us/src/code/func_800A9A98.c.o
-python3 tools/trim_elf32_section.py \
     build/us/src/code/func_800ABE6C.c.o .rodata 0x4 --alignment 4
-python3 tools/trim_elf32_section.py \
-    build/us/src/code/func_800ABE6C.c.o .text 0 --alignment 4
-"${tool_prefix}objcopy" --localize-symbol=func_800ABE6C \
-    build/us/src/code/func_800ABE6C.c.o
 python3 tools/trim_elf32_section.py \
     build/us/src/code/func_800B6934.c.o .rodata 0x8 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -1947,14 +1939,6 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/func_800BFDA4.c.o
 python3 tools/trim_elf32_section.py \
     build/us/src/code/func_800BFE4C.c.o .rodata 0x8 --alignment 4
-python3 tools/trim_elf32_section.py \
-    build/us/src/code/func_800BFE4C.c.o .text 0 --alignment 4
-"${tool_prefix}objcopy" --localize-symbol=func_800BFE4C \
-    build/us/src/code/func_800BFE4C.c.o
-python3 tools/trim_elf32_section.py \
-    build/us/src/code/func_800C0C38.c.o .text 0 --alignment 4
-"${tool_prefix}objcopy" --localize-symbol=func_800C0C38 \
-    build/us/src/code/func_800C0C38.c.o
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_list_layout_data.c.o .rodata 0x268 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -4052,7 +4036,7 @@ if false; then
     build/us/src/code/func_800A98B8.c.o \
     build/us/asm/us/main_800A9928_to_800A9A44.s.o \
     build/us/src/code/func_800A9A44.c.o \
-    build/us/asm/us/main_800A9A98_to_800A9B64.s.o \
+    build/us/src/code/func_800A9A98.c.o \
     build/us/src/code/func_800A9B64.c.o \
     build/us/asm/us/main_800A9BE8_to_800A9BF0.s.o \
     build/us/src/code/object_table_color.c.o \
@@ -4071,7 +4055,7 @@ if false; then
     build/us/asm/us/main_800AAC14_to_800AB4DC.s.o \
     build/us/src/code/800AB4DC.c.o \
     build/us/asm/us/main_800AB58C_to_800ABE6C.s.o \
-    build/us/asm/us/main_800ABE6C_to_800ABF38.s.o \
+    build/us/src/code/func_800ABE6C.c.o \
     build/us/asm/us/main_800ABF38_to_800AC0F4.s.o \
     build/us/src/code/800AC0F4.c.o \
     build/us/asm/us/main_800AC198_to_800ACE70.s.o \
@@ -4173,7 +4157,9 @@ if false; then
     build/us/src/code/hud_frame.c.o \
     build/us/src/code/func_800BFCA4.c.o \
     build/us/src/code/hud_state.c.o \
-    build/us/asm/us/main_800BFDA4_to_800BFEA0.s.o \
+    build/us/asm/us/main_800BFDA4_to_800BFE4C.s.o \
+    build/us/src/code/func_800BFE4C.c.o \
+    build/us/asm/us/main_800BFE94_to_800BFEA0.s.o \
     build/us/src/code/race_assets_init.c.o \
     build/us/src/code/hud_root_callback.c.o \
     build/us/src/code/hud_mode_table.c.o \
@@ -4188,7 +4174,7 @@ if false; then
     build/us/src/code/func_800C0ADC.c.o \
     build/us/src/code/func_800C0B78.c.o \
     build/us/src/code/hud_layout.c.o \
-    build/us/asm/us/main_800C0C38_to_800C0D00.s.o \
+    build/us/src/code/func_800C0C38.c.o \
     build/us/src/code/hud_volume_adjust.c.o \
     build/us/src/code/menu_toggle.c.o \
     build/us/src/code/hud_secondary.c.o \

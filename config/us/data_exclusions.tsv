@@ -79,3 +79,20 @@ align_8007749C	0x8007749C	0x4
 align_800774D4	0x800774D4	0xC
 align_800774F8	0x800774F8	0x8
 align_800778C4	0x800778C4	0xC
+# Verified non-code alignment and stale object-tail words from the gameplay
+# text region. Boundary audits found no entry points or references in them.
+align_800D6E34	0x800D6E34	0xC
+align_800D7DD4	0x800D7DD4	0xC
+align_800D88E8	0x800D88E8	0x8
+align_800D92D4	0x800D92D4	0xC
+align_800D9B48	0x800D9B48	0x8
+align_800DB6E8	0x800DB6E8	0x8
+align_800DC7A4	0x800DC7A4	0xC
+align_800DF0C4	0x800DF0C4	0xC
+align_800E1BA4	0x800E1BA4	0xC
+align_800E58C4	0x800E58C4	0xC
+align_800E603C	0x800E603C	0x4
+align_800E64EC	0x800E64EC	0x4
+align_800E7F5C	0x800E7F5C	0x4
+align_800E92E8	0x800E92E8	0x8
+align_800EAC2C	0x800EAC2C	0x4

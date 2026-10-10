@@ -1,3 +1,4 @@
+/* RODATA_VRAM 0x8007367C */
 #include "types.h"
 
 extern f32 D_803A5948;

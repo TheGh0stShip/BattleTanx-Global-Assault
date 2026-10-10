@@ -1,3 +1,4 @@
+/* RODATA_VRAM 0x80072D64 */
 #include "types.h"
 
 typedef struct {

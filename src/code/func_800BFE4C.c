@@ -1,3 +1,4 @@
+/* RODATA_VRAM 0x800732AC */
 #include "types.h"
 
 typedef struct Func800BFE4CInner {
