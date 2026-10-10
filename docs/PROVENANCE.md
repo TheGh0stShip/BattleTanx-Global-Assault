@@ -21,6 +21,13 @@ distribution, and modification. All nine functions in the recovered unit and
 the repository decoder are independently checked against this ROM; the N64
 unit requires two documented retail-assembler load-delay nops.
 
+The libmus asset inventory is independently derived from the matching
+`MusPtrBankInitialize`, effect-player, and song-relocation routines plus the
+retail 26-entry resource directory. Pointer-bank, wave-bank, effect, and song
+references are range-checked directly against the verified ROM. The unlicensed
+`nviewer` project was used only to cross-check format facts; none of its parser
+or renderer source is incorporated.
+
 The matching asset encoder in `tools/lzari.py` is a Python port of Okumura's
 freely redistributable 1989 [`LZARI.C`](https://github.com/e-n-f/lzss/blob/f370a64a7ce5e4c54cfe122ca441671c3faccc24/LZARI.C).
 The retail variant changes the native `unsigned long` size field to a

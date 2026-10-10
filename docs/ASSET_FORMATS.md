@@ -229,3 +229,30 @@ python3 tools/pack_lzari_bundle.py \
 
 The packer rejects component sets that violate the loader-derived record and
 alignment rules.
+
+## libmus audio store
+
+The 26-entry directory at `0x80114710` covers the cartridge range
+`0x58FAE0–0x7BE9AE`, excluding at most six alignment bytes between entries.
+The 2,289,292 indexed bytes contain two `N64 PtrTablesV2` pointer banks, two
+`N64 WaveTables` sample banks, one effect bank, and 21 version-`0x215` song
+files. This title uses Software Creations' libmus format rather than MIDI or
+libultra `.ctl`/`.tbl` banks.
+
+The SFX pointer bank describes 76 waves and the effect bank contains 93 effect
+programs. The music pointer bank describes 231 waves; the 21 songs reference
+171 of them, leaving 60 music-bank waves unused by the songs. Every wave record
+is checked against its sample bank, including its ADPCM predictor book, loop
+record, base note, and detune field. Every song's channel, volume, pitch-bend,
+envelope, drum, wave, and master-track offsets are checked against its bounds.
+
+Generate a metadata-only inventory without writing audio payloads:
+
+```sh
+python3 tools/inventory_libmus_assets.py \
+  --output /tmp/btga-libmus-assets.json
+```
+
+The inventory records retail offsets, sizes, SHA-256 values, and structural
+metadata. Lossless source repacking remains future work; decoded WAV files are
+inspection artifacts and must stay untracked.
