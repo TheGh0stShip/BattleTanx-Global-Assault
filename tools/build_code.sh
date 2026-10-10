@@ -1037,6 +1037,8 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             scheduler_context scheduler_state scheduler_events \
             scheduler_queue scheduler_misc object_range object_timing object_setters \
             object_init func_800A16F8 800A1BE0 task_message_broadcast \
+            800AAAE0 800AB4DC 800AC0F4 func_800ACE70 func_800ACEB4 \
+            func_800ACEFC 800AD14C 800AE710 800AF364 func_800B0268 func_800B03F4 \
             func_800A8E3C 800A9080 func_800A977C func_800A98B8 func_800A9B64 \
             func_800A9C24 func_800A9CCC 800A9F10 \
             func_800A2E5C 800A2FBC 800A3758 \
@@ -3220,6 +3222,32 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/object_init.c.o .text 0x30 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/800AAAE0.c.o .text 0x134 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800AAAE0.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800AB4DC.c.o .text 0xb0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800AC0F4.c.o .text 0xa4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800ACE70.c.o .text 0x44 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800ACEB4.c.o .text 0x48 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800ACEFC.c.o .text 0x24 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800AD14C.c.o .text 0x55c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800AD14C.c.o .rodata 0x28 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800AE710.c.o .text 0x1dc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800AF364.c.o .text 0xd8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800B0268.c.o .text 0x6c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800B03F4.c.o .text 0x50 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/func_800A8E3C.c.o .text 0x48 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800A9080.c.o .text 0x5e0 --alignment 4
@@ -3999,7 +4027,32 @@ if false; then
     build/us/src/code/800A9F10.c.o \
     build/us/asm/us/main_800AA058_to_800AA598.s.o \
     build/us/src/code/object_table_lookup.c.o \
-    build/us/asm/us/main_800AA5C4_to_800B0444.s.o \
+    build/us/asm/us/main_800AA5C4_to_800AA5D0.s.o \
+    build/us/src/code/func_800AA5D0.c.o \
+    build/us/asm/us/main_800AA664_to_800AAAE0.s.o \
+    build/us/src/code/800AAAE0.c.o \
+    build/us/asm/us/main_800AAC14_to_800AB4DC.s.o \
+    build/us/src/code/800AB4DC.c.o \
+    build/us/asm/us/main_800AB58C_to_800ABE6C.s.o \
+    build/us/asm/us/main_800ABE6C_to_800ABF38.s.o \
+    build/us/asm/us/main_800ABF38_to_800AC0F4.s.o \
+    build/us/src/code/800AC0F4.c.o \
+    build/us/asm/us/main_800AC198_to_800ACE70.s.o \
+    build/us/src/code/func_800ACE70.c.o \
+    build/us/src/code/func_800ACEB4.c.o \
+    build/us/src/code/func_800ACEFC.c.o \
+    build/us/src/code/func_800ACF20.c.o \
+    build/us/src/code/func_800ACFE0.c.o \
+    build/us/src/code/func_800AD088.c.o \
+    build/us/src/code/800AD14C.c.o \
+    build/us/asm/us/main_800AD6A8_to_800AE710.s.o \
+    build/us/src/code/800AE710.c.o \
+    build/us/asm/us/main_800AE8EC_to_800AF364.s.o \
+    build/us/src/code/800AF364.c.o \
+    build/us/asm/us/main_800AF43C_to_800B0268.s.o \
+    build/us/src/code/func_800B0268.c.o \
+    build/us/asm/us/main_800B02D4_to_800B03F4.s.o \
+    build/us/src/code/func_800B03F4.c.o \
     build/us/src/code/gameplay_stub.c.o \
     build/us/asm/us/main_800B044C_to_800B06A8.s.o \
     build/us/src/code/player_color.c.o \
