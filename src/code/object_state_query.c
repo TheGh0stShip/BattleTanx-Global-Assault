@@ -28,9 +28,6 @@ typedef struct {
     f32 y;
 } QueryResult;
 
-extern f32 D_80077028;
-extern f32 D_8007702C;
-extern f32 D_80077030;
 extern u8 D_8011551C[];
 extern s32 D_8021945C;
 
@@ -72,7 +69,7 @@ void func_800F2558(ObjectState *object) {
                 object->effect_handle = 0xFFFF;
                 object->state = 3;
                 object->timer =
-                    (func_8009D8A0(D_80077028) + D_8007702C) * D_80077030;
+                    (func_8009D8A0(0.2f) + 0.9f) * 12.0f;
                 func_80097FB4(0x34, *(s32 *)&object->x, *(s32 *)&object->y,
                               1.0f, object->kind);
                 break;

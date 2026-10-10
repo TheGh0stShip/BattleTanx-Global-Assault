@@ -6,12 +6,11 @@ typedef struct {
 typedef struct { char pad[8]; unsigned short next; char pA[2]; Obj *obj; char p10[0x44-0x10]; } Node;
 extern unsigned short D_80224E70;
 extern Node D_80224EF0[];
-extern float D_80075C60;
 extern int func_80096250(Obj *);
 
 Obj *func_800E2810(float *pos, unsigned char team, int excl, int maxd, unsigned int mask) {
     short i = D_80224E70;
-    float best = D_80075C60;
+    float best = 1e+09f;
     Obj *res = 0;
     while (i != -1) {
         Node *n = &D_80224EF0[i];

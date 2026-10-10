@@ -11,7 +11,6 @@ typedef struct { float x, y, z; } V3;
 typedef struct { char p[0xC]; T *obj; } HitE; typedef struct { HitE *e; char pad[36]; } Hit;
 extern int D_8021945C; extern float D_80219488; extern short D_80397650;
 extern short D_80122E46[];
-extern float D_800774A0, D_800774A4, D_800774A8, D_800774AC, D_800774B0, D_800774B4, D_800774B8;
 extern char D_801156F0[];
 extern int func_8009D914(void); extern T *func_800E2810(float *, int, int, int, int);
 extern void func_8009EC0C(float *); extern unsigned short func_800B49E0(float *, float *, int, int, int, int, Hit *);
@@ -35,14 +34,14 @@ void func_800F872C(S *s, int *done)
     }
     if (s->tgt == 0) goto slow;
     d[0] = s->tgt->x - s->pos[0];
-    d[2] = (s->tgt->y10 + D_80122E46[s->tgt->idx * 104]) - D_800774A0 - s->pos[2];
+    d[2] = (s->tgt->y10 + D_80122E46[s->tgt->idx * 104]) - 1e+01f - s->pos[2];
     d[1] = s->tgt->z - s->pos[1];
     func_8009EC0C(d);
-    s->vx = s->vx * D_800774A4 + d[0];
-    s->vy = s->vy * D_800774A4 + d[2];
-    s->vz = s->vz * D_800774A4 + d[1];
+    s->vx = s->vx * 0.9f + d[0];
+    s->vy = s->vy * 0.9f + d[2];
+    s->vz = s->vz * 0.9f + d[1];
     len = sqrtf(s->vx * s->vx + s->vy * s->vy + s->vz * s->vz);
-    m = D_800774A8;
+    m = 4e+01f;
     if (len > m) {
         s->vx = s->vx / len * m;
         s->vy = s->vy / len * m;
@@ -50,9 +49,9 @@ void func_800F872C(S *s, int *done)
     }
     goto move;
 slow:
-    s->vx *= D_800774AC;
-    s->vy *= D_800774AC;
-    s->vz *= D_800774AC;
+    s->vx *= 0.9f;
+    s->vy *= 0.9f;
+    s->vz *= 0.9f;
 move:
     np[0] = s->pos[0] + D_80219488 * s->vx;
     np[2] = s->pos[2] + D_80219488 * s->vy;
@@ -62,14 +61,14 @@ move:
         if (o->team->id != s->owner->id) {
             func_800966D4(o, 150);
             s->tgt = 0;
-            s->vx /= D_800774B0;
-            s->vy /= D_800774B0;
-            s->vz /= D_800774B0;
+            s->vx /= 4.0f;
+            s->vy /= 4.0f;
+            s->vz /= 4.0f;
         }
     }
-    { float r = D_800774B4;
+    { float r = 1.0f;
     *(V3 *)s->pos = *(V3 *)np;
-    if (func_8009D8A0(r) < D_800774B8)
-        func_800A5BD8(s->pos, 0, s->kind, D_800774B8, D_801156F0, 0);
+    if (func_8009D8A0(r) < 0.5f)
+        func_800A5BD8(s->pos, 0, s->kind, 0.5f, D_801156F0, 0);
     }
 }

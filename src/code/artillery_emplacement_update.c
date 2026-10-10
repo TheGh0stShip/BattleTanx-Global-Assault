@@ -11,7 +11,6 @@ typedef struct {
 extern int D_8021945C;
 extern unsigned char D_802194A4;
 extern Player D_80235F00[];
-extern float D_80077490, D_80077494, D_80077498;
 extern int D_801155EC;
 extern unsigned int func_8009D914(void);
 extern float func_8009D8A0(float);
@@ -37,11 +36,11 @@ void func_800F83C0(Obj *o, int *done) {
             t = p->tank;
         }
         if (t != 0 && func_80096250(t) && t->b94 == o->b18) {
-            range = t->f30 / t->f34 * D_80077490 + D_80077494;
+            range = t->f30 / t->f34 * 2e+02f + 1e+02f;
             lo = -range;
             range = range - lo;
             tgt.x = t->f150 + (lo + func_8009D8A0(range));
-            tgt.z = D_80077498;
+            tgt.z = -1.0f;
             tgt.y = t->f154 + (lo + func_8009D8A0(range));
             d.x = tgt.x - o->pos.x;
             d.z = tgt.z - o->pos.z;

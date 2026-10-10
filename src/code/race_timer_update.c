@@ -2,7 +2,6 @@ typedef struct { unsigned int w0, w1; } Gfx;
 typedef struct { short x; short y; unsigned short flags; unsigned char a; unsigned char pad; } Ent;
 extern float D_8011F214;
 extern float D_803A5948;
-extern float D_80073D70, D_80073D74, D_80073D78, D_80073D7C;
 extern signed char D_80117EB0;
 extern char D_8011E0E4[], D_8011E384[], D_8011E454[], D_8011E2B4[];
 extern unsigned char D_8011F210[];
@@ -22,8 +21,8 @@ void func_800C8484(Gfx **gp, void *a1) {
 
     t = D_8011F214 - D_803A5948;
     D_8011F214 = t;
-    if (t < D_80073D70) {
-        D_8011F214 = t + D_80073D74;
+    if (t < -1e+01f) {
+        D_8011F214 = t + 2e+01f;
     }
     switch (D_80117EB0) {
     case 2:
@@ -66,7 +65,7 @@ void func_800C8484(Gfx **gp, void *a1) {
                 p->w0 = 0xFA000000;
                 p->w1 = (r << 24) | (gg << 16) | (bb << 8) | D_803A5990[s][i].a;
             }
-            func_8007C9B8(&g, tex, D_803A5990[s][i].x, D_803A5990[s][i].y, D_80073D78, D_80073D7C);
+            func_8007C9B8(&g, tex, D_803A5990[s][i].x, D_803A5990[s][i].y, 1.0f, -1.0f);
         }
         *gp = g;
     }

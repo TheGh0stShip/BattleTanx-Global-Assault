@@ -1,11 +1,10 @@
 typedef struct { char pad[0x10]; float x; float y; } Obj;
-extern float D_80074204;
 extern Obj *func_800A1A28(Obj *, int);
 extern Obj *func_800A1A80(Obj *, int);
 
 Obj *func_800D1140(float x, float y) {
     Obj *best = 0;
-    float bestd = D_80074204;
+    float bestd = 1e+12f;
     Obj *p;
     float d;
 

@@ -1352,6 +1352,7 @@ functions = [
     { name = "func_800DA4F0", vram = 0x800da4f0, size = 0x16c },
     { name = "func_800DA65C", vram = 0x800da65c, size = 0x174 },
     { name = "func_800DA7D0", vram = 0x800da7d0, size = 0x1b4 },
+    { name = "func_800DA984", vram = 0x800da984, size = 0x15c },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800DAAE0", vram = 0x800daae0, size = 0x154 },
     { name = "func_800DAC34", vram = 0x800dac34, size = 0x57c },
@@ -1398,6 +1399,7 @@ functions = [
     { name = "func_800DDF04", vram = 0x800ddf04, size = 0x3f8 },
     { name = "func_800DE2FC", vram = 0x800de2fc, size = 0x78 },
     { name = "func_800DE374", vram = 0x800de374, size = 0x168 },
+    { name = "func_800DE4DC", vram = 0x800de4dc, size = 0x50 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800DE52C", vram = 0x800de52c, size = 0x2bc },
     { name = "func_800DE7E8", vram = 0x800de7e8, size = 0x148 },
@@ -1427,6 +1429,8 @@ functions = [
     { name = "func_800E1540", vram = 0x800e1540, size = 0x198 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800E16D8", vram = 0x800e16d8, size = 0x200 },
+    { name = "func_800E18D8", vram = 0x800e18d8, size = 0xa8 },
+    { name = "func_800E1980", vram = 0x800e1980, size = 0xcc },
     { name = "func_800E1A4C", vram = 0x800e1a4c, size = 0x158 },
     # round 21: the original gap-guessed size (0x940) for func_800E16D8 actually
     # covered TWO functions plus a short string constant between them
@@ -1450,8 +1454,10 @@ functions = [
     { name = "func_800E2E0C", vram = 0x800e2e0c, size = 0x190 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800E2F9C", vram = 0x800e2f9c, size = 0x468 },
+    { name = "func_800E3404", vram = 0x800e3404, size = 0x5c },
     { name = "func_800E3460", vram = 0x800e3460, size = 0xb7c },
     { name = "func_800E3FDC", vram = 0x800e3fdc, size = 0x4ec },
+    { name = "func_800E44C8", vram = 0x800e44c8, size = 0x68 },
     { name = "func_800E4530", vram = 0x800e4530, size = 0xfc },
     { name = "func_800E462C", vram = 0x800e462c, size = 0x27c },
     { name = "func_800E48A8", vram = 0x800e48a8, size = 0x38 },
@@ -1475,6 +1481,7 @@ functions = [
     { name = "func_800E5860", vram = 0x800e5860, size = 0x64 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800E5BB8", vram = 0x800e5bb8, size = 0x484 },
+    { name = "func_800E6040", vram = 0x800e6040, size = 0x1a8 },
     { name = "func_800E61E8", vram = 0x800e61e8, size = 0x13c },
     { name = "func_800E6324", vram = 0x800e6324, size = 0x1c8 },
     # round 22: split -- the trailing garbage word this time (0x800e64ec,
@@ -1500,6 +1507,7 @@ functions = [
     { name = "func_800E759C", vram = 0x800e759c, size = 0x58 },
     { name = "func_800E75F4", vram = 0x800e75f4, size = 0x174 },
     { name = "func_800E7768", vram = 0x800e7768, size = 0x200 },
+    { name = "func_800E7968", vram = 0x800e7968, size = 0xa8 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800E7A10", vram = 0x800e7a10, size = 0x3e8 },
     { name = "func_800E7DF8", vram = 0x800e7df8, size = 0x2c },
@@ -1582,6 +1590,7 @@ functions = [
     { name = "func_800EC4A8", vram = 0x800ec4a8, size = 0x284 },
     { name = "func_800EC72C", vram = 0x800ec72c, size = 0x4c },
     { name = "func_800EC778", vram = 0x800ec778, size = 0x10 },
+    { name = "func_800EC788", vram = 0x800ec788, size = 0x8 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800EC790", vram = 0x800ec790, size = 0x158 },
     { name = "func_800EC8E8", vram = 0x800ec8e8, size = 0x5d4 },
@@ -1616,6 +1625,7 @@ functions = [
     { name = "func_800EFB90", vram = 0x800efb90, size = 0x6c },
     { name = "func_800EFBFC", vram = 0x800efbfc, size = 0x2c },
     { name = "func_800EFC28", vram = 0x800efc28, size = 0x40 },
+    { name = "func_800EFC68", vram = 0x800efc68, size = 0x8 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800EFC70", vram = 0x800efc70, size = 0x104 },
     { name = "func_800EFD74", vram = 0x800efd74, size = 0x34 },
@@ -1731,6 +1741,7 @@ functions = [
     { name = "func_800F7A80", vram = 0x800f7a80, size = 0x124 },
     { name = "func_800F757C", vram = 0x800f757c, size = 0xcc },
     { name = "func_800F7BA4", vram = 0x800f7ba4, size = 0x80 },
+    { name = "func_800F7C24", vram = 0x800f7c24, size = 0xc },
     # Round 82 (STATUS.md): batch-tool split, newly analysable with MIPS64 decoding (trailing string data).
     { name = "func_800F7C30", vram = 0x800f7c30, size = 0xf4 },
     { name = "func_800F7D24", vram = 0x800f7d24, size = 0x140 },

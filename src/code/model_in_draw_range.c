@@ -1,7 +1,6 @@
 typedef struct { float x, z; char r[32]; } Ent;
 typedef struct { char p0; unsigned char n; char p2[14]; Ent e[1]; } Tbl;
 extern Tbl D_802194A4;
-extern const float D_80077488;
 typedef struct { char pad[48]; float x; float y; float z; } Tank;
 typedef struct { char pad[8]; int h; } Inner;
 extern void func_800F80E8(int, int *, int *);
@@ -25,7 +24,7 @@ void func_800F8264(Inner ***h, Tank *t, int id, unsigned char mask) {
             float p[2];
             p[0] = t->x;
             p[1] = t->z;
-            if (inrange(&D_802194A4.e[i].x, p, D_80077488))
+            if (inrange(&D_802194A4.e[i].x, p, 1e+06f))
                 func_8007B1F0(b, (**h)->h, a, 0, 0, t, 0, i, 2, 0);
         }
     }

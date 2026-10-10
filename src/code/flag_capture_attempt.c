@@ -6,7 +6,6 @@ typedef struct { char p0[0x1E]; unsigned char state; char p1f; unsigned char kin
 typedef struct { char p0[0x62]; unsigned char a; unsigned char b; } Cfg;
 extern Player D_80235F00[];
 extern Info D_80123BD8[];
-extern float D_80075D9C, D_80075DA0, D_80075DA4, D_80075DA8;
 extern Cfg *D_8021958C;
 extern int D_8021945C;
 extern int D_801155EC;
@@ -39,13 +38,13 @@ void func_800E462C(Obj *o, Vec3 *pos, int c, int unused, int who, int p5, int p6
     }
     cc = c;
     func_800EB720(pos, cc, 0.4f, 12);
-    func_80097FB4(18, pos->x, pos->y, f = D_80075D9C, cc);
+    func_80097FB4(18, pos->x, pos->y, f = 1.0f, cc);
     if (func_80096294(D_8021958C->a, D_8021958C->b, p5, p6, &t) != 0) {
         Vec3 v; float g;
         g = D_80123BD8[o->kind].i4;
         v.x = pos->x;
-        g = g * D_80075DA4;
-        v.z = pos->z + D_80123BD8[o->kind].f0 / D_80075DA0;
+        g = g * 1.5f;
+        v.z = pos->z + D_80123BD8[o->kind].f0 / 2.0f;
         v.y = pos->y;
         func_800F6ED0(0, g, &v, cc);
         func_800F6ED0(0, g, &v, cc);
@@ -57,7 +56,7 @@ void func_800E462C(Obj *o, Vec3 *pos, int c, int unused, int who, int p5, int p6
     } else {
         Vec3 w;
         w.x = pos->x;
-        w.z = pos->z + D_80075DA8;
+        w.z = pos->z + 3e+01f;
         w.y = pos->y;
         func_800A5BD8(&w, 0, cc, f, &D_801155EC, 0);
         o->state = 3;

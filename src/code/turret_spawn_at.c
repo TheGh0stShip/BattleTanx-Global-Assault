@@ -11,8 +11,6 @@ typedef struct {
 extern float D_80123BD8[][24];
 extern int D_80123BE0[][24];
 extern int D_80123C04[][24];
-extern float D_80075C64;
-extern float D_80075C68;
 extern int func_800E29A4(unsigned char, Vec3 *, unsigned short, unsigned char);
 extern Wreck *func_800A18D0(int, int);
 extern unsigned short func_800B1898(Wreck *, short, short, int, short, short, short, short, short, short, unsigned short, int, unsigned char);
@@ -36,8 +34,8 @@ Wreck *func_800E2AEC(unsigned char kind, Vec3 *pos, unsigned short a2, unsigned 
         o->b1F = 0;
 
         o->h28 = func_800B1898(o, pos->x, pos->y, 0, -D_80123BDC[kind][0], D_80123BDE[kind][0],
-                               -D_80123BDC[kind][0], D_80123BDE[kind][0], pos->z - D_80075C64,
-                               (pos->z + D_80123BD8[kind][0] > D_80075C68) ? (short)(pos->z + D_80123BD8[kind][0]) : 70, a3 + a2,
+                               -D_80123BDC[kind][0], D_80123BDE[kind][0], pos->z - 5e+01f,
+                               (pos->z + D_80123BD8[kind][0] > 7e+01f) ? (short)(pos->z + D_80123BD8[kind][0]) : 70, a3 + a2,
                                (kind == 3) ? 0x400000 : 4096, a4);
         o->b21 = 255;
     }

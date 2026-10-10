@@ -1973,6 +1973,8 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/audio_listener_update.c.o .text 0xd4 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/audio_listener_update.c.o .rodata 0x10 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/race_buffers_alloc.c.o .text 0xe0 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/player_attach_effect_create.c.o .text 0xac --alignment 4
@@ -1999,7 +2001,11 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/debris_burst_spawn.c.o .text 0x16c --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/debris_burst_spawn.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/debris_burst_spawn_tinted.c.o .text 0x174 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/debris_burst_spawn_tinted.c.o .rodata 0x4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/debris_scatter_spawn.c.o .text 0x15c --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -2009,13 +2015,19 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/projectile_model_matrix.c.o .text 0xb8 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_model_matrix.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/projectile_model_matrix_cb.c.o .text 0xb8 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/projectile_trail_draw.c.o .text 0x164 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_trail_draw.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/projectile_launch_delayed.c.o .text 0xe8 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/projectile_launch_delayed_tick.c.o .text 0xcc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_launch_delayed_tick.c.o .rodata 0x8 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/model_mesh_partition.c.o .text 0x110 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -2045,7 +2057,11 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/wreck_timer_duration.c.o .text 0x5c --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/wreck_timer_duration.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/flag_capture_attempt.c.o .text 0x27c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/flag_capture_attempt.c.o .rodata 0x10 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/actor_kind16_link_clear.c.o .text 0x70 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -2092,6 +2108,8 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/building_anim_frame_tick.c.o .text 0x5c --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/building_destroy.c.o .text 0x39c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/building_destroy.c.o .rodata 0xc --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/impact_flash_spawn.c.o .text 0x9c --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -2171,6 +2189,8 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/mine_message_handlers.c.o .text 0x324 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/mine_message_handlers.c.o .rodata 0xc --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/powerup_pad_create.c.o .text 0x1f4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/powerup_pad_draw.c.o .text 0x170 --alignment 4
@@ -2179,7 +2199,11 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/barrel_handlers.c.o .text 0x240 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/barrel_handlers.c.o .rodata 0x10 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/falling_crate_update.c.o .text 0x1f0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/falling_crate_update.c.o .rodata 0x4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/decal_spawn_draw.c.o .text 0x2bc --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -2219,6 +2243,8 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/spark_spawn.c.o .text 0xe4 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/spark_spawn.c.o .rodata 0x10 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/smoke_puff_spawn.c.o .text 0x80 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/flicker_prop_create.c.o .text 0xf4 --alignment 4
@@ -2240,6 +2266,8 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/model_cache_globals.c.o .text 0x5c --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/artillery_emplacement_update.c.o .text 0x218 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/artillery_emplacement_update.c.o .rodata 0xc --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/artillery_emplacement_disable.c.o .text 0x18 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -2338,13 +2366,23 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/artillery_target_track.c.o .text 0x380 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/artillery_target_track.c.o .rodata 0x1c --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/model_in_draw_range.c.o .text 0x154 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_in_draw_range.c.o .rodata 0x4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/static_in_radius.c.o .text 0x48 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/static_in_radius.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/spark_burst_update.c.o .text 0x124 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/spark_burst_update.c.o .rodata 0x10 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/anim_alpha_fade_draw.c.o .text 0x12c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/anim_alpha_fade_draw.c.o .rodata 0x8 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/generator_spawn.c.o .text 0x178 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -2364,6 +2402,8 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/mesh_wave_update.c.o .text 0x270 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/mesh_wave_update.c.o .rodata 0x2c --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/barrel_explode.c.o .text 0x1a4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/barrel_explode.c.o .rodata 0x4c --alignment 4
@@ -2382,6 +2422,8 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/object_state_query.c.o .text 0x164 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/object_state_query.c.o .rodata 0xc --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/hazard_model_draw.c.o .text 0x134 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hazard_state_update.c.o .text 0x2bc --alignment 4
@@ -2394,7 +2436,7 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/effect_motion_update.c.o .text 0x220 --alignment 4
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/effect_motion_update.c.o .rodata 0xc --alignment 4
+    build/us/src/code/effect_motion_update.c.o .rodata 0x30 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/particle_owner_message.c.o .text 0xa8 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -2494,9 +2536,13 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/turret_spawn_at.c.o .text 0x288 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/turret_spawn_at.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/wreck_spawn.c.o .text 0x148 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/target_search.c.o .text 0x194 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/target_search.c.o .rodata 0x4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/slot_entry_lookup.c.o .text 0x48 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -2520,11 +2566,15 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/structure_flicker_roll.c.o .text 0x68 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/structure_flicker_roll.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/projectile_fire.c.o .text 0x770 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/projectile_fire.c.o .rodata 0x2c --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/projectile_life_tick.c.o .text 0x54 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/projectile_life_tick.c.o .rodata 0x8 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/projectile_bounce.c.o .text 0x57c --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -2626,9 +2676,15 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/spawn_nearest_type31.c.o .text 0xf4 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawn_nearest_type31.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/spawn_nearest_type28.c.o .text 0xf4 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawn_nearest_type28.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/spawn_nearest_type1.c.o .text 0xf4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spawn_nearest_type1.c.o .rodata 0x4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_element_alloc.c.o .text 0x94 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -2688,6 +2744,8 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/race_timer_update.c.o .text 0x2f8 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_timer_update.c.o .rodata 0x10 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/race_marker_project.c.o .text 0x3f8 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/race_marker_project.c.o .rodata 0x28 --alignment 4
@@ -2720,7 +2778,7 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_value_to_byte.c.o .text 0x68 --alignment 4
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/hud_value_to_byte.c.o .rodata 0x4 --alignment 4
+    build/us/src/code/hud_value_to_byte.c.o .rodata 0x8 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_panel_select.c.o .text 0x2c4 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -2740,7 +2798,7 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_marker_update.c.o .text 0x240 --alignment 4
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/hud_marker_update.c.o .rodata 0x4 --alignment 4
+    build/us/src/code/hud_marker_update.c.o .rodata 0x14 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/hud_player_slots_cycle.c.o .text 0x1e0 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -2840,7 +2898,11 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800DA1D8_debris_piece_update.c.o .text 0x168 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/800DA1D8_debris_piece_update.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/800DA7D0_debris_group_spawn.c.o .text 0x1b4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800DA7D0_debris_group_spawn.c.o .rodata 0x4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800DAAE0_projectile_spawn.c.o .text 0x154 --alignment 4
 python3 tools/trim_elf32_section.py \

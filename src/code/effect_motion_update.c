@@ -19,15 +19,6 @@ typedef struct {
     u8 direction;
 } EffectMotion;
 
-extern const f32 D_80077350;
-extern const f32 D_80077354;
-extern f32 D_80077358;
-extern f32 D_8007735C;
-extern f32 D_80077360;
-extern f32 D_80077370;
-extern f32 D_80077374;
-extern f32 D_80077378;
-extern f32 D_8007737C;
 extern f32 D_80219488;
 
 extern f32 func_8009D8A0(f32 value);
@@ -35,21 +26,21 @@ extern f32 func_8009D8A0(f32 value);
 void func_800F7650(EffectMotion *effect, s32 *done) {
     EffectMotion *motion = effect;
     f32 angle;
-    f32 range = D_80077350;
-    f32 offset = D_80077354;
+    f32 range = 0.2f;
+    f32 offset = 0.9f;
 
     motion->life -=
-        (func_8009D8A0(range) + offset) * D_80077358 * D_80219488;
+        (func_8009D8A0(range) + offset) * 0.005f * D_80219488;
     if (motion->life <= 0.0f) {
         *done = 1;
         return;
     }
 
     motion->radius +=
-        (func_8009D8A0(range) + offset) * D_8007735C * D_80219488;
+        (func_8009D8A0(range) + offset) * 0.3f * D_80219488;
     if (motion->direction != 0) {
         angle = motion->angle +
-                (func_8009D8A0(range) + offset) * D_80077360 * D_80219488;
+                (func_8009D8A0(range) + offset) * 512.0f * D_80219488;
         motion->angle = (u32)angle;
     } else {
         angle = motion->angle -
@@ -57,10 +48,10 @@ void func_800F7650(EffectMotion *effect, s32 *done) {
         motion->angle = (u32)angle;
     }
 
-    range = D_80077370;
-    offset = D_80077374;
+    range = 1.2f;
+    offset = -0.4f;
     motion->position.x += (func_8009D8A0(range) + offset) * D_80219488;
     motion->position.z +=
-        (func_8009D8A0(D_80077378) + D_8007737C) * D_80219488;
+        (func_8009D8A0(0.5f) + 1.0f) * D_80219488;
     motion->position.y += (func_8009D8A0(range) + offset) * D_80219488;
 }

@@ -22,22 +22,22 @@ class DecompReportTests(unittest.TestCase):
         )
         measures = report["measures"]
         self.assertEqual(report["version"], 2)
-        self.assertEqual(measures["total_functions"], 1803)
-        self.assertEqual(measures["matched_functions"], 1610)
-        self.assertEqual(measures["total_code"], "630284")
-        self.assertEqual(measures["matched_code"], "465532")
-        self.assertEqual(measures["total_data"], "118820")
-        self.assertEqual(measures["matched_data"], "84716")
+        self.assertEqual(measures["total_functions"], 1814)
+        self.assertEqual(measures["matched_functions"], 1653)
+        self.assertEqual(measures["total_code"], "631900")
+        self.assertEqual(measures["matched_code"], "491580")
+        self.assertEqual(measures["total_data"], "117204")
+        self.assertEqual(measures["matched_data"], "104012")
         self.assertEqual([item["name"] for item in report["categories"]], ["Code", "Data"])
         data = report["categories"][1]["measures"]
-        self.assertAlmostEqual(data["matched_data_percent"], 84716 * 100 / 118820)
+        self.assertAlmostEqual(data["matched_data_percent"], 104012 * 100 / 117204)
         unmatched = [
             unit for unit in report["units"]
             if unit["name"].startswith("data/unmatched_")
         ]
-        self.assertEqual(len(unmatched), 224)
+        self.assertEqual(len(unmatched), 200)
         self.assertEqual(
-            sum(int(unit["sections"][0]["size"]) for unit in unmatched), 34104
+            sum(int(unit["sections"][0]["size"]) for unit in unmatched), 13192
         )
         self.assertTrue(
             all("virtual_address" in unit["sections"][0]["metadata"] for unit in unmatched)
@@ -55,7 +55,7 @@ class DecompReportTests(unittest.TestCase):
         ranges = REPORT.load_owned_data(
             [ROOT / "config/us/unit_rodata.tsv", ROOT / "config/us/unit_data.tsv"]
         )
-        self.assertEqual(sum(item["size"] for item in ranges), 84716)
+        self.assertEqual(sum(item["size"] for item in ranges), 104012)
         self.assertTrue(
             all(
                 left["end"] <= right["address"]
@@ -79,9 +79,40 @@ class DecompReportTests(unittest.TestCase):
         self.assertEqual(
             REPORT.MAIN_IMAGE_END
             - REPORT.MAIN_IMAGE_START
-            - 630284,
-            118820,
+            - 631900,
+            117204,
         )
+
+    def test_late_gameplay_functions_are_not_reported_as_data(self):
+        report = REPORT.build_report(
+            ROOT / "config/us/recomp_function_boundaries.toml",
+            ROOT / "config/us/splat.yaml",
+        )
+        expected = {
+            0x800DA984,
+            0x800DE4DC,
+            0x800E18D8,
+            0x800E1980,
+            0x800E3404,
+            0x800E44C8,
+            0x800E6040,
+            0x800E7968,
+            0x800EC788,
+            0x800EFC68,
+            0x800F7C24,
+        }
+        functions = REPORT.load_functions(
+            ROOT / "config/us/recomp_function_boundaries.toml"
+        )
+        self.assertTrue(expected.issubset({item["vram"] for item in functions}))
+
+        for unit in report["units"]:
+            if not unit["name"].startswith("data/unmatched_"):
+                continue
+            section = unit["sections"][0]
+            start = int(section["metadata"]["virtual_address"], 0)
+            end = start + int(section["size"])
+            self.assertFalse(any(start <= address < end for address in expected))
 
     def test_function_catalogue_has_no_overlaps(self):
         functions = REPORT.load_functions(

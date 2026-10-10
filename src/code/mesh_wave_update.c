@@ -9,8 +9,6 @@ typedef struct {
 } Obj4D80;
 extern float D_80219488;
 extern int D_8021945C;
-extern float D_800771D0, D_800771D4, D_800771D8, D_800771DC, D_800771E0, D_800771E4;
-extern float D_800771E8, D_800771EC, D_800771F0, D_800771F4, D_800771F8;
 extern char D_80115C38[];
 extern float func_8009D8A0(float);
 extern void func_800A5BD8(Vec3 *, int, int, float, void *, Vec3 *);
@@ -25,25 +23,25 @@ void func_800F4D80(Obj4D80 *arg0, int *done) {
         o->pos.x += o->vel.x * D_80219488;
         o->pos.z += o->vel.z * D_80219488;
         o->pos.y += o->vel.y * D_80219488;
-        o->vel.z += D_800771D0;
+        o->vel.z += -0.1f;
         if (D_8021945C - o->time >= 5) {
             o->state = 1;
         }
         break;
     case 1:
-        nv.x = o->vel.x * D_800771D8 + func_8009D8A0(D_800771D4) - D_800771DC;
+        nv.x = o->vel.x * 0.85f + func_8009D8A0(0.5f) - 0.25f;
         if (o->vel.z > 0.0f) {
-            nv.z = o->vel.z * D_800771D8 + D_800771E0;
+            nv.z = o->vel.z * 0.85f + -0.1f;
         } else {
-            nv.z = o->vel.z + D_800771E4;
+            nv.z = o->vel.z + -0.1f;
         }
-        if (nv.z < D_800771E8) {
-            nv.z = D_800771E8;
+        if (nv.z < -4.0f) {
+            nv.z = -4.0f;
         }
-        nv.y = o->vel.y * D_800771F0 + func_8009D8A0(D_800771EC) - D_800771F4;
-        o->pos.x += (nv.x + o->vel.x) / D_800771F8 * D_80219488;
-        o->pos.z += (nv.z + o->vel.z) / D_800771F8 * D_80219488;
-        o->pos.y += (nv.y + o->vel.y) / D_800771F8 * D_80219488;
+        nv.y = o->vel.y * 0.85f + func_8009D8A0(0.5f) - 0.25f;
+        o->pos.x += (nv.x + o->vel.x) / 2.0f * D_80219488;
+        o->pos.z += (nv.z + o->vel.z) / 2.0f * D_80219488;
+        o->pos.y += (nv.y + o->vel.y) / 2.0f * D_80219488;
         if (o->pos.z < 0.0f) {
             *done = 1;
             return;

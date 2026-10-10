@@ -15,7 +15,6 @@ typedef struct {
 typedef struct { unsigned char id; char pad[3]; int flag; } Q26;
 typedef struct { unsigned char hit; char pad[3]; float a; float b; } R26;
 extern int D_8021945C;
-extern float D_80077034, D_80077038, D_8007703C;
 extern char D_8011551C[];
 extern void func_800F2288(Obj26 *, int, Q26 *, R26 *);
 extern void func_800B22F8(int);
@@ -53,7 +52,7 @@ void func_800F265C(Obj26 *o, int a1, unsigned int msg, Q26 *q, R26 *r) {
                 func_800B22F8(o->u48);
                 o->u48 = 0xFFFF;
                 o->state = msg;
-                o->f36 = (func_8009D8A0(D_80077034) + D_80077038) * D_8007703C;
+                o->f36 = (func_8009D8A0(0.2f) + 0.9f) * 12.0f;
                 func_80097FB4(52, o->pos.x, o->pos.y, 1.0f, o->b24);
                 break;
             }

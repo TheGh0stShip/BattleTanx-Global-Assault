@@ -13,7 +13,6 @@ typedef struct {
 typedef struct { unsigned char id; char pad[3]; int flag; } Q36;
 typedef struct { unsigned char hit; char pad[3]; float a; float b; } R36;
 extern int D_8021945C;
-extern float D_8007712C;
 extern unsigned int func_8009D914(void);
 
 void func_800F36D0(Obj36 *o) {
@@ -26,7 +25,7 @@ void func_800F36D0(Obj36 *o) {
         }
         break;
     case 2:
-        o->vel += D_8007712C;
+        o->vel += -0.6f;
         o->y += o->vel;
         if (o->y < 0.0f) {
             o->y = 0.0f;

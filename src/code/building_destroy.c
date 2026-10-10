@@ -11,9 +11,6 @@ typedef struct Obj {
 } Obj;
 typedef struct { Obj *obj; u8 pad[32]; } Hit;
 extern short D_80397650;
-extern float D_800764F0;
-extern float D_800764F4;
-extern float D_800764F8;
 extern int D_80115834[];
 extern float func_8009D8A0(float);
 extern int func_8009D914(void);
@@ -59,7 +56,7 @@ void func_800EAF6C(Obj *o, u16 a1)
     func_800DA4F0(o->w16, &o->w28, o->h42, o->b44, a1, 0);
     if (o->b46 != 0) {
         u.s.v.x = func_8009D8A0(o->model->h68 - o->model->h64) + o->model->h64;
-        u.s.v.z = func_8009D8A0(D_800764F0);
+        u.s.v.z = func_8009D8A0(25.0f);
         u.s.v.y = func_8009D8A0(o->model->h70 - o->model->h66) + o->model->h66;
         func_800A60E0(&u.s.v, o->h42, o->b44, o->b46, 0);
         switch (o->b46) {
@@ -80,11 +77,11 @@ void func_800EAF6C(Obj *o, u16 a1)
             func_80097FB4(40, o->w28, o->w32, 1.0f, o->b44);
         }
         i = 0;
-        base = D_800764F4;
+        base = 25.0f;
     loop:
         {
             u.s.w.x = func_8009D8A0(o->model->h68 - o->model->h64) + o->model->h64;
-            u.s.w.z = func_8009D8A0(D_800764F8) + base;
+            u.s.w.z = func_8009D8A0(5e+01f) + base;
             u.s.w.y = func_8009D8A0(o->model->h70 - o->model->h66) + o->model->h66;
             func_800A5BD8(&u.s.w, 0, o->b44, 1.0f, D_80115834, 0);
         }

@@ -4,7 +4,6 @@ typedef struct { char pad[0x28]; Part parts[5]; } Mdl;
 extern char D_8011CD88[], D_8011CEF8[], D_8011D068[];
 extern unsigned short D_8011DC78[];
 extern float D_803A5948;
-extern float D_80073AB0, D_80073AB4, D_80073AB8, D_80073ABC;
 float func_8009D4B0(unsigned short);
 float func_8009D510(unsigned short);
 int func_800C4594(void *o, Mdl *m) {
@@ -15,10 +14,10 @@ int func_800C4594(void *o, Mdl *m) {
     else if (o == D_8011CEF8) i = 1;
     else if (o == D_8011D068) i = 2;
     else i = 4;
-    sc = D_80073AB0;
+    sc = 2e+02f;
     v = m->parts[0].v;
     v->x = func_8009D4B0(D_8011DC78[i]) * sc;
-    v->z = func_8009D510(D_8011DC78[i]) * sc + (a = D_80073AB4) + (b = D_80073AB8);
+    v->z = func_8009D510(D_8011DC78[i]) * sc + (a = 4e+02f) + (b = 1e+02f);
     v = m->parts[1].v;
     v->x = func_8009D4B0(D_8011DC78[i] + 0x3333) * sc;
     v->z = func_8009D510(D_8011DC78[i] + 0x3333) * sc + a + b;
@@ -31,6 +30,6 @@ int func_800C4594(void *o, Mdl *m) {
     v = m->parts[4].v;
     v->x = func_8009D4B0(D_8011DC78[i] + 0xCCCC) * sc;
     v->z = func_8009D510(D_8011DC78[i] + 0xCCCC) * sc + a + b;
-    D_8011DC78[i] += (unsigned int)(D_803A5948 * D_80073ABC);
+    D_8011DC78[i] += (unsigned int)(D_803A5948 * 5e+01f);
     return 0;
 }

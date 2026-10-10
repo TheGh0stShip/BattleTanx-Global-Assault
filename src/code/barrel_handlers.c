@@ -43,7 +43,6 @@ typedef struct {
     short r46;
     short t48;
 } Obj33;
-extern float D_800770D0, D_800770D4, D_800770D8, D_800770DC;
 extern Obj33 *func_800A18D0(int, int);
 extern unsigned int func_8009D914(void);
 extern float func_8009D8A0(float);
@@ -53,8 +52,8 @@ void func_800F33C0(unsigned short *a0, void *a1, Vec3 *a2, short a3, unsigned ch
     Obj33 *o = func_800A18D0(48, 52);
     if (o != 0) {
         o->h = func_800DF758(a1, a5, a0[1]);
-        o->f40 = (func_8009D8A0(D_800770D0) + D_800770D4) * D_800770D8;
-        zz = D_800770DC;
+        o->f40 = (func_8009D8A0(0.2f) + 0.9f) * -1e+01f;
+        zz = 6e+02f;
         o->z32 = 0;
         o->c = a3;
         o->pos = *a2;

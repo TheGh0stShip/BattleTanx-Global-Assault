@@ -20,7 +20,6 @@ typedef struct {
     u8 flags;
     u8 unk3C;
 } Unk800DA1D8;
-extern f32 D_80075388;
 extern u8 D_80115C38[];
 extern s32 func_8009D914(void);
 extern void func_800A5BD8(f32 *, s32, s32, f32, void *, s32);
@@ -32,7 +31,7 @@ void func_800DA1D8(Unk800DA1D8 *p, s32 *done) {
             p->vz = -p->vz;
         }
     } else {
-        p->vy -= D_80075388;
+        p->vy -= 0.25f;
     }
     p->pos[0] += p->vx;
     p->pos[2] += p->vy;
