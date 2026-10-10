@@ -16,7 +16,7 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,820 bytes: the 749,104-byte loaded
 image minus 630,284 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 68,516 bytes, or 57.664%.
+`.data` and `.rodata` currently account for 74,112 bytes, or 62.373%.
 
 The effect-definition bank at `0x80114F10–0x80116580` accounts for 5,744 of
 those bytes. It is kept as heterogeneous 32-bit record words until the matched
@@ -106,6 +106,12 @@ tables, and the heterogeneous definitions consumed by weapon, vehicle, world
 object, effect, and pickup code. Major consumer-proven boundaries are explicit
 in source; variant fields remain word-exact until their individual interpreters
 establish stronger types.
+
+The results-screen data at `0x801201E0–0x801217BC` contains shared scene-graph
+roots, three mutable player-result slots, single-player and split-screen panel
+graphs, four menu layouts, summary widgets, and seven results-page layouts.
+Consumer-known boundaries are preserved, and callback and graph-link fields
+remain explicit N64 address tokens.
 
 ## LZARI bundles
 

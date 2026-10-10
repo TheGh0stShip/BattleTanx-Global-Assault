@@ -804,6 +804,7 @@ controller_pak_text 0x3e4
 title_legal_text 0x120
 pal_warning_text 0x50
 results_text 0xb4
+results_layout_data 0x15DC
 ending_text 0xa4
 ending_results_layout 0x1a0
 menu_help_text 0xa0
