@@ -659,6 +659,83 @@ class KmcPipelineTests(unittest.TestCase):
             normalized,
         )
 
+    def test_angle_table_lookup_requires_index_pattern(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "index allocation fired 0 times"):
+            MODULE.shape_angle_table_lookup_registers(
+                "func_8009D5B4:\n\tnop\n"
+            )
+
+    def test_angle_table_lookup_reassigns_temporary_and_adds(self) -> None:
+        source = (
+            "func_8009D5B4:\n"
+            "\txor\t$2,$5,$4\n"
+            "\t.set\tnoreorder\n"
+            "\tandi\t$3,$2,0xffff\n"
+            "\tsll\t$2,$3,2\n"
+            "\taddu\t$2,$4,$3\n"
+            "\taddu\t$2,$4,$3\n"
+        )
+        normalized = MODULE.shape_angle_table_lookup_registers(source)
+        self.assertIn(
+            "\txor\t$3,$5,$4\n"
+            "\t.set\tnoreorder\n"
+            "\tandi\t$2,$3,0xffff\n"
+            "\tsll\t$2,$2,2\n",
+            normalized,
+        )
+        self.assertEqual(normalized.count("\taddu\t$2,$3,$4\n"), 2)
+
+    def test_spotter_frame_setup_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.order_spotter_frame_setup_prologue(
+                "func_800A6FD0:\n\tnop\n"
+            )
+
+    def test_spotter_frame_setup_reorders_prologue(self) -> None:
+        source = (
+            "func_800A6FD0:\n"
+            "\tsw\t$17,28($sp)\n"
+            "\tmove\t$17,$7\n"
+            "\tsw\t$31,32($sp)\n"
+        )
+        normalized = MODULE.order_spotter_frame_setup_prologue(source)
+        self.assertIn(
+            "\tsw\t$31,32($sp)\n"
+            "\tsw\t$17,28($sp)\n"
+            "\tmove\t$17,$7\n",
+            normalized,
+        )
+
+    def test_font_glyph_draw_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "float prologue fired 0 times"):
+            MODULE.order_font_glyph_draw_prologue(
+                "func_80096A54:\n\tnop\n"
+            )
+
+    def test_font_glyph_draw_reorders_prologue_and_address(self) -> None:
+        source = (
+            "func_80096A54:\n"
+            "\ts.d\t$f22,80($sp)\n"
+            "\tl.s\t$f22,112($sp)\n"
+            "\tsw\t$18,56($sp)\n"
+            "\tmove\t$18,$4\n"
+            "\tsw\t$19,60($sp)\n"
+            "\tmove\t$19,$7\n"
+            "\ts.d\t$f20,72($sp)\n"
+            "\tl.s\t$f20,108($sp)\n"
+            "\taddu\t$2,$2,$17\n"
+        )
+        normalized = MODULE.order_font_glyph_draw_prologue(source)
+        self.assertIn(
+            "\ts.d\t$f20,72($sp)\n\tl.s\t$f20,108($sp)\n",
+            normalized,
+        )
+        self.assertIn(
+            "\ts.d\t$f22,80($sp)\n\tl.s\t$f22,112($sp)\n",
+            normalized,
+        )
+        self.assertEqual(normalized.count("\taddu\t$2,$17,$2\n"), 1)
+
     def test_mover_reflect_likely_multiply_requires_one_fire(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.hoist_mover_reflect_likely_multiply(

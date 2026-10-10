@@ -1292,6 +1292,113 @@ def schedule_progress_level_loop_setup(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def shape_angle_table_lookup_registers(text: str) -> str:
+    """Match the retail temporary allocation in ``func_8009D5B4``.
+
+    Keep the xor result in ``v1`` and its narrowed table index in ``v0``, then
+    use the retail commutative operand order in both return paths. The complete
+    patterns and their counts are function-gated.
+    """
+    if "func_8009D5B4:" not in text:
+        return text
+    before = (
+        "\txor\t$2,$5,$4\n"
+        "\t.set\tnoreorder\n"
+        "\tandi\t$3,$2,0xffff\n"
+        "\tsll\t$2,$3,2\n"
+    )
+    after = (
+        "\txor\t$3,$5,$4\n"
+        "\t.set\tnoreorder\n"
+        "\tandi\t$2,$3,0xffff\n"
+        "\tsll\t$2,$2,2\n"
+    )
+    if text.count(before) != 1:
+        raise RuntimeError(
+            f"func_8009D5B4 index allocation fired {text.count(before)} times (expected 1)"
+        )
+    text = text.replace(before, after, 1)
+    add_before = "\taddu\t$2,$4,$3\n"
+    add_after = "\taddu\t$2,$3,$4\n"
+    if text.count(add_before) != 2:
+        raise RuntimeError(
+            f"func_8009D5B4 return add fired {text.count(add_before)} times (expected 2)"
+        )
+    return text.replace(add_before, add_after)
+
+
+def order_spotter_frame_setup_prologue(text: str) -> str:
+    """Match the retail prologue ordering in ``func_800A6FD0``.
+
+    The source compiler emits the three independent operations in a different
+    order. Reorder only this complete function-local sequence and require one
+    fire; no instruction is added or removed.
+    """
+    if "func_800A6FD0:" not in text:
+        return text
+    before = (
+        "\tsw\t$17,28($sp)\n"
+        "\tmove\t$17,$7\n"
+        "\tsw\t$31,32($sp)\n"
+    )
+    after = (
+        "\tsw\t$31,32($sp)\n"
+        "\tsw\t$17,28($sp)\n"
+        "\tmove\t$17,$7\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800A6FD0 prologue ordering fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
+def order_font_glyph_draw_prologue(text: str) -> str:
+    """Match retail scheduling in ``func_80096A54``.
+
+    Load/save the stack-passed x scale before the y scale, and use the retail
+    commutative operand order for the glyph address. Both patterns are gated
+    to this function and have exact fire counts.
+    """
+    if "func_80096A54:" not in text:
+        return text
+    before = (
+        "\ts.d\t$f22,80($sp)\n"
+        "\tl.s\t$f22,112($sp)\n"
+        "\tsw\t$18,56($sp)\n"
+        "\tmove\t$18,$4\n"
+        "\tsw\t$19,60($sp)\n"
+        "\tmove\t$19,$7\n"
+        "\ts.d\t$f20,72($sp)\n"
+        "\tl.s\t$f20,108($sp)\n"
+    )
+    after = (
+        "\ts.d\t$f20,72($sp)\n"
+        "\tl.s\t$f20,108($sp)\n"
+        "\tsw\t$18,56($sp)\n"
+        "\tmove\t$18,$4\n"
+        "\tsw\t$19,60($sp)\n"
+        "\tmove\t$19,$7\n"
+        "\ts.d\t$f22,80($sp)\n"
+        "\tl.s\t$f22,112($sp)\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_80096A54 float prologue fired {fires} times (expected 1)"
+        )
+    text = text.replace(before, after, 1)
+    add_before = "\taddu\t$2,$2,$17\n"
+    add_after = "\taddu\t$2,$17,$2\n"
+    fires = text.count(add_before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_80096A54 glyph address fired {fires} times (expected 1)"
+        )
+    return text.replace(add_before, add_after, 1)
+
+
 def hoist_mover_reflect_likely_multiply(text: str) -> str:
     """Apply the retail multiply-delay-slot workaround to ``bc1fl``.
 
@@ -1914,6 +2021,12 @@ def normalize_v3(source: str) -> str:
         text = suppress_distance_multiply_hazard_nops(text)
     if os.environ.get("V3_PROGRESS_LEVEL_LOOP_SETUP", "1") == "1":
         text = schedule_progress_level_loop_setup(text)
+    if os.environ.get("V3_ANGLE_TABLE_LOOKUP_REGISTERS", "1") == "1":
+        text = shape_angle_table_lookup_registers(text)
+    if os.environ.get("V3_SPOTTER_FRAME_SETUP_PROLOGUE", "1") == "1":
+        text = order_spotter_frame_setup_prologue(text)
+    if os.environ.get("V3_FONT_GLYPH_DRAW_PROLOGUE", "1") == "1":
+        text = order_font_glyph_draw_prologue(text)
     if os.environ.get("V3_MOVER_REFLECT_LIKELY_MUL", "1") == "1":
         text = hoist_mover_reflect_likely_multiply(text)
     if os.environ.get("V3_CRATE_LIST_HEAD_STORE", "1") == "1":
