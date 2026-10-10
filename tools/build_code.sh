@@ -814,6 +814,7 @@ controller_required_text 0x50
 controls_help_text 0xf0
 controller_binding_text 0xc4
 campaign_map_help_text 0x40
+hud_list_layout_data 0xEF0
 main_menu_text 0x98
 options_menu_text 0x70
 code_entry_text 0xa4

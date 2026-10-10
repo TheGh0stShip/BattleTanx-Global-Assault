@@ -16,7 +16,7 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,820 bytes: the 749,104-byte loaded
 image minus 630,284 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 78,288 bytes, or 65.888%.
+`.data` and `.rodata` currently account for 82,112 bytes, or 69.106%.
 
 The effect-definition bank at `0x80114F10–0x80116580` accounts for 5,744 of
 those bytes. It is kept as heterogeneous 32-bit record words until the matched
@@ -118,6 +118,11 @@ scene roots, binding tables, mutable player labels and model slots, four player
 panels, and controller-selection definitions. The source preserves each
 consumer-addressed subrange and represents callbacks and graph links as N64
 tokens.
+
+The preceding HUD list bank at `0x8011B318–0x8011C208` contains the option
+scene, mutable draw references, sprites, compact and expanded menu roots, and
+their sixteen list variants. Each consumer-selected list begins at its retail
+address, while callbacks and graph links remain explicit N64 tokens.
 
 ## LZARI bundles
 
