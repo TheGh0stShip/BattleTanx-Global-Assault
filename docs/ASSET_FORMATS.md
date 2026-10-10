@@ -16,7 +16,7 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,820 bytes: the 749,104-byte loaded
 image minus 630,284 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 61,672 bytes, or 51.904%.
+`.data` and `.rodata` currently account for 68,516 bytes, or 57.664%.
 
 The effect-definition bank at `0x80114F10–0x80116580` accounts for 5,744 of
 those bytes. It is kept as heterogeneous 32-bit record words until the matched
@@ -99,6 +99,13 @@ Gameplay and camera defaults at `0x80121CC0–0x80122384` preserve the initializ
 HUD/audio/loader state, fourteen front-end record pointers, script-particle
 tables, and two fifteen-record camera-preset banks. Float fields retain their
 retail bit patterns and address fields remain explicit N64 tokens.
+
+The adjacent `0x80122384–0x80123E40` definition bank contains the twelve
+effect-code records, four rotating decode records, the code alphabet and lookup
+tables, and the heterogeneous definitions consumed by weapon, vehicle, world
+object, effect, and pickup code. Major consumer-proven boundaries are explicit
+in source; variant fields remain word-exact until their individual interpreters
+establish stronger types.
 
 ## LZARI bundles
 
