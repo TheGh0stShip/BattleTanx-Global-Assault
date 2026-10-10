@@ -1090,7 +1090,8 @@ functions = [
     { name = "func_800C420C", vram = 0x800c420c, size = 0x50 },
     { name = "func_800C425C", vram = 0x800c425c, size = 0x44 },
     { name = "func_800C42A0", vram = 0x800c42a0, size = 0x44 },
-    { name = "func_800C42E4", vram = 0x800c42e4, size = 0x134 },
+    { name = "func_800C42E4", vram = 0x800c42e4, size = 0x68 },
+    { name = "func_800C434C", vram = 0x800c434c, size = 0xcc }, # verified byte-exact function boundary
     { name = "func_800C4418", vram = 0x800c4418, size = 0x40 },
     { name = "func_800C4458", vram = 0x800c4458, size = 0x13c },
     { name = "func_800C4594", vram = 0x800c4594, size = 0x240 },
@@ -1140,10 +1141,13 @@ functions = [
     { name = "func_800C877C", vram = 0x800c877c, size = 0x3f8 },
     { name = "func_800C8B74", vram = 0x800c8b74, size = 0x368 },
     { name = "func_800C8EDC", vram = 0x800c8edc, size = 0x24 },
-    { name = "func_800C8F00", vram = 0x800c8f00, size = 0x34c },
+    { name = "func_800C8F00", vram = 0x800c8f00, size = 0x110 },
+    { name = "func_800C9010", vram = 0x800c9010, size = 0x120 }, # verified byte-exact function boundary
+    { name = "func_800C9130", vram = 0x800c9130, size = 0x11c }, # verified byte-exact function boundary
     { name = "func_800C924C", vram = 0x800c924c, size = 0x354 },
     { name = "func_800C95A0", vram = 0x800c95a0, size = 0x8c },
-    { name = "func_800C962C", vram = 0x800c962c, size = 0x130 },
+    { name = "func_800C962C", vram = 0x800c962c, size = 0x54 },
+    { name = "func_800C9680", vram = 0x800c9680, size = 0xdc }, # verified byte-exact function boundary
     { name = "func_800C975C", vram = 0x800c975c, size = 0x17c },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800C98D8", vram = 0x800c98d8, size = 0x10 },
@@ -1155,7 +1159,8 @@ functions = [
     { name = "func_800CA3F0", vram = 0x800ca3f0, size = 0x2c },
     { name = "func_800CA41C", vram = 0x800ca41c, size = 0x2c },
     { name = "func_800CA448", vram = 0x800ca448, size = 0x2c },
-    { name = "func_800CA474", vram = 0x800ca474, size = 0x1ac },
+    { name = "func_800CA474", vram = 0x800ca474, size = 0x2c },
+    { name = "func_800CA4A0", vram = 0x800ca4a0, size = 0x180 }, # verified byte-exact function boundary
     { name = "func_800CA620", vram = 0x800ca620, size = 0x3ec },
     { name = "func_800CAA0C", vram = 0x800caa0c, size = 0x3c },
     { name = "func_800CAA48", vram = 0x800caa48, size = 0xfc },
@@ -1183,8 +1188,10 @@ functions = [
     { name = "func_800CAED0", vram = 0x800caed0, size = 0xd8 },
     { name = "func_800CAFA8", vram = 0x800cafa8, size = 0x118 },
     { name = "func_800CB0C0", vram = 0x800cb0c0, size = 0x4c },
-    { name = "func_800CB110", vram = 0x800cb110, size = 0x224 },
-    { name = "func_800CB334", vram = 0x800cb334, size = 0x600 },
+    { name = "func_800CB110", vram = 0x800cb110, size = 0xd4 },
+    { name = "func_800CB1E4", vram = 0x800cb1e4, size = 0x150 }, # verified byte-exact function boundary
+    { name = "func_800CB334", vram = 0x800cb334, size = 0x4f0 },
+    { name = "func_800CB824", vram = 0x800cb824, size = 0x110 }, # verified byte-exact function boundary
     { name = "func_800CB934", vram = 0x800cb934, size = 0x50c },
     { name = "func_800CBE40", vram = 0x800cbe40, size = 0x1fc },
     { name = "func_800CC03C", vram = 0x800cc03c, size = 0x1c },
@@ -1250,7 +1257,8 @@ functions = [
     { name = "func_800CF5C8", vram = 0x800cf5c8, size = 0xc8 },
     { name = "func_800CF690", vram = 0x800cf690, size = 0xa8 },
     { name = "func_800CF738", vram = 0x800cf738, size = 0x18 },
-    { name = "func_800CF750", vram = 0x800cf750, size = 0x40 },
+    { name = "func_800CF750", vram = 0x800cf750, size = 0x24 },
+    { name = "func_800CF774", vram = 0x800cf774, size = 0x1c }, # verified byte-exact function boundary
     { name = "func_800CF790", vram = 0x800cf790, size = 0x18 },
     { name = "func_800CF7A8", vram = 0x800cf7a8, size = 0x2a8 },
     # Round 83 (STATUS.md): was "osBbCardChange", an iQue-only libultra name
@@ -1268,10 +1276,19 @@ functions = [
     { name = "func_800CFDD0", vram = 0x800cfdd0, size = 0x288 },
     { name = "func_800D0058", vram = 0x800d0058, size = 0x18 },
     { name = "func_800D0070", vram = 0x800d0070, size = 0x568 },
-    { name = "func_800D05E0", vram = 0x800d05e0, size = 0x278 },
+    { name = "func_800D05E0", vram = 0x800d05e0, size = 0x234 },
+    { name = "func_800D0814", vram = 0x800d0814, size = 0x44 }, # verified byte-exact function boundary
     { name = "func_800D0858", vram = 0x800d0858, size = 0x108 },
-    { name = "func_800D0960", vram = 0x800d0960, size = 0x114 },
-    { name = "func_800D0A74", vram = 0x800d0a74, size = 0x83c },
+    { name = "func_800D0960", vram = 0x800d0960, size = 0xc },
+    { name = "func_800D096C", vram = 0x800d096c, size = 0x74 }, # verified byte-exact function boundary
+    { name = "func_800D09E0", vram = 0x800d09e0, size = 0x94 }, # verified byte-exact function boundary
+    { name = "func_800D0A74", vram = 0x800d0a74, size = 0x384 },
+    { name = "func_800D0DF8", vram = 0x800d0df8, size = 0x160 }, # verified byte-exact function boundary
+    { name = "func_800D0F58", vram = 0x800d0f58, size = 0xf4 }, # verified byte-exact function boundary
+    { name = "func_800D104C", vram = 0x800d104c, size = 0xf4 }, # verified byte-exact function boundary
+    { name = "func_800D1140", vram = 0x800d1140, size = 0xf4 }, # verified byte-exact function boundary
+    { name = "func_800D1234", vram = 0x800d1234, size = 0x40 }, # verified byte-exact function boundary
+    { name = "func_800D1274", vram = 0x800d1274, size = 0x3c }, # verified byte-exact function boundary
     { name = "func_800D12B0", vram = 0x800d12b0, size = 0x9e0 },
     { name = "func_800D1C90", vram = 0x800d1c90, size = 0x87c },
     { name = "func_800D250C", vram = 0x800d250c, size = 0xd4 },
@@ -1284,7 +1301,8 @@ functions = [
     { name = "func_800D3C64", vram = 0x800d3c64, size = 0x3e8 },
     { name = "func_800D404C", vram = 0x800d404c, size = 0x3d0 },
     { name = "func_800D441C", vram = 0x800d441c, size = 0x73c },
-    { name = "func_800D4B58", vram = 0x800d4b58, size = 0x288 },
+    { name = "func_800D4B58", vram = 0x800d4b58, size = 0x1a8 },
+    { name = "func_800D4D00", vram = 0x800d4d00, size = 0xe0 }, # verified byte-exact function boundary
     { name = "func_800D4DE0", vram = 0x800d4de0, size = 0x42c },
     { name = "func_800D520C", vram = 0x800d520c, size = 0x1c8 },
     { name = "func_800D53D4", vram = 0x800d53d4, size = 0x134 },
@@ -1300,22 +1318,32 @@ functions = [
     { name = "func_800D6B80", vram = 0x800d6b80, size = 0x2b4 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800D6E40", vram = 0x800d6e40, size = 0xac },
-    { name = "func_800D6EEC", vram = 0x800d6eec, size = 0x74c },
-    { name = "func_800D7638", vram = 0x800d7638, size = 0x728 },
+    { name = "func_800D6EEC", vram = 0x800d6eec, size = 0x658 },
+    { name = "func_800D7544", vram = 0x800d7544, size = 0xf4 }, # verified byte-exact function boundary
+    { name = "func_800D7638", vram = 0x800d7638, size = 0x6bc },
+    { name = "func_800D7CF4", vram = 0x800d7cf4, size = 0x6c }, # verified byte-exact function boundary
     { name = "func_800D7D60", vram = 0x800d7d60, size = 0x74 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
-    { name = "func_800D7DE0", vram = 0x800d7de0, size = 0x2a8 },
+    { name = "func_800D7DE0", vram = 0x800d7de0, size = 0x270 },
+    { name = "func_800D8050", vram = 0x800d8050, size = 0x38 }, # verified byte-exact function boundary
     { name = "func_800D8088", vram = 0x800d8088, size = 0x2f8 },
     { name = "func_800D8380", vram = 0x800d8380, size = 0x15c },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
-    { name = "func_800D84DC", vram = 0x800d84dc, size = 0x27c },
+    { name = "func_800D84DC", vram = 0x800d84dc, size = 0x198 },
+    { name = "func_800D8674", vram = 0x800d8674, size = 0x50 }, # verified byte-exact function boundary
+    { name = "func_800D86C4", vram = 0x800d86c4, size = 0x58 }, # verified byte-exact function boundary
+    { name = "func_800D871C", vram = 0x800d871c, size = 0x3c }, # verified byte-exact function boundary
     { name = "func_800D8758", vram = 0x800d8758, size = 0x190 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
-    { name = "func_800D88F0", vram = 0x800d88f0, size = 0x190 },
+    { name = "func_800D88F0", vram = 0x800d88f0, size = 0x50 },
+    { name = "func_800D8940", vram = 0x800d8940, size = 0xb8 }, # verified byte-exact function boundary
+    { name = "func_800D89F8", vram = 0x800d89f8, size = 0x88 }, # verified byte-exact function boundary
     { name = "func_800D8A80", vram = 0x800d8a80, size = 0x1e0 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
-    { name = "func_800D8C60", vram = 0x800d8c60, size = 0x2e8 },
-    { name = "func_800D8F48", vram = 0x800d8f48, size = 0x2fc },
+    { name = "func_800D8C60", vram = 0x800d8c60, size = 0x2c8 },
+    { name = "func_800D8F28", vram = 0x800d8f28, size = 0x20 }, # verified byte-exact function boundary
+    { name = "func_800D8F48", vram = 0x800d8f48, size = 0x278 },
+    { name = "func_800D91C0", vram = 0x800d91c0, size = 0x84 }, # verified byte-exact function boundary
     { name = "func_800D9244", vram = 0x800d9244, size = 0x90 },
     # round 22: same trailing-garbage-then-real-function pattern as many
     # round-21 fixes, just missed then because the garbage word
@@ -1337,9 +1365,11 @@ functions = [
     # stays in the first piece. Sums to 0x4d4.
     { name = "func_800D942C", vram = 0x800d942c, size = 0x3c0 },
     { name = "func_800D97EC", vram = 0x800d97ec, size = 0x114 },
-    { name = "func_800D9900", vram = 0x800d9900, size = 0x1e0 },
+    { name = "func_800D9900", vram = 0x800d9900, size = 0x188 },
+    { name = "func_800D9A88", vram = 0x800d9a88, size = 0x58 }, # verified byte-exact function boundary
     { name = "func_800D9AE0", vram = 0x800d9ae0, size = 0x68 },
-    { name = "func_800D9B50", vram = 0x800d9b50, size = 0x200 },
+    { name = "func_800D9B50", vram = 0x800d9b50, size = 0xe8 },
+    { name = "func_800D9C38", vram = 0x800d9c38, size = 0x118 }, # verified byte-exact function boundary
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800D9D50", vram = 0x800d9d50, size = 0x488 },
     { name = "func_800DA1D8", vram = 0x800da1d8, size = 0x168 },
@@ -1374,7 +1404,8 @@ functions = [
     { name = "func_800DB850", vram = 0x800db850, size = 0x9c4 },
     { name = "func_800DC214", vram = 0x800dc214, size = 0x194 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
-    { name = "func_800DC3A8", vram = 0x800dc3a8, size = 0x344 },
+    { name = "func_800DC3A8", vram = 0x800dc3a8, size = 0x28c },
+    { name = "func_800DC634", vram = 0x800dc634, size = 0xb8 }, # verified byte-exact function boundary
     { name = "func_800DC6EC", vram = 0x800dc6ec, size = 0xb8 },
     # Round 84 (STATUS.md): uncovered gap after this entry -- 3 data words, then
     # real code the original syms missed (functions placed right after
@@ -1386,7 +1417,8 @@ functions = [
     { name = "func_800DD0D8", vram = 0x800dd0d8, size = 0xe8 },
     { name = "func_800DD1C0", vram = 0x800dd1c0, size = 0xd0 },
     { name = "func_800DD290", vram = 0x800dd290, size = 0x110 },
-    { name = "func_800DD3A0", vram = 0x800dd3a0, size = 0x3bc },
+    { name = "func_800DD3A0", vram = 0x800dd3a0, size = 0x354 },
+    { name = "func_800DD6F4", vram = 0x800dd6f4, size = 0x68 }, # verified byte-exact function boundary
     # Round 73 (STATUS.md): merged-function boundary, a four-way split.
     # "Failed to find function at 0x800DD82C" after idling at the title
     # screen. jr-$ra scan of the original 0xc18 range: three clean internal
@@ -1401,7 +1433,8 @@ functions = [
     { name = "func_800DE374", vram = 0x800de374, size = 0x168 },
     { name = "func_800DE4DC", vram = 0x800de4dc, size = 0x50 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
-    { name = "func_800DE52C", vram = 0x800de52c, size = 0x2bc },
+    { name = "func_800DE52C", vram = 0x800de52c, size = 0x21c },
+    { name = "func_800DE748", vram = 0x800de748, size = 0xa0 }, # verified byte-exact function boundary
     { name = "func_800DE7E8", vram = 0x800de7e8, size = 0x148 },
     # Round 75 (STATUS.md): merged-function boundary, a five-way split.
     # "Failed to find function at 0x800DEB1C" after idling at the title
@@ -1417,7 +1450,8 @@ functions = [
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800DEEDC", vram = 0x800deedc, size = 0x5c },
     { name = "func_800DEF38", vram = 0x800def38, size = 0x18c },
-    { name = "func_800DF0D0", vram = 0x800df0d0, size = 0x2e8 },
+    { name = "func_800DF0D0", vram = 0x800df0d0, size = 0x26c },
+    { name = "func_800DF33C", vram = 0x800df33c, size = 0x7c }, # verified byte-exact function boundary
     { name = "func_800DF3B8", vram = 0x800df3b8, size = 0x1a0 },
     { name = "func_800DF558", vram = 0x800df558, size = 0xe4 },
     { name = "func_800DF63C", vram = 0x800df63c, size = 0x11c },
@@ -1450,7 +1484,8 @@ functions = [
     { name = "func_800E26A8", vram = 0x800e26a8, size = 0x168 },
     { name = "func_800E2810", vram = 0x800e2810, size = 0x194 },
     { name = "func_800E29A4", vram = 0x800e29a4, size = 0x148 },
-    { name = "func_800E2AEC", vram = 0x800e2aec, size = 0x320 },
+    { name = "func_800E2AEC", vram = 0x800e2aec, size = 0x288 },
+    { name = "func_800E2D74", vram = 0x800e2d74, size = 0x98 }, # verified byte-exact function boundary
     { name = "func_800E2E0C", vram = 0x800e2e0c, size = 0x190 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800E2F9C", vram = 0x800e2f9c, size = 0x468 },
@@ -1477,7 +1512,8 @@ functions = [
     # at 0x800e58d0.
     { name = "func_800E58D0", vram = 0x800e58d0, size = 0x2e8 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
-    { name = "func_800E56D0", vram = 0x800e56d0, size = 0x190 },
+    { name = "func_800E56D0", vram = 0x800e56d0, size = 0x134 },
+    { name = "func_800E5804", vram = 0x800e5804, size = 0x5c }, # verified byte-exact function boundary
     { name = "func_800E5860", vram = 0x800e5860, size = 0x64 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800E5BB8", vram = 0x800e5bb8, size = 0x484 },
@@ -1518,7 +1554,8 @@ functions = [
     # right after this function's real jr $ra return, not a real trap
     # instruction. The already-separately-declared func_800E7F60
     # immediately follows with no gap, so no new symbol needed here.
-    { name = "func_800E7F60", vram = 0x800e7f60, size = 0x130 },
+    { name = "func_800E7F60", vram = 0x800e7f60, size = 0xec },
+    { name = "func_800E804C", vram = 0x800e804c, size = 0x44 }, # verified byte-exact function boundary
     { name = "func_800E8090", vram = 0x800e8090, size = 0x64 },
     { name = "func_800E80F4", vram = 0x800e80f4, size = 0x1b8 },
     { name = "func_800E82AC", vram = 0x800e82ac, size = 0x6c },
@@ -1582,7 +1619,8 @@ functions = [
     { name = "func_800EB838", vram = 0x800eb838, size = 0xfc },
     { name = "func_800EB934", vram = 0x800eb934, size = 0x164 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
-    { name = "func_800EBA98", vram = 0x800eba98, size = 0x308 },
+    { name = "func_800EBA98", vram = 0x800eba98, size = 0x210 },
+    { name = "func_800EBCA8", vram = 0x800ebca8, size = 0xf8 }, # verified byte-exact function boundary
     { name = "func_800EBDA0", vram = 0x800ebda0, size = 0x1e0 },
     { name = "func_800EBF80", vram = 0x800ebf80, size = 0x240 },
     { name = "func_800EC1C0", vram = 0x800ec1c0, size = 0x38 },
@@ -1602,17 +1640,26 @@ functions = [
     { name = "func_800ED320", vram = 0x800ed320, size = 0x1d4 },
     # Round 79 (STATUS.md): batch-tool split, skipped in round 78 over a stray `jr $zero` at 0x800ED98C (dead code, not a jump table).
     { name = "func_800ED4F4", vram = 0x800ed4f4, size = 0x148 },
-    { name = "func_800ED63C", vram = 0x800ed63c, size = 0x1c8 },
+    { name = "func_800ED63C", vram = 0x800ed63c, size = 0x5c },
+    { name = "func_800ED698", vram = 0x800ed698, size = 0x98 }, # verified byte-exact function boundary
+    { name = "func_800ED730", vram = 0x800ed730, size = 0x44 }, # verified byte-exact function boundary
+    { name = "func_800ED774", vram = 0x800ed774, size = 0x48 }, # verified byte-exact function boundary
+    { name = "func_800ED7BC", vram = 0x800ed7bc, size = 0x48 }, # verified byte-exact function boundary
     { name = "func_800ED804", vram = 0x800ed804, size = 0x188 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
-    { name = "func_800ED990", vram = 0x800ed990, size = 0x35c },
+    { name = "func_800ED990", vram = 0x800ed990, size = 0x270 },
+    { name = "func_800EDC00", vram = 0x800edc00, size = 0xec }, # verified byte-exact function boundary
     { name = "func_800EDCEC", vram = 0x800edcec, size = 0xe0 },
     { name = "func_800EDDCC", vram = 0x800eddcc, size = 0x148 },
     # Round 82 (STATUS.md): batch-tool split, newly analysable with MIPS64 decoding (trailing string data).
-    { name = "func_800EDF14", vram = 0x800edf14, size = 0x374 },
+    { name = "func_800EDF14", vram = 0x800edf14, size = 0x19c },
+    { name = "func_800EE0B0", vram = 0x800ee0b0, size = 0x38 }, # verified byte-exact function boundary
+    { name = "func_800EE0E8", vram = 0x800ee0e8, size = 0xd0 }, # verified byte-exact function boundary
+    { name = "func_800EE1B8", vram = 0x800ee1b8, size = 0xd0 }, # verified byte-exact function boundary
     { name = "func_800EE288", vram = 0x800ee288, size = 0x200 },
     { name = "func_800EE490", vram = 0x800ee490, size = 0x1f8 },
-    { name = "func_800EE688", vram = 0x800ee688, size = 0x238 },
+    { name = "func_800EE688", vram = 0x800ee688, size = 0x170 },
+    { name = "func_800EE7F8", vram = 0x800ee7f8, size = 0xc8 }, # verified byte-exact function boundary
     { name = "func_800EE8C0", vram = 0x800ee8c0, size = 0x21c },
     { name = "func_800EEADC", vram = 0x800eeadc, size = 0x150 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
@@ -1621,7 +1668,8 @@ functions = [
     { name = "func_800EF400", vram = 0x800ef400, size = 0x178 },
     { name = "func_800EF578", vram = 0x800ef578, size = 0x1f8 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
-    { name = "func_800EF770", vram = 0x800ef770, size = 0x420 },
+    { name = "func_800EF770", vram = 0x800ef770, size = 0x3c0 },
+    { name = "func_800EFB30", vram = 0x800efb30, size = 0x60 }, # verified byte-exact function boundary
     { name = "func_800EFB90", vram = 0x800efb90, size = 0x6c },
     { name = "func_800EFBFC", vram = 0x800efbfc, size = 0x2c },
     { name = "func_800EFC28", vram = 0x800efc28, size = 0x40 },
@@ -1631,7 +1679,8 @@ functions = [
     { name = "func_800EFD74", vram = 0x800efd74, size = 0x34 },
     { name = "func_800EFDA8", vram = 0x800efda8, size = 0x20 },
     { name = "func_800EFDC8", vram = 0x800efdc8, size = 0x48 },
-    { name = "func_800EFE10", vram = 0x800efe10, size = 0xb4 },
+    { name = "func_800EFE10", vram = 0x800efe10, size = 0x50 },
+    { name = "func_800EFE60", vram = 0x800efe60, size = 0x64 }, # verified byte-exact function boundary
     { name = "func_800EFEC4", vram = 0x800efec4, size = 0x1a0 },
     { name = "func_800F0064", vram = 0x800f0064, size = 0x18c },
     { name = "func_800F01F0", vram = 0x800f01f0, size = 0x428 },
@@ -1640,7 +1689,8 @@ functions = [
     { name = "func_800F0658", vram = 0x800f0658, size = 0x2d8 },
     { name = "func_800F0930", vram = 0x800f0930, size = 0x48 },
     { name = "func_800F0978", vram = 0x800f0978, size = 0x48 },
-    { name = "func_800F09C0", vram = 0x800f09c0, size = 0x148 },
+    { name = "func_800F09C0", vram = 0x800f09c0, size = 0x60 },
+    { name = "func_800F0A20", vram = 0x800f0a20, size = 0xe8 }, # verified byte-exact function boundary
     { name = "func_800F0B08", vram = 0x800f0b08, size = 0x3c8 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800F0ED0", vram = 0x800f0ed0, size = 0x300 },
@@ -1707,7 +1757,8 @@ functions = [
     { name = "func_800F577C", vram = 0x800f577c, size = 0x3c0 },
     { name = "func_800F5B3C", vram = 0x800f5b3c, size = 0x2dc },
     { name = "func_800F5E18", vram = 0x800f5e18, size = 0xf8 },
-    { name = "func_800F5F10", vram = 0x800f5f10, size = 0x234 },
+    { name = "func_800F5F10", vram = 0x800f5f10, size = 0x1f0 },
+    { name = "func_800F6100", vram = 0x800f6100, size = 0x44 }, # verified byte-exact function boundary
     { name = "func_800F6144", vram = 0x800f6144, size = 0x200 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800F6344", vram = 0x800f6344, size = 0x174 },
@@ -1737,14 +1788,16 @@ functions = [
     # find function at 0x800F7650", opening the credits).
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800F7650", vram = 0x800f7650, size = 0x220 },
-    { name = "func_800F7870", vram = 0x800f7870, size = 0x210 },
+    { name = "func_800F7870", vram = 0x800f7870, size = 0x12c },
+    { name = "func_800F799C", vram = 0x800f799c, size = 0xe4 }, # verified byte-exact function boundary
     { name = "func_800F7A80", vram = 0x800f7a80, size = 0x124 },
     { name = "func_800F757C", vram = 0x800f757c, size = 0xcc },
     { name = "func_800F7BA4", vram = 0x800f7ba4, size = 0x80 },
     { name = "func_800F7C24", vram = 0x800f7c24, size = 0xc },
     # Round 82 (STATUS.md): batch-tool split, newly analysable with MIPS64 decoding (trailing string data).
     { name = "func_800F7C30", vram = 0x800f7c30, size = 0xf4 },
-    { name = "func_800F7D24", vram = 0x800f7d24, size = 0x140 },
+    { name = "func_800F7D24", vram = 0x800f7d24, size = 0xf0 },
+    { name = "func_800F7E14", vram = 0x800f7e14, size = 0x50 }, # verified byte-exact function boundary
     { name = "func_800F7E64", vram = 0x800f7e64, size = 0x5c },
     # Round 77 (STATUS.md): merged-function boundary, a three-way split.
     # "Failed to find function at 0x800F7F6C" after idling at the title

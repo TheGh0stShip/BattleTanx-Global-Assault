@@ -1,6 +1,7 @@
 import importlib.util
 import json
 import tempfile
+import tomllib
 import unittest
 from pathlib import Path
 
@@ -22,10 +23,10 @@ class DecompReportTests(unittest.TestCase):
         )
         measures = report["measures"]
         self.assertEqual(report["version"], 2)
-        self.assertEqual(measures["total_functions"], 1814)
-        self.assertEqual(measures["matched_functions"], 1653)
+        self.assertEqual(measures["total_functions"], 1867)
+        self.assertEqual(measures["matched_functions"], 1706)
         self.assertEqual(measures["total_code"], "631900")
-        self.assertEqual(measures["matched_code"], "491580")
+        self.assertEqual(measures["matched_code"], "492788")
         self.assertEqual(measures["total_data"], "117204")
         self.assertEqual(measures["matched_data"], "104012")
         self.assertEqual([item["name"] for item in report["categories"]], ["Code", "Data"])
@@ -113,6 +114,31 @@ class DecompReportTests(unittest.TestCase):
             start = int(section["metadata"]["virtual_address"], 0)
             end = start + int(section["size"])
             self.assertFalse(any(start <= address < end for address in expected))
+
+    def test_verified_manual_function_boundaries_are_catalogued(self):
+        functions = REPORT.load_functions(
+            ROOT / "config/us/recomp_function_boundaries.toml"
+        )
+        catalogue_addresses = {item["vram"] for item in functions}
+        with (ROOT / "config/us/manual_symbols.toml").open("rb") as stream:
+            manual_symbols = tomllib.load(stream)["symbol"]
+
+        verified_addresses = {
+            item["vram"]
+            for item in manual_symbols
+            if item.get("type") == "func"
+            and (
+                "byte-exact C build" in item.get("reason", "")
+                or "Matched C TU" in item.get("reason", "")
+            )
+        }
+        self.assertTrue(verified_addresses.issubset(catalogue_addresses))
+
+        # These three functions predate the standardized verification reason,
+        # but their current production units are also byte-exact.
+        self.assertTrue(
+            {0x800D09E0, 0x800DD6F4, 0x800F6100}.issubset(catalogue_addresses)
+        )
 
     def test_function_catalogue_has_no_overlaps(self):
         functions = REPORT.load_functions(
