@@ -139,15 +139,14 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800859E4_to_8009C284.s.o .text 0xee9c --alignment 4
 for spec in \
-    main_80094F40_to_80094FBC:0x7c \
-    main_80095B50_to_80095C50:0x100 \
-    main_80095E7C_to_80096294:0x418 \
-    main_8009660C_to_800966D4:0xc8 \
-    main_800967F0_to_80096810:0x20 \
+    main_80095F08_to_80096250:0x348 \
     main_80096BDC_to_800973E0:0x804 \
-    main_80097508_to_80097560:0x58 \
-    main_80097EE4_to_800985A0:0x6bc \
-    main_800988E8_to_80098CC8:0x3e0 \
+    main_8009755C_to_80097560:0x4 \
+    main_80097FB4_to_8009813C:0x188 \
+    main_80098454_to_80098534:0xe0 \
+    main_8009859C_to_800985A0:0x4 \
+    main_800988E8_to_80098AFC:0x214 \
+    main_80098BC8_to_80098BF8:0x30 \
     main_80099160_to_800991CC:0x6c \
     main_80099824_to_80099830:0xc \
     main_8009ACDC_to_8009AD7C:0xa0 \
@@ -967,14 +966,21 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             collision_fields object_query pair_queue \
             object_defaults mode_owner mode_transition object_disable \
             object_predicates object_direction object_action \
-            80094880 80094FBC 80095C50 80096294 800966D4 80096810 \
-            font_glyph_draw 800973E0 80097560 \
+            80094880 func_80094F40 func_80094F78 80094FBC \
+            func_80095B50 func_80095B68 func_80095B90 func_80095BE4 80095C50 \
+            func_80095E7C func_80096250 80096294 func_8009660C 800966D4 \
+            func_800967F0 80096810 font_glyph_draw 800973E0 \
+            func_80097508 func_80097530 80097560 \
             func_80097660 func_800976AC func_80097794 func_800977DC \
             func_80097844 func_8009790C func_800979A0 func_800979F4 \
             func_80097A6C func_80097B20 func_80097B44 func_80097B68 \
             func_80097BA4 func_80097BC4 func_80097C1C func_80097C84 \
             func_80097CB8 func_80097CC8 music_stream_queue \
-            80097DF8 800985A0 80098CC8 \
+            80097DF8 func_80097EE4 func_8009813C func_80098180 func_80098190 \
+            func_800981E0 func_80098250 func_80098334 func_8009836C \
+            func_80098430 func_80098534 800985A0 \
+            func_80098AFC func_80098B2C func_80098B40 func_80098B58 \
+            func_80098BF8 80098CC8 \
             func_80098F24 func_80098FBC func_80099028 func_80099080 \
             func_800992E0 func_800993B0 func_800996C4 func_80099758 \
             func_80099784 func_80099830 func_80099854 func_800998A8 \
@@ -3405,13 +3411,23 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/camera_view_select.c.o .text 0x9c --alignment 4
 for spec in \
     font_glyph_draw:0x188 \
+    func_80094F40:0x38 func_80094F78:0x44 \
+    func_80095B50:0x18 func_80095B68:0x28 func_80095B90:0x54 \
+    func_80095BE4:0x6c func_80095E7C:0x8c func_80096250:0x44 \
+    func_8009660C:0xc8 func_800967F0:0x20 \
+    func_80097508:0x28 func_80097530:0x2c \
     func_80097660:0x4c func_800976AC:0xe8 func_80097794:0x48 \
     func_800977DC:0x68 func_80097844:0xc8 func_8009790C:0x94 \
     func_800979A0:0x54 func_800979F4:0x78 func_80097A6C:0xb4 \
     func_80097B20:0x24 func_80097B44:0x24 func_80097B68:0x3c \
     func_80097BA4:0x20 func_80097BC4:0x58 func_80097C1C:0x68 \
     func_80097C84:0x34 func_80097CB8:0x10 func_80097CC8:0x4c \
-    music_stream_queue:0xe4 \
+    music_stream_queue:0xe4 func_80097EE4:0xd0 \
+    func_8009813C:0x44 func_80098180:0x10 func_80098190:0x50 \
+    func_800981E0:0x70 func_80098250:0xe4 func_80098334:0x38 \
+    func_8009836C:0xc4 func_80098430:0x24 func_80098534:0x68 \
+    func_80098AFC:0x30 func_80098B2C:0x14 func_80098B40:0x18 \
+    func_80098B58:0x70 func_80098BF8:0xd0 \
     func_80098F24:0x98 func_80098FBC:0x6c func_80099028:0x58 \
     func_80099080:0xe0 func_800992E0:0xd0 func_800993B0:0xb4 \
     func_800996C4:0x94 func_80099758:0x2c func_80099784:0xa0 \
@@ -4090,20 +4106,28 @@ if false; then
     build/us/src/code/object_action.c.o \
     build/us/asm/us/main_800859E4_to_8009C284.s.o \
     build/us/src/code/80094880.c.o \
-    build/us/asm/us/main_80094F40_to_80094FBC.s.o \
+    build/us/src/code/func_80094F40.c.o \
+    build/us/src/code/func_80094F78.c.o \
     build/us/src/code/80094FBC.c.o \
-    build/us/asm/us/main_80095B50_to_80095C50.s.o \
+    build/us/src/code/func_80095B50.c.o \
+    build/us/src/code/func_80095B68.c.o \
+    build/us/src/code/func_80095B90.c.o \
+    build/us/src/code/func_80095BE4.c.o \
     build/us/src/code/80095C50.c.o \
-    build/us/asm/us/main_80095E7C_to_80096294.s.o \
+    build/us/src/code/func_80095E7C.c.o \
+    build/us/asm/us/main_80095F08_to_80096250.s.o \
+    build/us/src/code/func_80096250.c.o \
     build/us/src/code/80096294.c.o \
-    build/us/asm/us/main_8009660C_to_800966D4.s.o \
+    build/us/src/code/func_8009660C.c.o \
     build/us/src/code/800966D4.c.o \
-    build/us/asm/us/main_800967F0_to_80096810.s.o \
+    build/us/src/code/func_800967F0.c.o \
     build/us/src/code/80096810.c.o \
     build/us/src/code/font_glyph_draw.c.o \
     build/us/asm/us/main_80096BDC_to_800973E0.s.o \
     build/us/src/code/800973E0.c.o \
-    build/us/asm/us/main_80097508_to_80097560.s.o \
+    build/us/src/code/func_80097508.c.o \
+    build/us/src/code/func_80097530.c.o \
+    build/us/asm/us/main_8009755C_to_80097560.s.o \
     build/us/src/code/80097560.c.o \
     build/us/src/code/func_80097660.c.o \
     build/us/src/code/func_800976AC.c.o \
@@ -4125,9 +4149,27 @@ if false; then
     build/us/src/code/func_80097CC8.c.o \
     build/us/src/code/music_stream_queue.c.o \
     build/us/src/code/80097DF8.c.o \
-    build/us/asm/us/main_80097EE4_to_800985A0.s.o \
+    build/us/src/code/func_80097EE4.c.o \
+    build/us/asm/us/main_80097FB4_to_8009813C.s.o \
+    build/us/src/code/func_8009813C.c.o \
+    build/us/src/code/func_80098180.c.o \
+    build/us/src/code/func_80098190.c.o \
+    build/us/src/code/func_800981E0.c.o \
+    build/us/src/code/func_80098250.c.o \
+    build/us/src/code/func_80098334.c.o \
+    build/us/src/code/func_8009836C.c.o \
+    build/us/src/code/func_80098430.c.o \
+    build/us/asm/us/main_80098454_to_80098534.s.o \
+    build/us/src/code/func_80098534.c.o \
+    build/us/asm/us/main_8009859C_to_800985A0.s.o \
     build/us/src/code/800985A0.c.o \
-    build/us/asm/us/main_800988E8_to_80098CC8.s.o \
+    build/us/asm/us/main_800988E8_to_80098AFC.s.o \
+    build/us/src/code/func_80098AFC.c.o \
+    build/us/src/code/func_80098B2C.c.o \
+    build/us/src/code/func_80098B40.c.o \
+    build/us/src/code/func_80098B58.c.o \
+    build/us/asm/us/main_80098BC8_to_80098BF8.s.o \
+    build/us/src/code/func_80098BF8.c.o \
     build/us/src/code/80098CC8.c.o \
     build/us/src/code/func_80098F24.c.o \
     build/us/src/code/func_80098FBC.c.o \
