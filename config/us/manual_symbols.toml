@@ -561,11 +561,11 @@ type = "func"
 reason = "Function boundary established by the byte-exact C build (make verify-code)."
 
 [[symbol]]
-name = "func_800EC788"
+name = "D_800EC788"
 vram = 0x800EC788
 size = 0x8
-type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+type = "u8"
+reason = "Boundary audit identifies two ASCII/data words between functions, not executable code."
 
 [[symbol]]
 name = "func_800ED63C"
@@ -659,11 +659,11 @@ type = "func"
 reason = "Function boundary established by the byte-exact C build (make verify-code)."
 
 [[symbol]]
-name = "func_800EFC68"
+name = "D_800EFC68"
 vram = 0x800EFC68
 size = 0x8
-type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+type = "u8"
+reason = "Boundary audit identifies two data words between functions, not executable code."
 
 [[symbol]]
 name = "func_800EFE10"
@@ -771,11 +771,11 @@ type = "func"
 reason = "Function boundary established by the byte-exact C build (make verify-code)."
 
 [[symbol]]
-name = "func_800F7C24"
+name = "D_800F7C24"
 vram = 0x800F7C24
 size = 0xC
-type = "func"
-reason = "Asm piece start after an integrated C unit; size runs to the next known function start (disassembly/symbol boundary)."
+type = "u8"
+reason = "Boundary audit identifies trailing ASCII bytes between functions, not executable code."
 
 [[symbol]]
 name = "func_800F7D24"
