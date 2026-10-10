@@ -26,6 +26,7 @@ controls_help_text	0x8011A3F0	0xF0
 controller_binding_text	0x8011A8D4	0xC4
 campaign_map_help_text	0x8011B2D8	0x40
 gang_selection_help_text	0x8011C208	0x4C
+controller_layout_data	0x8011C254	0x1050
 team_alignment_help_text	0x8011D2A4	0x40
 team_setup_text	0x8011D9E8	0x7C
 mission_result_text	0x8011DDE8	0x10

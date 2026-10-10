@@ -16,7 +16,7 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,820 bytes: the 749,104-byte loaded
 image minus 630,284 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 74,112 bytes, or 62.373%.
+`.data` and `.rodata` currently account for 78,288 bytes, or 65.888%.
 
 The effect-definition bank at `0x80114F10–0x80116580` accounts for 5,744 of
 those bytes. It is kept as heterogeneous 32-bit record words until the matched
@@ -112,6 +112,12 @@ roots, three mutable player-result slots, single-player and split-screen panel
 graphs, four menu layouts, summary widgets, and seven results-page layouts.
 Consumer-known boundaries are preserved, and callback and graph-link fields
 remain explicit N64 address tokens.
+
+Controller-configuration data at `0x8011C254–0x8011D2A4` contains the controls
+scene roots, binding tables, mutable player labels and model slots, four player
+panels, and controller-selection definitions. The source preserves each
+consumer-addressed subrange and represents callbacks and graph links as N64
+tokens.
 
 ## LZARI bundles
 

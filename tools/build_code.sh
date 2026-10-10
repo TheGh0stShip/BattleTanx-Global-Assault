@@ -818,6 +818,7 @@ main_menu_text 0x98
 options_menu_text 0x70
 code_entry_text 0xa4
 gang_selection_help_text 0x4c
+controller_layout_data 0x1050
 team_alignment_help_text 0x40
 mission_result_text 0x10
 pause_menu_text 0x1c
