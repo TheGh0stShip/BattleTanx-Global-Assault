@@ -505,5 +505,22 @@ python3 tools/inventory_libmus_assets.py \
 ```
 
 The inventory records retail offsets, sizes, SHA-256 values, and structural
-metadata. Lossless source repacking remains future work; decoded WAV files are
-inspection artifacts and must stay untracked.
+metadata. To split the store locally and prove its lossless reconstruction:
+
+```sh
+python3 tools/inventory_libmus_assets.py \
+  --output /tmp/btga-libmus-assets.json \
+  --extract-dir /tmp/btga-libmus-assets
+python3 tools/pack_libmus_assets.py \
+  --manifest /tmp/btga-libmus-assets.json \
+  --source /tmp/btga-libmus-assets \
+  --output /tmp/btga-libmus-store.bin \
+  --require-original
+```
+
+The split contains all 26 independently replaceable files and all 18 alignment
+gaps, covering the complete store with no opaque fallback slice. The packer
+validates pointer banks, sample ranges, effects and songs after reconstruction.
+This is a lossless raw-file source pipeline; semantic editing and re-encoding
+of individual libmus structures remain future work. Extracted files and decoded
+WAV inspection artifacts must stay untracked.

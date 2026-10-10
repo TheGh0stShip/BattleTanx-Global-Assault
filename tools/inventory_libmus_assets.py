@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Validate and inventory BattleTanx: Global Assault's libmus assets.
+"""Validate, inventory, and optionally split Global Assault's libmus assets.
 
-The program reads metadata only. It never writes sample or sequence payloads;
-an optional JSON report records offsets, sizes, counts, and hashes so the ROM
-layout can be audited without committing extracted copyrighted material.
+The JSON report contains metadata only.  ``--extract-dir`` writes the 26 raw
+files and their inter-file alignment bytes for local inspection or rebuilding;
+those ROM-derived files must remain untracked.
 """
 
 from __future__ import annotations
@@ -68,6 +68,23 @@ def read_file_table(rom: bytes) -> list[dict]:
             "sha256": hashlib.sha256(payload).hexdigest(),
         })
     return files
+
+
+def describe_gaps(rom: bytes, files: list[dict]) -> list[dict]:
+    gaps = []
+    for index, (left, right) in enumerate(zip(files, files[1:])):
+        if left["end"] == right["start"]:
+            continue
+        payload = rom[left["end"]:right["start"]]
+        gaps.append({
+            "index": index,
+            "after_file": left["index"],
+            "start": left["end"],
+            "end": right["start"],
+            "size": len(payload),
+            "sha256": hashlib.sha256(payload).hexdigest(),
+        })
+    return gaps
 
 
 def parse_pointer_bank(data: bytes, sample_data: bytes, name: str) -> dict:
@@ -200,11 +217,8 @@ def parse_song(data: bytes, index: int, music_wave_count: int) -> dict:
     }
 
 
-def inventory(rom: bytes) -> dict:
-    digest = hashlib.sha1(rom).hexdigest()
-    require(digest == ROM_SHA1, f"wrong ROM SHA-1: {digest}")
-    files = read_file_table(rom)
-    payloads = [rom[item["start"]:item["end"]] for item in files]
+def validate_payloads(payloads: list[bytes]) -> dict:
+    require(len(payloads) == FILE_COUNT, "unexpected libmus file count")
     sfx_bank = parse_pointer_bank(payloads[0], payloads[2], "SFX")
     effects = parse_effect_bank(payloads[1])
     music_bank = parse_pointer_bank(payloads[3], payloads[4], "music")
@@ -216,12 +230,6 @@ def inventory(rom: bytes) -> dict:
         wave for song in songs for wave in song["referenced_waves"]
     })
     return {
-        "format": "BattleTanx Global Assault libmus inventory v1",
-        "rom_sha1": digest,
-        "file_table_rom": FILE_TABLE_ROM,
-        "file_count": len(files),
-        "stored_bytes": sum(item["size"] for item in files),
-        "files": files,
         "sfx": {"pointer_bank": sfx_bank, "effect_bank": effects},
         "music": {
             "pointer_bank": music_bank,
@@ -234,15 +242,57 @@ def inventory(rom: bytes) -> dict:
     }
 
 
+def inventory(rom: bytes) -> dict:
+    digest = hashlib.sha1(rom).hexdigest()
+    require(digest == ROM_SHA1, f"wrong ROM SHA-1: {digest}")
+    files = read_file_table(rom)
+    payloads = [rom[item["start"]:item["end"]] for item in files]
+    parsed = validate_payloads(payloads)
+    gaps = describe_gaps(rom, files)
+    return {
+        "format": "BattleTanx Global Assault libmus inventory v1",
+        "rom_sha1": digest,
+        "file_table_rom": FILE_TABLE_ROM,
+        "file_count": len(files),
+        "stored_bytes": sum(item["size"] for item in files),
+        "store_start": files[0]["start"],
+        "store_end": files[-1]["end"],
+        "store_span_bytes": files[-1]["end"] - files[0]["start"],
+        "alignment_bytes": sum(item["size"] for item in gaps),
+        "files": files,
+        "gaps": gaps,
+        **parsed,
+    }
+
+
+def extract(rom: bytes, report: dict, output: Path) -> None:
+    output.mkdir(parents=True, exist_ok=True)
+    gaps_dir = output / "gaps"
+    gaps_dir.mkdir(exist_ok=True)
+    for item in report["files"]:
+        (output / f"file_{item['index']:02d}.bin").write_bytes(
+            rom[item["start"]:item["end"]]
+        )
+    for item in report["gaps"]:
+        (gaps_dir / f"gap_{item['index']:02d}.bin").write_bytes(
+            rom[item["start"]:item["end"]]
+        )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--rom", type=Path, default=Path("baseroms/us/baserom.z64"))
     parser.add_argument("--output", type=Path, help="write a metadata-only JSON report")
+    parser.add_argument("--extract-dir", type=Path,
+                        help="write untracked raw files and alignment bytes")
     args = parser.parse_args()
-    report = inventory(args.rom.read_bytes())
+    rom = args.rom.read_bytes()
+    report = inventory(rom)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(report, indent=2) + "\n")
+    if args.extract_dir:
+        extract(rom, report, args.extract_dir)
     print(
         f"Validated {report['file_count']} libmus files, {report['stored_bytes']} bytes: "
         f"{report['sfx']['pointer_bank']['wave_count']} SFX waves, "
