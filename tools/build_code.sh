@@ -148,12 +148,9 @@ for spec in \
     main_80097508_to_80097560:0x58 \
     main_80097EE4_to_800985A0:0x6bc \
     main_800988E8_to_80098CC8:0x3e0 \
-    main_80098F24_to_800991CC:0x2a8 \
-    main_800992E0_to_80099464:0x184 \
-    main_800996C4_to_800998E8:0x224 \
-    main_80099F74_to_80099FE8:0x74 \
-    main_8009A650_to_8009A6F8:0xa8 \
-    main_8009ACDC_to_8009AE38:0x15c \
+    main_80099160_to_800991CC:0x6c \
+    main_80099824_to_80099830:0xc \
+    main_8009ACDC_to_8009AD7C:0xa0 \
     main_8009B0F0_to_8009B434:0x344 \
     main_8009B62C_to_8009C098:0xa6c \
     main_8009C284_to_8009C31C:0x98
@@ -977,7 +974,12 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             func_80097A6C func_80097B20 func_80097B44 func_80097B68 \
             func_80097BA4 func_80097BC4 func_80097C1C func_80097C84 \
             func_80097CB8 func_80097CC8 music_stream_queue \
-            80097DF8 800985A0 80098CC8 800991CC \
+            80097DF8 800985A0 80098CC8 \
+            func_80098F24 func_80098FBC func_80099028 func_80099080 \
+            func_800992E0 func_800993B0 func_800996C4 func_80099758 \
+            func_80099784 func_80099830 func_80099854 func_800998A8 \
+            func_80099F74 func_8009A650 func_8009A6F0 func_8009AD7C \
+            800991CC \
             func_80099464 800998E8 80099FE8 player_order_shuffle 8009A6F8 \
             8009AE38 8009B434 8009C098 session_queries progress_level_advance \
             random_integer vector2 vector2_scale vector2_motion game_queue \
@@ -3409,7 +3411,13 @@ for spec in \
     func_80097B20:0x24 func_80097B44:0x24 func_80097B68:0x3c \
     func_80097BA4:0x20 func_80097BC4:0x58 func_80097C1C:0x68 \
     func_80097C84:0x34 func_80097CB8:0x10 func_80097CC8:0x4c \
-    music_stream_queue:0xe4
+    music_stream_queue:0xe4 \
+    func_80098F24:0x98 func_80098FBC:0x6c func_80099028:0x58 \
+    func_80099080:0xe0 func_800992E0:0xd0 func_800993B0:0xb4 \
+    func_800996C4:0x94 func_80099758:0x2c func_80099784:0xa0 \
+    func_80099830:0x24 func_80099854:0x54 func_800998A8:0x40 \
+    func_80099F74:0x74 func_8009A650:0xa0 func_8009A6F0:0x8 \
+    func_8009AD7C:0xbc
 do
     unit="${spec%%:*}"
     size="${spec##*:}"
@@ -4121,18 +4129,31 @@ if false; then
     build/us/src/code/800985A0.c.o \
     build/us/asm/us/main_800988E8_to_80098CC8.s.o \
     build/us/src/code/80098CC8.c.o \
-    build/us/asm/us/main_80098F24_to_800991CC.s.o \
+    build/us/src/code/func_80098F24.c.o \
+    build/us/src/code/func_80098FBC.c.o \
+    build/us/src/code/func_80099028.c.o \
+    build/us/src/code/func_80099080.c.o \
+    build/us/asm/us/main_80099160_to_800991CC.s.o \
     build/us/src/code/800991CC.c.o \
-    build/us/asm/us/main_800992E0_to_80099464.s.o \
+    build/us/src/code/func_800992E0.c.o \
+    build/us/src/code/func_800993B0.c.o \
     build/us/src/code/func_80099464.c.o \
-    build/us/asm/us/main_800996C4_to_800998E8.s.o \
+    build/us/src/code/func_800996C4.c.o \
+    build/us/src/code/func_80099758.c.o \
+    build/us/src/code/func_80099784.c.o \
+    build/us/asm/us/main_80099824_to_80099830.s.o \
+    build/us/src/code/func_80099830.c.o \
+    build/us/src/code/func_80099854.c.o \
+    build/us/src/code/func_800998A8.c.o \
     build/us/src/code/800998E8.c.o \
-    build/us/asm/us/main_80099F74_to_80099FE8.s.o \
+    build/us/src/code/func_80099F74.c.o \
     build/us/src/code/80099FE8.c.o \
     build/us/src/code/player_order_shuffle.c.o \
-    build/us/asm/us/main_8009A650_to_8009A6F8.s.o \
+    build/us/src/code/func_8009A650.c.o \
+    build/us/src/code/func_8009A6F0.c.o \
     build/us/src/code/8009A6F8.c.o \
-    build/us/asm/us/main_8009ACDC_to_8009AE38.s.o \
+    build/us/asm/us/main_8009ACDC_to_8009AD7C.s.o \
+    build/us/src/code/func_8009AD7C.c.o \
     build/us/src/code/8009AE38.c.o \
     build/us/asm/us/main_8009B0F0_to_8009B434.s.o \
     build/us/src/code/8009B434.c.o \
