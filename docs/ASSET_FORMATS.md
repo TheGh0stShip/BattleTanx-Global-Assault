@@ -59,11 +59,23 @@ The region formerly treated as one 294,352-byte stale blob contains exact
 copies of six live libmus songs at `0xC0000`, `0xD0000`, `0xD8000`, `0xE0000`,
 `0xF0000`, and `0xF8000`. They match live files 18, 10, 15, 21, 7, and 6 for
 all 136,294 bytes. The ROM-layout gate checks those byte equalities and now
+classifies those copies separately from unknown data.
+
 The preceding `0xB8400–0xC0000` range is a compact debug-name/type table with
 1,305 length-prefixed records and 664 unique identifiers. It retains internal
 names including `Steps_PruneFork`, `Obstacles_InitObstacleRef`, N64 SDK types,
 COFF `.fake`/`.eos` markers, and libmus enums. Generate its lossless name
-inventory with `tools/inventory_stale_debug.py`.
+inventory with `tools/inventory_stale_debug.py`. One contiguous chain has a
+proven little-endian descriptor format: 16 class-`0x0C` records associate
+`Steps_*` names with a type index, section 2, and a section-relative value;
+three following class-`0x0E` records associate names with type indices only.
+Other record classes are intentionally left uninterpreted until their layouts
+are established, and the section-relative values are not presented as retail
+function addresses without an independent anchor. All 16 section-2 offsets
+coincide with catalogued function boundaries when based at `0x8007D720`, from
+`Steps_GetNextLegPtr` through `Steps_FreeBranch`. The checked mapping is in
+`config/us/recovered_debug_symbols.tsv`; the unrecorded function at
+`0x8007DD54` remains unnamed.
 
 The six ranges after the stale songs are exact copies of live texture-pool
 bytes located `0x40000` later in the ROM. They account for another 123,912

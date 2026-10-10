@@ -1,0 +1,17 @@
+address	legacy_symbol	recovered_symbol	section_offset	type_index	evidence
+0x8007D720	func_8007D720	Steps_GetNextLegPtr	0x000	10	stale-debug-class-0x0c
+0x8007D738	func_8007D738	Steps_FreeStep	0x018	11	stale-debug-class-0x0c
+0x8007D760	func_8007D760	Steps_PruneFork	0x040	12	stale-debug-class-0x0c
+0x8007D7AC	func_8007D7AC	Steps_CropLinearBranch	0x08C	13	stale-debug-class-0x0c
+0x8007D7C4	func_8007D7C4	Steps_InitStep_Fork	0x0A4	14	stale-debug-class-0x0c
+0x8007D884	func_8007D884	Steps_InitStep_Leg	0x164	15	stale-debug-class-0x0c
+0x8007D998	func_8007D998	Steps_NewStep	0x278	16	stale-debug-class-0x0c
+0x8007DA5C	func_8007DA5C	Steps_InitStep_Free	0x33C	17	stale-debug-class-0x0c
+0x8007DA8C	func_8007DA8C	Steps_CopyObstacleRef	0x36C	18	stale-debug-class-0x0c
+0x8007DACC	func_8007DACC	Steps_PruneForksBelow	0x3AC	19	stale-debug-class-0x0c
+0x8007DB84	func_8007DB84	Steps_SpliceIn	0x464	20	stale-debug-class-0x0c
+0x8007DBE0	func_8007DBE0	Steps_InitStepPool	0x4C0	21	stale-debug-class-0x0c
+0x8007DE3C	func_8007DE3C	Steps_GetNextStepId	0x71C	23	stale-debug-class-0x0c
+0x8007DFA0	func_8007DFA0	Steps_InitStep	0x880	24	stale-debug-class-0x0c
+0x8007E024	func_8007E024	Steps_StepPtrFromId	0x904	25	stale-debug-class-0x0c
+0x8007E118	func_8007E118	Steps_FreeBranch	0x9F8	26	stale-debug-class-0x0c
