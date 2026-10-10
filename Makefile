@@ -4,7 +4,7 @@ VENV_PYTHON := $(VENV)/bin/python
 VENV_STAMP := $(VENV)/.installed
 ROM := baseroms/us/baserom.z64
 
-.PHONY: all setup toolchain symbols verify split build-code verify-code progress-report check clean-generated
+.PHONY: all setup toolchain symbols verify split build-code verify-code verify-assets progress-report check clean-generated
 
 all: split
 
@@ -41,6 +41,9 @@ build-code: split
 verify-code: build-code
 	cmp -s -n 1052672 $(ROM) build/us/battletanx_ga.code.bin
 	@echo "Verified reconstructed ROM 0x000000-0x101000 matches the retail dump"
+
+verify-assets: verify
+	$(PYTHON) tools/verify_asset_corpus.py --rom $(ROM)
 
 progress-report:
 	$(PYTHON) tools/generate_decomp_report.py

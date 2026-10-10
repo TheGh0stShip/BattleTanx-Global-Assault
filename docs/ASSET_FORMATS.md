@@ -204,6 +204,17 @@ offset, and embedded graph/data links remain N64 tokens.
 
 ## LZARI bundles
 
+Run the aggregate, non-extracting resource gate with:
+
+```sh
+make verify-assets
+```
+
+It verifies the base ROM, accounts for all 8 MiB, parses every known resource
+family, and canonically re-encodes all known LZARI streams. This is deliberately
+separate from `make verify-code`: asset-format work can use one corpus-wide
+resource gate without rebuilding the matching program image after every edit.
+
 The matching decoder at `0x800A0750` is used by the level, common-world, and
 image loaders. The audited ROM tables identify 271 streams: 74 level worlds,
 one common world, 195 images, and one unreferenced world left over from the
@@ -250,6 +261,24 @@ Each ignored output directory contains `world.json` plus the seven original
 decoded components. Keeping those components unchanged means they can already
 be passed to `pack_lzari_bundle.py` for an exact rebuild while the structured
 formats are progressively named.
+
+`world.json` is also lossless. Its fixed records are typed, while each
+variable-length object-definition span carries `raw_hex` until that kind's
+precise schema is established. Rebuild and compress it directly with:
+
+```sh
+python3 tools/pack_world_json.py \
+  assets/extracted/us/worlds/level_world_000/world.json \
+  /tmp/level_world_000.lzari
+```
+
+The matching creation handlers currently establish editable field overlays
+for 34 object-definition kinds. They cover 4,404 of the 5,372 reachable spans
+(36,540 of 42,300 span bytes). Kinds 6, 9, 25, 27, 31, 33, 37, 38, and 41
+remain raw-only pending equally strong layout evidence. Typed edits are written
+back over the preserved span, so unknown trailing bytes are neither discarded
+nor guessed. One unused 20-byte kind-3 record precedes the reachable records in
+`level_world_053`; it is retained explicitly as `definition_prefix_hex`.
 
 The world loader's two 17-command render-state replacement tables are also
 reconstructed as typed initialized data at `0x80116710`. These are the exact

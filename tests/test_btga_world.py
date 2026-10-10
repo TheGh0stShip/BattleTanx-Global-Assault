@@ -1,7 +1,7 @@
 import struct
 import unittest
 
-from tools.btga_world import WorldError, parse_world
+from tools.btga_world import WorldError, build_world, parse_world
 
 
 def sample_world():
@@ -21,6 +21,20 @@ def sample_world():
 
 
 class BtgaWorldTests(unittest.TestCase):
+    def test_parsed_world_rebuilds_exactly(self):
+        data = sample_world()
+        self.assertEqual(build_world(parse_world(data)), data)
+
+    def test_typed_definition_field_is_editable(self):
+        data = bytearray(sample_world())
+        offsets = struct.unpack_from(">8I", data)
+        data[offsets[3] : offsets[4]] = b"\0\0\x12\x34"
+        world = parse_world(bytes(data))
+        self.assertEqual(world["definitions"][0]["fields"]["model_index"], 0x1234)
+        world["definitions"][0]["fields"]["model_index"] = 0x5678
+        rebuilt = build_world(world)
+        self.assertEqual(rebuilt[offsets[3] : offsets[4]], b"\0\0\x56\x78")
+
     def test_parses_every_fixed_record_family(self):
         world = parse_world(sample_world())
         self.assertEqual(world["groups"][0]["min_z"], -3)
@@ -29,7 +43,13 @@ class BtgaWorldTests(unittest.TestCase):
         })
         self.assertEqual(
             world["definitions"][0],
-            {"offset": 0, "size": 4, "kind": 0x25, "placement_references": 1},
+            {
+                "offset": 0,
+                "size": 4,
+                "kind": 0x25,
+                "placement_references": 1,
+                "raw_hex": "25010203",
+            },
         )
         self.assertEqual(world["models"][0]["max_y"], 11)
         self.assertEqual(world["parts"][0]["reference_count"], 1)

@@ -12,6 +12,118 @@ POOL_LIMITS = {
     "texture": 0x2F8070 - 0x102C70,
 }
 
+GROUP = struct.Struct(">HH6h")
+PLACEMENT = struct.Struct(">hhhHI")
+MODEL = struct.Struct(">BBH6h")
+PART = struct.Struct(">BBH")
+REFERENCE = struct.Struct(">6i")
+
+# Field offsets are established by the matching creation handlers. Names stay
+# deliberately functional where the original game terminology is not proven.
+# The raw span remains authoritative for bytes outside these schemas.
+DEFINITION_SCHEMAS = {
+    0: (("model_index", 2, "H"),),
+    1: (("model_index", 2, "H"), ("height_mode", 4, "B")),
+    2: (("model_index", 2, "H"),),
+    3: tuple((f"model_index_{i}", 2 + i * 2, "H") for i in range(8))
+    + (("variant", 18, "B"), ("selection", 19, "B")),
+    4: tuple((f"model_index_{i}", 2 + i * 2, "H") for i in range(5))
+    + (("selection_from_model", 12, "B"),),
+    5: tuple((f"model_index_{i}", 2 + i * 2, "H") for i in range(3)),
+    7: (("mode", 1, "B"), ("value", 2, "B")),
+    8: (("first_offset", 4, "i"), ("second_offset", 8, "i")),
+    10: tuple((f"model_index_{i}", 2 + i * 2, "H") for i in range(3))
+    + (("variant", 8, "B"), ("selection_from_model", 9, "B")),
+    11: (("model_index", 2, "H"),),
+    12: (("mode", 1, "B"), ("player", 2, "B"), ("model_index", 4, "H")),
+    13: (
+        ("variant", 1, "B"),
+        ("player", 2, "B"),
+        ("effect", 3, "B"),
+        ("model_index", 4, "H"),
+        ("model_index_1", 6, "H"),
+        ("parameter", 8, "B"),
+        ("aux_model_index", 12, "H"),
+        ("aux_parameter", 14, "H"),
+    ),
+    14: (("model_index", 2, "H"), ("height_mode", 4, "B")),
+    15: (
+        ("model_index", 2, "H"),
+        ("model_index_1", 4, "H"),
+        ("model_index_2", 6, "H"),
+        ("variant", 8, "B"),
+        ("selection", 9, "B"),
+        ("model_index_3", 10, "H"),
+    ),
+    16: (("radius_x", 1, "B"), ("radius_y", 2, "B"), ("variant", 3, "B")),
+    17: (("slot", 1, "B"), ("scale", 2, "H")),
+    20: (("model_index", 2, "H"),),
+    21: tuple((f"model_index_{i}", 2 + i * 2, "H") for i in range(5))
+    + (
+        ("variant", 12, "B"),
+        ("conditional_offset", 16, "i"),
+        ("mission_type", 20, "B"),
+    ),
+    22: (("model_index", 2, "H"),),
+    24: tuple((f"model_index_{i}", 2 + i * 2, "H") for i in range(3))
+    + (("selection", 8, "B"),),
+    26: (
+        ("variant", 1, "B"),
+        ("first_offset", 4, "i"),
+        ("second_offset", 8, "i"),
+        ("parameter_0", 12, "H"),
+        ("parameter_1", 14, "H"),
+    )
+    + tuple((f"segment_offset_{i}", 16 + i * 4, "i") for i in range(6)),
+    28: tuple((f"model_index_{i}", 2 + i * 2, "H") for i in range(3)),
+    29: (("model_index", 2, "H"),),
+    30: (("mode", 1, "B"),)
+    + tuple((f"bound_{i}", 2 + i * 2, "h") for i in range(6)),
+    32: (("variant", 1, "B"),)
+    + tuple((f"model_index_{i}", 2 + i * 2, "H") for i in range(7)),
+    34: (("model_index", 2, "H"),),
+    35: (
+        ("model_index", 2, "H"),
+        ("colour_index", 5, "B"),
+        ("collision_mode", 6, "B"),
+    ),
+    36: (("model_index", 2, "H"), ("model_index_1", 4, "H")),
+    39: (("condition", 1, "B"), ("flag", 2, "H"), ("target_offset", 4, "I")),
+    40: (("model_index", 2, "H"),),
+    42: (("model_index", 2, "H"),),
+    43: (
+        ("model_index", 2, "H"),
+        ("height_mode", 4, "B"),
+        ("collision_mode", 5, "B"),
+    ),
+    44: (("model_index", 2, "H"),),
+    45: (("flag", 1, "B"), ("player", 2, "B")),
+}
+
+
+def _decode_definition_fields(kind: int, payload: bytes) -> dict:
+    fields = {}
+    for name, offset, code in DEFINITION_SCHEMAS.get(kind, ()):
+        value_size = struct.calcsize(">" + code)
+        if offset + value_size > len(payload):
+            raise WorldError(f"kind-{kind} definition is shorter than field {name}")
+        fields[name] = struct.unpack_from(">" + code, payload, offset)[0]
+    return fields
+
+
+def _encode_definition_fields(row: dict, payload: bytes) -> bytes:
+    result = bytearray(payload)
+    fields = row.get("fields", {})
+    schema = DEFINITION_SCHEMAS.get(row["kind"], ())
+    expected = {name for name, _offset, _code in schema}
+    unknown = set(fields) - expected
+    if unknown:
+        raise WorldError(f"unknown kind-{row['kind']} fields: {sorted(unknown)}")
+    for name, offset, code in schema:
+        if name in fields:
+            struct.pack_into(">" + code, result, offset, fields[name])
+    return bytes(result)
+
 
 class WorldError(ValueError):
     """Raised when a decoded world violates its loader-established layout."""
@@ -33,13 +145,13 @@ def parse_world(data: bytes) -> dict:
         raise WorldError("world offsets are not monotonic")
 
     group_count = struct.unpack_from(">I", data, offsets[0])[0]
-    groups_raw = _records(data, offsets[1], offsets[2], struct.Struct(">HH6h"))
+    groups_raw = _records(data, offsets[1], offsets[2], GROUP)
     if len(groups_raw) != group_count:
         raise WorldError("group count disagrees with the group section")
-    placements_raw = _records(data, offsets[2], offsets[3], struct.Struct(">hhhHI"))
-    models_raw = _records(data, offsets[4], offsets[5], struct.Struct(">BBH6h"))
-    parts_raw = _records(data, offsets[5], offsets[6], struct.Struct(">BBH"))
-    refs_raw = _records(data, offsets[6], offsets[7], struct.Struct(">6i"))
+    placements_raw = _records(data, offsets[2], offsets[3], PLACEMENT)
+    models_raw = _records(data, offsets[4], offsets[5], MODEL)
+    parts_raw = _records(data, offsets[5], offsets[6], PART)
+    refs_raw = _records(data, offsets[6], offsets[7], REFERENCE)
 
     for count, first, *_ in groups_raw:
         if first + count > len(placements_raw):
@@ -81,6 +193,8 @@ def parse_world(data: bytes) -> dict:
             definition_offsets.add(target)
             pending.append(target)
     definition_offsets = sorted(definition_offsets)
+    first_definition = definition_offsets[0] if definition_offsets else definition_size
+    definition_prefix = data[offsets[3] : offsets[3] + first_definition]
     definition_ends = definition_offsets[1:] + [definition_size]
     definitions = []
     for start, end in zip(definition_offsets, definition_ends):
@@ -92,7 +206,14 @@ def parse_world(data: bytes) -> dict:
             "size": len(payload),
             "kind": payload[0],
             "placement_references": placement_definition_offsets.count(start),
+            # Dispatcher-proven starts divide the whole section into lossless
+            # spans. Some spans can still contain trailing unknown records or
+            # padding until every kind's precise schema is established.
+            "raw_hex": payload.hex(),
         }
+        fields = _decode_definition_fields(payload[0], payload)
+        if fields:
+            definition["fields"] = fields
         if payload[0] == 39:
             definition.update(
                 {
@@ -135,8 +256,82 @@ def parse_world(data: bytes) -> dict:
         "offsets": list(offsets),
         "groups": groups,
         "placements": placements,
+        "definition_prefix_hex": definition_prefix.hex(),
         "definitions": definitions,
         "models": models,
         "parts": parts,
         "references": references,
     }
+
+
+def build_world(world: dict) -> bytes:
+    """Rebuild a decoded seven-component world from ``parse_world`` JSON."""
+
+    bounds = ("min_x", "min_y", "min_z", "max_x", "max_y", "max_z")
+    groups = b"".join(
+        GROUP.pack(
+            row["placement_count"],
+            row["first_placement"],
+            *(row[name] for name in bounds),
+        )
+        for row in world["groups"]
+    )
+    placements = b"".join(
+        PLACEMENT.pack(
+            row["x"], row["y"], row["z"], row["yaw"], row["definition_offset"]
+        )
+        for row in world["placements"]
+    )
+
+    definitions = bytearray.fromhex(world.get("definition_prefix_hex", ""))
+    for row in sorted(world["definitions"], key=lambda item: item["offset"]):
+        if row["offset"] != len(definitions):
+            raise WorldError(
+                f"object-definition spans are not contiguous at 0x{len(definitions):X}"
+            )
+        payload = _encode_definition_fields(row, bytes.fromhex(row["raw_hex"]))
+        if len(payload) != row["size"] or not payload or payload[0] != row["kind"]:
+            raise WorldError(
+                f"object-definition span at 0x{row['offset']:X} disagrees with metadata"
+            )
+        definitions.extend(payload)
+
+    models = b"".join(
+        MODEL.pack(
+            row["part_count"],
+            0,
+            row["first_part"],
+            *(row[name] for name in bounds),
+        )
+        for row in world["models"]
+    )
+    parts = b"".join(
+        PART.pack(row["reference_count"], 0, row["first_reference"])
+        for row in world["parts"]
+    )
+    references = b"".join(
+        REFERENCE.pack(
+            row["geometry_offset"],
+            row["geometry_size"],
+            row["state_offset"],
+            row["state_size"],
+            row["texture_offset"],
+            row["texture_size"],
+        )
+        for row in world["references"]
+    )
+    components = (
+        struct.pack(">I", len(world["groups"])),
+        groups,
+        placements,
+        bytes(definitions),
+        models,
+        parts,
+        references,
+    )
+    offsets = [32]
+    for component in components:
+        offsets.append(offsets[-1] + len(component))
+    rebuilt = struct.pack(">8I", *offsets) + b"".join(components)
+    parse_world(rebuilt)
+    return rebuilt
