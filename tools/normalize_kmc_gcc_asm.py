@@ -1759,6 +1759,45 @@ def order_spotter_frame_setup_prologue(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def schedule_template_retry_source_reset(text: str) -> str:
+    """Match the retail retry scheduling in ``func_800A1384``.
+
+    GCC moves the source-pointer reset into the pointer-test delay slot and
+    retargets that branch directly to the copy loop.  Retail instead branches
+    to the reset instruction with an empty slot, then uses the reset in the
+    later kind-test delay slot.  Move that one instruction between the two
+    slots without adding or removing code.
+    """
+    if "func_800A1384:" not in text:
+        return text
+    before = (
+        "\tbne\t$2,$0,.L5\n"
+        "\tmove\t$6,$8\n"
+        "\t.set\tnoreorder\n"
+        "\tlhu\t$2,496($sp)\n"
+        "\t#nop\n"
+        "\tsltu\t$2,$2,5\n"
+        "\tbne\t$2,$0,.L5\n"
+        "\tnop\n"
+    )
+    after = (
+        "\tbne\t$2,$0,.L3\n"
+        "\tnop\n"
+        "\t.set\tnoreorder\n"
+        "\tlhu\t$2,496($sp)\n"
+        "\t#nop\n"
+        "\tsltu\t$2,$2,5\n"
+        "\tbne\t$2,$0,.L5\n"
+        "\tmove\t$6,$8\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800A1384 retry scheduling fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def order_font_glyph_draw_prologue(text: str) -> str:
     """Match retail scheduling in ``func_80096A54``.
 
@@ -2832,6 +2871,8 @@ def normalize_v3(source: str) -> str:
         text = shape_curve_mode_dispatches(text)
     if os.environ.get("V3_SPOTTER_FRAME_SETUP_PROLOGUE", "1") == "1":
         text = order_spotter_frame_setup_prologue(text)
+    if os.environ.get("V3_TEMPLATE_RETRY_SOURCE_RESET", "1") == "1":
+        text = schedule_template_retry_source_reset(text)
     if os.environ.get("V3_FONT_GLYPH_DRAW_PROLOGUE", "1") == "1":
         text = order_font_glyph_draw_prologue(text)
     if os.environ.get("V3_MUSIC_STREAM_QUEUE_REGISTERS", "1") == "1":

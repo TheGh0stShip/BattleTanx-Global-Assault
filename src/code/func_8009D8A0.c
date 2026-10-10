@@ -1,7 +1,7 @@
 #include "types.h"
 
-extern f64 D_800725B0;
-extern f32 D_800725B8;
+static f64 D_800725B0 __attribute__((section(".rodata"))) = 4294967296.0;
+static f32 D_800725B8 __attribute__((section(".rodata"))) = 4.2949673e+09f;
 extern s32 player_bss_0048;
 
 f32 func_8009D8A0(f32 arg0) {

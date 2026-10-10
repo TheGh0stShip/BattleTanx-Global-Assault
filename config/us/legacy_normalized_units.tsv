@@ -13,7 +13,6 @@ func_80097660	0x80097660	0x4C	selected
 func_800841D4	0x800841D4	0x50	selected
 func_80085D58	0x80085D58	0x50	selected
 func_800866B0	0x800866B0	0x50	selected
-func_800A9EC0	0x800A9EC0	0x50	selected
 func_800B03F4	0x800B03F4	0x50	selected
 func_8007AD40	0x8007AD40	0x54	selected
 func_800979A0	0x800979A0	0x54	selected
@@ -59,7 +58,6 @@ func_80089610	0x80089610	0x74	selected
 func_8008EC40	0x8008EC40	0x74	selected
 func_80099F74	0x80099F74	0x74	selected
 func_8009D8A0	0x8009D8A0	0x74	selected
-func_800BF130	0x800BF130	0x74	selected
 func_800BF798	0x800BF798	0x74	selected
 func_80077FD0	0x80077FD0	0x78	selected
 func_8007D5B0	0x8007D5B0	0x78	selected
@@ -79,7 +77,6 @@ func_800C11B8	0x800C11B8	0x84	selected
 func_8008543C	0x8008543C	0x88	selected
 func_800879F8	0x800879F8	0x88	selected
 func_8009EF4C	0x8009EF4C	0x88	selected
-func_800A1384	0x800A1384	0x88	selected
 func_8007E170	0x8007E170	0x8C	selected
 func_80083028	0x80083028	0x8C	selected
 func_80087798	0x80087798	0x8C	selected

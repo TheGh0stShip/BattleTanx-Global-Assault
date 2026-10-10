@@ -282,10 +282,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800BD93C_to_800BFD40.s.o .text 0x2404 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800BFDA4_to_800BFE4C.s.o asm/us/main_800BFDA4_to_800BFE4C.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800BFDA4_to_800BFE4C.s.o .text 0xa8 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800BFE94_to_800BFEA0.s.o asm/us/main_800BFE94_to_800BFEA0.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800BFE94_to_800BFEA0.s.o .text 0xc --alignment 4
@@ -1563,6 +1559,20 @@ while IFS=$'\t' read -r function_name address size status; do
     python3 tools/trim_elf32_section.py \
         "build/us/src/${unit}.c.o" .text "$size" --alignment 4
 done < config/us/legacy_normalized_units_extra.tsv
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_80090218.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_8009D168.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_8009D510.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_8009D8A0.c.o .rodata 0xC --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_8009EF4C.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_8009EFD4.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_draw.c.o .rodata 0x4 --alignment 4
 
 # Whole gameplay translation units that match with the standard production
 # normalizer. Keep these manifest-driven so new unit reconstructions do not
@@ -1729,7 +1739,6 @@ for function_name in \
         func_800BF1A4 \
         func_800BF3EC \
         func_800BFCA4 \
-        func_800BFDA4 \
         func_800BFE4C \
         func_800C04C8 \
         func_800C0564 \
@@ -1887,7 +1896,6 @@ for function_name in \
         func_800BF1A4) size=0x60 ;;
         func_800BF3EC) size=0x98 ;;
         func_800BFCA4) size=0x9C ;;
-        func_800BFDA4) size=0xA8 ;;
         func_800BFE4C) size=0x48 ;;
         func_800C04C8) size=0x9C ;;
         func_800C0564) size=0xA4 ;;
@@ -1924,6 +1932,8 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/func_8009F334.c.o .rodata 0x4 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_8009F5AC.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/func_8009F8A0.c.o .rodata 0xC --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/func_800A9A98.c.o .rodata 0x19 --alignment 4
@@ -1931,12 +1941,6 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/func_800ABE6C.c.o .rodata 0x4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/func_800B6934.c.o .rodata 0x8 --alignment 4
-python3 tools/trim_elf32_section.py \
-    build/us/src/code/func_800BFDA4.c.o .rodata 0xC --alignment 4
-python3 tools/trim_elf32_section.py \
-    build/us/src/code/func_800BFDA4.c.o .text 0 --alignment 4
-"${tool_prefix}objcopy" --localize-symbol=func_800BFDA4 \
-    build/us/src/code/func_800BFDA4.c.o
 python3 tools/trim_elf32_section.py \
     build/us/src/code/func_800BFE4C.c.o .rodata 0x8 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3970,7 +3974,7 @@ if false; then
     build/us/src/code/scheduler_context.c.o \
     build/us/src/code/func_800A1290.c.o \
     build/us/src/code/scheduler_state.c.o \
-    build/us/asm/us/main_800A1384_to_800A140C.s.o \
+    build/us/src/code/func_800A1384.c.o \
     build/us/src/code/func_800A140C.c.o \
     build/us/src/code/func_800A15F0.c.o \
     build/us/src/code/func_800A16F8.c.o \

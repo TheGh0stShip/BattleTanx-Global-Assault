@@ -1,7 +1,7 @@
 #include "types.h"
 #include "m2c_macros.h"
 
-extern f32 D_80071DC8;
+static f32 D_80071DC8 __attribute__((section(".rodata"))) = 0.1f;
 
 void func_80090218(void *arg0) {
     register f32 temp_f4 __asm__("$f4") = M2C_FIELD(arg0, f32 *, 0x250);

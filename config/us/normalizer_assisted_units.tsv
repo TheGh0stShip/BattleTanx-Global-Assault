@@ -26,3 +26,4 @@ progress_level_advance	0x8009C31C	0x208	normalizer-assisted
 grid_node_remove	0x800B0F4C	0x150	normalizer-assisted
 contact_side_test	0x800B739C	0x118	normalizer-assisted
 curve_mode	0x80079AFC	0xFC	normalizer-assisted
+func_800A1384	0x800A1384	0x88	normalizer-assisted

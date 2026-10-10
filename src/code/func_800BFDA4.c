@@ -3,9 +3,8 @@
 extern f32 D_803A5948;
 
 s32 func_800BFDA4(void *unused, u8 *wrapper) {
-    register u8 *object asm("$5") = *(u8 **)(wrapper + 8);
+    u8 *object = *(u8 **)(wrapper + 8);
     u32 converted;
-    register s32 highValue asm("$4");
     f32 amount;
 
     if (object[7] == 0xFF) {
@@ -22,8 +21,8 @@ s32 func_800BFDA4(void *unused, u8 *wrapper) {
     converted = (s32)amount;
     goto converted_done;
 high:
-    highValue = (s32)(amount - 2.1474836e+09f);
-    converted = highValue | 0x80000000;
+    converted = (s32)(amount - 2.1474836e+09f);
+    converted |= 0x80000000;
 converted_done:
     object[7] += converted;
     return 0;

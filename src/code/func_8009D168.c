@@ -5,7 +5,7 @@
 #endif
 M2C_UNK func_80097D14(s32, M2C_UNK);                /* extern */
 f32 func_8009D8A0(f32);                             /* extern */
-extern f32 D_80072558;
+static f32 D_80072558 __attribute__((section(".rodata"))) = 19.0f;
 
 void func_8009D168(void) {
     s32 temp_f2;

@@ -1,7 +1,7 @@
 #include "types.h"
 
 extern f32 D_80114870[];
-extern f32 D_80072594;
+static f32 D_80072594 __attribute__((section(".rodata"))) = 0.00390625f;
 
 f32 func_8009D510(u16 value) {
     register u32 index __asm__("$2") = (u8)((value >> 8) + 0x40);

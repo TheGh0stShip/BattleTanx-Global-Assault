@@ -15,7 +15,7 @@ typedef struct Eff {
     float unk3C;
 } Eff;
 extern int D_80121D5C[];
-extern float D_80074FE4;
+static float D_80074FE4 __attribute__((section(".rodata"))) = -0.5f;
 extern float D_80219488;
 extern Mtx68 D_80074F94;
 extern void *D_803A53A0[];

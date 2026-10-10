@@ -3,7 +3,7 @@
 
 f32 func_8009D4B0(s32);
 f32 func_8009D510(s32);
-extern f32 D_80072644;
+static f32 D_80072644 __attribute__((section(".rodata"))) = 1.0f;
 
 void func_8009EF4C(void *arg0, s32 arg1, s32 arg2, s32 arg3) {
     void *object = arg0;

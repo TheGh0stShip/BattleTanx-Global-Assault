@@ -126,6 +126,14 @@ align_800D05D8	0x800D05D8	0x8
 align_800F809C	0x800F809C	0x4
 align_800F865C	0x800F865C	0x4
 align_800F8DA4	0x800F8DA4	0xC
+# KMC data-object alignment at the end of the game data block. The typed
+# objects begin at 16-byte boundaries; these unreferenced slots retain stale
+# scalar and string-tail bytes from the preceding object.
+align_8011449C	0x8011449C	0x4
+align_801144E8	0x801144E8	0x8
+align_801144FC	0x801144FC	0x4
+align_80114504	0x80114504	0xC
+align_80114514	0x80114514	0xC
 # TU-end padding and stale ASCII fragments established by the 0x80071000-
 # 0x80090000 boundary audit. None is a CPU entry point or referenced object.
 align_80079564	0x80079564	0xC

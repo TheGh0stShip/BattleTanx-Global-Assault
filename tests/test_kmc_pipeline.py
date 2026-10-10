@@ -706,6 +706,31 @@ class KmcPipelineTests(unittest.TestCase):
             normalized,
         )
 
+    def test_template_retry_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.schedule_template_retry_source_reset(
+                "func_800A1384:\n\tnop\n"
+            )
+
+    def test_template_retry_moves_source_reset(self) -> None:
+        source = (
+            "func_800A1384:\n"
+            "\tbne\t$2,$0,.L5\n"
+            "\tmove\t$6,$8\n"
+            "\t.set\tnoreorder\n"
+            "\tlhu\t$2,496($sp)\n"
+            "\t#nop\n"
+            "\tsltu\t$2,$2,5\n"
+            "\tbne\t$2,$0,.L5\n"
+            "\tnop\n"
+        )
+        normalized = MODULE.schedule_template_retry_source_reset(source)
+        self.assertIn("\tbne\t$2,$0,.L3\n\tnop\n", normalized)
+        self.assertIn(
+            "\tbne\t$2,$0,.L5\n\tmove\t$6,$8\n",
+            normalized,
+        )
+
     def test_font_glyph_draw_requires_one_fire(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "float prologue fired 0 times"):
             MODULE.order_font_glyph_draw_prologue(

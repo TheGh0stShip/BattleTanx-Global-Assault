@@ -10,7 +10,7 @@ typedef struct {
     f32 z;
 } Vec3f;
 
-extern f32 D_80072650;
+static f32 D_80072650 __attribute__((section(".rodata"))) = 1.0f;
 
 void func_8009F5AC(Matrix4f *input, Matrix4f *output, Vec3f *position,
                    Vec3f *reference) {
