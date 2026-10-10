@@ -328,6 +328,7 @@ class FunctionBoundaryTests(unittest.TestCase):
         self.assertEqual(0x98, by_address[0x8007AF84]["size"])
         self.assertEqual(0xCC, by_address[0x8007D39C]["size"])
         self.assertEqual(0x14, by_address[0x8007D484]["size"])
+        self.assertEqual(0x8, by_address[0x8007D498]["size"])
 
         covered_words = {
             address
@@ -339,11 +340,11 @@ class FunctionBoundaryTests(unittest.TestCase):
             )
         }
         for address in (0x8007B01C, 0x8007D468, 0x8007D46C,
-                        0x8007D498, 0x8007D49C, 0x8007D704,
-                        0x8007D708, 0x8007D70C, 0x8007D718,
-                        0x8007D71C, 0x8007E164, 0x8007E168,
-                        0x8007E16C, 0x80080BBC, 0x80082B3C,
-                        0x80082D08, 0x80082D0C, 0x8009859C):
+                        0x8007D704, 0x8007D708, 0x8007D70C,
+                        0x8007D718, 0x8007D71C, 0x8007E164,
+                        0x8007E168, 0x8007E16C, 0x80080BBC,
+                        0x80082B3C, 0x80082D08, 0x80082D0C,
+                        0x8009859C):
             self.assertNotIn(address, covered_words)
 
     def test_late_game_units_do_not_swallow_helpers_or_data(self) -> None:
@@ -361,6 +362,9 @@ class FunctionBoundaryTests(unittest.TestCase):
         }
         for address, size in expected.items():
             self.assertEqual(size, by_address[address]["size"])
+
+        self.assertEqual("__rmonPanic", by_address[0x800E9E78]["name"])
+        self.assertEqual(0x8, by_address[0x800E9E78]["size"])
 
         covered_words = {
             address

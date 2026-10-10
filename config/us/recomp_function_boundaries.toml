@@ -78,6 +78,8 @@ functions = [
     { name = "func_800796F0", vram = 0x800796f0, size = 0x26c },
     { name = "func_8007995C", vram = 0x8007995c, size = 0xc },
     { name = "func_80079968", vram = 0x80079968, size = 0x194 },
+    { name = "func_80079AFC", vram = 0x80079afc, size = 0x38 }, # byte-exact curve_mode unit
+    { name = "func_80079B34", vram = 0x80079b34, size = 0xc4 }, # byte-exact curve_mode unit
     { name = "func_80079C00", vram = 0x80079c00, size = 0x5c },
     { name = "func_80079C5C", vram = 0x80079c5c, size = 0x5c },
     { name = "func_80079CB8", vram = 0x80079cb8, size = 0x338 },
@@ -125,6 +127,7 @@ functions = [
     { name = "func_8007D39C", vram = 0x8007d39c, size = 0xcc },
     { name = "func_8007D470", vram = 0x8007d470, size = 0x14 },
     { name = "func_8007D484", vram = 0x8007d484, size = 0x14 },
+    { name = "func_8007D498", vram = 0x8007d498, size = 0x8 }, # function emitted by byte-exact production C unit
     { name = "func_8007D4A0", vram = 0x8007d4a0, size = 0x1c },
     { name = "func_8007D4BC", vram = 0x8007d4bc, size = 0x44 },
     { name = "func_8007D500", vram = 0x8007d500, size = 0x58 },
@@ -1291,7 +1294,8 @@ functions = [
     { name = "func_800D1274", vram = 0x800d1274, size = 0x3c }, # verified byte-exact function boundary
     { name = "func_800D12B0", vram = 0x800d12b0, size = 0x9e0 },
     { name = "func_800D1C90", vram = 0x800d1c90, size = 0x87c },
-    { name = "func_800D250C", vram = 0x800d250c, size = 0xd4 },
+    { name = "func_800D250C", vram = 0x800d250c, size = 0x68 },
+    { name = "func_800D2574", vram = 0x800d2574, size = 0x6c }, # function emitted by byte-exact production C unit
     { name = "func_800D25E0", vram = 0x800d25e0, size = 0x564 },
     { name = "func_800D2B44", vram = 0x800d2b44, size = 0x698 },
     { name = "func_800D31DC", vram = 0x800d31dc, size = 0x378 },
@@ -1314,7 +1318,8 @@ functions = [
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800D6508", vram = 0x800d6508, size = 0x2e8 },
     { name = "func_800D67F0", vram = 0x800d67f0, size = 0x1f0 },
-    { name = "func_800D69E0", vram = 0x800d69e0, size = 0x1a0 },
+    { name = "func_800D69E0", vram = 0x800d69e0, size = 0x1c },
+    { name = "func_800D69FC", vram = 0x800d69fc, size = 0x184 }, # function emitted by byte-exact production C unit
     { name = "func_800D6B80", vram = 0x800d6b80, size = 0x2b4 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800D6E40", vram = 0x800d6e40, size = 0xac },
@@ -1464,7 +1469,9 @@ functions = [
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800E16D8", vram = 0x800e16d8, size = 0x200 },
     { name = "func_800E18D8", vram = 0x800e18d8, size = 0xa8 },
-    { name = "func_800E1980", vram = 0x800e1980, size = 0xcc },
+    { name = "func_800E1980", vram = 0x800e1980, size = 0x44 },
+    { name = "func_800E19C4", vram = 0x800e19c4, size = 0x44 }, # function emitted by byte-exact production C unit
+    { name = "func_800E1A08", vram = 0x800e1a08, size = 0x44 }, # function emitted by byte-exact production C unit
     { name = "func_800E1A4C", vram = 0x800e1a4c, size = 0x158 },
     # round 21: the original gap-guessed size (0x940) for func_800E16D8 actually
     # covered TWO functions plus a short string constant between them
@@ -1510,7 +1517,9 @@ functions = [
     # round 22: split -- two trailing garbage words (mfhi $zero / sll $zero,...
     # / mfhi $zero again) after the real jr $ra return; real code resumes
     # at 0x800e58d0.
-    { name = "func_800E58D0", vram = 0x800e58d0, size = 0x2e8 },
+    { name = "func_800E58D0", vram = 0x800e58d0, size = 0x100 },
+    { name = "func_800E59D0", vram = 0x800e59d0, size = 0xf4 }, # function emitted by byte-exact production C unit
+    { name = "func_800E5AC4", vram = 0x800e5ac4, size = 0xf4 }, # function emitted by byte-exact production C unit
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800E56D0", vram = 0x800e56d0, size = 0x134 },
     { name = "func_800E5804", vram = 0x800e5804, size = 0x5c }, # verified byte-exact function boundary
@@ -1566,9 +1575,10 @@ functions = [
     { name = "func_800E8E34", vram = 0x800e8e34, size = 0x15c },
     { name = "func_800E8F90", vram = 0x800e8f90, size = 0xa0 },
     { name = "func_800E9030", vram = 0x800e9030, size = 0x15c },
-    { name = "func_800E918C", vram = 0x800e918c, size = 0x164 },
+    { name = "func_800E918C", vram = 0x800e918c, size = 0x15c }, # byte-exact slot_mode_value_get body; trailing 0x8 is alignment
     { name = "func_800E92F0", vram = 0x800e92f0, size = 0x134 },
-    { name = "func_800E9424", vram = 0x800e9424, size = 0x28 },
+    { name = "func_800E9424", vram = 0x800e9424, size = 0x20 },
+    { name = "func_800E9444", vram = 0x800e9444, size = 0x8 }, # function emitted by byte-exact production C unit
     { name = "func_800E944C", vram = 0x800e944c, size = 0x268 },
     { name = "func_800E96B4", vram = 0x800e96b4, size = 0x244 },
     { name = "func_800E98F8", vram = 0x800e98f8, size = 0x98 },
@@ -1577,6 +1587,7 @@ functions = [
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800E9CAC", vram = 0x800e9cac, size = 0x1a0 },
     { name = "func_800E9E4C", vram = 0x800e9e4c, size = 0x2c },
+    { name = "__rmonPanic", vram = 0x800e9e78, size = 0x8 }, # executable jump stub; retained as assembly
     { name = "func_800E9E80", vram = 0x800e9e80, size = 0x2cc },
     # Round 76 (STATUS.md): merged-function boundary, an eight-way split.
     # "Failed to find function at 0x800EA224" after idling at the title
@@ -1617,7 +1628,8 @@ functions = [
     { name = "func_800EB7BC", vram = 0x800eb7bc, size = 0x7c },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800EB838", vram = 0x800eb838, size = 0xfc },
-    { name = "func_800EB934", vram = 0x800eb934, size = 0x164 },
+    { name = "func_800EB934", vram = 0x800eb934, size = 0x28 },
+    { name = "func_800EB95C", vram = 0x800eb95c, size = 0x13c }, # function emitted by byte-exact production C unit
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800EBA98", vram = 0x800eba98, size = 0x210 },
     { name = "func_800EBCA8", vram = 0x800ebca8, size = 0xf8 }, # verified byte-exact function boundary
@@ -1731,7 +1743,9 @@ functions = [
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800F33C0", vram = 0x800f33c0, size = 0x16c },
     { name = "func_800F352C", vram = 0x800f352c, size = 0x1a4 },
-    { name = "func_800F36D0", vram = 0x800f36d0, size = 0x130 },
+    { name = "func_800F36D0", vram = 0x800f36d0, size = 0x8c },
+    { name = "func_800F375C", vram = 0x800f375c, size = 0x38 }, # function emitted by byte-exact production C unit
+    { name = "func_800F3794", vram = 0x800f3794, size = 0x6c }, # function emitted by byte-exact production C unit
     { name = "func_800F3800", vram = 0x800f3800, size = 0xc0 },
     # Batch split (round 78, STATUS.md): clean jr-$ra boundaries whose start is ROM-referenced.
     { name = "func_800F38C0", vram = 0x800f38c0, size = 0x108 },
@@ -1741,7 +1755,8 @@ functions = [
     { name = "func_800F3B80", vram = 0x800f3b80, size = 0x144 },
     { name = "func_800F3CC4", vram = 0x800f3cc4, size = 0x40 },
     { name = "func_800F3D04", vram = 0x800f3d04, size = 0x154 },
-    { name = "func_800F3E58", vram = 0x800f3e58, size = 0x840 },
+    { name = "func_800F3E58", vram = 0x800f3e58, size = 0x120 },
+    { name = "func_800F3F78", vram = 0x800f3f78, size = 0x720 }, # function emitted by byte-exact production C unit
     { name = "func_800F4698", vram = 0x800f4698, size = 0x6dc },
     # Round 84 (STATUS.md): uncovered gap after this entry -- string "_FLAME_GANGL" (12 bytes), then
     # real code the original syms missed (functions placed right after

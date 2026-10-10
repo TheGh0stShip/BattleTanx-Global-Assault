@@ -23,22 +23,22 @@ class DecompReportTests(unittest.TestCase):
         )
         measures = report["measures"]
         self.assertEqual(report["version"], 2)
-        self.assertEqual(measures["total_functions"], 1867)
-        self.assertEqual(measures["matched_functions"], 1706)
-        self.assertEqual(measures["total_code"], "631900")
-        self.assertEqual(measures["matched_code"], "492788")
-        self.assertEqual(measures["total_data"], "117204")
+        self.assertEqual(measures["total_functions"], 1882)
+        self.assertEqual(measures["matched_functions"], 1720)
+        self.assertEqual(measures["total_code"], "632160")
+        self.assertEqual(measures["matched_code"], "493040")
+        self.assertEqual(measures["total_data"], "116944")
         self.assertEqual(measures["matched_data"], "104012")
         self.assertEqual([item["name"] for item in report["categories"]], ["Code", "Data"])
         data = report["categories"][1]["measures"]
-        self.assertAlmostEqual(data["matched_data_percent"], 104012 * 100 / 117204)
+        self.assertAlmostEqual(data["matched_data_percent"], 104012 * 100 / 116944)
         unmatched = [
             unit for unit in report["units"]
             if unit["name"].startswith("data/unmatched_")
         ]
-        self.assertEqual(len(unmatched), 200)
+        self.assertEqual(len(unmatched), 199)
         self.assertEqual(
-            sum(int(unit["sections"][0]["size"]) for unit in unmatched), 13192
+            sum(int(unit["sections"][0]["size"]) for unit in unmatched), 12932
         )
         self.assertTrue(
             all("virtual_address" in unit["sections"][0]["metadata"] for unit in unmatched)
@@ -80,8 +80,8 @@ class DecompReportTests(unittest.TestCase):
         self.assertEqual(
             REPORT.MAIN_IMAGE_END
             - REPORT.MAIN_IMAGE_START
-            - 631900,
-            117204,
+            - 632160,
+            116944,
         )
 
     def test_late_gameplay_functions_are_not_reported_as_data(self):
