@@ -71,4 +71,6 @@ func_80099464	0x80099464	0x260	matched
 800BDAF8	0x800BDAF8	0x1314	matched
 800BEE0C	0x800BEE0C	0x1F4	matched
 world_resource_aggregate	0x800BA330	0x390	matched
+world_loader	0x800BA6C0	0xBE0	matched
 world_bundle_resource_aggregate	0x800BB2A0	0x29C	matched
+common_model_loader	0x800BB53C	0x880	matched
