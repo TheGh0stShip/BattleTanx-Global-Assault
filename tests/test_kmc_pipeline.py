@@ -592,6 +592,28 @@ class KmcPipelineTests(unittest.TestCase):
             normalized,
         )
 
+    def test_sprite_ring_label_hazard_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.reproduce_sprite_ring_label_hazard(
+                "func_800A42C8:\n\tnop\n\t.end\tfunc_800A42C8\n"
+            )
+
+    def test_sprite_ring_label_hazard_preserves_target(self) -> None:
+        source = (
+            "func_800A42C8:\n"
+            "\tsub.s\t$f2,$f2,$f0\n"
+            ".L47:\n"
+            "\tmul.s\t$f2,$f8,$f2\n"
+            "\t.end\tfunc_800A42C8\n"
+        )
+        normalized = MODULE.reproduce_sprite_ring_label_hazard(source)
+        self.assertIn(
+            ".L47 = . + 4\n"
+            "\tsub.s\t$f2,$f2,$f0\n"
+            "\tmul.s\t$f2,$f8,$f2\n",
+            normalized,
+        )
+
     def test_mover_reflect_likely_multiply_requires_one_fire(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.hoist_mover_reflect_likely_multiply(

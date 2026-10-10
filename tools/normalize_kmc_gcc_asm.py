@@ -1172,6 +1172,42 @@ def reproduce_collision_query_label_hazard(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def reproduce_sprite_ring_label_hazard(text: str) -> str:
+    """Suppress the non-retail label-adjacent ``mul.s`` nop in func_800A42C8.
+
+    The branch target remains the multiply address. Defining it one
+    instruction earlier as ``. + 4`` prevents KMC ``as`` from treating the
+    label as a floating-point multiply hazard boundary. The complete pattern
+    is function-gated and must occur exactly once.
+    """
+    if "func_800A42C8:" not in text:
+        return text
+    body_match = re.search(
+        r"func_800A42C8:.*?\n\s*\.end\s+func_800A42C8\b", text, flags=re.S
+    )
+    if body_match is None:
+        raise RuntimeError("func_800A42C8 body not found for label hazard")
+    body = body_match.group(0)
+    pattern = re.compile(
+        r"\tsub\.s\t\$f2,\$f2,\$f0\n(?P<label>\.L\d+):\n"
+        r"\tmul\.s\t\$f2,\$f8,\$f2\n"
+    )
+    matches = list(pattern.finditer(body))
+    if len(matches) != 1:
+        raise RuntimeError(
+            "func_800A42C8 label-adjacent multiply fired "
+            f"{len(matches)} times (expected 1)"
+        )
+    label = matches[0].group("label")
+    replacement = (
+        f"{label} = . + 4\n"
+        "\tsub.s\t$f2,$f2,$f0\n"
+        "\tmul.s\t$f2,$f8,$f2\n"
+    )
+    body = pattern.sub(replacement, body, count=1)
+    return text[:body_match.start()] + body + text[body_match.end():]
+
+
 def hoist_mover_reflect_likely_multiply(text: str) -> str:
     """Apply the retail multiply-delay-slot workaround to ``bc1fl``.
 
@@ -1788,6 +1824,8 @@ def normalize_v3(source: str) -> str:
         text = reproduce_entity_model_draw_label_hazard(text)
     if os.environ.get("V3_COLLISION_QUERY_LABEL_HAZARD", "1") == "1":
         text = reproduce_collision_query_label_hazard(text)
+    if os.environ.get("V3_SPRITE_RING_LABEL_HAZARD", "1") == "1":
+        text = reproduce_sprite_ring_label_hazard(text)
     if os.environ.get("V3_MOVER_REFLECT_LIKELY_MUL", "1") == "1":
         text = hoist_mover_reflect_likely_multiply(text)
     if os.environ.get("V3_CRATE_LIST_HEAD_STORE", "1") == "1":
