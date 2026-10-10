@@ -294,18 +294,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800C11B8_to_800C12B4.s.o .text 0xfc --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C2528_to_800C27EC.s.o asm/us/main_800C2528_to_800C27EC.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C2528_to_800C27EC.s.o .text 0x2c4 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C2924_to_800C30A0.s.o asm/us/main_800C2924_to_800C30A0.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C2924_to_800C30A0.s.o .text 0x77c --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C4BB4_to_800C4E24.s.o asm/us/main_800C4BB4_to_800C4E24.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C4BB4_to_800C4E24.s.o .text 0x270 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800C6914_to_800C6918.s.o asm/us/main_800C6914_to_800C6918.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800C6914_to_800C6918.s.o .text 0x4 --alignment 4
@@ -313,14 +301,6 @@ python3 tools/trim_elf32_section.py \
     -o build/us/asm/us/data/main_800C6918_textbin.s.o asm/us/data/main_800C6918_textbin.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/data/main_800C6918_textbin.s.o .text 0x8 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C7594_to_800C7650.s.o asm/us/main_800C7594_to_800C7650.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C7594_to_800C7650.s.o .text 0xbc --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C8350_to_800C8484.s.o asm/us/main_800C8350_to_800C8484.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C8350_to_800C8484.s.o .text 0x134 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800C98E8_to_800CA1A8.s.o asm/us/main_800C98E8_to_800CA1A8.s
 python3 tools/trim_elf32_section.py \
@@ -330,41 +310,21 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800CA620_to_800CAA0C.s.o .text 0x3ec --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800CAA48_to_800CAB44.s.o asm/us/main_800CAA48_to_800CAB44.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800CAA48_to_800CAB44.s.o .text 0xfc --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800CB10C_to_800CB110.s.o asm/us/main_800CB10C_to_800CB110.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800CB10C_to_800CB110.s.o .text 0x4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800CD57C_to_800CD85C.s.o asm/us/main_800CD57C_to_800CD85C.s
+    -o build/us/asm/us/main_800CD96C_to_800CD970.s.o asm/us/main_800CD96C_to_800CD970.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800CD57C_to_800CD85C.s.o .text 0x2e0 --alignment 4
+    build/us/asm/us/main_800CD96C_to_800CD970.s.o .text 0x4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800CD96C_to_800CDD70.s.o asm/us/main_800CD96C_to_800CDD70.s
+    -o build/us/asm/us/main_800CDBDC_to_800CDBE0.s.o asm/us/main_800CDBDC_to_800CDBE0.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800CD96C_to_800CDD70.s.o .text 0x404 --alignment 4
+    build/us/asm/us/main_800CDBDC_to_800CDBE0.s.o .text 0x4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800CE610_to_800CE814.s.o asm/us/main_800CE610_to_800CE814.s
+    -o build/us/asm/us/main_800D05D8_to_800D05E0.s.o asm/us/main_800D05D8_to_800D05E0.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800CE610_to_800CE814.s.o .text 0x204 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800CFA84_to_800CFBD8.s.o asm/us/main_800CFA84_to_800CFBD8.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800CFA84_to_800CFBD8.s.o .text 0x154 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800CFD18_to_800CFDD0.s.o asm/us/main_800CFD18_to_800CFDD0.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800CFD18_to_800CFDD0.s.o .text 0xb8 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800D0070_to_800D05E0.s.o asm/us/main_800D0070_to_800D05E0.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800D0070_to_800D05E0.s.o .text 0x570 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800D0858_to_800D0960.s.o asm/us/main_800D0858_to_800D0960.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800D0858_to_800D0960.s.o .text 0x108 --alignment 4
+    build/us/asm/us/main_800D05D8_to_800D05E0.s.o .text 0x8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800D0A74_to_800D0DF8.s.o asm/us/main_800D0A74_to_800D0DF8.s
 python3 tools/trim_elf32_section.py \
@@ -530,17 +490,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800EAC2C_to_800EAC30.s.o .text 0x4 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800EB308_to_800EB4FC.s.o asm/us/main_800EB308_to_800EB4FC.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800EB308_to_800EB4FC.s.o .text 0x1f4 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800EB714_to_800EB720.s.o asm/us/main_800EB714_to_800EB720.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800EB714_to_800EB720.s.o .text 0xc --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800EB838_to_800EB934.s.o asm/us/main_800EB838_to_800EB934.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800EB838_to_800EB934.s.o .text 0xfc --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800EBA98_to_800EBCA8.s.o asm/us/main_800EBA98_to_800EBCA8.s
 python3 tools/trim_elf32_section.py \
@@ -565,18 +517,6 @@ python3 tools/trim_elf32_section.py \
     -o build/us/asm/us/main_800ED694_to_800ED698.s.o asm/us/main_800ED694_to_800ED698.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800ED694_to_800ED698.s.o .text 0x4 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800ED804_to_800EDC00.s.o asm/us/main_800ED804_to_800EDC00.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800ED804_to_800EDC00.s.o .text 0x3fc --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800EE288_to_800EE490.s.o asm/us/main_800EE288_to_800EE490.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800EE288_to_800EE490.s.o .text 0x208 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800EED90_to_800EF400.s.o asm/us/main_800EED90_to_800EF400.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800EED90_to_800EF400.s.o .text 0x670 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800EF770_to_800EFB30.s.o asm/us/main_800EF770_to_800EFB30.s
 python3 tools/trim_elf32_section.py \
@@ -4273,10 +4213,10 @@ if false; then
     build/us/src/code/hud_ready.c.o \
     build/us/src/code/hud_clear.c.o \
     build/us/src/code/hud_list_callback.c.o \
-    build/us/asm/us/main_800C2528_to_800C27EC.s.o \
+    build/us/src/code/hud_option_select.c.o \
     build/us/src/code/hud_navigation.c.o \
     build/us/src/code/hud_selection_apply.c.o \
-    build/us/asm/us/main_800C2924_to_800C30A0.s.o \
+    build/us/src/code/hud_list_select_full.c.o \
     build/us/src/code/hud_primary_trigger.c.o \
     build/us/src/code/hud_controls_page.c.o \
     build/us/src/code/hud_player_slots_cycle.c.o \
@@ -4292,7 +4232,7 @@ if false; then
     build/us/src/code/hud_menu_entries_apply_settings.c.o \
     build/us/src/code/hud_page_select.c.o \
     build/us/src/code/hud_entry_set_label.c.o \
-    build/us/asm/us/main_800C4BB4_to_800C4E24.s.o \
+    build/us/src/code/hud_player_page.c.o \
     build/us/src/code/hud_page_focus_cycle.c.o \
     build/us/src/code/game_mode8_toggled.c.o \
     build/us/src/code/hud_slot_icons_update.c.o \
@@ -4315,12 +4255,12 @@ if false; then
     build/us/src/code/race_object_timestamps.c.o \
     build/us/src/code/race_state_init.c.o \
     build/us/src/code/race_state_reset.c.o \
-    build/us/asm/us/main_800C7594_to_800C7650.s.o \
+    build/us/src/code/race_mode_query.c.o \
     build/us/src/code/race_frame_border_draw.c.o \
     build/us/src/code/race_start_check.c.o \
     build/us/src/code/race_map_draw.c.o \
     build/us/src/code/race_event_push.c.o \
-    build/us/asm/us/main_800C8350_to_800C8484.s.o \
+    build/us/src/code/race_hud_layout.c.o \
     build/us/src/code/race_timer_update.c.o \
     build/us/src/code/race_marker_project.c.o \
     build/us/src/code/race_player_icons_draw.c.o \
@@ -4341,7 +4281,7 @@ if false; then
     build/us/src/code/race_slot_set_digit.c.o \
     build/us/asm/us/main_800CA620_to_800CAA0C.s.o \
     build/us/src/code/race_popup_show.c.o \
-    build/us/asm/us/main_800CAA48_to_800CAB44.s.o \
+    build/us/src/code/race_popup_setup.c.o \
     build/us/src/code/race_flag_queries.c.o \
     build/us/src/code/race_player_widget.c.o \
     build/us/src/code/race_widget_values.c.o \
@@ -4358,12 +4298,15 @@ if false; then
     build/us/src/code/controller_menu_input.c.o \
     build/us/src/code/controller_queue_push.c.o \
     build/us/src/code/controller_slot_find.c.o \
-    build/us/asm/us/main_800CD57C_to_800CD85C.s.o \
+    build/us/src/code/controller_menu_state.c.o \
     build/us/src/code/results_record_write.c.o \
-    build/us/asm/us/main_800CD96C_to_800CDD70.s.o \
+    build/us/asm/us/main_800CD96C_to_800CD970.s.o \
+    build/us/src/code/results_menu_callbacks.c.o \
+    build/us/asm/us/main_800CDBDC_to_800CDBE0.s.o \
+    build/us/src/code/results_time_text.c.o \
     build/us/src/code/results_time_format.c.o \
     build/us/src/code/results_time_compare.c.o \
-    build/us/asm/us/main_800CE610_to_800CE814.s.o \
+    build/us/src/code/results_panel_setup.c.o \
     build/us/src/code/results_screen_setup.c.o \
     build/us/src/code/results_split_setup.c.o \
     build/us/src/code/results_continue.c.o \
@@ -4380,15 +4323,16 @@ if false; then
     build/us/src/code/results_ready_flags_c.c.o \
     build/us/src/code/results_time_tick.c.o \
     build/us/src/code/results_status_flags.c.o \
-    build/us/asm/us/main_800CFA84_to_800CFBD8.s.o \
+    build/us/src/code/results_bar_step.c.o \
     build/us/src/code/results_columns_draw.c.o \
-    build/us/asm/us/main_800CFD18_to_800CFDD0.s.o \
+    build/us/src/code/results_rank_label.c.o \
     build/us/src/code/results_assets_reload.c.o \
     build/us/src/code/game_state_clear.c.o \
-    build/us/asm/us/main_800D0070_to_800D05E0.s.o \
+    build/us/src/code/cheat_codes.c.o \
+    build/us/asm/us/main_800D05D8_to_800D05E0.s.o \
     build/us/src/code/hud_element_unlink.c.o \
     build/us/src/code/spawn_ctl_index.c.o \
-    build/us/asm/us/main_800D0858_to_800D0960.s.o \
+    build/us/src/code/spawn_color_lookup.c.o \
     build/us/src/code/spawn_ctl_alloc.c.o \
     build/us/src/code/hud_element_alloc.c.o \
     build/us/asm/us/main_800D0A74_to_800D0DF8.s.o \
@@ -4594,12 +4538,12 @@ if false; then
     build/us/src/code/building_anim_frame_tick.c.o \
     build/us/src/code/func_800EAEB4.c.o \
     build/us/src/code/building_destroy.c.o \
-    build/us/asm/us/main_800EB308_to_800EB4FC.s.o \
+    build/us/src/code/800EB308_object_handlers.c.o \
     build/us/src/code/model_shielded_dispatch.c.o \
     build/us/asm/us/main_800EB714_to_800EB720.s.o \
     build/us/src/code/impact_flash_spawn.c.o \
     build/us/src/code/impact_debris_spray.c.o \
-    build/us/asm/us/main_800EB838_to_800EB934.s.o \
+    build/us/src/code/impact_debris_emit.c.o \
     build/us/src/code/impact_flash_expire.c.o \
     build/us/asm/us/main_800EBA98_to_800EBCA8.s.o \
     build/us/src/code/player_projectile_launch.c.o \
@@ -4624,20 +4568,20 @@ if false; then
     build/us/src/code/projectile_target_query.c.o \
     build/us/src/code/destructible_prop_on_hit.c.o \
     build/us/src/code/destructible_prop_on_hit_alt.c.o \
-    build/us/asm/us/main_800ED804_to_800EDC00.s.o \
+    build/us/src/code/800ED804_message_dispatch.c.o \
     build/us/src/code/prop_destroy_slot_release.c.o \
     build/us/src/code/func_800EDDCC.c.o \
     build/us/src/code/prop_message_shatter.c.o \
     build/us/src/code/prop_target_query.c.o \
     build/us/src/code/prop_debris_burst_on_hit.c.o \
     build/us/src/code/prop_debris_burst_on_hit_alt.c.o \
-    build/us/asm/us/main_800EE288_to_800EE490.s.o \
+    build/us/src/code/800EE288_entity_message.c.o \
     build/us/src/code/motion_scale_curve.c.o \
     build/us/src/code/prop_spawn_child.c.o \
     build/us/src/code/prop_spawn_pickup.c.o \
     build/us/src/code/prop_height_update.c.o \
     build/us/src/code/barrier_break_open.c.o \
-    build/us/asm/us/main_800EED90_to_800EF400.s.o \
+    build/us/src/code/800EED90_segment_update.c.o \
     build/us/src/code/effect_segment_append.c.o \
     build/us/src/code/effect_segments_draw.c.o \
     build/us/asm/us/main_800EF770_to_800EFB30.s.o \
