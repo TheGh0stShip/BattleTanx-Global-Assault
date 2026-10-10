@@ -3392,6 +3392,52 @@ python3 tools/trim_elf32_section.py \
     build/us/asm/us/libultra/exceptasm.s.o .rodata 0x44 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/libultra/exceptasm.s.o .data 0x20 --alignment 4
+
+# Handwritten libultra 2.0I routines are retained as their authentic source
+# objects.  IDO assembles these files; they are not compiler-generated C.
+while read -r unit text_size asopt; do
+    unit_flags=()
+    # The game also has an earlier private copy with the public SDK name.
+    # Keep this object's already-established unique link symbol.
+    if [[ "$unit" == "getsr" ]]; then
+        unit_flags=(-D__osGetSR=__osGetSR_80105DA0)
+    fi
+    .toolchain/ido5.3/cc -c -Wab,-r4300_mul -G 0 -nostdinc \
+        -woff 516,649,838,712 -mips2 -o32 "$asopt" \
+        -D_MIPS_SZLONG=32 -DBUILD_VERSION=VERSION_I \
+        '-DBUILD_VERSION_STRING="2.0I"' -D_FINALROM -non_shared \
+        -I.toolchain/ultralib/include \
+        -I.toolchain/ultralib/include/compiler/ido \
+        -I.toolchain/ultralib/include/PR \
+        -I.toolchain/ultralib/src -I.toolchain/ultralib/src/os \
+        "${unit_flags[@]}" \
+        -o "build/us/asm/us/libultra/${unit}.s.o" \
+        "src/libultra/${unit}.s"
+    python3 tools/fix_ido_symtab.py \
+        "build/us/asm/us/libultra/${unit}.s.o"
+    python3 tools/trim_elf32_section.py \
+        "build/us/asm/us/libultra/${unit}.s.o" .text "$text_size" --alignment 4
+done <<'LIBULTRA_ASM_UNITS'
+bcopy 0x310 -O2
+bzero 0xA0 -O2
+getcount 0x10 -O1
+getsr 0x10 -O1
+interrupt 0x40 -O1
+invaldcache 0xB0 -O1
+invalicache 0x80 -O1
+maptlbrdb 0x60 -O1
+setfpccsr 0x10 -O1
+setintmask 0xA0 -O1
+setsr 0x10 -O1
+sqrtf 0x10 -O1
+setcompare 0x10 -O1
+probetlb 0xC0 -O1
+writebackdcache 0x80 -O1
+writebackdcacheall 0x30 -O1
+LIBULTRA_ASM_UNITS
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/libultra/setintmask.s.o .rodata 0x80 --alignment 4
+
 .toolchain/ido5.3/cc -c -Wab,-r4300_mul -G 0 -nostdinc \
     -woff 516,649,838,712 -mips2 -32 -O1 -D_MIPS_SZLONG=32 \
     -DBUILD_VERSION=VERSION_I -D_FINALROM -DNDEBUG \
@@ -3403,8 +3449,6 @@ python3 tools/trim_elf32_section.py \
     build/us/src/libultra/libm_vals.c.o .rodata 0x10 --alignment 4
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Xcpluscomm \
     -Isrc/libultra -o build/us/src/libultra/vitbl.c.o src/libultra/vitbl.c
-.toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
-    -o build/us/src/libultra/os_rcp_im_table.c.o src/libultra/os_rcp_im_table.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_pi_manager.c.o src/libultra/os_pi_manager.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \

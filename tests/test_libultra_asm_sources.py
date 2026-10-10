@@ -28,7 +28,26 @@ class LibultraAssemblySourceTests(unittest.TestCase):
         build = (ROOT / "tools/build_code.sh").read_text()
         self.assertIn("exceptasm.s.o --mips3-32", build)
         placement = (ROOT / "tools/place_unit_rodata.py").read_text()
-        self.assertIn('unit == "libultra/exceptasm"', placement)
+        self.assertIn('"libultra/exceptasm", "libultra/setintmask"', placement)
+
+    def test_handwritten_libultra_units_use_authentic_sources(self):
+        units = {
+            "bcopy", "bzero", "getcount", "getsr", "interrupt",
+            "invaldcache", "invalicache", "maptlbrdb", "setfpccsr",
+            "setintmask", "setsr", "sqrtf", "setcompare", "probetlb",
+            "writebackdcache", "writebackdcacheall",
+        }
+        splat = (ROOT / "config/us/splat.yaml").read_text()
+        build = (ROOT / "tools/build_code.sh").read_text()
+        for unit in units:
+            source = (ROOT / f"src/libultra/{unit}.s").read_text()
+            self.assertNotIn(".incbin", source)
+            self.assertIn(f"hasm, libultra/{unit}]", splat)
+            self.assertIn(f"{unit} ", build)
+
+        rows = (ROOT / "config/us/unit_rodata.tsv").read_text()
+        self.assertIn("libultra/setintmask\t0x80077A00\t0x80", rows)
+        self.assertIn("-D__osGetSR=__osGetSR_80105DA0", build)
 
 
 if __name__ == "__main__":

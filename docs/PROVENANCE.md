@@ -56,11 +56,14 @@ with IDO 5.3 to the exact 0xD20 retail bytes at `0x80127090`. The local
 compatibility header retains only the fixed-width record layout and constants
 needed to build that table.
 
-The libultra `__osRcpImTable` reconstruction follows `setintmask.s` from
-`decompals/ultralib` revision `e24c8367`. Rather than copying an extracted byte
-array, `src/libultra/os_rcp_im_table.c` expresses the documented conversion
-from six MI interrupt-enable bits to the RCP's paired clear/set mask fields.
-IDO 5.3 evaluates the table to the exact 0x80 retail bytes at `0x80077A00`.
+The handwritten `_bcopy`, `_bzero`, low-level cache/TLB/status routines,
+`sqrtf`, and interrupt-mask routines come from libultra 2.0I at
+[`decompals/ultralib`](https://github.com/decompals/ultralib/tree/e24c836796df4bf520ff8b11a5c9d2cea3a66cbd).
+That repository provides no license statement; these files reconstruct
+Nintendo SDK objects and are documented separately from MIT/CC0-licensed
+upstream reuse. IDO 5.3 assembles all 16 source objects to the exact retail
+text for 17 functions. `setintmask.s` also emits the exact 0x80-byte
+`__osRcpImTable` at `0x80077A00` from its documented mask macros.
 
 The initialized RSP DMEM layout for F3DEX FIFO 2.07 follows the matching,
 documented CC0 disassembly in
