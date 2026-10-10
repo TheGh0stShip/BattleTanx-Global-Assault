@@ -37,6 +37,7 @@ CANDIDATE_KEYS = ("best_candidate", "candidate", "source", "source_unit")
 MISMATCH_KEYS = ("mismatch_words", "mismatched_words", "after", "before")
 RESULT_RE = re.compile(r"\b(UNIT MATCH|NORMALIZER_ASSISTED|DIFF\((\d+)\)|DIFF)")
 TEXT_DIFF_RE = re.compile(r"^\.text\s+[^:]+:\s+(\d+)\s+mismatched words", re.MULTILINE)
+TEXT_SPAN_RE = re.compile(r"^\.text\s+([0-9A-Fa-f]+)\.\.([0-9A-Fa-f]+):", re.MULTILINE)
 HEX_RE = re.compile(r"(?:0x)?([0-9A-Fa-f]{8})")
 
 
@@ -183,6 +184,34 @@ def production_owner(target: str, segments: list[tuple[int, str, str]]) -> tuple
     return (owner[1], owner[2]) if owner else ("unknown", "")
 
 
+def c_source_state(text: str) -> str:
+    if re.search(r"\bregister\b[^;\n]*\b(?:__asm__|asm)\s*\(", text):
+        return "c_register_asm"
+    if re.search(r"\b(?:__asm__|asm)\s*(?:volatile\s*)?\(", text):
+        return "c_inline_asm"
+    if re.search(r"\bvolatile\b", text):
+        return "c_volatile"
+    return "c_clean"
+
+
+def production_state(repo: Path, kind: str, owner: str) -> str:
+    """Describe whether the current owner is actually clean C.
+
+    A splat ``c`` segment is not necessarily decompiled: several inherited
+    source files still contain inline assembly or fixed-register declarations.
+    Treating those as ordinary C hid clean replacements from the campaign's
+    actionable list.
+    """
+    if kind == "asm":
+        return "asm"
+    if kind != "c" or not owner:
+        return kind
+    source = repo / "src" / f"{owner}.c"
+    if not source.is_file():
+        return "c_missing"
+    return c_source_state(source.read_text(errors="replace"))
+
+
 def digest_job(job: dict[str, object], repo: Path) -> str:
     digest = hashlib.sha256()
     digest.update(Path(__file__).read_bytes())
@@ -206,6 +235,9 @@ def parse_result(output: str, returncode: int) -> tuple[str, int | None]:
         return ("ERROR" if returncode else "UNKNOWN"), None
     result = matches[-1].group(1)
     if result == "UNIT MATCH":
+        span = TEXT_SPAN_RE.search(output)
+        if span and int(span.group(1), 16) == int(span.group(2), 16):
+            return "INVALID", None
         return "MATCH", 0
     if result == "NORMALIZER_ASSISTED":
         return "ASSISTED", 0
@@ -229,22 +261,36 @@ def run_job(job: dict[str, object], repo: Path, cache: Path) -> dict[str, object
         return result
     command = [sys.executable, "tools/kmc_cmp.py", str(job["candidate_arg"]), str(job["target"])]
     started = time.monotonic()
-    proc = subprocess.run(
-        command,
-        cwd=Path(job["lane"]),
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        timeout=300,
-    )
-    status, score = parse_result(proc.stdout, proc.returncode)
+    try:
+        proc = subprocess.run(
+            command,
+            cwd=Path(job["lane"]),
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            timeout=300,
+        )
+        captured = proc.stdout
+        returncode = proc.returncode
+    except subprocess.TimeoutExpired as exc:
+        captured = (exc.stdout or "") + (exc.stderr or "")
+        if isinstance(captured, bytes):
+            captured = captured.decode(errors="replace")
+        captured += "\nTIMEOUT after 300 seconds\n"
+        returncode = 124
+    log_dir = cache / "logs"
+    log_dir.mkdir(parents=True, exist_ok=True)
+    log_path = log_dir / f"{key}.txt"
+    log_path.write_text(captured)
+    status, score = parse_result(captured, returncode)
     result = {
         "status": status,
         "score": score,
-        "returncode": proc.returncode,
+        "returncode": returncode,
         "seconds": round(time.monotonic() - started, 3),
-        "output_hash": hashlib.sha256(proc.stdout.encode()).hexdigest(),
-        "tail": "\n".join(proc.stdout.splitlines()[-12:]),
+        "output_hash": hashlib.sha256(captured.encode()).hexdigest(),
+        "log": str(log_path.relative_to(repo)),
+        "tail": "\n".join(captured.splitlines()[-12:]),
         "cached": False,
     }
     cache.mkdir(parents=True, exist_ok=True)
@@ -253,7 +299,7 @@ def run_job(job: dict[str, object], repo: Path, cache: Path) -> dict[str, object
 
 
 def rank(row: dict[str, object]) -> tuple[int, int, str]:
-    status_order = {"MATCH": 0, "ASSISTED": 1, "DIFF": 2, "UNKNOWN": 3, "ERROR": 4}
+    status_order = {"MATCH": 0, "ASSISTED": 1, "DIFF": 2, "INVALID": 3, "UNKNOWN": 4, "ERROR": 5}
     score = row.get("score")
     return status_order.get(str(row["status"]), 5), int(score) if score is not None else 10**9, str(row["name"])
 
@@ -274,6 +320,10 @@ def main() -> int:
     jobs = [job for job in discover(root) if job["old_score"] is None or int(job["old_score"]) <= args.max_old_score]
     for job in jobs:
         job["production_kind"], job["production_owner"] = production_owner(str(job["target"]), segments)
+        job["production_state"] = production_state(
+            repo, str(job["production_kind"]), str(job["production_owner"])
+        )
+        job["candidate_state"] = c_source_state(Path(job["candidate"]).read_text(errors="replace"))
     if not jobs:
         print("no runnable maintained candidates discovered", file=sys.stderr)
         return 2
@@ -290,8 +340,8 @@ def main() -> int:
     completed.sort(key=rank)
     output.parent.mkdir(parents=True, exist_ok=True)
     fields = (
-        "status", "score", "old_score", "production_kind", "production_owner",
-        "inventory", "name", "target", "candidate", "lane", "seconds", "cached", "output_hash", "tail",
+        "status", "score", "old_score", "candidate_state", "production_kind", "production_state", "production_owner",
+        "inventory", "name", "target", "candidate", "lane", "seconds", "cached", "output_hash", "log", "tail",
     )
     with output.open("w", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=fields, delimiter="\t", extrasaction="ignore", lineterminator="\n")
@@ -307,8 +357,13 @@ def main() -> int:
         counts[str(row["status"])] = counts.get(str(row["status"]), 0) + 1
     print(f"campaign: {len(completed)} candidates -> {output.relative_to(repo)}")
     print(" ".join(f"{key}={counts[key]}" for key in sorted(counts)))
-    actionable = [row for row in completed if row["status"] in ("MATCH", "ASSISTED") and row["production_kind"] == "asm"]
-    print(f"actionable_exact_asm={len(actionable)}")
+    actionable = [
+        row for row in completed
+        if row["status"] in ("MATCH", "ASSISTED")
+        and row["candidate_state"] == "c_clean"
+        and row["production_state"] in ("asm", "c_inline_asm", "c_register_asm")
+    ]
+    print(f"actionable_exact_nonclean={len(actionable)}")
     for row in completed[:20]:
         print(f"{row['status']:8} {str(row.get('score')):>5} {row['name']:<24} {Path(row['candidate']).name}")
     return 0

@@ -30,18 +30,8 @@ done
 # references keep their original names and therefore resolve to the typed C
 # objects.  Deriving this list from the manifest sources avoids a second,
 # hand-maintained symbol catalogue whenever another pool is recovered.
-while IFS=$'\t' read -r typed_unit address size; do
-    case "$typed_unit" in
-        \#*|unit|'') continue ;;
-    esac
-    while IFS= read -r typed_symbol; do
-        for asm_source in asm/us/*.s; do
-            sed -i -E \
-                "s/^(glabel|dlabel|endlabel|enddlabel) ${typed_symbol}$/\\1 __retail_${typed_symbol}/" \
-                "$asm_source"
-        done
-    done < <(grep -oE '(D|jtbl)_[0-9A-Fa-f]{8}' "src/code/${typed_unit}.c" | sort -u)
-done < config/us/typed_rodata_units.tsv
+python3 tools/rename_retail_asm_labels.py \
+    config/us/typed_rodata_units.tsv src/code asm/us
 
 for boot_exception_source in asm/us/main_8007*.s; do
     [[ -f "$boot_exception_source" ]] || continue
@@ -1000,7 +990,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             800B9FD4 world_resource_aggregate world_loader \
             world_bundle_resource_aggregate common_model_loader 800BBDC0 \
             800BD93C 800BDAF8 800BEE0C func_800BF798 \
-            800AAAE0 func_800AAC14 800AB4DC 800AC0F4 func_800ACE70 func_800ACEB4 \
+            800AA8A8 800AAAE0 func_800AAC14 800AB4DC 800AC0F4 func_800ACE70 func_800ACEB4 \
             func_800ACEFC 800AD14C 800AE710 800AF364 func_800B0268 func_800B03F4 \
             func_800A8E3C 800A9080 func_800A977C func_800A98B8 func_800A9B64 \
             func_800A9C24 func_800A9CCC light_display_list_build 800A9F10 \
@@ -1008,7 +998,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             effect_sprite_key_draw effect_sprite_ring_draw 800A477C \
             800A5BD8 800A61A0 camera_collision_resolve 800A6588 \
             spotter_update spotter_frame_setup func_800A702C \
-            player_perspective_update 800A7794 800A8690 800A89B0 \
+            player_perspective_update 800A7794 800A8690 800A87BC 800A89B0 \
             camera_view_select camera_mode_update object_reset object_flags object_limit \
             800B87A0 grid_node_height grid_height_query model_player_color angle_table_lookup bounds_pair \
             object_table_color object_table_reset object_table_lookup \
@@ -3336,6 +3326,8 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/func_800BF798.c.o .text 0x74 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/800AA8A8.c.o .text 0x238 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/800AAAE0.c.o .text 0x134 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800AAAE0.c.o .rodata 0x4 --alignment 4
@@ -3437,6 +3429,8 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/800A7794.c.o .text 0x14 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800A8690.c.o .text 0x12c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A87BC.c.o .text 0x1f4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800A89B0.c.o .text 0xc8 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -4374,7 +4368,7 @@ if false; then
     build/us/src/code/800A7794.c.o \
     build/us/asm/us/main_800A77A8_to_800A8690.s.o \
     build/us/src/code/800A8690.c.o \
-    build/us/asm/us/main_800A87BC_to_800A89B0.s.o \
+    build/us/src/code/800A87BC.c.o \
     build/us/src/code/800A89B0.c.o \
     build/us/src/code/camera_view_select.c.o \
     build/us/src/code/object_reset.c.o \
@@ -4408,8 +4402,9 @@ if false; then
     build/us/src/code/object_table_lookup.c.o \
     build/us/asm/us/main_800AA5C4_to_800AA5D0.s.o \
     build/us/src/code/func_800AA5D0.c.o \
-    build/us/asm/us/main_800AA664_to_800AAAE0.s.o \
+    build/us/asm/us/main_800AA664_to_800AA8A8.s.o \
     build/us/src/code/object_distance_constants.c.o \
+    build/us/src/code/800AA8A8.c.o \
     build/us/src/code/800AAAE0.c.o \
     build/us/src/code/func_800AAC14.c.o \
     build/us/asm/us/main_800AAEA0_to_800AB4DC.s.o \
@@ -4723,8 +4718,6 @@ if false; then
     build/us/src/code/path_route_constants.c.o \
     build/us/src/code/path_search_constants.c.o \
     build/us/src/code/ai_target_constants.c.o \
-    build/us/src/code/buffer_fill_constants.c.o \
-    build/us/src/code/effect_update_limit.c.o \
     build/us/src/code/waypoint_stack_constants.c.o \
     build/us/src/code/object_mode_constants.c.o \
     build/us/src/code/tank_motion_constant.c.o \

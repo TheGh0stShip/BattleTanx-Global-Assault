@@ -17,8 +17,6 @@ path_waypoint_constants	0x80071120	0x4
 path_route_constants	0x8007119C	0x8
 path_search_constants	0x800711C0	0x5C
 ai_target_constants	0x8007135C	0x8
-buffer_fill_constants	0x800715FC	0xC
-effect_update_limit	0x800716A0	0x4
 waypoint_stack_constants	0x800718A0	0x18
 object_mode_constants	0x800718EC	0x1C
 tank_motion_constant	0x80071DAC	0x4

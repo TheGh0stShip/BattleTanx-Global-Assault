@@ -30,12 +30,54 @@ class DecompCampaignTests(unittest.TestCase):
     def test_unit_match_with_nonzero_status_is_still_a_match(self):
         self.assertEqual(CAMPAIGN.parse_result("RESULT x.c: UNIT MATCH\n", 1), ("MATCH", 0))
 
+    def test_zero_byte_unit_match_is_invalid(self):
+        output = (
+            ".text 80080CC8..80080CC8: 0 mismatched words\n"
+            "RESULT func_80080CC8.c: UNIT MATCH\n"
+        )
+        self.assertEqual(CAMPAIGN.parse_result(output, 0), ("INVALID", None))
+
     def test_production_owner_uses_current_segment(self):
         segments = [(0x20000, "asm", "before"), (0x20C4C, "c", "code/tank_contact_scan"), (0x20DCC, "asm", "after")]
         self.assertEqual(
             CAMPAIGN.production_owner("80090C4C", segments),
             ("c", "code/tank_contact_scan"),
         )
+
+    def test_production_state_finds_inline_assembly(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "src/code/example.c"
+            source.parent.mkdir(parents=True)
+            source.write_text('void f(void) { __asm__("nop"); }\n')
+            self.assertEqual(
+                CAMPAIGN.production_state(root, "c", "code/example"),
+                "c_inline_asm",
+            )
+
+    def test_production_state_distinguishes_clean_c_and_asm_segments(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "src/code/example.c"
+            source.parent.mkdir(parents=True)
+            source.write_text("void f(void) {}\n")
+            self.assertEqual(CAMPAIGN.production_state(root, "c", "code/example"), "c_clean")
+            self.assertEqual(CAMPAIGN.production_state(root, "asm", "example"), "asm")
+
+    def test_candidate_source_state_rejects_matching_tricks(self):
+        self.assertEqual(
+            CAMPAIGN.c_source_state('register void *q asm("$4");\n'),
+            "c_register_asm",
+        )
+        self.assertEqual(
+            CAMPAIGN.c_source_state('void f(void) { asm("nop"); }\n'),
+            "c_inline_asm",
+        )
+        self.assertEqual(
+            CAMPAIGN.c_source_state("volatile int x;\n"),
+            "c_volatile",
+        )
+        self.assertEqual(CAMPAIGN.c_source_state("int x;\n"), "c_clean")
 
     def test_search_candidate_ignores_function_prototypes(self):
         source = "void func_80080000(void);\nvoid func_80090000(void) { func_80080000(); }\n"

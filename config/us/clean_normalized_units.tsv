@@ -23,6 +23,8 @@ ai_target_in_range	0x80083FF8	0x1DC	matched
 ai_leader_distance_check	0x800848E8	0x368	matched
 ai_goal_state_update	0x800859E4	0x24C	matched
 ai_waypoint_move	0x80087570	0x228	matched
+ai_angle_arc_build	0x80087824	0x1D4	matched
+ai_target_scan_update	0x80088854	0x268	matched
 ai_target_tracking	0x80088030	0x62C	matched
 ai_weapon_range_check	0x8008916C	0x4A0	matched
 80094880	0x80094880	0x6C0	matched
@@ -61,9 +63,11 @@ player_perspective_update	0x800A7664	0x130	matched
 800A6588	0x800A6588	0x534	matched
 800A7794	0x800A7794	0x14	matched
 800A8690	0x800A8690	0x12C	matched
+800A87BC	0x800A87BC	0x1F4	matched
 800A89B0	0x800A89B0	0xC8	matched
 800A9080	0x800A9080	0x5E0	matched
 800A9F10	0x800A9F10	0x148	matched
+800AA8A8	0x800AA8A8	0x238	matched
 800AAAE0	0x800AAAE0	0x134	matched
 800AB4DC	0x800AB4DC	0xB0	matched
 800AC0F4	0x800AC0F4	0xA4	matched
