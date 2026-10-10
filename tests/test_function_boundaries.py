@@ -391,7 +391,7 @@ class FunctionBoundaryTests(unittest.TestCase):
         functions = self.load_functions()
         by_address = {function["vram"]: function for function in functions}
         expected = {
-            0x800BBDC4: 0x60,
+            0x800BBDC0: 0x64,
             0x800BBE24: 0x150,
             0x800BBF74: 0xAC,
             0x800BC020: 0x1B4,
@@ -418,7 +418,7 @@ class FunctionBoundaryTests(unittest.TestCase):
             )
         }
         self.assertNotIn(0x800BBDBC, covered_words)
-        self.assertNotIn(0x800BBDC0, covered_words)
+        self.assertIn(0x800BBDC0, covered_words)
 
 
 if __name__ == "__main__":

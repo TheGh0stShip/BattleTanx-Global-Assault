@@ -65,5 +65,9 @@ func_80099464	0x80099464	0x260	matched
 800B5A10	0x800B5A10	0x17C	matched
 800B61B8	0x800B61B8	0x528	matched
 800B87A0	0x800B87A0	0xD0	matched
+800B9FD4	0x800B9FD4	0x1E8	matched
+800BBDC0	0x800BBDC0	0xC34	matched
+800BD93C	0x800BD93C	0xF4	matched
+800BEE0C	0x800BEE0C	0x1F4	matched
 world_resource_aggregate	0x800BA330	0x390	matched
 world_bundle_resource_aggregate	0x800BB2A0	0x29C	matched

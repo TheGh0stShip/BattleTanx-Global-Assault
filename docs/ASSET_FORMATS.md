@@ -14,9 +14,9 @@ and terminal ROM padding. Those excluded regions still need documented formats
 and exact reconstruction for the project, but adding their bytes to the Data
 denominator would conflate asset extraction with linked program-data matching.
 
-The current denominator is therefore 118,824 bytes: the 749,104-byte loaded
-image minus 630,280 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 58,656 bytes, or 49.364%.
+The current denominator is therefore 118,820 bytes: the 749,104-byte loaded
+image minus 630,284 non-overlapping catalogued function bytes. Source-owned
+`.data` and `.rodata` currently account for 59,940 bytes, or 50.446%.
 
 The effect-definition bank at `0x80114F10–0x80116580` accounts for 5,744 of
 those bytes. It is kept as heterogeneous 32-bit record words until the matched
@@ -89,6 +89,11 @@ fixed-layout text structures.
 Additional fixed-layout units cover the main and options menus, code-entry
 keys, gang and team selection, mission results, pause, Rumble Pak prompts,
 and tank selection.
+
+The main-menu scene graph at `0x80118054–0x8011854C` is reconstructed as 318
+big-endian 32-bit tokens. It combines packed front-end commands, coordinates,
+floating-point fields, callback addresses, and links among graph records. Its
+address-valued fields remain N64 ILP32 tokens rather than native host pointers.
 
 ## LZARI bundles
 
