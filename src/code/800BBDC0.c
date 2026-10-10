@@ -1,4 +1,4 @@
-/* SPAN 0x800BC9F4 */
+/* SPAN 0x800BD880 */
 /* RODATA_VRAM 0x80073190 */
 /* LDSYM D_80116848=0x80116848 */
 typedef signed char s8;
@@ -110,7 +110,7 @@ static inline u16 texMode(u8 *tex) {
     return 1;
 }
 
-void func_800BBDC0(HudScale *p) {
+inline void func_800BBDC0(HudScale *p) {
     s16 v = p->flip;
 
     if (v < 0) {
@@ -132,14 +132,14 @@ static inline void fillRect(u8 r, u8 g, u8 b, u8 a, s16 x, s16 y, u16 w, u16 h) 
     D_803A5944 = gp;
 }
 
-void func_800BBE24(HudRect *p, s16 x, s16 y) {
+inline void func_800BBE24(HudRect *p, s16 x, s16 y) {
     if (p->a != 0) {
         hudMode(3);
         fillRect(p->r, p->g, p->b, p->a, x, y, p->w, p->h);
     }
 }
 
-void func_800BBF74(void *s, s16 x, s16 y) {
+inline void func_800BBF74(void *s, s16 x, s16 y) {
     hudMode(2);
     func_80096F48(&D_803A5944, s, D_803A5942, x, y, D_803A594C, D_803A5950);
 }
@@ -176,14 +176,14 @@ void func_800BC020(HudNumber *p, s16 x, s16 y) {
     }
 }
 
-void func_800BC1D4(HudText *p, s16 x, s16 y) {
+inline void func_800BC1D4(HudText *p, s16 x, s16 y) {
     if (p->text != 0) {
         hudMode(2);
         func_8009700C(&D_803A5944, p->text, D_803A5942, x, y, D_803A594C, D_803A5950, p->w, p->h, -1);
     }
 }
 
-void func_800BC2A4(void *t, s16 x, s16 y) {
+inline void func_800BC2A4(void *t, s16 x, s16 y) {
     u8 *tex = t;
     u16 m = texMode(tex);
 
@@ -191,31 +191,31 @@ void func_800BC2A4(void *t, s16 x, s16 y) {
     func_8007C9B8(&D_803A5944, tex, x, y, D_803A594C, D_803A5950);
 }
 
-void func_800BC370(u8 *tex, s16 x, s16 y) {
+inline void func_800BC370(u8 *tex, s16 x, s16 y) {
     hudMode(4);
     func_8007C9B8(&D_803A5944, tex, x, y, D_803A594C, D_803A5950);
 }
 
-void func_800BC410(HudImage *p, s16 x, s16 y) {
+inline void func_800BC410(HudImage *p, s16 x, s16 y) {
     u16 m = texMode(p->tex);
 
     hudMode(m);
     func_8007CE64(&D_803A5944, p->tex, x, y, D_803A594C, D_803A5950, p->x0, p->y0, p->x1, p->y1);
 }
 
-void func_800BC500(HudImage *p, s16 x, s16 y) {
+inline void func_800BC500(HudImage *p, s16 x, s16 y) {
     hudMode(4);
     func_8007CE64(&D_803A5944, p->tex, x, y, D_803A594C, D_803A5950, p->x0, p->y0, p->x1, p->y1);
 }
 
-void func_800BC5C0(HudAnim *p, s16 x, s16 y) {
+inline void func_800BC5C0(HudAnim *p, s16 x, s16 y) {
     u16 m = texMode(p->frames[p->frame]);
 
     hudMode(m);
     func_8007D39C(&D_803A5944, p, x, y, D_803A594C, D_803A5950);
 }
 
-void func_800BC6A0(u8 *c) {
+inline void func_800BC6A0(u8 *c) {
     gDPSetPrimColor(D_803A5944++, 0, 0, c[0], c[1], c[2], c[3]);
 }
 
@@ -277,7 +277,7 @@ void func_800BC6EC(HudView *v) {
     gSPSetLights1(D_803A5944++, D_80116848);
 }
 
-void func_800BC874(HudModel *p) {
+inline void func_800BC874(HudModel *p) {
     Matrix4f f;
     Mtx *mtx;
     Lod **model;
@@ -303,4 +303,253 @@ void func_800BC874(HudModel *p) {
             gSPDisplayList(D_803A5944++, pt->c);
         }
     }
+}
+
+typedef struct {
+    u8 kind;            /* 0x00 */
+    u8 color;           /* 0x01 */
+    s16 x;              /* 0x02 */
+    s16 y;              /* 0x04 */
+    char p6[2];
+    void *data;         /* 0x08 */
+    char pC[4];
+} HudElem;
+
+typedef struct {
+    u16 *hidden;        /* 0x00 */
+    HudElem *elems;     /* 0x04 */
+    u8 *colors;         /* 0x08 */
+    char pC[0x16 - 0xC];
+    s16 x;              /* 0x16 */
+    s16 y;              /* 0x18 */
+} HudTree;
+
+typedef struct {
+    u16 h;
+    char p2[14];
+} HudFont;
+
+extern Gfx D_1000138[];
+extern HudFont D_801B4450[];
+
+int func_800973E0(void *s, u16 flip, float sx);
+
+void func_800BC9F4(HudTree *t) {
+    HudElem *e;
+    u16 cur;
+    u8 r;
+    u8 g;
+    u8 bl;
+    u8 a;
+    s16 x;
+    s16 y;
+    u16 ex;
+    u16 ey;
+
+    if (t->hidden != 0 && *t->hidden != 0) {
+        return;
+    }
+    D_803A5942 = 0;
+    D_80114700 = 0;
+    gSPDisplayList(D_803A5944++, D_1000138);
+    e = t->elems;
+    D_803A5940 = 0xFFFF;
+    D_803A594C = D_803A5950 = 1.0f;
+    cur = 0xFFFF;
+    while (e->kind != 0) {
+        if (e->color != 0 && e->color != cur) {
+            switch (e->color) {
+            case 0x10:
+                r = t->colors[0];
+                g = t->colors[1];
+                bl = t->colors[2];
+                a = t->colors[3];
+                break;
+            case 0x90:
+                r = t->colors[4];
+                g = t->colors[5];
+                bl = t->colors[6];
+                a = t->colors[7];
+                break;
+            case 0x01:
+                r = t->colors[8];
+                g = t->colors[9];
+                bl = t->colors[10];
+                a = t->colors[11];
+                break;
+            case 0x02:
+                r = t->colors[12];
+                g = t->colors[13];
+                bl = t->colors[14];
+                a = t->colors[15];
+                break;
+            case 0x03:
+                r = t->colors[16];
+                g = t->colors[17];
+                bl = t->colors[18];
+                a = t->colors[19];
+                break;
+            case 4:
+            default:
+                r = t->colors[20];
+                g = t->colors[21];
+                bl = t->colors[22];
+                a = t->colors[23];
+                break;
+            }
+            gDPSetPrimColor(D_803A5944++, 0, 0, r, g, bl, a);
+            cur = e->color;
+        }
+        switch (e->kind) {
+        case 1:
+            break;
+        case 2:
+            func_800BBDC0(e->data);
+            break;
+        case 3:
+            func_800BBE24(e->data, t->x + e->x, t->y + e->y);
+            cur = 0xFFFF;
+            break;
+        case 4:
+            if (e->data != 0) {
+                func_800BBF74(e->data, t->x + e->x, t->y + e->y);
+            }
+            break;
+        case 5:
+            if (e->data != 0) {
+                ex = e->x;
+                func_800BBF74(e->data, t->x + (ex - func_800973E0(e->data, D_803A5942, D_803A594C)), t->y + e->y);
+            }
+            break;
+        case 6:
+            if (e->data != 0) {
+                ex = e->x;
+                func_800BBF74(e->data, t->x + (ex - ((s16)func_800973E0(e->data, D_803A5942, D_803A594C) >> 1)),
+                              t->y + e->y);
+            }
+            break;
+        case 7:
+            if (e->data != 0) {
+                ex = e->x;
+                ey = e->y;
+                x = ex - ((s16)func_800973E0(e->data, D_803A5942, D_803A594C) >> 1);
+                y = ey - ((s16)(D_801B4450[D_803A5942].h * D_803A5950) >> 1);
+                func_800BBF74(e->data, t->x + x, t->y + y);
+            }
+            break;
+        case 8:
+            if (e->data != 0) {
+                func_800BC020(e->data, t->x + e->x, t->y + e->y);
+            }
+            break;
+        case 9:
+            if (e->data != 0) {
+                func_800BC1D4(e->data, t->x + e->x, t->y + e->y);
+            }
+            break;
+        case 10: {
+            u8 *tx;
+
+            tx = e->data;
+            if (tx != 0) {
+                func_800BC2A4(tx, t->x + e->x, t->y + e->y);
+            }
+            break;
+        }
+        case 15:
+            if (e->data != 0) {
+                func_800BC370(e->data, t->x + e->x, t->y + e->y);
+            }
+            break;
+        case 13: {
+            u8 *tx;
+
+            if (e->data != 0) {
+                tx = *(u8 **)e->data;
+                if (tx != 0) {
+                    func_800BC2A4(tx, t->x + e->x, t->y + e->y);
+                }
+            }
+            break;
+        }
+        case 11: {
+            u8 *tx;
+
+            tx = e->data;
+            if (tx != 0) {
+                ex = e->x;
+                func_800BC2A4(tx, t->x + (ex - ((s16)(((u16 *)tx)[1] * D_803A594C) >> 1)), t->y + e->y);
+            }
+            break;
+        }
+        case 12: {
+            u8 *tx;
+
+            tx = e->data;
+            if (tx != 0) {
+                ex = e->x;
+                ey = e->y;
+                func_800BC2A4(tx, t->x + (ex - ((s16)(((u16 *)tx)[1] * D_803A594C) >> 1)), t->y + (ey - ((s16)(((u16 *)tx)[2] * D_803A5950) >> 1)));
+            }
+            break;
+        }
+        case 14: {
+            u8 *tx;
+
+            if (e->data != 0) {
+                tx = *(u8 **)e->data;
+                if (tx != 0) {
+                    ex = e->x;
+                    func_800BC2A4(tx, t->x + (ex - ((s16)(((u16 *)tx)[1] * D_803A594C) >> 1)), t->y + e->y);
+                }
+            }
+            break;
+        }
+        case 16:
+            if (e->data != 0) {
+                func_800BC410(e->data, t->x + e->x, t->y + e->y);
+            }
+            break;
+        case 17:
+            if (e->data != 0) {
+                func_800BC500(e->data, t->x + e->x, t->y + e->y);
+            }
+            break;
+        case 18:
+            if (e->data != 0) {
+                func_800BC5C0(e->data, t->x + e->x, t->y + e->y);
+            }
+            break;
+        case 19:
+            if (e->data != 0) {
+                func_800BC6A0(e->data);
+                cur = 0xFFFF;
+            }
+            break;
+        case 20:
+            if (e->data != 0) {
+                func_800BC6EC(e->data);
+            }
+            break;
+        case 21:
+            if (e->data != 0) {
+                func_800BC874(e->data);
+            }
+            break;
+        case 22:
+            if (e->data != 0) {
+                gSPDisplayList(D_803A5944++, e->data);
+            }
+            break;
+        case 23:
+            if (e->data != 0) {
+                ((void (*)(Gfx **, HudTree *, HudElem *))e->data)(&D_803A5944, t, e);
+                D_803A5940 = 0xFFFF;
+                cur = 0xFFFF;
+            }
+            break;
+        }
+        e++;
+    }
+    D_80114700 = 0;
 }
