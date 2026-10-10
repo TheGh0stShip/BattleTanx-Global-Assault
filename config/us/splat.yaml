@@ -1255,7 +1255,7 @@ segments:
       - [0x94150, c, libultra/al_aux_bus]
       - [0x94260, c, libultra/al_env]
       - [0x94EC0, c, libultra/os_epi_start_dma]
-      - [0x94FA0, asm, main_80104FA0_to_801058B0]
+      - [0x94FA0, hasm, libultra/exceptasm]
       - [0x958B0, c, libultra/os_destroy_thread]
       - [0x959B0, c, libultra/al_filter_new]
       - [0x959D0, c, libultra/os_get_time]

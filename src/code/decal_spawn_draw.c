@@ -32,7 +32,7 @@ void func_800F38C0(int a0, Vec3 *a1, int a2, int a3) {
 }
 
 /* ---- 0x800F2000/b/f39c8.c ---- */
-typedef struct { int w[17]; } M17;
+typedef struct { float w[17]; } M17;
 typedef struct { unsigned int hi, lo; } Gfx2;
 typedef struct {
     char pad0[16];
@@ -43,7 +43,7 @@ typedef struct {
     int time;
     int h36;
 } Obj39;
-extern M17 D_80077130;
+static const M17 D_80077130 = { { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f } };
 extern int D_8021945C;
 extern unsigned char func_800AD14C(float, float, float, int);
 extern void func_8009EFD4(M17 *, float, float, float, int);

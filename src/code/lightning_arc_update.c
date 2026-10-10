@@ -10,18 +10,15 @@ typedef struct Obj61E8 {
 } Obj61E8;
 
 extern f32 func_8009D8A0(f32);
-extern const f32 D_80075ECC;
-extern const f32 D_80075ED0;
-extern const f32 D_80075ED4;
 
 void func_800E61E8(Obj61E8* o) {
 
-    o->a[0] = o->x + (o->tx - o->x) / D_80075ED0 + func_8009D8A0(D_80075ECC) - D_80075ED4;
-    o->a[2] = o->z + (o->tz - o->z) / D_80075ED0 + func_8009D8A0(D_80075ED4);
-    o->a[1] = o->y + (o->ty - o->y) / D_80075ED0 + func_8009D8A0(D_80075ECC) - D_80075ED4;
-    o->b[0] = o->x + (o->tx - o->x) / D_80075ED0 + func_8009D8A0(D_80075ECC) - D_80075ED4;
-    o->b[2] = o->z + (o->tz - o->z) / D_80075ED0 + func_8009D8A0(D_80075ED4);
-    o->b[1] = o->y + (o->ty - o->y) / D_80075ED0 + func_8009D8A0(D_80075ECC) - D_80075ED4;
+    o->a[0] = o->x + (o->tx - o->x) / 2.0f + func_8009D8A0(2e+02f) - 1e+02f;
+    o->a[2] = o->z + (o->tz - o->z) / 2.0f + func_8009D8A0(1e+02f);
+    o->a[1] = o->y + (o->ty - o->y) / 2.0f + func_8009D8A0(2e+02f) - 1e+02f;
+    o->b[0] = o->x + (o->tx - o->x) / 2.0f + func_8009D8A0(2e+02f) - 1e+02f;
+    o->b[2] = o->z + (o->tz - o->z) / 2.0f + func_8009D8A0(1e+02f);
+    o->b[1] = o->y + (o->ty - o->y) / 2.0f + func_8009D8A0(2e+02f) - 1e+02f;
 }
 
 /* ---- 0x800E4800/b/src/func_800E6324.c ---- */
@@ -44,8 +41,7 @@ extern void func_8009F824(Mtx6324*, f32, f32, f32);
 extern void func_800AE4D0(s32, s32, Mtx6324*, s32, s32, s32, u8);
 extern s32 D_803A53D8[];
 extern s32 D_80123DF0[];
-extern const Mtx6324 D_80075ED8;
-extern const f32 D_80075F1C;
+static const Mtx6324 D_80075ED8 = { { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f } };
 
 void func_800E6324(Obj6324* o) {
     Vec3f pts[97];
@@ -66,7 +62,7 @@ void func_800E6324(Obj6324* o) {
         for (i = 0; i < D_80123DF0[n]; i++) {
             m = D_80075ED8;
             func_8009EFD4(&m, pts[i].x, pts[i].z, pts[i].y, 0);
-            func_8009F824(&m, D_80075F1C, D_80075F1C, D_80075F1C);
+            func_8009F824(&m, 0.3f, 0.3f, 0.3f);
             func_800AE4D0(D_803A53D8[0], model, &m, 0, 0, 0, vis);
         }
     }

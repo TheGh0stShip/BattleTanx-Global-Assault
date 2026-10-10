@@ -1,11 +1,10 @@
 typedef struct { float x, y, z; } V3;
 typedef struct { char p[0xa]; unsigned short ti; float x, y, z; unsigned short a; unsigned char b; unsigned char idx; short hp; short maxhp; int m0, m1, m2, m3, m4, m5; char p3[0x42 - 0x38]; unsigned short col; } O;
 typedef struct { char p[0x1e4]; unsigned char r, g, b; char p2[0x250 - 0x1e7]; } P;
-typedef struct { int v[17]; } Mtx;
+typedef struct { float v[17]; } Mtx;
 typedef struct { unsigned int w0, w1; } Gfx;
 extern P D_80235F00[];
-extern Mtx D_8007722C;
-extern float D_80077270;
+static const Mtx D_8007722C = { { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f } };
 extern int D_80117EB4;
 extern unsigned char func_800ACF20(int, int);
 extern int func_800AA058(int, V3 *);
@@ -37,7 +36,7 @@ void func_800F5B3C(O *o) {
     h = func_800AA058(o->b, (V3 *)&o->x);
     func_8009EFD4(&m, o->x, o->z, o->y, o->a);
     s = func_8009D4B0(o->a);
-    s = (o->x * s + o->y * func_8009D510(o->a)) * D_80077270;
+    s = (o->x * s + o->y * func_8009D510(o->a)) * -3.0f;
     if (D_80117EB4 == 10) {
         func_800D0858(o->col, &rgb[0], &rgb[1], &rgb[2]);
         col.w0 = 0xFB000000;

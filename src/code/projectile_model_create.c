@@ -3,8 +3,7 @@ typedef float f32; typedef unsigned char u8; typedef unsigned short u16;
 typedef struct { f32 m[16]; } M;
 typedef struct { char p0[10]; u8 big; u8 sc; f32 x, y, z; f32 s; u16 rz, ry, rx, life; u8 b24, fl, id, b27; f32 a[3]; f32 b[3]; int i40; } O;
 typedef struct { char p0[11]; u8 b; } P;
-extern M D_800755D8;
-extern f32 D_80075618;
+static const M D_800755D8 = { { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f } };
 extern O *func_800A18D0(int, int);
 extern void func_8009F8A0(M *, M *, u16);
 extern void func_8009FA04(M *, M *, u16);
@@ -22,7 +21,7 @@ O *func_800DC3A8(f32 *pos, u8 id, f32 s, u16 rz, P *p, u8 b24, u8 doM, f32 *A, f
     o->id = id;
     o->s = s;
     o->sc = sc;
-    if (big) o->s = o->s / D_80075618;
+    if (big) o->s = o->s / 2.0f;
     o->b24 = b24;
     o->rz = rz;
     o->b27 = p->b;

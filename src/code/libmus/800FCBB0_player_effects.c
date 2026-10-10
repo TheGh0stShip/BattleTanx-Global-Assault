@@ -1,6 +1,5 @@
 #include "mus_channel.h"
 
-extern double D_80077620;
 extern float sinf(float x);
 
 void func_800FCBB0(channel_t *cp)
@@ -145,7 +144,7 @@ void func_800FCFF8(channel_t *cp)
         if (--cp->fA4 == 0) {
             c = *cp->f34++;
             if (c >= 0x80) {
-                f = (float)(c & 0x7F) - D_80077620;
+                f = (float)(c & 0x7F) - 64.0;
                 cp->f70 = f;
                 cp->f24 = f * cp->f6C;
                 c = *cp->f34++;
@@ -156,7 +155,7 @@ void func_800FCFF8(channel_t *cp)
                     cp->fA4 = c + 2;
                 }
             } else {
-                f = (float)c - D_80077620;
+                f = (float)c - 64.0;
                 cp->fA4 = 1;
                 cp->f70 = f;
                 cp->f24 = f * cp->f6C;

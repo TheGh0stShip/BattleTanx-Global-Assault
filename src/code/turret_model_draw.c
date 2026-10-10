@@ -1,10 +1,10 @@
-typedef struct { int w[17]; } M44;
+typedef struct { float w[17]; } M44;
 typedef struct { char pad[0x10]; int id; char pad2[0x250 - 0x14]; } Plr;
 typedef struct {
   char pad0[0xC]; float x, y, z; unsigned short rot; unsigned char x1A; char pad1B;
   int x1C; char pad20[4]; int x24; char pad28[4]; int x2C; unsigned char x30;
 } Obj;
-extern M44 D_80075210;
+static const M44 D_80075210 = { { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f } };
 extern unsigned char D_802194A5[];
 extern Plr D_80235F00[];
 extern int D_80123B1C[];

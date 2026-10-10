@@ -23,8 +23,7 @@ typedef struct {
     unsigned char counter;
 } Proj;
 #define ABS(x) ((x) > 0.0f ? (x) : -(x))
-extern float D_80074F78, D_80074F7C, D_80074F80, D_80074F84, D_80074F88, D_80074F8C, D_80074F90;
-extern Info D_80074F5C;
+static const Info D_80074F5C = { 2, 0, { 0, 0, 0, 0, 0 } };
 extern float D_80219488;
 extern int D_80121D68[];
 extern int D_80121D74[];
@@ -54,7 +53,7 @@ void func_800D5E2C(Proj *s, int *out)
     float t;
     float sc;
 
-    if (s->timer < D_80074F78) {
+    if (s->timer < 3e+02f) {
     pos.x = s->p.f.x + s->vx * D_80219488;
     pos.y = s->p.f.y + s->vy * D_80219488;
     pos.z = s->p.f.z;
@@ -71,8 +70,8 @@ void func_800D5E2C(Proj *s, int *out)
     }
     a = s->p.v;
     b = pos;
-    if (s->p.f.z > D_80074F7C) {
-        a.z = D_80074F80; b.z = D_80074F80;
+    if (s->p.f.z > 2e+01f) {
+        a.z = 37.0f; b.z = 37.0f;
     }
     {
     int k = s->unk2B;
@@ -108,9 +107,9 @@ void func_800D5E2C(Proj *s, int *out)
                 if (ABS(s->vx) < ABS(s->vy)) { t = s->vx; if (t > 0.0f) goto pos; else goto neg; }
                 else { t = s->vy; if (t > 0.0f) goto pos; else goto neg; }
             pos:
-                sc = spd + t * D_80074F84 / D_80074F88; goto done5;
+                sc = spd + t * 3.0f / 8.0f; goto done5;
             neg:
-                sc = spd + -t * D_80074F8C / D_80074F90;
+                sc = spd + -t * 3.0f / 8.0f;
             done5:
                 s->vx = sc * func_8009D4B0(s->angle);
                 s->vy = sc * func_8009D510(s->angle);

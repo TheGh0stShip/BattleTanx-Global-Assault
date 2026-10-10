@@ -122,13 +122,13 @@ void func_800DEEDC(NodeF *n) {
 }
 
 /* ---- 0x800DE000/d/def38.c ---- */
-typedef struct { int w[17]; } Mtx17;
+typedef struct { float w[17]; } Mtx17;
 typedef struct { unsigned int w0, w1; } G;
 typedef struct {
     char pad[0xC]; float x, y; unsigned short s20; unsigned char b22, b23; unsigned short h24;
     unsigned char b26, b27; char p28[0x30-0x1C]; void *model;
 } Obj;
-extern Mtx17 D_80075840;
+static const Mtx17 D_80075840 = { { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f } };
 extern int D_8021945C;
 extern int func_800AD14C(float, float, float, int);
 extern void func_8009EFD4(Mtx17 *, float, float, float, int);

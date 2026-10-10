@@ -91,7 +91,7 @@ n_audio/80101D10_n_alinit	0x80126B30	0x10
 libultra/os_ai_set_next_buffer	0x80126B40	0x10
 libultra/os_controller	0x80126B50	0x10
 libultra/al_env	0x80126CF0	0x140
-libultra/os_exception_data	0x80126E30	0x20
+libultra/exceptasm	0x80126E30	0x20
 libultra/os_initialize	0x80126E50	0x20
 libultra/os_pi_manager	0x80126E70	0x30
 libultra/os_pi_access	0x80126EA0	0x10

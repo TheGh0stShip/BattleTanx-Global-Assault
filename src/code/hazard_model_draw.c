@@ -1,5 +1,5 @@
 typedef struct { float x, y, z; } Vec3;
-typedef struct { int w[17]; } M44;
+typedef struct { float w[17]; } M44;
 typedef struct {
     char pad0[12];
     Vec3 pos;
@@ -11,7 +11,7 @@ typedef struct {
     unsigned int time;
 } Obj;
 extern unsigned int D_8021945C;
-extern M44 D_80076FC0;
+static const M44 D_80076FC0 = { { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f } };
 extern int D_80125AA4[];
 extern int D_803A53A0[];
 extern unsigned char func_800AD14C(float, float, float, int);

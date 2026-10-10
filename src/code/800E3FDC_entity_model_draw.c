@@ -1,6 +1,6 @@
 /* NORMALIZER_ASSISTED: exact with one label-gated assembler-hazard rule. */
 typedef struct { float x, y, z; } Vec3;
-typedef struct { int w[17]; } M68;
+typedef struct { float w[17]; } M68;
 typedef struct {
     char p0[0x18]; int idx; int m1C; int m20; int m24; float f28; int i2C; char p30[0x60 - 0x30];
 } TypeInfo;
@@ -17,8 +17,7 @@ typedef struct { unsigned int a, b; } Gfx;
 extern TypeInfo D_80123BB0[];
 extern Player D_80235F00[];
 extern void *D_803A53A0[];
-extern M68 D_80075C94;
-extern float D_80075CD8;
+static const M68 D_80075C94 = { { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f } };
 
 extern void func_800E2E0C(Obj *, Vec3 *, unsigned short *, unsigned char *);
 extern unsigned char func_800AD14C(float, float, float, int);
@@ -73,7 +72,7 @@ void func_800E3FDC(Obj *e) {
         }
     } else {
         M68 m = D_80075C94;
-        float dz = (float)e->s31 / D_80075CD8 * ti->f28 - ti->f28;
+        float dz = (float)e->s31 / 255.0f * ti->f28 - ti->f28;
         func_8009EFD4(&m, pos.x, pos.z + dz, pos.y, lerpAng(e->a24, e->a26, e->s31));
         func_800AD9A8(D_803A53A0[ti->idx], lod, &m, 0, 0, vis, &gfx, 1);
         if (ti->m1C == 263) {

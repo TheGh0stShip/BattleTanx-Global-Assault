@@ -1,6 +1,5 @@
 /* ---- 0x800E9000/f/ec72c.c ---- */
-extern float D_80076710, D_80076714, D_80076718;
-int func_800EC72C(int a0, int a1) { float t = (D_80076710 - a1) / D_80076710; t = t * D_80076714 + D_80076718; return a0 * t; }
+int func_800EC72C(int a0, int a1) { float t = (8.1e+07f - a1) / 8.1e+07f; t = t * 0.75f + 0.25f; return a0 * t; }
 
 /* ---- 0x800E9000/f2.c ---- */
 extern unsigned char D_803A8330;

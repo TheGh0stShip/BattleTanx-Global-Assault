@@ -21,8 +21,15 @@ for asm_source in asm/us/*.s; do
     sed -i 's/beql       \$s2, \$a1, \.\?L80099664/.word      0x52454D41/' \
         "$asm_source"
     sed -i -E \
-        's/^(glabel|dlabel|endlabel|enddlabel) (osViClock|__osShutdown|__OSGlobalIntMask|__osRcpImTable|osClockRate|D_80126F80|rspbootTextStart|gspF3DEX_fifoDataStart|n_aspMainTextStart|osViModeMpalLan1|osViModeNtscLan1|osViModePalLan1|xlitob_data_0000|xlitob_data_0014|n_alGlobals|alGlobals|__osContinitialized|__osHwIntTable|__osPiAccessQueueEnabled|D_80126EC0|alGlobals_80126ED0|__osThreadTail|__osRunQueue|__osActiveQueue|__osRunningThread|__osFaultedThread|__osTimerList|vi_data_0000|__osViCurr|__osViNext)$/\1 __retail_\2/' \
+        's/^(glabel|dlabel|endlabel|enddlabel) (osViClock|__osShutdown|__OSGlobalIntMask|__osRcpImTable|osClockRate|D_80126F80|rspbootTextStart|gspF3DEX_fifoDataStart|n_aspMainTextStart|__libm_qnan_f|osViModeMpalLan1|osViModeNtscLan1|osViModePalLan1|xlitob_data_0000|xlitob_data_0014|n_alGlobals|alGlobals|__osContinitialized|__osHwIntTable|__osPiAccessQueueEnabled|D_80126EC0|alGlobals_80126ED0|__osThreadTail|__osRunQueue|__osActiveQueue|__osRunningThread|__osFaultedThread|__osTimerList|vi_data_0000|__osViCurr|__osViNext)$/\1 __retail_\2/' \
         "$asm_source"
+done
+for boot_exception_source in asm/us/main_8007*.s; do
+    [[ -f "$boot_exception_source" ]] || continue
+    sed -i \
+        -e 's/__osExceptionPreamble/__bootExceptionPreamble/g' \
+        -e 's/__osException/__bootException/g' \
+        "$boot_exception_source"
 done
 
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
@@ -730,7 +737,8 @@ while IFS= read -r -d '' asm_source; do
         python3 tools/trim_elf32_section.py "$asm_object" .text \
             "$textbin_size" --alignment 4
     fi
-done < <(find asm/us -type f -name '*.s' -print0)
+done < <(find asm/us -path 'asm/us/nonmatchings' -prune -o \
+    -type f -name '*.s' -print0)
 
 tools/bootstrap_ido.sh
 tools/bootstrap_kmc_gcc.sh
@@ -867,7 +875,10 @@ while read -r unit text_size; do
     .toolchain/kmc-gcc-2.7.2/as -mips3 -G0 \
         -o "build/us/src/code/libmus/${unit}.c.o" \
         "build/us/src/code/libmus/${unit}.raw.s"
-    if [[ "$unit" == 800FAE70_fenvelope ]]; then
+    if [[ "$unit" == 800FAE70_fenvelope ||
+          "$unit" == 800FC864_player_voice ||
+          "$unit" == 800FCBB0_player_effects ||
+          "$unit" == 800FD10C_player_bank_math ]]; then
         "${tool_prefix}objcopy" --set-section-flags \
             .rodata=alloc,load,readonly,data \
             "build/us/src/code/libmus/${unit}.c.o"
@@ -881,6 +892,15 @@ while read -r unit text_size; do
         800FBF94_player_main)
             python3 tools/trim_elf32_section.py \
                 "build/us/src/code/libmus/${unit}.c.o" .rodata 0x8 --alignment 8 ;;
+        800FC864_player_voice)
+            python3 tools/trim_elf32_section.py \
+                "build/us/src/code/libmus/${unit}.c.o" .rodata 0x10 --alignment 4 ;;
+        800FCBB0_player_effects)
+            python3 tools/trim_elf32_section.py \
+                "build/us/src/code/libmus/${unit}.c.o" .rodata 0x8 --alignment 4 ;;
+        800FD10C_player_bank_math)
+            python3 tools/trim_elf32_section.py \
+                "build/us/src/code/libmus/${unit}.c.o" .rodata 0x70 --alignment 4 ;;
         800FD2A0_remap_ptr_bank)
             python3 tools/trim_elf32_section.py \
                 "build/us/src/code/libmus/${unit}.c.o" .rodata 0x8 --alignment 8 ;;
@@ -2937,7 +2957,7 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800D9D50_debris_spawn.c.o .text 0x488 --alignment 4
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/800D9D50_debris_spawn.c.o .rodata 0x1c --alignment 4
+    build/us/src/code/800D9D50_debris_spawn.c.o .rodata 0x5c --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800DA1D8_debris_piece_update.c.o .text 0x168 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3356,11 +3376,31 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/display_color.c.o .text 0x64 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/display_commands.c.o .text 0x44 --alignment 4
-mkdir -p build/us/src/libultra
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 \
-    -o build/us/src/libultra/os_exception_data.c.o src/libultra/os_exception_data.s
+mkdir -p build/us/src/libultra build/us/asm/us/libultra
+tools/bootstrap_ultralib.sh
+.toolchain/ido5.3/cc -c -Wab,-r4300_mul -G 0 -nostdinc \
+    -woff 516,649,838,712 -mips3 -32 -O1 -D_MIPS_SZLONG=32 \
+    -DBUILD_VERSION=VERSION_I -D_FINALROM -DNDEBUG \
+    -I.toolchain/ultralib/include -I.toolchain/ultralib/include/PR \
+    -I.toolchain/ultralib/include/compiler/ido -I.toolchain/ultralib/src \
+    -I.toolchain/ultralib/src/os \
+    -o build/us/asm/us/libultra/exceptasm.s.o src/libultra/exceptasm.s
+python3 tools/fix_ido_symtab.py build/us/asm/us/libultra/exceptasm.s.o --mips3-32
 python3 tools/trim_elf32_section.py \
-    build/us/src/libultra/os_exception_data.c.o .data 0x20 --alignment 4
+    build/us/asm/us/libultra/exceptasm.s.o .text 0x910 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/libultra/exceptasm.s.o .rodata 0x44 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/libultra/exceptasm.s.o .data 0x20 --alignment 4
+.toolchain/ido5.3/cc -c -Wab,-r4300_mul -G 0 -nostdinc \
+    -woff 516,649,838,712 -mips2 -32 -O1 -D_MIPS_SZLONG=32 \
+    -DBUILD_VERSION=VERSION_I -D_FINALROM -DNDEBUG \
+    -I.toolchain/ultralib/include -I.toolchain/ultralib/include/PR \
+    -I.toolchain/ultralib/include/compiler/ido -I.toolchain/ultralib/src \
+    -o build/us/src/libultra/libm_vals.c.o src/libultra/libm_vals.s
+python3 tools/fix_ido_symtab.py build/us/src/libultra/libm_vals.c.o
+python3 tools/trim_elf32_section.py \
+    build/us/src/libultra/libm_vals.c.o .rodata 0x10 --alignment 4
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Xcpluscomm \
     -Isrc/libultra -o build/us/src/libultra/vitbl.c.o src/libultra/vitbl.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
@@ -4399,6 +4439,49 @@ if false; then
     build/us/asm/us/main_8011449C_to_80171000.s.o \
     > build/us/undefined_object_symbols.txt
 fi
+
+# Source-owned constant pools recovered from the remaining gameplay rodata.
+while read -r unit rodata_size; do
+    python3 tools/trim_elf32_section.py \
+        "build/us/src/code/${unit}.c.o" .rodata "$rodata_size" --alignment 4
+done <<'RODATA_UNITS'
+800D5E2C_script_particle_update 0x38
+800E3FDC_entity_model_draw 0x48
+actor_model_draw 0x44
+controller_slots_scan 0x7
+debris_piece_draw 0x44
+debris_scatter_spawn 0x4
+func_800C0C38 0x4
+gameplay_definition_data 0x99
+hud_transition 0x4
+lightning_arc_update 0x54
+model_bounds_center 0x1C
+player_cursor_anim 0x8
+player_menu_draw 0x28
+player_menu_update 0x20
+projectile_model_create 0x44
+projectile_model_draw 0x4C
+slot_angle_classify 0x8
+turret_model_draw 0x44
+unit_spawner_update 0x44
+decal_spawn_draw 0x44
+effect_beam_draw 0x48
+effect_billboard_draw 0x44
+effect_targets_damage 0x1C
+flicker_prop_draw 0x44
+hazard_model_draw 0x44
+impact_debris_spray 0x4
+mission_flag_set 0xB
+powerup_pad_create 0xC
+powerup_pad_draw 0x48
+projectile_shell_draw 0x48
+shockwave_expand 0x10
+shockwave_ring_draw 0xC
+shockwave_ring_spawn 0x4
+splash_damage_falloff 0xC
+static_prop_draw 0x44
+RODATA_UNITS
+
 find build/us/asm build/us/src -type f -name '*.o' -print0 \
     | xargs -0 "${tool_prefix}nm" -u \
     > build/us/undefined_object_symbols.txt
@@ -4410,6 +4493,7 @@ python3 tools/generate_linker_symbols.py build/us/symbols.ld \
     --symbol rspbootTextEnd=0x800F8E80 \
     --symbol gspF3DEX_fifoTextStart=0x800F8E80 \
     --symbol gspF3DEX_fifoDataStart=0x80125EC0 \
+    --symbol osDestroyThread=0x801058B0 \
     --symbol func_8E180004=0x8E180004 \
     --symbol func_80000000=0x80000000 \
     --symbol D_803A66C0=0x803A66C0

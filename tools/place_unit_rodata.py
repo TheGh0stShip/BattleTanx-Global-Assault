@@ -45,6 +45,8 @@ def output_section_name(unit: str, kind: str = "rodata") -> str:
 
 
 def unit_object_path(unit: str) -> str:
+    if unit == "libultra/exceptasm":
+        return "build/us/asm/us/libultra/exceptasm.s.o"
     if unit.startswith(("libultra/", "libgcc/")):
         return f"build/us/src/{unit}.c.o"
     return f"build/us/src/code/{unit}.c.o"

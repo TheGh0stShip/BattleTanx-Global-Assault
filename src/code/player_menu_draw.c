@@ -6,10 +6,9 @@ typedef struct Ent { int pad[0x90 / 4]; int unk90; char pad94[0xD0 - 0x94]; } En
 typedef struct Sel { int pad0[3]; Obj *obj; int count; int sel; unsigned int state; float t; int pad20[2]; int unk28; } Sel;
 typedef struct Vec3 { float x, y, z; } Vec3;
 
-extern Vec3 D_800750B8;
+static const Vec3 D_800750B8 = { 0.0f, -3.5e+02f, 0.0f };
 extern int D_802195CC;
 extern int D_8021945C;
-extern float D_800750C4, D_800750C8, D_800750CC, D_800750D0, D_800750D4, D_800750D8, D_800750DC;
 extern Ent D_80122E38[];
 extern Ent D_80122EC8[];
 extern unsigned char D_80123AA0[], D_80123AA4[], D_80123AA8[];
@@ -69,10 +68,10 @@ void func_800D7638(Sel *arg0) {
     case 0:
         break;
     case 1:
-        off = s->t * (D_800750C4 / s->count);
+        off = s->t * (65536.0f / s->count);
         break;
     case 2:
-        off = -s->t * (D_800750C8 / s->count);
+        off = -s->t * (65536.0f / s->count);
         break;
     }
     for (k = 0; k < s->count; k++) {
@@ -80,7 +79,7 @@ void func_800D7638(Sel *arg0) {
     }
     b[0] = 0;
     f = func_8009D4B0(0x1000);
-    c = D_800750CC;
+    c = 1e+02f;
     b[2] = -f * c;
     b[1] = func_8009D510(0x1000) * c;
     a[0] = c;
@@ -88,23 +87,23 @@ void func_800D7638(Sel *arg0) {
     a[1] = 0;
     i = 0;
     if (i < n) {
-    k0 = D_800750D0;
+    k0 = 2.0f;
     for (; i < n; i++) {
-        scale = D_800750D4;
+        scale = 1.0f;
         switch (s->state) {
         case 0:
-            if (i == s->sel) scale = D_800750D8;
+            if (i == s->sel) scale = 2.0f;
             break;
         case 1:
             if (i == s->sel) scale = -s->t + k0;
-            else if (i == (s->sel + n - 1) % n) scale = s->t + D_800750D4;
+            else if (i == (s->sel + n - 1) % n) scale = s->t + 1.0f;
             break;
         case 2:
             if (i == s->sel) scale = -s->t + k0;
-            else if (i == (s->sel + 1) % n) scale = s->t + D_800750D4;
+            else if (i == (s->sel + 1) % n) scale = s->t + 1.0f;
             break;
         }
-        scale *= D_800750DC;
+        scale *= 0.5f;
         func_8009EEE0(&mtx);
         mtx.unk40 = 0;
         pos[0] = base.x + func_8009D510(ang[i]) * b[0] + func_8009D4B0(ang[i]) * a[0];

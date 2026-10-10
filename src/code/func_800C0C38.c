@@ -1,7 +1,6 @@
 #include "types.h"
 
 extern f32 D_803A5948;
-extern f32 D_8007367C;
 
 u8 *func_8009836C(u16 id);
 
@@ -25,7 +24,7 @@ s32 func_800C0C38(u8 *object) {
             value = D_803A5948 + D_803A5948;
         } else if (flags & *(u32 *)(owner + 0x14)) {
             value = D_803A5948;
-            factor = D_8007367C;
+            factor = -2.0f;
             value = value * factor;
         } else {
             return 0;

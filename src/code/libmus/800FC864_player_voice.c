@@ -4,8 +4,6 @@ extern char *D_803AD978;
 extern int D_803AD988;
 extern unsigned short D_803AD98C;
 extern unsigned short D_803AD98E;
-extern double D_80077610;
-extern double D_80077618;
 extern void func_801022D0(void *voice);
 extern void func_80102240(void *voice, void *wave);
 extern void func_80102190(void *voice, short volume, int time);
@@ -60,8 +58,8 @@ void func_800FCA34(channel_t *cp, int i, float freq)
     f += freq + cp->f24;
     if (f != cp->f28) {
         cp->f28 = f;
-        f = func_800FD10C(f * D_80077610);
-        if (f > D_80077618) {
+        f = func_800FD10C(f * 0.08333333333333333);
+        if (f > 2.0) {
             f = 2.0f;
             cp->fBB = 0;
         }

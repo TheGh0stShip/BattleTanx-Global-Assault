@@ -2,7 +2,6 @@ typedef unsigned long long u64;
 typedef long long s64;
 extern unsigned int D_80117EB8;
 extern unsigned char D_80125558[];
-extern char D_800761B0[];
 extern int sprintf(char *, const char *, ...);
 extern u64 func_8009E668(u64);
 
@@ -13,7 +12,7 @@ void func_800E96B4(unsigned int a0, int a1, int a2, int a3, char *out)
     int i;
 
     if (a0 >= 32) {
-        sprintf(out, D_800761B0);
+        sprintf(out, "TRDDYBRRKS");
         return;
     }
     if (a1 > 819100) a1 = 819100;

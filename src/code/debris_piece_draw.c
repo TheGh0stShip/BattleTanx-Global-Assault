@@ -19,7 +19,7 @@ typedef struct {
     u8 b;
     void *model;
 } Unk800DA340;
-extern Mtx68 D_8007538C;
+static const Mtx68 D_8007538C = { { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f } };
 extern s32 D_803A568C[];
 extern u8 func_800AD14C(f32, f32, f32, u8);
 extern void func_8009EF30(Mtx68 *, f32 *);

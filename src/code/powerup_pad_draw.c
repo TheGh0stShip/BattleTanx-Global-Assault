@@ -1,6 +1,6 @@
 /* ---- 0x800F2000/d/f3098.c ---- */
 typedef struct { float x, y, z; } Vec3;
-typedef struct { int w[17]; } M44;
+typedef struct { float w[17]; } M44;
 typedef struct { char pad[77]; unsigned char b77; } Sub;
 typedef struct {
     char pad0[16];
@@ -16,8 +16,7 @@ typedef struct {
 } Obj;
 extern unsigned int D_8021945C;
 extern unsigned char D_8021957C[];
-extern float D_800770C4;
-extern M44 D_80077080;
+static const M44 D_80077080 = { { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f } };
 extern float func_8009D4B0(unsigned short);
 extern int func_800AA058(int, Vec3 *);
 extern void func_8009EFD4(M44 *, float, float, float, int);
@@ -28,7 +27,7 @@ void func_800F3098(Obj *o) {
     int h;
     vis = D_8021957C[o->b66] & (o->sub->b77 >> 4);
     if (vis) {
-        o->pos.z = o->f16 + func_8009D4B0(D_8021945C * 1310) * D_800770C4;
+        o->pos.z = o->f16 + func_8009D4B0(D_8021945C * 1310) * 6.0f;
         func_8009EFD4(&m, o->pos.x, o->pos.z, o->pos.y, o->u64);
         h = func_800AA058(o->b66, &o->pos);
         if (o->type == 4) {

@@ -7,7 +7,7 @@ typedef struct { int v[7]; } R;
 typedef struct { void (*fn)(H *, O *, int, Info *, R *); int p[2]; } F;
 extern T D_803978E0[];
 extern short D_80397650;
-extern R D_80077200;
+static const R D_80077200 = { { 2, 0, 0, 0, 0, 0, 0 } };
 extern F D_80224B5C[];
 extern unsigned short func_800B205C(int, int, int, int, int, int, int, int, int, int, int, int, int);
 extern unsigned short func_800B3748(int, int, Hit *, int, int);

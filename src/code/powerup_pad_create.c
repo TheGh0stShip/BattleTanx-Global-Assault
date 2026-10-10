@@ -18,7 +18,7 @@ typedef struct {
     unsigned short u64;
     unsigned char b66;
 } Obj;
-extern Vec3 D_80077050;
+static const Vec3 D_80077050 = { 0.0f, 0.0f, 0.0f };
 extern Obj *func_800A18D0(int, int);
 extern int func_800DF758(Ctx *, int, int);
 extern unsigned short func_800DF89C(Ctx *, Vec3 *, int, int, int, int, int, Obj *);

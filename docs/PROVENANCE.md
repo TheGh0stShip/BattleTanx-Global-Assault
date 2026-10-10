@@ -106,6 +106,16 @@ relocation is compared at its retail address. The adjacent N_audio globals at
 `0x80126B20–0x80126B40` use the MIT-licensed Mario Golf 64 reconstruction at
 revision `5014056b8ac5c26178e299bbdaede70c0d318910` as a declaration reference.
 
+The exception handler at `0x80104FA0–0x801058B0`, its interrupt dispatch
+tables at `0x80077880`, and its hardware-interrupt callback table at
+`0x80126E30` are built from the unmodified libultra 2.0I `exceptasm.s` in
+[`decompals/ultralib`](https://github.com/decompals/ultralib/tree/e24c836796df4bf520ff8b11a5c9d2cea3a66cbd).
+The same pinned source supplies `libm_vals.s` and its quiet-NaN constant at
+`0x80077930`. That repository provides no license statement; these files
+reconstruct Nintendo SDK objects and are documented separately from
+MIT/CC0-licensed upstream reuse. IDO 5.3 reproduces all three exception-object
+sections and the libm constant byte-for-byte.
+
 The libmus command dispatch, effect presets, scheduler callbacks, and initial
 audio state at `0x80126590–0x80126890` follow the MIT-licensed N64 Sound Tools
 3.14 sources retained by the

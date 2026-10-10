@@ -5,7 +5,6 @@ extern Disp D_803A62D0[4];
 extern unsigned short D_8011F236;
 extern char D_8011F9EC[][16];
 extern unsigned short D_8011F820[];
-extern char D_80074034[];
 extern unsigned short func_800CC0B0(void);
 extern int sprintf(char *, const char *, ...);
 extern void func_80099160(void *, char *, int);
@@ -29,7 +28,7 @@ int func_800CC2F8(int base) {
             continue;
         }
         flags[i][0] = 8;
-        sprintf(D_803A62D0[i].text, D_80074034, slot + 1);
+        sprintf(D_803A62D0[i].text, "%02i: ", slot + 1);
         if (D_803A6360[slot].b == 0 && D_803A6360[slot].c == 0 && D_803A6360[slot].a == 0) {
             D_803A62D0[i].name[0] = 'e';
             D_803A62D0[i].name[1] = 'm';

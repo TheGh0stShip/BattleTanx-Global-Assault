@@ -260,13 +260,13 @@ def build_report(
         members = [item for item in functions if start_vram <= item["vram"] < end_vram]
         if not members:
             continue
-        is_c = segment["kind"] == "c"
+        is_source = segment["kind"] in ("c", "hasm")
         for item in members:
-            item["matched"] = is_c
+            item["matched"] = is_source
             assigned.add(item["vram"])
-        unit_measures = measures(members, is_c)
+        unit_measures = measures(members, is_source)
         unit_measures["total_units"] = 1
-        unit_measures["complete_units"] = int(is_c)
+        unit_measures["complete_units"] = int(is_source)
         report_units.append(
             {
                 "name": segment["name"],
@@ -275,16 +275,20 @@ def build_report(
                     {
                         "name": item["name"],
                         "size": str(item["size"]),
-                        "fuzzy_match_percent": 100.0 if is_c else 0.0,
+                        "fuzzy_match_percent": 100.0 if is_source else 0.0,
                         "address": str(item["vram"]),
                         "metadata": {"virtual_address": str(item["vram"])},
                     }
                     for item in members
                 ],
                 "metadata": {
-                    "complete": is_c,
+                    "complete": is_source,
                     "source_path": (
-                        f"src/{segment['name']}.c" if is_c else f"asm/us/{segment['name']}.s"
+                        f"src/{segment['name']}.s"
+                        if segment["kind"] == "hasm"
+                        else f"src/{segment['name']}.c"
+                        if segment["kind"] == "c"
+                        else f"asm/us/{segment['name']}.s"
                     ),
                     "progress_categories": ["code"],
                 },
@@ -329,6 +333,7 @@ def build_report(
         raise ValueError("source-owned data exceeds total non-function ROM bytes")
 
     for item in owned_data:
+        source_suffix = ".s" if Path(f"src/{item['unit']}.s").exists() else ".c"
         unit_measures = data_measures(item["size"], item["size"], item["size"], 1, 1)
         report_units.append(
             {
@@ -345,7 +350,7 @@ def build_report(
                 "functions": [],
                 "metadata": {
                     "complete": True,
-                    "source_path": f"src/{item['unit']}.c",
+                    "source_path": f"src/{item['unit']}{source_suffix}",
                     "progress_categories": ["data"],
                 },
             }

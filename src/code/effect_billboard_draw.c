@@ -9,7 +9,7 @@ typedef struct {
     char pad[12]; Vec3 pos; unsigned char b18; char p19[3];
     Owner *owner; int w20; unsigned short r24, r26, r28, s2a, s2c, s2e; int w30; float f34;
 } Obj;
-extern M44 D_800772A0;
+static const M44 D_800772A0 = { { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f } };
 extern int D_8021945C;
 extern short D_80122E46[];
 extern int D_803A561C;

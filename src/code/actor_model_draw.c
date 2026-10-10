@@ -5,10 +5,10 @@ typedef struct {
   unsigned char x2E; unsigned char x2F; unsigned char x30; char pad31;
   unsigned short x32; unsigned short x34;
 } Obj;
-typedef struct { int m[17]; } Mtx68;
+typedef struct { float m[17]; } Mtx68;
 typedef struct { float m[16]; } Mtx;
 typedef struct { int id; int id2; int id3; char pad[0xC4]; } Ent;
-extern Mtx68 D_800750E0;
+static const Mtx68 D_800750E0 = { { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f } };
 extern int D_80117EB4;
 extern int D_8021945C;
 extern Ent D_80122E80[];

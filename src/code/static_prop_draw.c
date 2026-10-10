@@ -4,7 +4,7 @@ typedef struct { float m[16]; } Mtx;
 typedef struct {
     char pad[12]; int w0c; float x; float z; float y; unsigned short h1c; unsigned short h1e; unsigned char b20;
 } Obj;
-extern M44 D_80077400;
+static const M44 D_80077400 = { { 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f } };
 extern unsigned char func_800AD14C(float, float, float, int);
 extern int func_800AA058(int, float *);
 extern void func_8009EF30(M44 *, float *);

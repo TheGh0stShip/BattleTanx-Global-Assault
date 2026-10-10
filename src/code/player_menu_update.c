@@ -13,8 +13,6 @@ typedef struct Entry { int a; char pad[0x8C]; int f90; char pad2[0x3C]; } Entry;
 extern int D_802195CC;
 extern int D_8021945C;
 extern float D_80219488;
-extern float D_80075090, D_800750A0;
-extern double D_80075098, D_800750A8;
 extern Entry D_80122E38[];
 extern Pad *func_80098250(int);
 extern int func_800A8F34(P *, int *, unsigned char *);
@@ -71,8 +69,8 @@ void func_800D6EEC(Menu *arg0, int *res) {
     }
     switch (m->state) {
     case 1:
-        m->t += D_80219488 * D_80075090;
-        if (m->t > D_80075098) {
+        m->t += D_80219488 * 0.04f;
+        if (m->t > 1.0) {
             m->state = 0;
             m->t = 0;
             if (--m->idx == -1) m->idx = n - 1;
@@ -81,8 +79,8 @@ void func_800D6EEC(Menu *arg0, int *res) {
         }
         break;
     case 2:
-        m->t += D_80219488 * D_800750A0;
-        if (m->t > D_800750A8) {
+        m->t += D_80219488 * 0.04f;
+        if (m->t > 1.0) {
             m->state = 0;
             m->t = 0;
             if (++m->idx >= n) m->idx = 0;

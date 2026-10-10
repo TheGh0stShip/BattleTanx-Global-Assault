@@ -39,9 +39,9 @@ typedef struct {
     Elem12 *model;  /* 0x40 */
 } Debris;
 
-extern const Vec3f D_80075310;   /* { 1e6, 1e6, 1e6 } */
-extern const Vec3f D_8007531C;   /* { -1e6, -1e6, -1e6 } */
-extern const Mtx D_8007532C;     /* identity */
+extern const Vec3f D_80075310;
+extern const Vec3f D_8007531C;
+static const Mtx D_8007532C = { { { 1.0f, 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 0.0f, 1.0f } } };
 /* float literals are emitted by this unit: 2.0 0.2 0.9 -2.0 2.5 8.0 30.0 at 0x8007536C.. */
 
 extern Debris *func_800A18D0(s32, s32);
