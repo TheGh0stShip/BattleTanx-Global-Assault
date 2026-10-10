@@ -21,13 +21,14 @@ extern void func_80089094(Object *, int);
 
 void func_80083464(Object *object) {
     int target;
+    float effectStrength = 400.0f;
 
     switch (object->state) {
     case 1:
         if (object->controller->kind == 7 && object->controller->active != 0) {
             target = func_80083230(object);
             if (target != 0) {
-                func_80088B18(object, target, 400.0f, 0);
+                func_80088B18(object, target, effectStrength, 0);
                 func_80089094(object, target);
                 object->state = 2;
             }

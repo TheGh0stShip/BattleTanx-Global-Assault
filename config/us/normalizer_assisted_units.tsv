@@ -1,4 +1,7 @@
 # unit	vram	text_size	status
+func_800904C8	0x800904C8	0x144	normalizer-assisted
+func_8009060C	0x8009060C	0x3C0	normalizer-assisted
+func_8009299C	0x8009299C	0x29C	normalizer-assisted
 func_8007D5B0	0x8007D5B0	0x78	normalizer-assisted
 font_number_draw	0x80096BDC	0x238	normalizer-assisted
 spatial_sound_play	0x80097FB4	0x188	normalizer-assisted
@@ -38,6 +41,7 @@ grid_overlap_query	0x800B33FC	0x108	normalizer-assisted
 runtime_fields_init	0x80088B6C	0xF8	normalizer-assisted
 segment_endpoint_clamp	0x800B5C48	0xD4	normalizer-assisted
 search_object_find	0x800A9928	0x11C	normalizer-assisted
+func_800AAC14	0x800AAC14	0x28C	normalizer-assisted
 ai_node_setup	0x800852F8	0x144	normalizer-assisted
 model_display_patch	0x80095F08	0xD8	normalizer-assisted
 shell_update	0x800EC8E8	0x5D4	compiler-normalizer-assisted-no-cse-skip-blocks

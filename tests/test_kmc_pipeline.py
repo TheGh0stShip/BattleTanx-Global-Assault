@@ -12,6 +12,105 @@ SPEC.loader.exec_module(MODULE)
 
 
 class KmcPipelineTests(unittest.TestCase):
+    def test_tank_event_constant_schedule_moves_complete_chunks(self) -> None:
+        source = (
+            "func_8009060C:\n"
+            "\t.section\t.rodata\n\t.align\t2\n$LF_lis8:\n"
+            "\t.word\t0x3E800000\n\t.text\n\tl.s\t$f0,$LF_lis8\n"
+            "\t.section\t.rodata\n\t.align\t2\n$LF_lis9:\n"
+            "\t.word\t0x3ECCCCCD\n\t.text\n\tl.s\t$f12,$LF_lis9\n"
+        )
+        normalized = MODULE.schedule_tank_event_constants(source)
+        self.assertLess(normalized.index("0x3ECCCCCD"), normalized.index("0x3E800000"))
+        self.assertIn("\tl.s\t$f12,$LF_lis8\n", normalized)
+        self.assertIn("\tl.s\t$f0,$LF_lis9\n", normalized)
+
+        unrelated = source.replace("func_8009060C", "func_80090608")
+        self.assertEqual(unrelated, MODULE.schedule_tank_event_constants(unrelated))
+
+    def test_tank_event_constant_schedule_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.schedule_tank_event_constants("func_8009060C:\n\tnop\n")
+
+    def test_tank_color_fade_schedule_is_exact_and_gated(self) -> None:
+        source = (
+            "func_8009299C:\n"
+            "\tsw\t$19,76($sp)\n\tla\t$19,D_803A53A0\n"
+            "\tsw\t$18,72($sp)\n"
+            "\tli\t$18,-2147483648\t\t\t# 0x80000000\n"
+            "\taddu\t$4,$19,$2\n\t.end\tfunc_8009299C\n"
+        )
+        normalized = MODULE.schedule_tank_color_fade(source)
+        self.assertIn(
+            "\tsw\t$18,72($sp)\n"
+            "\tli\t$18,-2147483648\t\t\t# 0x80000000\n"
+            "\tsw\t$19,76($sp)\n\tla\t$19,D_803A53A0\n",
+            normalized,
+        )
+        self.assertIn("\taddu\t$4,$2,$19\n", normalized)
+
+        unrelated = source.replace("func_8009299C", "func_80092998")
+        self.assertEqual(unrelated, MODULE.schedule_tank_color_fade(unrelated))
+
+    def test_tank_color_fade_schedule_requires_each_fire_once(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "prologue=0, address=0"):
+            MODULE.schedule_tank_color_fade(
+                "func_8009299C:\n\tnop\n\t.end\tfunc_8009299C\n"
+            )
+
+    def test_vehicle_extent_multiply_hazard_moves_label(self) -> None:
+        source = (
+            "func_800904C8:\n"
+            "\tbc1tl\t.L7\n"
+            "\tmov.s\t$f20,$f2\n"
+            "\t.set\tnoreorder\n"
+            ".L7:\n"
+            "\tmul.s\t$f2,$f24,$f6\n"
+            "\t.end\tfunc_800904C8\n"
+        )
+        normalized = MODULE.suppress_vehicle_extent_multiply_hazard(source)
+        self.assertIn(
+            "\tbc1tl\t.L7\n.L7 = . + 4\n"
+            "\tmov.s\t$f20,$f2\n\t.set\tnoreorder\n"
+            "\tmul.s\t$f2,$f24,$f6\n",
+            normalized,
+        )
+
+    def test_vehicle_extent_multiply_hazard_is_gated_and_counted(self) -> None:
+        unrelated = "func_800904C4:\n\tnop\n"
+        self.assertEqual(
+            unrelated, MODULE.suppress_vehicle_extent_multiply_hazard(unrelated)
+        )
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.suppress_vehicle_extent_multiply_hazard(
+                "func_800904C8:\n\tnop\n\t.end\tfunc_800904C8\n"
+            )
+
+    def test_score_span_register_swap_is_exact_and_function_gated(self) -> None:
+        body = (
+            "func_800AAC14:\n"
+            + "\tmove\t$2,$11\n" * 8
+            + "\taddu\t$2,$11,$12\n"
+            + "\tsll\t$12,$2,5\n" * 2
+            + "\tmove\t$12,$2\n"
+            + "\t.end\tfunc_800AAC14\n"
+        )
+        normalized = MODULE.swap_score_span_group_registers(body)
+        self.assertEqual(normalized.count("$11"), 4)
+        self.assertEqual(normalized.count("$12"), 9)
+
+        unrelated = "func_800AAC10:\n\taddu\t$11,$12,$2\n"
+        self.assertEqual(
+            unrelated, MODULE.swap_score_span_group_registers(unrelated)
+        )
+
+    def test_score_span_register_swap_rejects_count_drift(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "register counts changed"):
+            MODULE.swap_score_span_group_registers(
+                "func_800AAC14:\n\taddu\t$11,$12,$2\n"
+                "\t.end\tfunc_800AAC14\n"
+            )
+
     def test_packed_heading_prologue_reorders_exact_window(self) -> None:
         source = (
             "func_8007D5B0:\n"

@@ -11,6 +11,7 @@ align_80071668	0x80071668	0x8
 align_800716B4	0x800716B4	0x4
 align_80071898	0x80071898	0x8
 align_800718B8	0x800718B8	0x8
+align_80071984	0x80071984	0x4
 align_80072428	0x80072428	0x8
 align_80072464	0x80072464	0xC
 align_80072514	0x80072514	0x4
@@ -202,6 +203,12 @@ align_800CDBDC	0x800CDBDC	0x4
 # two words are documented stale string tails between compiler-runtime objects.
 align_800ACE6C	0x800ACE6C	0x4
 align_800B06D8	0x800B06D8	0x8
+# Boundary-audited non-code words embedded between gameplay text objects.
+# They have no entry point or reference and cannot be attributed to either
+# neighboring translation unit, so they are object-separator residue rather
+# than authored data objects.
+stub_800B99A4	0x800B99A4	0x8
+stub_800BBDBC	0x800BBDBC	0x4
 align_800FF814	0x800FF814	0xC
 align_8010CF98	0x8010CF98	0x8
 align_80113E0C	0x80113E0C	0x4

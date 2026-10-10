@@ -1197,6 +1197,44 @@ def suppress_distance_multiply_hazard_nops(text: str) -> str:
     return text
 
 
+def suppress_vehicle_extent_multiply_hazard(text: str) -> str:
+    """Hide one retail label boundary before ``mul.s`` in func_800904C8.
+
+    KMC ``as`` inserts a multiply-hazard nop when the instruction immediately
+    follows a branch target. Retail retains the target address but has no nop.
+    Defining the target as ``.+4`` preserves that address while presenting the
+    multiply to the assembler as part of the preceding instruction stream.
+    """
+    if "func_800904C8:" not in text:
+        return text
+    match = re.search(
+        r"func_800904C8:.*?\n\s*\.end\s+func_800904C8\b", text, flags=re.S
+    )
+    if match is None:
+        raise RuntimeError("func_800904C8 body not found")
+    body = match.group(0)
+    pattern = re.compile(
+        r"\n\tbc1tl\t(\.L\d+)\n"
+        r"\tmov\.s\t\$f20,\$f2\n"
+        r"\t\.set\tnoreorder\n"
+        r"\1:\n"
+        r"\tmul\.s\t\$f2,\$f24,\$f6\n"
+    )
+    replacement = (
+        "\n\tbc1tl\t\\1\n"
+        "\\1 = . + 4\n"
+        "\tmov.s\t$f20,$f2\n"
+        "\t.set\tnoreorder\n"
+        "\tmul.s\t$f2,$f24,$f6\n"
+    )
+    body, fires = pattern.subn(replacement, body)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_800904C8 label-multiply hazard fired {fires} times (expected 1)"
+        )
+    return text[:match.start()] + body + text[match.end():]
+
+
 def schedule_progress_level_loop_setup(text: str) -> str:
     """Match the retail loop-pointer/constant setup in ``func_8009C31C``.
 
@@ -1345,6 +1383,37 @@ def swap_model_vertex_offset_loop_registers(text: str) -> str:
         if body.count(before) != 1:
             raise RuntimeError("func_800EBA98 frame pattern changed")
         body = body.replace(before, after, 1)
+    return text[:match.start()] + body + text[match.end():]
+
+
+def swap_score_span_group_registers(text: str) -> str:
+    """Exchange the tied group and group-stride allocnos in func_800AAC14.
+
+    The reconstructed source is instruction-for-instruction identical except
+    that GCC assigns the long-lived stack parameter to ``t3`` and each of the
+    four mutually exclusive group-stride values to ``t4``. Retail makes the
+    opposite tied allocation. Limit the rename to the complete function and
+    require exact register-use counts so compiler or source drift fails.
+    """
+    if "func_800AAC14:" not in text:
+        return text
+    match = re.search(
+        r"func_800AAC14:.*?\n\s*\.end\s+func_800AAC14\b", text, flags=re.S
+    )
+    if match is None:
+        raise RuntimeError("func_800AAC14 body not found")
+    body = match.group(0)
+    counts = {
+        register: len(re.findall(re.escape(register), body))
+        for register in ("$11", "$12")
+    }
+    if counts != {"$11": 9, "$12": 4}:
+        raise RuntimeError(f"func_800AAC14 register counts changed: {counts}")
+    body = (
+        body.replace("$11", "$__swap")
+        .replace("$12", "$11")
+        .replace("$__swap", "$12")
+    )
     return text[:match.start()] + body + text[match.end():]
 
 
@@ -3665,6 +3734,8 @@ def normalize_v3(source: str) -> str:
         text = reproduce_sprite_ring_label_hazard(text)
     if os.environ.get("V3_DISTANCE_MULTIPLY_HAZARDS", "1") == "1":
         text = suppress_distance_multiply_hazard_nops(text)
+    if os.environ.get("V3_VEHICLE_EXTENT_MULTIPLY_HAZARD", "1") == "1":
+        text = suppress_vehicle_extent_multiply_hazard(text)
     if os.environ.get("V3_PROGRESS_LEVEL_LOOP_SETUP", "1") == "1":
         text = schedule_progress_level_loop_setup(text)
     if os.environ.get("V3_ANGLE_TABLE_LOOKUP_REGISTERS", "1") == "1":
@@ -3675,6 +3746,8 @@ def normalize_v3(source: str) -> str:
         text = shape_waypoint_stack_reset_addresses(text)
     if os.environ.get("V3_MODEL_VERTEX_OFFSET_LOOP_REGISTERS", "1") == "1":
         text = swap_model_vertex_offset_loop_registers(text)
+    if os.environ.get("V3_SCORE_SPAN_GROUP_REGISTERS", "1") == "1":
+        text = swap_score_span_group_registers(text)
     if os.environ.get("V3_TANK_CONTACT_SCAN_REGISTERS", "1") == "1":
         text = cycle_tank_contact_scan_registers(text)
     if os.environ.get("V3_ENTITY_SELECTION_REGISTERS", "1") == "1":
@@ -3773,7 +3846,79 @@ def normalize_v3(source: str) -> str:
         text = schedule_spatial_sound_sentinel(text)
     if os.environ.get("V3_PACKED_HEADING_PROLOGUE", "1") == "1":
         text = schedule_packed_heading_prologue(text)
+    if os.environ.get("V3_TANK_COLOR_FADE_SCHEDULE", "1") == "1":
+        text = schedule_tank_color_fade(text)
+    if os.environ.get("V3_TANK_EVENT_CONSTANT_SCHEDULE", "1") == "1":
+        text = schedule_tank_event_constants(text)
     return text
+
+
+def schedule_tank_color_fade(text: str) -> str:
+    """Reproduce two retail scheduling choices in ``func_8009299C``.
+
+    The operations and dependencies emitted from C are identical.  Retail
+    saves and initializes ``s2`` before ``s3`` and writes the commutative
+    address addition with the index operand first.  Match only both complete
+    function-local patterns and require one occurrence of each.
+    """
+    if "func_8009299C:" not in text:
+        return text
+
+    prologue_before = (
+        "\tsw\t$19,76($sp)\n"
+        "\tla\t$19,D_803A53A0\n"
+        "\tsw\t$18,72($sp)\n"
+        "\tli\t$18,-2147483648\t\t\t# 0x80000000\n"
+    )
+    prologue_after = (
+        "\tsw\t$18,72($sp)\n"
+        "\tli\t$18,-2147483648\t\t\t# 0x80000000\n"
+        "\tsw\t$19,76($sp)\n"
+        "\tla\t$19,D_803A53A0\n"
+    )
+    address_before = "\taddu\t$4,$19,$2\n"
+    address_after = "\taddu\t$4,$2,$19\n"
+
+    prologue_fires = text.count(prologue_before)
+    address_fires = text.count(address_before)
+    if prologue_fires != 1 or address_fires != 1:
+        raise RuntimeError(
+            "func_8009299C schedule fired "
+            f"prologue={prologue_fires}, address={address_fires} times "
+            "(expected 1 each)"
+        )
+    text = text.replace(prologue_before, prologue_after, 1)
+    return text.replace(address_before, address_after, 1)
+
+
+def schedule_tank_event_constants(text: str) -> str:
+    """Match the tied constant-load order in ``func_8009060C``.
+
+    GCC's second scheduler reverses two independent literal loads in the
+    case-7/case-10 arm. Retail emits the same two chunks in the opposite
+    order. Move complete text/rodata chunks so each instruction remains tied
+    to its literal.
+    """
+    if "func_8009060C:" not in text:
+        return text
+    before = (
+        "\t.section\t.rodata\n\t.align\t2\n$LF_lis8:\n"
+        "\t.word\t0x3E800000\n\t.text\n\tl.s\t$f0,$LF_lis8\n"
+        "\t.section\t.rodata\n\t.align\t2\n$LF_lis9:\n"
+        "\t.word\t0x3ECCCCCD\n\t.text\n\tl.s\t$f12,$LF_lis9\n"
+    )
+    after = (
+        "\t.section\t.rodata\n\t.align\t2\n$LF_lis8:\n"
+        "\t.word\t0x3ECCCCCD\n\t.text\n\tl.s\t$f12,$LF_lis8\n"
+        "\t.section\t.rodata\n\t.align\t2\n$LF_lis9:\n"
+        "\t.word\t0x3E800000\n\t.text\n\tl.s\t$f0,$LF_lis9\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_8009060C constant schedule fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
 
 
 def schedule_path_sequence_final_call(text: str) -> str:

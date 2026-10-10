@@ -2,6 +2,15 @@
 # See tools/place_unit_rodata.py. Listed C units own [vram, vram+size) of
 # main-segment rodata; make verify-code proves the C bytes equal the ROM.
 800902C0	0x80071DCC	0x8
+func_800904C8	0x80071DD4	0x24
+func_8009060C	0x80071DF8	0x5C
+func_800909CC	0x80071E54	0x4
+func_8009299C	0x80071FD8	0x4
+func_800F1278	0x80076EC0	0xD0
+func_800AD6A8	0x80072EB8	0xC
+func_800AD9A8	0x80072EC4	0x10
+func_800ADCA0	0x80072ED4	0x10
+func_800AE4D0	0x80072EF4	0x10
 func_8007B8EC	0x80071080	0x8
 func_8007D5B0	0x800710B0	0x8
 object_embedded_state_refresh	0x80071228	0x10
@@ -149,6 +158,7 @@ cheat_codes	0x80074140	0x84
 hud_slot_icons_update	0x80073B88	0xE0
 hud_menu_entries_apply_settings	0x80073AC8	0x60
 hud_entry_set_label	0x80073B28	0x20
+func_8008C5BC	0x80071974	0x10
 8008C5D8_tank_fire_weapon	0x80071988	0x16C
 race_player_set_vehicle_label	0x80073DB8	0x30
 race_type_name_lookup	0x80073DE8	0x40

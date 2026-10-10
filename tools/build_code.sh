@@ -985,7 +985,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             800B9FD4 world_resource_aggregate world_loader \
             world_bundle_resource_aggregate common_model_loader 800BBDC0 \
             800BD93C 800BDAF8 800BEE0C func_800BF798 \
-            800AAAE0 800AB4DC 800AC0F4 func_800ACE70 func_800ACEB4 \
+            800AAAE0 func_800AAC14 800AB4DC 800AC0F4 func_800ACE70 func_800ACEB4 \
             func_800ACEFC 800AD14C 800AE710 800AF364 func_800B0268 func_800B03F4 \
             func_800A8E3C 800A9080 func_800A977C func_800A98B8 func_800A9B64 \
             func_800A9C24 func_800A9CCC light_display_list_build 800A9F10 \
@@ -3307,6 +3307,8 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800AAAE0.c.o .rodata 0x4 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800AAC14.c.o .text 0x28c --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/800AB4DC.c.o .text 0xb0 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800AC0F4.c.o .text 0xa4 --alignment 4
@@ -4371,7 +4373,8 @@ if false; then
     build/us/src/code/func_800AA5D0.c.o \
     build/us/asm/us/main_800AA664_to_800AAAE0.s.o \
     build/us/src/code/800AAAE0.c.o \
-    build/us/asm/us/main_800AAC14_to_800AB4DC.s.o \
+    build/us/src/code/func_800AAC14.c.o \
+    build/us/asm/us/main_800AAEA0_to_800AB4DC.s.o \
     build/us/src/code/800AB4DC.c.o \
     build/us/asm/us/main_800AB58C_to_800ABE6C.s.o \
     build/us/src/code/func_800ABE6C.c.o \

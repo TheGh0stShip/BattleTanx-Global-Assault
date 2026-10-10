@@ -1,5 +1,12 @@
 # unit	vram	text_size	status
 800902C0	0x800902C0	0x208	matched
+func_800909CC	0x800909CC	0x280	matched
+func_800F1278	0x800F1278	0x4F8	matched
+func_800AD6A8	0x800AD6A8	0x300	matched
+func_800AD9A8	0x800AD9A8	0x2F8	matched
+func_800ADCA0	0x800ADCA0	0x328	matched
+func_800ADFC8	0x800ADFC8	0x1BC	matched
+func_800AE4D0	0x800AE4D0	0x240	matched
 effect_trail_draw	0x800A3560	0x1F8	matched
 player_state_build	0x8009B0F0	0x26C	matched
 nearest_path_test	0x800ABF38	0x1BC	matched

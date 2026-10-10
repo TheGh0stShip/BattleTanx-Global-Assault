@@ -120,7 +120,7 @@ extern s32 D_80123A58[];
 extern s32 D_80123A7C[];
 extern u8 D_801155EC[];
 extern u8 D_801151A4[];
-extern char D_80071974[];        /* "EDGE POWER USED" (asm rodata, see HANDOFF) */
+extern const char gEdgePowerUsedMessage[]; /* owned by func_8008C5BC */
 
 void func_8008C3B4(Tank *, Vec3f *, s32, Vec3f *, u16 *);
 void func_80095B90(Tank *, s32);
@@ -136,7 +136,7 @@ void func_800A6B08(void *, void *);
 void func_800A6B38(void *, void *);
 void func_800A8B14(Driver *, void *);
 f32 func_800B93A4(Vec3f *, u8);
-void func_800CA620(u8, char *, s32);
+void func_800CA620(u8, const char *, s32);
 void func_800D5C80(Vec3f *, u8, f32 *, f32 *, u16, u8, f32, s32, s32, s32, Driver *, f32);
 void func_800DAAE0(Vec3f *, u8, Vec3f *, u16, u8, u8, s32, Driver *);
 void *func_800DC3A8(Vec3f *, u8, f32, u16, Driver *, u8, u8, Vec3f *, Vec3f *, s32, u8, u8);
@@ -163,6 +163,7 @@ static inline void recoil(Tank *t, f32 k) {
     t->recoil1E8 = 0.0f;
     t->recoil1F0 = 0.0f;
 }
+
 s32 func_8008C5D8(Tank *t, s32 weapon, s32 mode) {
     switch (weapon) {
     case 1:
@@ -634,7 +635,7 @@ s32 func_8008C5D8(Tank *t, s32 weapon, s32 mode) {
                       func_800EC1F8(&p, t->team, t->b95, 100, 3, 1));
         t->drv->flagsA &= ~8;
         func_80095B90(t, 0x36);
-        func_800CA620(t->drv->id, D_80071974, 0x2D);
+        func_800CA620(t->drv->id, gEdgePowerUsedMessage, 0x2D);
         return 0;
     }
     }
