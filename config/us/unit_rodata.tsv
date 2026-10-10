@@ -2,6 +2,14 @@
 # See tools/place_unit_rodata.py. Listed C units own [vram, vram+size) of
 # main-segment rodata; make verify-code proves the C bytes equal the ROM.
 angle_table_lookup	0x80072598	0x18
+camera_collision_resolve	0x80072B34	0x28
+spotter_update	0x80072B88	0x8
+grid_height_query	0x80073184	0x8
+path_waypoint_side_select	0x80071150	0x4C
+unit_command_candidate	0x80071598	0x24
+turret_ai_update	0x80075C78	0x1C
+wave_vertex_update	0x80076B68	0x28
+wave_mesh_copy	0x80076F98	0x8
 80094880	0x80072158	0xD0
 80094FBC	0x80072228	0x40
 80095C50	0x80072268	0x18

@@ -71,6 +71,9 @@ mover_collision_response	0x800B5F70	0x248	matched
 800B61B8	0x800B61B8	0x528	matched
 800B87A0	0x800B87A0	0xD0	matched
 grid_node_height	0x800B8870	0x6C	matched
+grid_height_query	0x800B93A4	0x224	matched
+model_player_color	0x800B9AB0	0xDC	matched
+ai_active_target_update	0x80083464	0xF8	matched
 800B9FD4	0x800B9FD4	0x1E8	matched
 800BBDC0	0x800BBDC0	0x1AC0	matched
 800BD93C	0x800BD93C	0xF4	matched

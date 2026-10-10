@@ -736,11 +736,135 @@ class KmcPipelineTests(unittest.TestCase):
         )
         self.assertEqual(normalized.count("\taddu\t$2,$17,$2\n"), 1)
 
+    def test_music_stream_queue_requires_dispatch_pattern(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "dispatch prefix fired 0 times"):
+            MODULE.shape_music_stream_queue_registers(
+                "func_80097D14:\n\tnop\n"
+            )
+
+    def test_music_stream_queue_shapes_both_allocations(self) -> None:
+        source = (
+            "func_80097D14:\n"
+            "\tsw\t$17,20($sp)\n\tla\t$17,D_801B4540\n"
+            "\tsw\t$31,24($sp)\n\tsw\t$16,16($sp)\n"
+            "\tlhu\t$3,0($17)\n\t#nop\n\t.set\tnoreorder\n"
+            "\tbeq\t$3,$0,.L3\n\tmove\t$16,$5\n\t.set\tnoreorder\n"
+            "\tli\t$2,0x00000001\t\t# 1\n\t.set\tnoreorder\n"
+            "\tbeq\t$3,$2,.L4\n\tsll\t$2,$4,3\n"
+            "\tlhu\t$3,D_801B4540+2\n\tlui\t$at,%hi(D_80114710)\n"
+            "\taddu\t$at,$at,$2\n\tlw\t$4,%lo(D_80114710)($at)\n"
+            "\tlui\t$at,%hi(D_80114710+4)\n\taddu\t$at,$at,$2\n"
+            "\tlw\t$6,%lo(D_80114710+4)($at)\n\taddu\t$3,$3,1\n"
+            "\tandi\t$3,$3,0x0001\n\tsll\t$3,$3,2\n"
+            "\taddu\t$3,$3,$17\n\tlw\t$5,8($3)\n"
+        )
+        normalized = MODULE.shape_music_stream_queue_registers(source)
+        self.assertIn("\tlhu\t$5,0($17)\n", normalized)
+        self.assertIn("\tbeq\t$5,$2,.L4\n\tsll\t$3,$4,3\n", normalized)
+        self.assertIn("\tlhu\t$2,D_801B4540+2\n", normalized)
+        self.assertIn("\tlw\t$5,8($2)\n", normalized)
+
+    def test_spotter_update_requires_collision_pattern(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "collision setup fired 0 times"):
+            MODULE.schedule_spotter_update_collision_setup(
+                "func_800A6C20:\n\tnop\n"
+            )
+
+    def test_spotter_update_reorders_setup_and_adds(self) -> None:
+        source = (
+            "func_800A6C20:\n"
+            "\tl.s\t$f2,20($16)\n\taddu\t$4,$16,16\n"
+            "\tadd.s\t$f2,$f2,$f0\n\taddu\t$5,$sp,32\n"
+            "\tli\t$6,0x00a00000\t\t# 10485760\n"
+            "\tsh\t$0,D_80397650\n\ts.s\t$f2,36($sp)\n"
+            "\tlbu\t$7,25($16)\n\tori\t$6,$6,0x0403\n"
+            "\taddu\t$2,$sp,40\n"
+            "\tadd.s\t$f0,$f0,$f2\n"
+            "\tadd.s\t$f0,$f0,$f2\n"
+            "\tadd.s\t$f0,$f0,$f2\n"
+        )
+        normalized = MODULE.schedule_spotter_update_collision_setup(source)
+        self.assertIn(
+            "\taddu\t$2,$sp,40\n\tsh\t$0,D_80397650\n",
+            normalized,
+        )
+        self.assertEqual(normalized.count("\tadd.s\t$f0,$f2,$f0\n"), 3)
+
+    def test_grid_node_remove_requires_table_bases(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "table bases fired 0 times"):
+            MODULE.shape_grid_node_remove_loop("func_800B0F4C:\n\tnop\n")
+
+    def test_grid_node_remove_separates_loop_index(self) -> None:
+        source = (
+            "func_800B0F4C:\n"
+            "\tla\t$22,D_801166E8\n\tla\t$21,D_801166E0\n"
+            "\tlhu\t$4,10($17)\n\tandi\t$3,$16,0x00ff\n"
+            "\tmult\t$3,$4\n\tmflo\t$4\n\t#nop\n"
+            "\tsll\t$3,$3,1\n\taddu\t$2,$3,$22\n"
+            "\tlhu\t$2,0($2)\n\tlhu\t$5,8($17)\n"
+            "\taddu\t$2,$19,$2\n\tsra\t$2,$2,10\n"
+            "\taddu\t$2,$2,$4\n\tmult\t$2,$5\n\tmflo\t$2\n"
+            "\t#nop\n\taddu\t$3,$3,$21\n\tlhu\t$3,0($3)\n"
+            "\tandi\t$6,$16,0x00ff\n"
+        )
+        normalized = MODULE.shape_grid_node_remove_loop(source)
+        self.assertIn("\tla\t$22,D_801166E0\n\tla\t$21,D_801166E8\n", normalized)
+        self.assertIn("\tandi\t$6,$16,0x00ff\n\tsll\t$3,$6,1\n", normalized)
+
+    def test_camera_collision_requires_full_function(self) -> None:
+        source = "func_800A6320:\n\tnop\n\t.end\tfunc_800A6320\n"
+        with self.assertRaisesRegex(RuntimeError, "saved-register counts"):
+            MODULE.shape_camera_collision_registers(source)
+
     def test_mover_reflect_likely_multiply_requires_one_fire(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.hoist_mover_reflect_likely_multiply(
                 "func_800B5B8C:\n\tnop\n"
             )
+
+    def test_path_waypoint_side_registers_are_gated(self) -> None:
+        source = (
+            "func_8007F59C:\n"
+            "\tlhu\t$20,250($18)\n\t#nop\n"
+            "\tandi\t$16,$20,0xffff\n"
+            "\tjal\tfunc_8007DA5C\n\tmove\t$5,$16\n"
+        )
+        normalized = MODULE.shape_path_waypoint_side_registers(source)
+        self.assertIn("\tlhu\t$5,250($18)\n", normalized)
+        self.assertIn("\tjal\tfunc_8007DA5C\n\tmove\t$20,$5\n", normalized)
+
+    def test_waypoint_stack_reset_addresses_require_two_fires(self) -> None:
+        source = (
+            "func_8008A764:\n"
+            "\taddu\t$2,$4,$2\n"
+            "\taddu\t$2,$4,$2\n"
+        )
+        normalized = MODULE.shape_waypoint_stack_reset_addresses(source)
+        self.assertEqual(normalized.count("\taddu\t$2,$2,$4\n"), 2)
+        with self.assertRaisesRegex(RuntimeError, "fired 1 times"):
+            MODULE.shape_waypoint_stack_reset_addresses(
+                "func_8008A764:\n\taddu\t$2,$4,$2\n"
+            )
+
+    def test_new_allocator_rules_reject_pattern_drift(self) -> None:
+        cases = (
+            (MODULE.swap_model_vertex_offset_loop_registers,
+             "func_800EBA98:\n\tnop\n\t.end\tfunc_800EBA98\n", "counts"),
+            (MODULE.shape_entity_selection_registers,
+             "func_800ED990:\n\tnop\n", "fired 0"),
+            (MODULE.shape_turret_angle_delta_registers,
+             "func_800E3460:\n\tnop\n", "fired 0"),
+            (MODULE.shape_wave_vertex_update_registers,
+             "func_800EF770:\n\tnop\n\t.end\tfunc_800EF770\n", "counts"),
+            (MODULE.shape_wave_mesh_copy_registers,
+             "func_800F1900:\n\tnop\n\t.end\tfunc_800F1900\n", "counts"),
+            (MODULE.shape_unit_command_candidate_prologue,
+             "func_80086CEC:\n\tnop\n", "prologue"),
+        )
+        for function, source, message in cases:
+            with self.subTest(function=function.__name__):
+                with self.assertRaisesRegex(RuntimeError, message):
+                    function(source)
 
     def test_mover_reflect_likely_multiply_is_hoisted(self) -> None:
         source = (
