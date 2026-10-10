@@ -1208,6 +1208,36 @@ def reproduce_sprite_ring_label_hazard(text: str) -> str:
     return text[:body_match.start()] + body + text[body_match.end():]
 
 
+def schedule_progress_level_loop_setup(text: str) -> str:
+    """Match the retail loop-pointer/constant setup in ``func_8009C31C``.
+
+    The pointer copy and constant load are independent. The retail scheduler
+    places the pointer copy in the preceding branch delay slot and loads the
+    constant immediately afterward. Require the complete function-local
+    pattern exactly once.
+    """
+    if "func_8009C31C:" not in text:
+        return text
+    before = (
+        "\tbeq\t$2,$0,.L12\n"
+        "\tli\t$17,0x00000001\t\t# 1\n"
+        "\t.set\tnoreorder\n"
+        "\tmove\t$16,$4\n"
+    )
+    after = (
+        "\tbeq\t$2,$0,.L12\n"
+        "\tmove\t$16,$4\n"
+        "\t.set\tnoreorder\n"
+        "\tli\t$17,0x00000001\t\t# 1\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_8009C31C loop setup fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def hoist_mover_reflect_likely_multiply(text: str) -> str:
     """Apply the retail multiply-delay-slot workaround to ``bc1fl``.
 
@@ -1826,6 +1856,8 @@ def normalize_v3(source: str) -> str:
         text = reproduce_collision_query_label_hazard(text)
     if os.environ.get("V3_SPRITE_RING_LABEL_HAZARD", "1") == "1":
         text = reproduce_sprite_ring_label_hazard(text)
+    if os.environ.get("V3_PROGRESS_LEVEL_LOOP_SETUP", "1") == "1":
+        text = schedule_progress_level_loop_setup(text)
     if os.environ.get("V3_MOVER_REFLECT_LIKELY_MUL", "1") == "1":
         text = hoist_mover_reflect_likely_multiply(text)
     if os.environ.get("V3_CRATE_LIST_HEAD_STORE", "1") == "1":

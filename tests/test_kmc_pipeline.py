@@ -614,6 +614,29 @@ class KmcPipelineTests(unittest.TestCase):
             normalized,
         )
 
+    def test_progress_level_loop_setup_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.schedule_progress_level_loop_setup(
+                "func_8009C31C:\n\tnop\n"
+            )
+
+    def test_progress_level_loop_setup_fills_branch_slot(self) -> None:
+        source = (
+            "func_8009C31C:\n"
+            "\tbeq\t$2,$0,.L12\n"
+            "\tli\t$17,0x00000001\t\t# 1\n"
+            "\t.set\tnoreorder\n"
+            "\tmove\t$16,$4\n"
+        )
+        normalized = MODULE.schedule_progress_level_loop_setup(source)
+        self.assertIn(
+            "\tbeq\t$2,$0,.L12\n"
+            "\tmove\t$16,$4\n"
+            "\t.set\tnoreorder\n"
+            "\tli\t$17,0x00000001\t\t# 1\n",
+            normalized,
+        )
+
     def test_mover_reflect_likely_multiply_requires_one_fire(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.hoist_mover_reflect_likely_multiply(
