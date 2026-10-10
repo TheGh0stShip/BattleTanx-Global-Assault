@@ -43,6 +43,15 @@ class LibmusAssetInventoryTests(unittest.TestCase):
         self.assertEqual(report["store_span_bytes"], 2_289_358)
         self.assertEqual(report["alignment_bytes"], 66)
         self.assertEqual(len(report["gaps"]), 18)
+        self.assertEqual(
+            [bank["wave_count"] for bank in report["sample_banks"]], [76, 231]
+        )
+        self.assertEqual(
+            sum(item["kind"] == "wave"
+                for bank in report["sample_banks"]
+                for item in bank["components"]),
+            307,
+        )
 
     def test_report_contains_metadata_not_payloads(self):
         encoded = json.dumps(self.report)
@@ -66,11 +75,23 @@ class LibmusAssetInventoryTests(unittest.TestCase):
                 self.rom[self.report["store_start"]:self.report["store_end"]],
             )
 
+    def test_sample_banks_rebuild_without_opaque_bank_files(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            source = Path(temporary)
+            MODULE.extract(self.rom, self.report, source)
+            (source / "file_02.bin").unlink()
+            (source / "file_04.bin").unlink()
+            rebuilt = PACK.rebuild(self.report, source, require_original=True)
+            self.assertEqual(
+                rebuilt,
+                self.rom[self.report["store_start"]:self.report["store_end"]],
+            )
+
     def test_rebuild_rejects_changed_retail_component(self):
         with tempfile.TemporaryDirectory() as temporary:
             source = Path(temporary)
             MODULE.extract(self.rom, self.report, source)
-            path = source / "file_02.bin"
+            path = source / "waves" / "sfx" / "wave_000.adpcm"
             changed = bytearray(path.read_bytes())
             changed[-1] ^= 1
             path.write_bytes(changed)

@@ -518,9 +518,12 @@ python3 tools/pack_libmus_assets.py \
   --require-original
 ```
 
-The split contains all 26 independently replaceable files and all 18 alignment
-gaps, covering the complete store with no opaque fallback slice. The packer
-validates pointer banks, sample ranges, effects and songs after reconstruction.
-This is a lossless raw-file source pipeline; semantic editing and re-encoding
-of individual libmus structures remain future work. Extracted files and decoded
-WAV inspection artifacts must stay untracked.
+The split contains all 26 independently replaceable files, all 18 alignment
+gaps, and each of the 307 non-overlapping ADPCM waves as a separate component.
+The two large wave-bank files are rebuilt from their 16-byte signatures,
+alignment regions and individual waves; the top-level copies are not used as
+fallbacks. The packer validates pointer banks, sample ranges, effects and songs
+after reconstruction. This is a lossless encoded-wave source pipeline;
+editing/re-encoding decoded PCM and semantically rebuilding pointer banks or
+songs remain future work. Extracted files and decoded WAV inspection artifacts
+must stay untracked.

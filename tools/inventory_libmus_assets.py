@@ -87,6 +87,70 @@ def describe_gaps(rom: bytes, files: list[dict]) -> list[dict]:
     return gaps
 
 
+def describe_sample_bank(data: bytes, bank: dict, name: str,
+                         file_index: int) -> dict:
+    regions = sorted(
+        (wave["sample_offset"], wave["sample_offset"] + wave["sample_size"], wave)
+        for wave in bank["waves"]
+    )
+    components = []
+    cursor = 0
+    gap_index = 0
+    for start, end, wave in regions:
+        require(start >= cursor, f"{name} sample waves overlap")
+        if start > cursor:
+            kind = "prefix" if cursor == 0 else "gap"
+            relative = (f"waves/{name}/prefix.bin" if kind == "prefix" else
+                        f"waves/{name}/gaps/gap_{gap_index:03d}.bin")
+            payload = data[cursor:start]
+            components.append({
+                "kind": kind,
+                "index": gap_index,
+                "start": cursor,
+                "end": start,
+                "size": len(payload),
+                "path": relative,
+                "sha256": hashlib.sha256(payload).hexdigest(),
+            })
+            gap_index += int(kind == "gap")
+        require(wave["type"] != "adpcm" or wave["sample_size"] % 9 == 0,
+                f"{name} ADPCM wave {wave['index']} is not frame-aligned")
+        require(wave["type"] != "raw16" or wave["sample_size"] % 2 == 0,
+                f"{name} raw wave {wave['index']} is not sample-aligned")
+        suffix = "adpcm" if wave["type"] == "adpcm" else "pcm16be"
+        payload = data[start:end]
+        components.append({
+            "kind": "wave",
+            "wave_index": wave["index"],
+            "wave_type": wave["type"],
+            "start": start,
+            "end": end,
+            "size": len(payload),
+            "path": f"waves/{name}/wave_{wave['index']:03d}.{suffix}",
+            "sha256": hashlib.sha256(payload).hexdigest(),
+        })
+        cursor = end
+    if cursor < len(data):
+        payload = data[cursor:]
+        components.append({
+            "kind": "gap",
+            "index": gap_index,
+            "start": cursor,
+            "end": len(data),
+            "size": len(payload),
+            "path": f"waves/{name}/gaps/gap_{gap_index:03d}.bin",
+            "sha256": hashlib.sha256(payload).hexdigest(),
+        })
+    return {
+        "name": name,
+        "file_index": file_index,
+        "size": len(data),
+        "wave_count": bank["wave_count"],
+        "component_count": len(components),
+        "components": components,
+    }
+
+
 def parse_pointer_bank(data: bytes, sample_data: bytes, name: str) -> dict:
     require(data[:16] == PTR_MAGIC, f"{name} pointer-bank magic is invalid")
     require(sample_data[:16] == WAVE_MAGIC, f"{name} wave-bank magic is invalid")
@@ -249,6 +313,10 @@ def inventory(rom: bytes) -> dict:
     payloads = [rom[item["start"]:item["end"]] for item in files]
     parsed = validate_payloads(payloads)
     gaps = describe_gaps(rom, files)
+    sample_banks = [
+        describe_sample_bank(payloads[2], parsed["sfx"]["pointer_bank"], "sfx", 2),
+        describe_sample_bank(payloads[4], parsed["music"]["pointer_bank"], "music", 4),
+    ]
     return {
         "format": "BattleTanx Global Assault libmus inventory v1",
         "rom_sha1": digest,
@@ -261,6 +329,7 @@ def inventory(rom: bytes) -> dict:
         "alignment_bytes": sum(item["size"] for item in gaps),
         "files": files,
         "gaps": gaps,
+        "sample_banks": sample_banks,
         **parsed,
     }
 
@@ -277,6 +346,13 @@ def extract(rom: bytes, report: dict, output: Path) -> None:
         (gaps_dir / f"gap_{item['index']:02d}.bin").write_bytes(
             rom[item["start"]:item["end"]]
         )
+    for bank in report["sample_banks"]:
+        file_item = report["files"][bank["file_index"]]
+        payload = rom[file_item["start"]:file_item["end"]]
+        for item in bank["components"]:
+            path = output / item["path"]
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(payload[item["start"]:item["end"]])
 
 
 def main() -> None:

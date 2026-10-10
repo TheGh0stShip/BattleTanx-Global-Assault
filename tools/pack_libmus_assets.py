@@ -29,6 +29,29 @@ def _read_component(path: Path, item: dict, require_original: bool) -> bytes:
     return payload
 
 
+def _rebuild_sample_bank(source: Path, bank: dict,
+                         require_original: bool) -> bytes:
+    parts = []
+    cursor = 0
+    for item in sorted(bank["components"], key=lambda entry: entry["start"]):
+        if item["start"] != cursor:
+            relation = "overlap" if item["start"] < cursor else "uncovered range"
+            raise AudioPackError(
+                f"{bank['name']} sample component creates an {relation} at 0x{cursor:X}"
+            )
+        path = source / item["path"]
+        payload = _read_component(path, item, require_original)
+        if item["end"] - item["start"] != len(payload):
+            raise AudioPackError(f"{path.name} has inconsistent manifest bounds")
+        parts.append(payload)
+        cursor = item["end"]
+    if cursor != bank["size"]:
+        raise AudioPackError(
+            f"{bank['name']} sample bank ends at 0x{cursor:X}, expected 0x{bank['size']:X}"
+        )
+    return b"".join(parts)
+
+
 def rebuild(manifest: dict, source: Path, require_original: bool = False) -> bytes:
     files = manifest.get("files", [])
     gaps = manifest.get("gaps", [])
@@ -41,12 +64,30 @@ def rebuild(manifest: dict, source: Path, require_original: bool = False) -> byt
 
     parts: list[tuple[int, int, bytes, str]] = []
     payloads = []
+    semantic_banks = {
+        item["file_index"]: item for item in manifest.get("sample_banks", [])
+    }
     for expected_index, item in enumerate(files):
         if item.get("index") != expected_index:
             raise AudioPackError("manifest file indices are not contiguous")
-        payload = _read_component(
-            source / f"file_{expected_index:02d}.bin", item, require_original
-        )
+        if expected_index in semantic_banks:
+            payload = _rebuild_sample_bank(
+                source, semantic_banks[expected_index], require_original
+            )
+            if len(payload) != item["size"]:
+                raise AudioPackError(
+                    f"semantic file {expected_index} is {len(payload)} bytes; "
+                    f"expected {item['size']}"
+                )
+            if (require_original and
+                    hashlib.sha256(payload).hexdigest() != item["sha256"]):
+                raise AudioPackError(
+                    f"semantic file {expected_index} does not match the retail hash"
+                )
+        else:
+            payload = _read_component(
+                source / f"file_{expected_index:02d}.bin", item, require_original
+            )
         payloads.append(payload)
         parts.append((item["start"], item["end"], payload,
                       f"file {expected_index}"))
