@@ -16,6 +16,5 @@ f32 func_8009D8A0(f32 arg0) {
         value += D_800725B0;
     }
     result = ((f32)value / D_800725B8) * arg0;
-    __asm__ volatile ("" : : "f"(result));
     return result;
 }

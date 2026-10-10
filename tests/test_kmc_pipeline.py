@@ -480,6 +480,57 @@ class KmcPipelineTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.schedule_pool_type4_removal("func_8007E7A8:\n\tnop\n")
 
+    def test_text_character_map_requires_both_patterns(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "lookup=0, loop=0"):
+            MODULE.shape_text_character_map("func_80099160:\n\tnop\n")
+
+    def test_text_character_map_rewrites_lookup_and_loop(self) -> None:
+        source = (
+            "func_80099160:\n"
+            "\t.set\tnoreorder\n"
+            "\tbeql\t$2,$0,.L10\n"
+            "\tsb\t$3,0($4)\n"
+            "\t.set\tnoreorder\n"
+            "\tlui\t$at,%hi(D_80114814)\n"
+            "\taddu\t$at,$at,$7\n"
+            "\tlbu\t$3,%lo(D_80114814)($at)\n"
+            ".L6:\n"
+            "\tslt\t$2,$8,$6\n"
+            "\tsltu\t$3,$0,$7\n"
+            "\tand\t$2,$2,$3\n"
+            "\t.set\tnoreorder\n"
+            "\tbne\t$2,$0,.L4\n"
+            "\taddu\t$5,$5,1\n"
+        )
+        normalized = MODULE.shape_text_character_map(source)
+        self.assertIn("\tbeq\t$2,$0,.L6\n\tandi\t$2,$7,0x00ff\n", normalized)
+        self.assertIn("\taddu\t$at,$at,$2\n", normalized)
+        self.assertIn("\tslt\t$3,$8,$6\n\tsltu\t$2,$0,$7\n", normalized)
+        self.assertIn("\tbnel\t$2,$0,.L4\n", normalized)
+
+    def test_grid_overlap_query_requires_every_pattern(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired"):
+            MODULE.shape_grid_overlap_query("func_800B33FC:\n\tmove\t$11,$4\n")
+
+    def test_grid_overlap_query_preserves_shared_narrowing_return(self) -> None:
+        source = (
+            "func_800B33FC:\n"
+            "\tmove\t$11,$4\n"
+            "\tlhu\t$2,16($8)\n\tlhu\t$4,16($9)\n\t#nop\n"
+            "\tbne\t$2,$0,.L5\n\tandi\t$11,$11,0xffff\n"
+            "\tbeq\t$2,$0,.L10\n\tandi\t$4,$11,0xffff\n"
+            "\tslt\t$2,$2,$3\n\t.set\tnoreorder\n"
+            "\tbne\t$2,$0,.L8\n\tmove\t$2,$0\n"
+            "\tbeq\t$3,$0,.L3\n\tandi\t$4,$11,0xffff\n"
+            "\tj\t.L8\n\tmove\t$2,$0\n"
+            "\tandi\t$2,$2,0xffff\n.L8:\n"
+        )
+        normalized = MODULE.shape_grid_overlap_query(source)
+        self.assertIn("\tandi\t$11,$4,0xffff\n", normalized)
+        self.assertIn("\tbne\t$2,$0,.Lkmc_narrow_800B33FC\n", normalized)
+        self.assertIn("\tj\t.Lkmc_narrow_800B33FC\n", normalized)
+        self.assertIn(".Lkmc_narrow_800B33FC:\n\tandi\t$2,$2,0xffff\n", normalized)
+
     def test_pool_type4_removal_schedules_state_before_call(self) -> None:
         source = (
             "func_8007E7A8:\n"
@@ -993,6 +1044,84 @@ class KmcPipelineTests(unittest.TestCase):
         )
         normalized = MODULE.reproduce_lzari_load_hazards(source)
         self.assertEqual(normalized.count("\tlw\t$2,0($17)\n\tnop\n\tdivu"), 2)
+
+    def test_runtime_fields_init_requires_both_patterns(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "clear=1, tail=0"):
+            MODULE.shape_runtime_fields_init(
+                "func_80088B6C:\n\tsw\t$6,180($16)\n"
+            )
+
+    def test_runtime_fields_init_restores_clear_and_tail_order(self) -> None:
+        source = (
+            "func_80088B6C:\n"
+            "\tsw\t$6,180($16)\n"
+            "\tl.s\t$f0,0($18)\n"
+            "\tli\t$2,0x00000002\t\t# 2\n"
+            "\tsb\t$2,17($17)\n"
+            "\ts.s\t$f0,20($17)\n"
+            "\tl.s\t$f0,4($18)\n"
+            "\t#nop\n"
+            "\ts.s\t$f0,24($17)\n"
+        )
+        normalized = MODULE.shape_runtime_fields_init(source)
+        self.assertIn(
+            "\tsw\t$0,180($16)\n\tsw\t$6,180($16)\n", normalized
+        )
+        self.assertIn(
+            "\tl.s\t$f0,0($18)\n"
+            "\ts.s\t$f0,20($17)\n"
+            "\tl.s\t$f0,4($18)\n"
+            "\tli\t$2,0x00000002\t\t# 2\n"
+            "\tsb\t$2,17($17)\n"
+            "\ts.s\t$f0,24($17)\n",
+            normalized,
+        )
+
+    def test_segment_endpoint_clamp_rejects_partial_function(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, r"expected \[1, 1, 1, 1\]"):
+            MODULE.shape_segment_endpoint_clamp_registers(
+                "func_800B5C48:\n\tnop\n"
+            )
+
+    def test_search_iterator_rejects_partial_first_inline(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.shape_search_iterator_first_inline(
+                "func_800A9928:\n\tnop\n"
+            )
+
+    def test_ai_node_setup_rejects_partial_frame(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "frame rewrite fired"):
+            MODULE.shape_ai_node_setup_frame("func_800852F8:\n\tnop\n")
+
+    def test_model_display_patch_rejects_partial_setup(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "table setup fired 0 times"):
+            MODULE.shape_model_display_patch_registers(
+                "func_80095F08:\n\tnop\n\t.end\tfunc_80095F08\n"
+            )
+
+    def test_shell_update_requires_both_schedules(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, r"expected \(1, 1\)"):
+            MODULE.schedule_shell_update_allocations(
+                "func_800EC8E8:\n\tsw\t$16,104($sp)\n"
+            )
+
+    def test_destroyed_object_update_requires_all_regions(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, r"expected \[1, 1, 1\]"):
+            MODULE.shape_destroyed_object_update_allocations(
+                "func_800EA224:\n\tnop\n"
+            )
+
+    def test_billboard_command_update_requires_body(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "body not found"):
+            MODULE.shape_billboard_command_update_allocations(
+                "func_800EBDA0:\n\tnop\n"
+            )
+
+    def test_object_search_loop_requires_entry_and_call(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, r"expected \(1, 1, 1\)"):
+            MODULE.merge_object_search_loop_entry(
+                "func_80084278:\n\tnop\n"
+            )
 
 
 if __name__ == "__main__":

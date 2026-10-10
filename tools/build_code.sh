@@ -146,7 +146,6 @@ for spec in \
     main_80097FB4_to_8009813C:0x188 \
     main_8009859C_to_800985A0:0x4 \
     main_800988E8_to_80098AFC:0x214 \
-    main_80099160_to_800991CC:0x6c \
     main_80099824_to_80099830:0xc \
     main_8009B0F0_to_8009B35C:0x26c \
     main_8009B694_to_8009C098:0xa04
@@ -1598,8 +1597,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/func_8009D510.c.o .rodata 0x4 --alignment 4
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/func_8009D8A0.c.o .rodata 0xC --alignment 4
-python3 tools/trim_elf32_section.py \
     build/us/src/code/func_8009EF4C.c.o .rodata 0x4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/func_8009EFD4.c.o .rodata 0x4 --alignment 4
@@ -1658,8 +1655,14 @@ while IFS=$'\t' read -r unit address text_size status; do
     case "$unit" in
         \#*|unit|'') continue ;;
     esac
+    extra_cflags=()
+    case "$status" in
+        compiler-normalizer-assisted-no-cse-skip-blocks)
+            extra_cflags+=(-fno-cse-skip-blocks)
+            ;;
+    esac
     .toolchain/kmc-gcc-2.7.2/gcc -B.toolchain/kmc-gcc-2.7.2/ -S \
-        -O2 -G0 -mips3 -mgp32 -mfp32 -Iinclude \
+        -O2 -G0 -mips3 -mgp32 -mfp32 "${extra_cflags[@]}" -Iinclude \
         -o "build/us/src/code/${unit}.raw.s" "src/code/${unit}.c"
     python3 tools/normalize_kmc_gcc_asm.py \
         "build/us/src/code/${unit}.raw.s" "build/us/src/code/${unit}.s"
@@ -4180,7 +4183,7 @@ if false; then
     build/us/src/code/func_80098FBC.c.o \
     build/us/src/code/func_80099028.c.o \
     build/us/src/code/func_80099080.c.o \
-    build/us/asm/us/main_80099160_to_800991CC.s.o \
+    build/us/src/code/text_character_map.c.o \
     build/us/src/code/800991CC.c.o \
     build/us/src/code/func_800992E0.c.o \
     build/us/src/code/func_800993B0.c.o \
@@ -4378,7 +4381,7 @@ if false; then
     build/us/src/code/800B2890.c.o \
     build/us/asm/us/main_800B3018_to_800B3368.s.o \
     build/us/src/code/800B3368.c.o \
-    build/us/asm/us/main_800B33FC_to_800B3504.s.o \
+    build/us/src/code/grid_overlap_query.c.o \
     build/us/src/code/800B3504.c.o \
     build/us/asm/us/main_800B3748_to_800B4684.s.o \
     build/us/src/code/800B4684_collision_query.c.o \

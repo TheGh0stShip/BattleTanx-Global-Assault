@@ -342,3 +342,7 @@ libmus/800FCBB0_player_effects	0x80077620	0x8
 libmus/800FD10C_player_bank_math	0x80077628	0x70
 libultra/exceptasm	0x80077880	0x44
 libultra/libm_vals	0x80077930	0x10
+ai_node_setup	0x80071350	0xC
+shell_update	0x80076720	0x38
+destroyed_object_update	0x80076260	0x28
+ai_object_search_update	0x800712F0	0x30

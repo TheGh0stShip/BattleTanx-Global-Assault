@@ -55,6 +55,8 @@ def main() -> None:
         if name in manual:
             entry = manual[name]
             line += f" // type:{entry['type']} size:0x{int(entry['size']):X}"
+            if entry.get("absolute", False):
+                line += " absolute:True"
         elif name in functions:
             line += f" // type:func size:0x{functions[name][1]:X}"
         output.append(line)

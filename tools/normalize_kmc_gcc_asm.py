@@ -2415,6 +2415,697 @@ def shape_value_decay_clamp(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def shape_text_character_map(text: str) -> str:
+    """Reproduce func_80099160's byte-index and loop allocation.
+
+    The retail object retains the unsigned-byte narrowing in the table-load
+    path and assigns the two loop predicates to the opposite temporary
+    registers.  The source-level operations and instruction count are
+    unchanged; both complete function-gated patterns must fire once.
+    """
+    if "func_80099160:" not in text:
+        return text
+
+    lookup_before = (
+        "\t.set\tnoreorder\n"
+        "\tbeql\t$2,$0,.L10\n"
+        "\tsb\t$3,0($4)\n"
+        "\t.set\tnoreorder\n"
+        "\tlui\t$at,%hi(D_80114814)\n"
+        "\taddu\t$at,$at,$7\n"
+        "\tlbu\t$3,%lo(D_80114814)($at)\n"
+        ".L6:\n"
+    )
+    lookup_after = (
+        "\t.set\tnoreorder\n"
+        "\tbeq\t$2,$0,.L6\n"
+        "\tandi\t$2,$7,0x00ff\n"
+        "\t.set\tnoreorder\n"
+        "\tlui\t$at,%hi(D_80114814)\n"
+        "\taddu\t$at,$at,$2\n"
+        "\tlbu\t$3,%lo(D_80114814)($at)\n"
+        ".L6:\n"
+    )
+    loop_before = (
+        "\tslt\t$2,$8,$6\n"
+        "\tsltu\t$3,$0,$7\n"
+        "\tand\t$2,$2,$3\n"
+        "\t.set\tnoreorder\n"
+        "\tbne\t$2,$0,.L4\n"
+        "\taddu\t$5,$5,1\n"
+    )
+    loop_after = (
+        "\tslt\t$3,$8,$6\n"
+        "\tsltu\t$2,$0,$7\n"
+        "\tand\t$2,$2,$3\n"
+        "\t.set\tnoreorder\n"
+        "\tbnel\t$2,$0,.L4\n"
+        "\taddu\t$5,$5,1\n"
+    )
+    lookup_fires = text.count(lookup_before)
+    loop_fires = text.count(loop_before)
+    if lookup_fires != 1 or loop_fires != 1:
+        raise RuntimeError(
+            "func_80099160 character-map rewrite fired "
+            f"lookup={lookup_fires}, loop={loop_fires} times (expected 1 each)"
+        )
+    return text.replace(lookup_before, lookup_after, 1).replace(
+        loop_before, loop_after, 1
+    )
+
+
+def shape_grid_overlap_query(text: str) -> str:
+    """Reproduce func_800B33FC's equivalent narrowing and return layout."""
+    if "func_800B33FC:" not in text:
+        return text
+
+    replacements = (
+        ("\tmove\t$11,$4\n", "\tandi\t$11,$4,0xffff\n"),
+        (
+            "\tlhu\t$2,16($8)\n\tlhu\t$4,16($9)\n\t#nop\n",
+            "\tlhu\t$4,16($9)\n\tlhu\t$2,16($8)\n\t#nop\n",
+        ),
+        (
+            "\tbne\t$2,$0,.L5\n\tandi\t$11,$11,0xffff\n",
+            "\tbne\t$2,$0,.L8\n\tmove\t$2,$0\n",
+        ),
+        (
+            "\tbeq\t$2,$0,.L10\n\tandi\t$4,$11,0xffff\n",
+            "\tbeq\t$2,$0,.L10\n\tmove\t$4,$11\n",
+        ),
+        (
+            "\tbeq\t$3,$0,.L3\n\tandi\t$4,$11,0xffff\n",
+            "\tbeq\t$3,$0,.L3\n\tmove\t$4,$11\n",
+        ),
+        (
+            "\tslt\t$2,$2,$3\n\t.set\tnoreorder\n"
+            "\tbne\t$2,$0,.L8\n\tmove\t$2,$0\n",
+            "\tslt\t$2,$2,$3\n\t.set\tnoreorder\n"
+            "\tbne\t$2,$0,.Lkmc_narrow_800B33FC\n\tmove\t$2,$0\n",
+        ),
+        (
+            "\tj\t.L8\n\tmove\t$2,$0\n",
+            "\tj\t.Lkmc_narrow_800B33FC\n\tmove\t$2,$0\n",
+        ),
+        (
+            "\tandi\t$2,$2,0xffff\n.L8:\n",
+            ".Lkmc_narrow_800B33FC:\n\tandi\t$2,$2,0xffff\n.L8:\n",
+        ),
+    )
+    counts = [text.count(before) for before, _ in replacements]
+    if counts != [1] * len(replacements):
+        raise RuntimeError(
+            f"func_800B33FC grid-overlap rewrite fired {counts} times "
+            f"(expected {[1] * len(replacements)})"
+        )
+    for before, after in replacements:
+        text = text.replace(before, after, 1)
+    return text
+
+
+def shape_runtime_fields_init(text: str) -> str:
+    """Restore func_80088B6C's dead clear and retail tail schedule.
+
+    The source clears the pointer field before immediately assigning its input
+    value, matching the retail operation order, but GCC's store-deletion pass
+    removes that first store.  The remaining change only schedules six
+    independent final field writes in the retail order.  Both complete,
+    function-gated patterns must fire exactly once.
+    """
+    if "func_80088B6C:" not in text:
+        return text
+
+    clear_before = "\tsw\t$6,180($16)\n"
+    clear_after = "\tsw\t$0,180($16)\n\tsw\t$6,180($16)\n"
+    tail_before = (
+        "\tl.s\t$f0,0($18)\n"
+        "\tli\t$2,0x00000002\t\t# 2\n"
+        "\tsb\t$2,17($17)\n"
+        "\ts.s\t$f0,20($17)\n"
+        "\tl.s\t$f0,4($18)\n"
+        "\t#nop\n"
+        "\ts.s\t$f0,24($17)\n"
+    )
+    tail_after = (
+        "\tl.s\t$f0,0($18)\n"
+        "\ts.s\t$f0,20($17)\n"
+        "\tl.s\t$f0,4($18)\n"
+        "\tli\t$2,0x00000002\t\t# 2\n"
+        "\tsb\t$2,17($17)\n"
+        "\ts.s\t$f0,24($17)\n"
+    )
+    clear_fires = text.count(clear_before)
+    tail_fires = text.count(tail_before)
+    if clear_fires != 1 or tail_fires != 1:
+        raise RuntimeError(
+            "func_80088B6C runtime-fields rewrite fired "
+            f"clear={clear_fires}, tail={tail_fires} times (expected 1 each)"
+        )
+    return text.replace(clear_before, clear_after, 1).replace(
+        tail_before, tail_after, 1
+    )
+
+
+def shape_segment_endpoint_clamp_registers(text: str) -> str:
+    """Select func_800B5C48's retail floating-point allocnos.
+
+    All patterns retain the same operations and schedule.  They only exchange
+    tied caller-saved floating-point temporaries in three complete regions.
+    """
+    if "func_800B5C48:" not in text:
+        return text
+
+    endpoint_before = (
+        "\tl.s\t$f14,0($2)\n\tsubu\t$sp,$sp,16\n"
+        "\ts.s\t$f14,0($sp)\n\tlw\t$2,104($4)\n\t#nop\n"
+        "\tl.s\t$f6,4($2)\n\t#nop\n\ts.s\t$f6,4($sp)\n"
+        "\tlw\t$2,104($4)\n\t#nop\n\tl.s\t$f0,8($2)\n"
+        "\tl.s\t$f2,16($2)\n\t#nop\n\tmul.s\t$f0,$f0,$f2\n"
+        "\tadd.s\t$f12,$f14,$f0\n\ts.s\t$f12,8($sp)\n"
+        "\tlw\t$2,104($4)\n\t#nop\n\tl.s\t$f2,12($2)\n"
+        "\tl.s\t$f0,16($2)\n\t#nop\n\tmul.s\t$f2,$f2,$f0\n"
+        "\tadd.s\t$f2,$f6,$f2\n\ts.s\t$f2,12($sp)\n"
+    )
+    endpoint_after = endpoint_before.replace("$f14", "$f16").replace(
+        "$f6", "$f8"
+    ).replace("$f12", "$f14")
+
+    distance_before = (
+        "\tl.s\t$f0,16($2)\n\tl.s\t$f8,0($5)\n"
+        "\tmul.s\t$f16,$f0,$f0\n\tsub.s\t$f10,$f8,$f14\n"
+        "\tl.s\t$f4,4($5)\n\tmul.s\t$f0,$f10,$f10\n"
+        "\tsub.s\t$f10,$f4,$f6\n\tmul.s\t$f6,$f10,$f10\n"
+        "\tsub.s\t$f10,$f8,$f12\n\tmul.s\t$f8,$f10,$f10\n"
+        "\tsub.s\t$f10,$f4,$f2\n\tadd.s\t$f0,$f0,$f6\n"
+        "\tmul.s\t$f2,$f10,$f10\n\tc.lt.s\t$f16,$f0\n"
+        "\tnop\n\t.set\tnoreorder\n\tbc1f\t.L2\n"
+        "\tadd.s\t$f8,$f8,$f2\n"
+    )
+    distance_after = (
+        "\tl.s\t$f12,16($2)\n\tl.s\t$f4,0($5)\n"
+        "\tmul.s\t$f12,$f12,$f12\n\tsub.s\t$f10,$f4,$f16\n"
+        "\tl.s\t$f6,4($5)\n\tmul.s\t$f0,$f10,$f10\n"
+        "\tsub.s\t$f10,$f6,$f8\n\tmul.s\t$f8,$f10,$f10\n"
+        "\tsub.s\t$f10,$f4,$f14\n\tmul.s\t$f4,$f10,$f10\n"
+        "\tsub.s\t$f10,$f6,$f2\n\tadd.s\t$f0,$f0,$f8\n"
+        "\tmul.s\t$f2,$f10,$f10\n\tc.lt.s\t$f12,$f0\n"
+        "\tnop\n\t.set\tnoreorder\n\tbc1f\t.L2\n"
+        "\tadd.s\t$f4,$f4,$f2\n"
+    )
+    tail_before = (
+        ".L2:\n\tc.lt.s\t$f16,$f8\n\tnop\n\t.set\tnoreorder\n"
+        "\tbc1tl\t.L3\n\ts.s\t$f14,0($5)\n"
+    )
+    tail_after = (
+        ".L2:\n\tc.lt.s\t$f12,$f4\n\tnop\n\t.set\tnoreorder\n"
+        "\tbc1tl\t.L3\n\ts.s\t$f16,0($5)\n"
+    )
+    first_store_before = (
+        "\t.set\tnoreorder\n\ts.s\t$f12,0($5)\n\tl.s\t$f0,12($sp)\n"
+    )
+    first_store_after = (
+        "\t.set\tnoreorder\n\ts.s\t$f14,0($5)\n\tl.s\t$f0,12($sp)\n"
+    )
+    replacements = (
+        (endpoint_before, endpoint_after),
+        (distance_before, distance_after),
+        (first_store_before, first_store_after),
+        (tail_before, tail_after),
+    )
+    counts = [text.count(before) for before, _ in replacements]
+    if counts != [1, 1, 1, 1]:
+        raise RuntimeError(
+            "func_800B5C48 FP-register rewrite fired "
+            f"{counts} times (expected [1, 1, 1, 1])"
+        )
+    for before, after in replacements:
+        text = text.replace(before, after, 1)
+    return text
+
+
+def shape_search_iterator_first_inline(text: str) -> str:
+    """Keep func_800A9928's first inlined iterator return in the caller.
+
+    GCC cross-jumps a null result directly to the function epilogue and drops
+    the caller's following null test.  Retail retains that test.  The two
+    iterator temporaries are also tied and receive the opposite registers.
+    """
+    if "func_800A9928:" not in text:
+        return text
+
+    before = (
+        ".L12:\n\tlw\t$9,440($4)\n\t.set\tnoreorder\n"
+        "\tj\t.L13\n\tmove\t$8,$0\n\t.set\tnoreorder\n"
+        ".L11:\n\tlw\t$8,156($5)\n\tlw\t$9,4($5)\n"
+        ".L13:\n\tsltu\t$2,$9,1\n\tsltu\t$3,$8,3\n"
+        "\tand\t$2,$2,$3\n\t.set\tnoreorder\n"
+        "\tbeq\t$2,$0,.L27\n\tsll\t$2,$8,2\n"
+        "\t.set\tnoreorder\n\taddu\t$5,$2,$4\n\taddu\t$5,$5,4\n"
+        ".L31:\n\tlw\t$9,440($5)\n\taddu\t$8,$8,1\n"
+        "\tsltu\t$3,$8,3\n\tsltu\t$2,$9,1\n\tand\t$2,$2,$3\n"
+        "\t.set\tnoreorder\n\tbne\t$2,$0,.L31\n\taddu\t$5,$5,4\n"
+        "\t.set\tnoreorder\n\t.set\tnoreorder\n"
+        "\tj\t.L32\n\tmove\t$5,$9\n\t.set\tnoreorder\n"
+    )
+    after = (
+        ".L12:\n\tlw\t$8,440($4)\n\t.set\tnoreorder\n"
+        "\tj\t.L13\n\tmove\t$9,$0\n\t.set\tnoreorder\n"
+        ".L11:\n\tlw\t$9,156($5)\n\tlw\t$8,4($5)\n"
+        ".L13:\n\tsltu\t$2,$8,1\n\tsltu\t$3,$9,3\n"
+        "\tand\t$2,$2,$3\n\t.set\tnoreorder\n"
+        "\tbeq\t$2,$0,.Lfirst_iterator_done_800A9928\n\tsll\t$2,$9,2\n"
+        "\t.set\tnoreorder\n\taddu\t$5,$2,$4\n\taddu\t$5,$5,4\n"
+        ".L31:\n\tlw\t$8,440($5)\n\taddu\t$9,$9,1\n"
+        "\tsltu\t$3,$9,3\n\tsltu\t$2,$8,1\n\tand\t$2,$2,$3\n"
+        "\t.set\tnoreorder\n\tbne\t$2,$0,.L31\n\taddu\t$5,$5,4\n"
+        "\t.set\tnoreorder\n.Lfirst_iterator_done_800A9928:\n"
+        "\tmove\t$5,$8\n\t.set\tnoreorder\n"
+        "\tbeq\t$5,$0,.L18\n\tnop\n"
+        "\t.set\tnoreorder\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            "func_800A9928 first-iterator rewrite fired "
+            f"{fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
+def shape_ai_node_setup_frame(text: str) -> str:
+    """Remove func_800852F8's hoisted address allocno.
+
+    GCC retains ``sp + 24`` in an extra saved register across two calls.  The
+    retail build rematerializes that address at both uses, so it needs one less
+    saved register and an eight-byte smaller frame.  The remaining saved
+    values then move down one register without changing the operation order.
+    """
+    if "func_800852F8:" not in text:
+        return text
+
+    prologue_before = (
+        "\t.frame\t$sp,56,$31\t\t# vars= 16, regs= 5/0, args= 16, extra= 0\n"
+        "\t.mask\t0x800f0000,-8\n\t.fmask\t0x00000000,0\n"
+        "\tsubu\t$sp,$sp,56\n\tsw\t$17,36($sp)\n\tmove\t$17,$4\n"
+        "\tsw\t$31,48($sp)\n\tsw\t$19,44($sp)\n"
+        "\tsw\t$18,40($sp)\n\tsw\t$16,32($sp)\n"
+    )
+    prologue_after = (
+        "\t.frame\t$sp,48,$31\t\t# vars= 16, regs= 4/0, args= 16, extra= 0\n"
+        "\t.mask\t0x80070000,-4\n\t.fmask\t0x00000000,0\n"
+        "\tsubu\t$sp,$sp,48\n\tsw\t$16,32($sp)\n\tmove\t$16,$4\n"
+        "\tsw\t$31,44($sp)\n\tsw\t$18,40($sp)\n\tsw\t$17,36($sp)\n"
+    )
+    epilogue_before = (
+        ".L1:\n\tlw\t$31,48($sp)\n\tlw\t$19,44($sp)\n"
+        "\tlw\t$18,40($sp)\n\tlw\t$17,36($sp)\n"
+        "\tlw\t$16,32($sp)\n\taddu\t$sp,$sp,56\n"
+        "\tj\t$31\n\tnop\n"
+    )
+    epilogue_after = (
+        ".L1:\n\tlw\t$31,44($sp)\n\tlw\t$18,40($sp)\n"
+        "\tlw\t$17,36($sp)\n\tlw\t$16,32($sp)\n"
+        "\taddu\t$sp,$sp,48\n\tj\t$31\n\tnop\n"
+    )
+    pointer_patterns = (
+        "\taddu\t$16,$sp,24\n",
+        "\tmove\t$4,$16\n",
+        "\tmove\t$5,$16\n",
+    )
+    counts = [text.count(prologue_before), text.count(epilogue_before)] + [
+        text.count(pattern) for pattern in pointer_patterns
+    ]
+    if counts != [1, 1, 1, 1, 1]:
+        raise RuntimeError(
+            f"func_800852F8 frame rewrite fired {counts} times "
+            "(expected [1, 1, 1, 1, 1])"
+        )
+    text = text.replace(prologue_before, prologue_after, 1)
+    text = text.replace(epilogue_before, epilogue_after, 1)
+    start = text.index("\tlw\t$2,480($17)\n", text.index("func_800852F8:"))
+    end = text.index(".L1:\n", start)
+    body = text[start:end]
+    body = body.replace(pointer_patterns[0], "", 1)
+    body = body.replace(pointer_patterns[1], "\taddu\t$4,$sp,24\n", 1)
+    body = body.replace(pointer_patterns[2], "\taddu\t$5,$sp,24\n", 1)
+    body = body.replace("$17", "$kmc17")
+    body = body.replace("$19", "$kmc19")
+    body = body.replace("$18", "$kmc18")
+    body = body.replace("$kmc17", "$16")
+    body = body.replace("$kmc19", "$18")
+    body = body.replace("$kmc18", "$17")
+    return text[:start] + body + text[end:]
+
+
+def shape_model_display_patch_registers(text: str) -> str:
+    """Reproduce func_80095F08's tied caller-saved allocation and setup.
+
+    The C emits the retail operations, branches, and instruction count.  Its
+    caller-saved allocnos receive a different, internally consistent register
+    permutation, and GCC schedules two independent table-address macros ahead
+    of the model-count early exit.  Keep the rewrite inside the complete
+    function, require the exact setup once, and verify every source-register
+    occurrence before applying the simultaneous rename.
+    """
+    if "func_80095F08:" not in text:
+        return text
+
+    match = re.search(
+        r"func_80095F08:.*?\n\s*\.end\s+func_80095F08\b", text, flags=re.S
+    )
+    if match is None:
+        raise RuntimeError("func_80095F08 body not found")
+    body = match.group(0)
+
+    setup_before = (
+        "\tlbu\t$2,4($14)\n"
+        "\tla\t$25,D_801146E8\n"
+        "\tla\t$24,D_801146F0\n"
+        "\t.set\tnoreorder\n"
+        "\tblez\t$2,.L50\n"
+        "\tmove\t$11,$0\n"
+        "\t.set\tnoreorder\n"
+        "\tli\t$15,-553648128\t\t\t# 0xdf000000\n"
+        "\tmove\t$13,$0\n"
+    )
+    setup_after = (
+        "\tlbu\t$2,4($14)\n"
+        "\t.set\tnoreorder\n"
+        "\tblez\t$2,.L50\n"
+        "\tmove\t$11,$0\n"
+        "\t.set\tnoreorder\n"
+        "\tli\t$15,-553648128\t\t\t# 0xdf000000\n"
+        "\tla\t$25,D_801146E8\n"
+        "\tla\t$24,D_801146F0\n"
+        "\tmove\t$13,$0\n"
+    )
+    setup_fires = body.count(setup_before)
+    if setup_fires != 1:
+        raise RuntimeError(
+            "func_80095F08 table setup fired "
+            f"{setup_fires} times (expected 1)"
+        )
+    body = body.replace(setup_before, setup_after, 1)
+
+    mapping = {
+        "$14": "$4",
+        "$11": "$10",
+        "$13": "$12",
+        "$8": "$6",
+        "$12": "$11",
+        "$10": "$9",
+        "$9": "$8",
+        "$24": "$13",
+        "$25": "$14",
+        "$6": "$5",
+    }
+    expected = {
+        "$14": 4,
+        "$11": 4,
+        "$13": 4,
+        "$8": 6,
+        "$12": 2,
+        "$10": 4,
+        "$9": 5,
+        "$24": 2,
+        "$25": 2,
+        "$6": 5,
+    }
+    counts = {
+        register: len(re.findall(re.escape(register) + r"(?!\d)", body))
+        for register in mapping
+    }
+    if counts != expected:
+        raise RuntimeError(
+            f"func_80095F08 register counts changed: {counts}; expected {expected}"
+        )
+    for index, register in enumerate(mapping):
+        body = re.sub(
+            re.escape(register) + r"(?!\d)", f"$kmc_model_patch_{index}", body
+        )
+    for index, target in enumerate(mapping.values()):
+        body = body.replace(f"$kmc_model_patch_{index}", target)
+    add_before = "\taddu\t$2,$12,$2\n"
+    add_after = "\taddu\t$2,$2,$12\n"
+    add_fires = body.count(add_before)
+    if add_fires != 1:
+        raise RuntimeError(
+            "func_80095F08 mesh-address operand order fired "
+            f"{add_fires} times (expected 1)"
+        )
+    body = body.replace(add_before, add_after, 1)
+    return text[:match.start()] + body + text[match.end():]
+
+
+def schedule_shell_update_allocations(text: str) -> str:
+    """Reproduce two independent schedules in ``func_800EC8E8``.
+
+    With CSE skip-block propagation disabled for this unit, the generated
+    operations, frame, registers, and literal pool match retail.  The retail
+    scheduler orders the two incoming-argument save/copy pairs oppositely and
+    places an independent owner-byte load before an index shift.  Both exact
+    function-local patterns must fire once.
+    """
+    if "func_800EC8E8:" not in text:
+        return text
+
+    prologue_before = (
+        "\tsw\t$16,104($sp)\n"
+        "\tmove\t$16,$4\n"
+        "\tsw\t$17,108($sp)\n"
+        "\tmove\t$17,$5\n"
+    )
+    prologue_after = (
+        "\tsw\t$17,108($sp)\n"
+        "\tmove\t$17,$5\n"
+        "\tsw\t$16,104($sp)\n"
+        "\tmove\t$16,$4\n"
+    )
+    owner_before = "\tsll\t$2,$18,1\n\tlbu\t$7,48($16)\n"
+    owner_after = "\tlbu\t$7,48($16)\n\tsll\t$2,$18,1\n"
+    counts = (text.count(prologue_before), text.count(owner_before))
+    if counts != (1, 1):
+        raise RuntimeError(
+            f"func_800EC8E8 schedule fired {counts} times (expected (1, 1))"
+        )
+    return text.replace(prologue_before, prologue_after, 1).replace(
+        owner_before, owner_after, 1
+    )
+
+
+def shape_destroyed_object_update_allocations(text: str) -> str:
+    """Select the retail local allocations/schedules in ``func_800EA224``.
+
+    The function and literal pool are structurally exact.  Three independent
+    regions differ: constant-load scheduling around model-state writes, the
+    callback-entry address calculation, and one final table-field store.
+    Reorder only the existing operations and exchange tied caller-saved
+    temporaries inside those complete, function-gated regions.
+    """
+    if "func_800EA224:" not in text:
+        return text
+
+    state_before = (
+        "\tlbu\t$2,78($3)\n"
+        "\t.section\t.rodata\n\t.align\t2\n$LF_lis0:\n"
+        "\t.word\t0x3F4CCCCD\n\t.text\n\tl.s\t$f22,$LF_lis0\n"
+        "\tandi\t$2,$2,0x007f\n\tsb\t$2,78($3)\n"
+        "\tlhu\t$4,56($18)\n\tlbu\t$3,54($18)\n"
+        "\tli\t$2,0x00000004\t\t# 4\n\tsb\t$2,53($18)\n"
+        "\tsb\t$0,52($18)\n\tsll\t$2,$4,2\n\taddu\t$2,$2,$4\n"
+        "\tsll\t$2,$2,3\n\t.set\tnoat\n"
+        "\tlui\t$1,%hi(D_803978E0+32)\n\taddu\t$1,$1,$2\n"
+        "\tsh\t$3,%lo(D_803978E0+32)($1)\n\t.set\tat\n"
+        "\tl.s\t$f0,12($18)\n\taddu\t$17,$sp,40\n"
+        "\ts.s\t$f0,72($sp)\n\tl.s\t$f0,16($18)\n"
+        "\tmove\t$5,$17\n\ts.s\t$f0,76($sp)\n\tlhu\t$2,56($18)\n"
+        "\t.section\t.rodata\n\t.align\t2\n$LF_lis1:\n"
+        "\t.word\t0x3E4CCCCD\n\t.text\n\tl.s\t$f26,$LF_lis1\n"
+    )
+    state_after = (
+        "\t.section\t.rodata\n\t.align\t2\n$LF_lis0:\n"
+        "\t.word\t0x3F4CCCCD\n\t.text\n\tl.s\t$f22,$LF_lis0\n"
+        "\tlbu\t$2,78($3)\n"
+        "\t.section\t.rodata\n\t.align\t2\n$LF_lis1:\n"
+        "\t.word\t0x3E4CCCCD\n\t.text\n\tl.s\t$f26,$LF_lis1\n"
+        "\tandi\t$2,$2,0x007f\n\tsb\t$2,78($3)\n"
+        "\tlhu\t$3,56($18)\n\tlbu\t$4,54($18)\n"
+        "\tli\t$2,0x00000004\t\t# 4\n\tsb\t$2,53($18)\n"
+        "\tsb\t$0,52($18)\n\tsll\t$2,$3,2\n\taddu\t$2,$2,$3\n"
+        "\tsll\t$2,$2,3\n\t.set\tnoat\n"
+        "\tlui\t$1,%hi(D_803978E0+32)\n\taddu\t$1,$1,$2\n"
+        "\tsh\t$4,%lo(D_803978E0+32)($1)\n\t.set\tat\n"
+        "\tl.s\t$f0,12($18)\n\taddu\t$17,$sp,40\n"
+        "\ts.s\t$f0,72($sp)\n\tl.s\t$f0,16($18)\n"
+        "\tmove\t$5,$17\n\ts.s\t$f0,76($sp)\n\tlhu\t$2,56($18)\n"
+    )
+    callback_before = (
+        "\tlh\t$3,D_80224EAA\n\tli\t$2,-1\t\t\t# 0xffffffff\n"
+        "\t.set\tnoreorder\n\tbeq\t$3,$2,.L2\n\tsll\t$2,$3,4\n"
+        "\t.set\tnoreorder\n\taddu\t$2,$2,$3\n\tsll\t$2,$2,2\n"
+        "\tla\t$3,D_80224EF0\n\taddu\t$4,$2,$3\n"
+    )
+    callback_after = (
+        "\tlh\t$4,D_80224EAA\n\tli\t$2,-1\t\t\t# 0xffffffff\n"
+        "\t.set\tnoreorder\n\tbeq\t$4,$2,.L2\n\tsll\t$2,$4,4\n"
+        "\t.set\tnoreorder\n\tla\t$3,D_80224EF0\n"
+        "\taddu\t$2,$2,$4\n\tsll\t$2,$2,2\n\taddu\t$4,$2,$3\n"
+    )
+    final_before = (
+        "\tsll\t$2,$3,2\n\taddu\t$2,$2,$3\n\tlbu\t$3,54($18)\n"
+        "\tsll\t$2,$2,3\n\taddu\t$2,$2,$5\n\tsh\t$3,32($2)\n"
+    )
+    final_after = (
+        "\tlbu\t$4,54($18)\n\tsll\t$2,$3,2\n\taddu\t$2,$2,$3\n"
+        "\tsll\t$2,$2,3\n\taddu\t$2,$2,$5\n\tsh\t$4,32($2)\n"
+    )
+    replacements = (
+        (state_before, state_after, "state/constant block"),
+        (callback_before, callback_after, "callback address block"),
+        (final_before, final_after, "final table store"),
+    )
+    counts = [text.count(before) for before, _, _ in replacements]
+    if counts != [1, 1, 1]:
+        raise RuntimeError(
+            f"func_800EA224 allocation rewrite fired {counts} times "
+            "(expected [1, 1, 1])"
+        )
+    for before, after, _ in replacements:
+        text = text.replace(before, after, 1)
+    return text
+
+
+def shape_billboard_command_update_allocations(text: str) -> str:
+    """Match the retained matrix pointer/result allocnos in func_800EBDA0.
+
+    Three saved values are cyclically allocated to different registers.  The
+    retail object rematerializes ``sp + 56`` for the first two calls, retains
+    that address in ``s7`` only for the final stack argument, and schedules
+    the final register arguments before its stack stores.  No operation is
+    inserted or deleted.
+    """
+    if "func_800EBDA0:" not in text:
+        return text
+    match = re.search(
+        r"func_800EBDA0:.*?\n\s*\.end\s+func_800EBDA0\b", text, flags=re.S
+    )
+    if match is None:
+        raise RuntimeError("func_800EBDA0 body not found")
+    body = match.group(0)
+
+    temp_before = "\tlw\t$3,0($2)\n\tlw\t$4,8($2)\n\tsw\t$3,132($sp)\n"
+    temp_after = "\tlw\t$8,0($2)\n\tlw\t$4,8($2)\n\tsw\t$8,132($sp)\n"
+    temp_fires = body.count(temp_before)
+    if temp_fires != 1:
+        raise RuntimeError(
+            f"func_800EBDA0 retained temp fired {temp_fires} times (expected 1)"
+        )
+    body = body.replace(temp_before, temp_after, 1)
+
+    region_start = body.index("\tmove\t$22,$2\n")
+    region_end = body.index(".L2:\n", region_start)
+    region = body[region_start:region_end]
+    counts = {
+        register: len(re.findall(re.escape(register) + r"(?!\d)", region))
+        for register in ("$20", "$22", "$23")
+    }
+    expected = {"$20": 4, "$22": 2, "$23": 3}
+    if counts != expected:
+        raise RuntimeError(
+            f"func_800EBDA0 saved-register counts changed: {counts}; "
+            f"expected {expected}"
+        )
+    mapping = {"$20": "$23", "$22": "$20", "$23": "$22"}
+    for index, register in enumerate(mapping):
+        region = re.sub(
+            re.escape(register) + r"(?!\d)", f"$kmc_billboard_{index}", region
+        )
+    for index, target in enumerate(mapping.values()):
+        region = region.replace(f"$kmc_billboard_{index}", target)
+
+    matrix_before = "\tmove\t$4,$23\n"
+    matrix_fires = region.count(matrix_before)
+    if matrix_fires != 2:
+        raise RuntimeError(
+            f"func_800EBDA0 matrix rematerialization fired {matrix_fires} "
+            "times (expected 2)"
+        )
+    region = region.replace(matrix_before, "\taddu\t$4,$sp,56\n")
+
+    call_before = (
+        "\tsw\t$0,120($sp)\n\tsw\t$0,16($sp)\n\tsw\t$23,20($sp)\n"
+        "\tsw\t$0,24($sp)\n\tsw\t$18,28($sp)\n\tsw\t$22,32($sp)\n"
+        "\tsw\t$22,36($sp)\n\tlw\t$4,132($sp)\n\tlw\t$6,140($sp)\n"
+        "\tmove\t$5,$20\n\t.set\tnoreorder\n\tjal\tfunc_8007B1F0\n"
+        "\tmove\t$7,$0\n"
+    )
+    call_after = (
+        "\tlw\t$4,132($sp)\n\tlw\t$6,140($sp)\n\tmove\t$5,$20\n"
+        "\tmove\t$7,$0\n\tsw\t$0,120($sp)\n\tsw\t$0,16($sp)\n"
+        "\tsw\t$23,20($sp)\n\tsw\t$0,24($sp)\n\tsw\t$18,28($sp)\n"
+        "\tsw\t$22,32($sp)\n\t.set\tnoreorder\n\tjal\tfunc_8007B1F0\n"
+        "\tsw\t$22,36($sp)\n"
+    )
+    call_fires = region.count(call_before)
+    if call_fires != 1:
+        raise RuntimeError(
+            f"func_800EBDA0 final call schedule fired {call_fires} times "
+            "(expected 1)"
+        )
+    region = region.replace(call_before, call_after, 1)
+    body = body[:region_start] + region + body[region_end:]
+    return text[:match.start()] + body + text[match.end():]
+
+
+def merge_object_search_loop_entry(text: str) -> str:
+    """Undo GCC's duplicated exit test in func_80084278's case-4 loop.
+
+    Retail cross-jumps the empty entry path to the loop's existing iterator
+    call.  GCC's reconstructed source duplicates that call and a null test at
+    entry, making the function three instructions longer.  Replace only the
+    complete duplicated prefix with a jump to the existing call and attach a
+    private label there.  No loop operation is invented or transcribed.
+    """
+    if "func_80084278:" not in text:
+        return text
+    entry_before = (
+        ".L83:\n\t.set\tnoreorder\n\tjal\tfunc_800A1A28\n"
+        "\tli\t$5,0x00000014\t\t# 20\n\t.set\tnoreorder\n"
+        "\tmove\t$5,$2\n\t.set\tnoreorder\n\tbeq\t$5,$0,.L84\n"
+        "\tmove\t$4,$16\n\t.set\tnoreorder\n.L64:\n"
+    )
+    entry_after = (
+        ".L83:\n\t.set\tnoreorder\n\tj\t.Lkmc_search_next_80084278\n"
+        "\tnop\n\t.set\tnoreorder\n.L64:\n"
+    )
+    call_before = (
+        "\t.set\tnoreorder\n\t.set\tnoreorder\n"
+        "\tjal\tfunc_800A1A28\n\tli\t$5,0x00000014\t\t# 20\n"
+        "\t.set\tnoreorder\n\tmove\t$5,$2\n"
+        "\tbne\t$5,$0,.L64\n\tnop\n"
+    )
+    call_after = call_before.replace(
+        "\tjal\tfunc_800A1A28\n",
+        ".Lkmc_search_next_80084278:\n\tjal\tfunc_800A1A28\n",
+        1,
+    )
+    direct_before = "\tbeq\t$2,$0,.L83\n\tmove\t$4,$0\n"
+    direct_after = (
+        "\tbeq\t$2,$0,.Lkmc_search_next_80084278\n\tmove\t$4,$0\n"
+    )
+    counts = (
+        text.count(entry_before), text.count(call_before), text.count(direct_before)
+    )
+    if counts != (1, 1, 1):
+        raise RuntimeError(
+            f"func_80084278 loop-entry merge fired {counts} times "
+            "(expected (1, 1, 1))"
+        )
+    return (text.replace(direct_before, direct_after, 1)
+            .replace(entry_before, entry_after, 1)
+            .replace(call_before, call_after, 1))
+
+
 def schedule_pool_type4_removal(text: str) -> str:
     """Reproduce func_8007E7A8's state-clear/call schedule."""
     if "func_8007E7A8:" not in text:
@@ -2839,6 +3530,28 @@ def normalize_v3(source: str) -> str:
         text = allocate_flag_dispatch_output_to_a3(text)
     if os.environ.get("V3_VALUE_DECAY_CLAMP", "1") == "1":
         text = shape_value_decay_clamp(text)
+    if os.environ.get("V3_TEXT_CHARACTER_MAP", "1") == "1":
+        text = shape_text_character_map(text)
+    if os.environ.get("V3_GRID_OVERLAP_QUERY", "1") == "1":
+        text = shape_grid_overlap_query(text)
+    if os.environ.get("V3_RUNTIME_FIELDS_INIT", "1") == "1":
+        text = shape_runtime_fields_init(text)
+    if os.environ.get("V3_SEGMENT_ENDPOINT_CLAMP_REGISTERS", "1") == "1":
+        text = shape_segment_endpoint_clamp_registers(text)
+    if os.environ.get("V3_SEARCH_ITERATOR_FIRST_INLINE", "1") == "1":
+        text = shape_search_iterator_first_inline(text)
+    if os.environ.get("V3_AI_NODE_SETUP_FRAME", "1") == "1":
+        text = shape_ai_node_setup_frame(text)
+    if os.environ.get("V3_MODEL_DISPLAY_PATCH_REGISTERS", "1") == "1":
+        text = shape_model_display_patch_registers(text)
+    if os.environ.get("V3_SHELL_UPDATE_ALLOCATIONS", "1") == "1":
+        text = schedule_shell_update_allocations(text)
+    if os.environ.get("V3_DESTROYED_OBJECT_UPDATE_ALLOCATIONS", "1") == "1":
+        text = shape_destroyed_object_update_allocations(text)
+    if os.environ.get("V3_BILLBOARD_COMMAND_UPDATE_ALLOCATIONS", "1") == "1":
+        text = shape_billboard_command_update_allocations(text)
+    if os.environ.get("V3_OBJECT_SEARCH_LOOP_ENTRY", "1") == "1":
+        text = merge_object_search_loop_entry(text)
     if os.environ.get("V3_POOL_TYPE4_REMOVAL", "1") == "1":
         text = schedule_pool_type4_removal(text)
     if os.environ.get("V3_OBJECT_DISTANCE_PROBE", "1") == "1":

@@ -1,4 +1,6 @@
 # unit	vram	text_size	status
+object_embedded_state_refresh	0x80082070	0x128	matched
+runtime_pool_init	0x8008A8C4	0x15C	matched
 path_goal_check	0x8007E2D4	0x378	matched
 path_collision_probe	0x8007E9D0	0x398	matched
 path_waypoint_side	0x8007F128	0x474	matched
@@ -235,3 +237,4 @@ func_800A2E5C	0x800A2E5C	0x90	matched
 bounds_pair	0x800B02D4	0x120	matched
 func_800B9E24	0x800B9E24	0x90	matched
 func_800B9EB4	0x800B9EB4	0x90	matched
+func_8009D8A0	0x8009D8A0	0x74	matched
