@@ -231,6 +231,23 @@ while the geometry, display-list, and texture subformats are still being
 named. Extracted files remain ROM-derived build artifacts and must not be
 committed.
 
+Rebuild the three pools from the split chunks and gap files with:
+
+```sh
+python3 tools/pack_world_pools.py \
+  /tmp/btga-world-pools.json \
+  assets/extracted/us/world-pools \
+  /tmp/btga-rebuilt-world-pools \
+  --require-original
+```
+
+The packer does not use the convenience `pool.bin` copies. It reconstructs
+every byte from the independently editable chunks and unreferenced gaps,
+requires complete coverage, and rejects conflicting bytes where source ranges
+overlap. `--require-original` additionally gates all three retail SHA-256
+hashes; omit it intentionally when building modified resources. An untouched
+extraction reconstructs texture, state, and geometry pool files byte-for-byte.
+
 The command-stream inventory independently identifies a terminating F3DEX2
 display list in every one of the 5,783 referenced chunks:
 

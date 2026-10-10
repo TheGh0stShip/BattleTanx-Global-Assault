@@ -40,6 +40,17 @@ def world_ranges(boundary_path: Path) -> list[dict]:
     return [COMMON_WORLD, *level_world_ranges(boundary_path)]
 
 
+def chunk_filename(chunk: dict) -> str:
+    return (
+        f"{chunk['index']:04d}_{chunk['pool_offset']:06X}_"
+        f"{chunk['size']:06X}.bin"
+    )
+
+
+def gap_filename(index: int, gap: dict) -> str:
+    return f"{index:04d}_{gap['pool_offset']:06X}_{gap['size']:06X}.bin"
+
+
 def coverage_ranges(chunks: list[dict], pool_size: int) -> tuple[list[dict], list[dict]]:
     """Return the union of referenced intervals and its complement."""
     merged: list[list[int]] = []
@@ -170,18 +181,13 @@ def main() -> None:
                 rom[pool["rom_start"] : pool["rom_end"]]
             )
             for chunk in pool["chunks"]:
-                name = (
-                    f"{chunk['index']:04d}_{chunk['pool_offset']:06X}_"
-                    f"{chunk['size']:06X}.bin"
-                )
-                directory.joinpath(name).write_bytes(
+                directory.joinpath(chunk_filename(chunk)).write_bytes(
                     rom[chunk["rom_start"] : chunk["rom_end"]]
                 )
             gap_directory = directory / "unreferenced"
             gap_directory.mkdir(exist_ok=True)
             for index, gap in enumerate(pool["gaps"]):
-                name = f"{index:04d}_{gap['pool_offset']:06X}_{gap['size']:06X}.bin"
-                gap_directory.joinpath(name).write_bytes(
+                gap_directory.joinpath(gap_filename(index, gap)).write_bytes(
                     rom[gap["rom_start"] : gap["rom_end"]]
                 )
 
