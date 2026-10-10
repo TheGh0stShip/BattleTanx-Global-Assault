@@ -3540,6 +3540,14 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/display_commands.c.o .text 0x44 --alignment 4
 mkdir -p build/us/src/libultra build/us/asm/us/libultra
 tools/bootstrap_ultralib.sh
+mkdir -p build/us/asm/us/boot
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/boot/exception_preamble.s.o \
+    src/boot/exception_preamble.s
+"${tool_prefix}objcopy" --set-section-alignment .text=4 \
+    build/us/asm/us/boot/exception_preamble.s.o
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/boot/exception_preamble.s.o .text 0x118 --alignment 4
 .toolchain/ido5.3/cc -c -Wab,-r4300_mul -G 0 -nostdinc \
     -woff 516,649,838,712 -mips3 -32 -O1 -D_MIPS_SZLONG=32 \
     -DBUILD_VERSION=VERSION_I -D_FINALROM -DNDEBUG \
