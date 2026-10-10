@@ -1,4 +1,6 @@
 # unit	vram	text_size	status
+nearest_live_entity	0x80083230	0x1EC	normalizer-assisted
+ai_target_bit_select	0x80084CC8	0x480	normalizer-assisted
 effect_sprite_ring_draw	0x800A42C8	0x1A0	normalizer-assisted
 progress_level_advance	0x8009C31C	0x208	normalizer-assisted
 800B4684_collision_query	0x800B4684	0x35C	normalizer-assisted

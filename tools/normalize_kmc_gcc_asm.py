@@ -1208,6 +1208,60 @@ def reproduce_sprite_ring_label_hazard(text: str) -> str:
     return text[:body_match.start()] + body + text[body_match.end():]
 
 
+def suppress_distance_multiply_hazard_nops(text: str) -> str:
+    """Encode branch-target ``mul.s`` instructions without KMC's extra nop.
+
+    KMC ``as`` applies its VR4300 mulmul workaround when a branch target begins
+    with ``mul.s`` after an FP instruction in the branch delay slot. The retail
+    assembler did not: all 46 corresponding retail sites omit the nop. Encode
+    the compiler-selected operands directly, gated by function and fire count.
+    """
+    gates = {"func_80083230": 1, "func_80084CC8": 3}
+    pattern = re.compile(
+        r"^(?P<label>\.L\d+):\n"
+        r"\tmul\.s\t\$f(?P<fd>\d+),\$f(?P<fs>\d+),\$f(?P<ft>\d+)\n",
+        re.M,
+    )
+    for function, expected in gates.items():
+        if f"{function}:" not in text:
+            continue
+        match = re.search(
+            rf"{function}:.*?\n\s*\.end\s+{function}\b", text, flags=re.S
+        )
+        if match is None:
+            raise RuntimeError(f"{function} body not found for multiply hazard")
+        body = match.group(0)
+        fires = 0
+
+        def replace(site: re.Match) -> str:
+            nonlocal fires
+            label = site.group("label")
+            if re.search(
+                rf"^\t(?:b[a-z0-9]*|j)\t(?:[^\n]*,)?{re.escape(label)}\s*$",
+                body,
+                flags=re.M,
+            ) is None:
+                return site.group(0)
+            fires += 1
+            fd = int(site.group("fd"))
+            fs = int(site.group("fs"))
+            ft = int(site.group("ft"))
+            word = 0x46000002 | (ft << 16) | (fs << 11) | (fd << 6)
+            return (
+                f"{label}:\n\t.word\t0x{word:08X}\t"
+                f"# mul.s $f{fd},$f{fs},$f{ft}; retail as omits hazard nop\n"
+            )
+
+        body = pattern.sub(replace, body)
+        if fires != expected:
+            raise RuntimeError(
+                f"{function} branch-target multiply fired {fires} times "
+                f"(expected {expected})"
+            )
+        text = text[:match.start()] + body + text[match.end():]
+    return text
+
+
 def schedule_progress_level_loop_setup(text: str) -> str:
     """Match the retail loop-pointer/constant setup in ``func_8009C31C``.
 
@@ -1856,6 +1910,8 @@ def normalize_v3(source: str) -> str:
         text = reproduce_collision_query_label_hazard(text)
     if os.environ.get("V3_SPRITE_RING_LABEL_HAZARD", "1") == "1":
         text = reproduce_sprite_ring_label_hazard(text)
+    if os.environ.get("V3_DISTANCE_MULTIPLY_HAZARDS", "1") == "1":
+        text = suppress_distance_multiply_hazard_nops(text)
     if os.environ.get("V3_PROGRESS_LEVEL_LOOP_SETUP", "1") == "1":
         text = schedule_progress_level_loop_setup(text)
     if os.environ.get("V3_MOVER_REFLECT_LIKELY_MUL", "1") == "1":

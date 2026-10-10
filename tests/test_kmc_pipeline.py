@@ -614,6 +614,28 @@ class KmcPipelineTests(unittest.TestCase):
             normalized,
         )
 
+    def test_distance_multiply_hazard_requires_declared_fire_count(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.suppress_distance_multiply_hazard_nops(
+                "func_80083230:\n\tnop\n\t.end\tfunc_80083230\n"
+            )
+
+    def test_distance_multiply_hazard_encodes_compiler_operands(self) -> None:
+        source = (
+            "func_80083230:\n"
+            "\tbne\t$2,$0,.L7\n"
+            "\tadd.s\t$f0,$f0,$f2\n"
+            ".L7:\n"
+            "\tmul.s\t$f0,$f0,$f24\n"
+            "\t.end\tfunc_80083230\n"
+        )
+        normalized = MODULE.suppress_distance_multiply_hazard_nops(source)
+        self.assertIn(
+            ".L7:\n\t.word\t0x46180002\t"
+            "# mul.s $f0,$f0,$f24; retail as omits hazard nop\n",
+            normalized,
+        )
+
     def test_progress_level_loop_setup_requires_one_fire(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.schedule_progress_level_loop_setup(
