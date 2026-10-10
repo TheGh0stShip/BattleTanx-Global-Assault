@@ -21,6 +21,7 @@ from inventory_lzari_assets import ROM_SHA1, inventory_known, inventory_ranges
 from inventory_rom_layout import inventory_layout
 from inventory_script_assets import build_script, inventory_scripts
 from inventory_stale_debug import inventory_debug_names
+from inventory_stale_object import inventory_stale_object
 from inventory_world_display_lists import inventory_display_lists
 from inventory_world_geometry import inventory_geometry
 from inventory_world_pools import inventory_pools, world_ranges
@@ -44,7 +45,9 @@ EXPECTED = {
     "libmus_files": 26,
     "libmus_bytes": 2_289_292,
     "stale_song_duplicate_bytes": 136_294,
-    "stale_debug_bytes": 31_744,
+    "stale_relocatable_text_bytes": 2_038,
+    "stale_debug_line_bytes": 1_692,
+    "stale_debug_bytes": 28_014,
     "stale_pool_duplicate_bytes": 123_912,
     "unresolved_stale_bytes": 0,
 }
@@ -124,7 +127,18 @@ def verify_corpus(rom: bytes, root: Path) -> dict:
 
     layout = inventory_layout(rom, boundaries, campaign)
     debug_names = inventory_debug_names(rom)
+    stale_object = inventory_stale_object(rom)
     require(sum(layout["bytes"].values()), len(rom), "complete ROM accounting")
+    require(
+        layout["bytes"]["stale_relocatable_text"],
+        EXPECTED["stale_relocatable_text_bytes"],
+        "stale relocatable-text bytes",
+    )
+    require(
+        layout["bytes"]["stale_debug_lines"],
+        EXPECTED["stale_debug_line_bytes"],
+        "stale debug-line bytes",
+    )
     require(
         layout["bytes"]["stale_debug_symbols"],
         EXPECTED["stale_debug_bytes"],
@@ -183,6 +197,10 @@ def verify_corpus(rom: bytes, root: Path) -> dict:
             "exact_pool_duplicates": layout["counts"]["stale_pool_duplicate"],
             "pool_duplicate_bytes": layout["bytes"]["stale_pool_duplicate"],
             "debug_symbol_bytes": layout["bytes"]["stale_debug_symbols"],
+            "relocatable_text_bytes": layout["bytes"]["stale_relocatable_text"],
+            "relocatable_exact_words": stale_object["exact_instruction_words"],
+            "relocation_words": len(stale_object["relocation_words"]),
+            "debug_line_bytes": layout["bytes"]["stale_debug_lines"],
             "debug_name_records": debug_names["record_count"],
             "unique_debug_names": debug_names["unique_name_count"],
             "unresolved_bytes": layout["bytes"].get("stale_build_material", 0),

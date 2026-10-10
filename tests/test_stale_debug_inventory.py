@@ -22,7 +22,7 @@ class StaleDebugInventoryTests(unittest.TestCase):
         if not rom_path.exists():
             self.skipTest("base ROM is unavailable")
         report = inventory_debug_names(rom_path.read_bytes())
-        self.assertEqual(report["size"], 0x7C00)
+        self.assertEqual(report["size"], 0x6D6E)
         self.assertEqual(report["record_count"], 1305)
         self.assertEqual(report["unique_name_count"], 664)
         self.assertIn("Steps_PruneFork", report["unique_names"])

@@ -55,9 +55,21 @@ def stale_build_regions(rom: bytes) -> list[dict]:
             "end": 0xB8400,
         },
         {
+            "kind": "stale_relocatable_text",
+            "name": "stale_steps_relocatable_text",
+            "start": 0xB8400,
+            "end": 0xB8BF6,
+        },
+        {
+            "kind": "stale_debug_lines",
+            "name": "stale_steps_debug_lines",
+            "start": 0xB8BF6,
+            "end": 0xB9292,
+        },
+        {
             "kind": "stale_debug_symbols",
             "name": "stale_debug_symbols",
-            "start": 0xB8400,
+            "start": 0xB9292,
             "end": 0xC0000,
         },
     ]

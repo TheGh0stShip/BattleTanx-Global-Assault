@@ -12,7 +12,7 @@ from pathlib import Path
 from inventory_lzari_assets import ROM_SHA1
 
 
-START = 0xB8400
+START = 0xB9292
 END = 0xC0000
 FUNCTION_RECORDS_START = 0xB9292
 FUNCTION_RECORD_CLASS = 0x0C

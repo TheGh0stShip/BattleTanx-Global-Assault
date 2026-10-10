@@ -61,8 +61,14 @@ copies of six live libmus songs at `0xC0000`, `0xD0000`, `0xD8000`, `0xE0000`,
 all 136,294 bytes. The ROM-layout gate checks those byte equalities and now
 classifies those copies separately from unknown data.
 
-The preceding `0xB8400–0xC0000` range is a compact debug-name/type table with
-1,305 length-prefixed records and 664 unique identifiers. It retains internal
+The preceding stale object fragment has three independently checked parts:
+
+- `0xB8400–0xB8BF6` is 2,038 bytes of unlinked `Steps` text. Its two leading
+  bytes and 438 instructions match the live text beginning at ROM `0xD96E`;
+  all 71 differing instructions are zeroed jump/immediate relocation sites.
+- `0xB8BF6–0xB9292` is 1,692 bytes of compact line/type metadata.
+- `0xB9292–0xC0000` is a compact debug-name/type table with 1,305
+  length-prefixed records and 664 unique identifiers. It retains internal
 names including `Steps_PruneFork`, `Obstacles_InitObstacleRef`, N64 SDK types,
 COFF `.fake`/`.eos` markers, and libmus enums. Generate its lossless name
 inventory with `tools/inventory_stale_debug.py`. One contiguous chain has a
