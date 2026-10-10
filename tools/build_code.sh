@@ -4718,6 +4718,24 @@ if false; then
     build/us/src/code/800D5E2C_script_particle_update.c.o \
     build/us/asm/us/main_800D6508_to_800D67F0.s.o \
     build/us/src/code/model_ring_identity.c.o \
+    build/us/src/code/font_render_constants.c.o \
+    build/us/src/code/path_waypoint_constants.c.o \
+    build/us/src/code/path_route_constants.c.o \
+    build/us/src/code/path_search_constants.c.o \
+    build/us/src/code/ai_target_constants.c.o \
+    build/us/src/code/buffer_fill_constants.c.o \
+    build/us/src/code/effect_update_limit.c.o \
+    build/us/src/code/waypoint_stack_constants.c.o \
+    build/us/src/code/object_mode_constants.c.o \
+    build/us/src/code/tank_motion_constant.c.o \
+    build/us/src/code/effect_sprite_constants.c.o \
+    build/us/src/code/camera_probe_constants.c.o \
+    build/us/src/code/object_collision_constants.c.o \
+    build/us/src/code/object_region_bounds.c.o \
+    build/us/src/code/hud_scale_constant.c.o \
+    build/us/src/code/race_bar_scale_constants.c.o \
+    build/us/src/code/race_bar_ratio_constants.c.o \
+    build/us/src/code/lightning_segment_constants.c.o \
     build/us/src/code/effect_draw.c.o \
     build/us/src/code/effect_code_table.c.o \
     build/us/src/code/effect_code_parse.c.o \
