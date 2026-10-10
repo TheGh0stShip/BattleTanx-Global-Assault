@@ -1041,6 +1041,10 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             800B109C 800B14A8 func_800B1610 800B1668 800B1DA8 800B2364 \
             800B2890 800B3368 800B3504 800B4684_collision_query 800B5A10 \
             800B5B8C_mover_reflect func_800B5D1C 800B5DA8 \
+            mover_collision_response 800B61B8 \
+            contact_side_test vector_angle_from_xy func_800B9E24 func_800B9EB4 \
+            800B9FD4 world_resource_aggregate world_loader \
+            world_bundle_resource_aggregate common_model_loader 800BBDC0 \
             800AAAE0 800AB4DC 800AC0F4 func_800ACE70 func_800ACEB4 \
             func_800ACEFC 800AD14C 800AE710 800AF364 func_800B0268 func_800B03F4 \
             func_800A8E3C 800A9080 func_800A977C func_800A98B8 func_800A9B64 \
@@ -1997,7 +2001,15 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/func_800A9A98.c.o .rodata 0x19 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800A9A98.c.o .text 0 --alignment 4
+"${tool_prefix}objcopy" --localize-symbol=func_800A9A98 \
+    build/us/src/code/func_800A9A98.c.o
+python3 tools/trim_elf32_section.py \
     build/us/src/code/func_800ABE6C.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800ABE6C.c.o .text 0 --alignment 4
+"${tool_prefix}objcopy" --localize-symbol=func_800ABE6C \
+    build/us/src/code/func_800ABE6C.c.o
 python3 tools/trim_elf32_section.py \
     build/us/src/code/func_800B6934.c.o .rodata 0x8 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3270,6 +3282,34 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800B5DA8.c.o .text 0x188 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/mover_collision_response.c.o .text 0x248 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B61B8.c.o .text 0x528 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B61B8.c.o .rodata 0x14 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/contact_side_test.c.o .text 0x118 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/vector_angle_from_xy.c.o .text 0x98 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800B9E24.c.o .text 0x90 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800B9EB4.c.o .text 0x90 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B9FD4.c.o .text 0x1e8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/world_resource_aggregate.c.o .text 0x390 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/world_loader.c.o .text 0xbe0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/world_bundle_resource_aggregate.c.o .text 0x29c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/common_model_loader.c.o .text 0x880 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800BBDC0.c.o .text 0x1ac0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800BBDC0.c.o .rodata 0x70 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/800AAAE0.c.o .text 0x134 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800AAAE0.c.o .rodata 0x4 --alignment 4
@@ -4136,9 +4176,14 @@ if false; then
     build/us/src/code/800B5DA8.c.o \
     build/us/src/code/turn_adjust.c.o \
     build/us/src/code/mover_collision_response.c.o \
+    build/us/src/code/800B61B8.c.o \
     build/us/asm/us/main_800B66E0_to_800B6934.s.o \
     build/us/src/code/func_800B6934.c.o \
-    build/us/asm/us/main_800B69F4_to_800B87A0.s.o \
+    build/us/asm/us/main_800B69F4_to_800B739C.s.o \
+    build/us/src/code/contact_side_test.c.o \
+    build/us/asm/us/main_800B74B4_to_800B8310.s.o \
+    build/us/src/code/vector_angle_from_xy.c.o \
+    build/us/asm/us/main_800B83A8_to_800B87A0.s.o \
     build/us/src/code/800B87A0.c.o \
     build/us/src/code/grid_node_height.c.o \
     build/us/asm/us/main_800B88DC_to_800B93A4.s.o \
@@ -4152,7 +4197,17 @@ if false; then
     build/us/src/code/display_commands.c.o \
     build/us/asm/us/main_800B9CAC_to_800B9D4C.s.o \
     build/us/src/code/table_lookup.c.o \
-    build/us/asm/us/main_800B9E24_to_800BD880.s.o \
+    build/us/src/code/func_800B9E24.c.o \
+    build/us/src/code/func_800B9EB4.c.o \
+    build/us/src/code/func_800B9F44.c.o \
+    build/us/src/code/800B9FD4.c.o \
+    build/us/src/code/world_loader_ref_walkers.c.o \
+    build/us/src/code/world_resource_aggregate.c.o \
+    build/us/src/code/world_loader.c.o \
+    build/us/src/code/world_bundle_resource_aggregate.c.o \
+    build/us/src/code/common_model_loader.c.o \
+    build/us/asm/us/main_800BBDBC_to_800BBDC0.s.o \
+    build/us/src/code/800BBDC0.c.o \
     build/us/src/code/entry_scan.c.o \
     build/us/src/code/entry_flags.c.o \
     build/us/asm/us/main_800BD93C_to_800BFD40.s.o \
