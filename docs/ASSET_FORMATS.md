@@ -289,6 +289,30 @@ python3 tools/inventory_world_textures.py \
 PNG output is a visual check, not a reconstruction input. The original pool
 bytes, command words, palette order, and range metadata remain authoritative.
 
+Geometry chunks use the standard 16-byte N64 vertex layout: signed XYZ,
+unused flag, signed ST, signed normal XYZ, and alpha. The geometry inventory
+simulates the 32-entry F3DEX2 vertex cache across every `G_VTX` and `G_TRI1`,
+rejecting odd indices, unloaded slots, truncated vertex arrays, and degenerate
+triangles:
+
+```sh
+python3 tools/inventory_world_geometry.py \
+  --output /tmp/btga-world-geometry.json \
+  --obj assets/extracted/us/world-geometry.obj
+```
+
+The 4,638 chunks contain 4,899 vertex loads, 41,996 distinct loaded vertices,
+and 19,411 triangles. Of those, 4,637 chunks are structurally exact. The sole
+exception is the singly referenced overlapping range at pool offset `0x5D40`:
+two of its four nominal vertices overlap its command words, and one resulting
+vertex flag is nonzero. It remains in the lossless raw inventory but is omitted
+from the inspection OBJ rather than being presented as valid geometry.
+
+The combined OBJ contains the remaining 41,992 vertices and 19,409 triangles,
+grouped by source chunk. It is an inspection export only; the original signed
+normal bytes, alpha, fixed-point texture coordinates, display-list cache
+behavior, and ROM offsets remain in the JSON/raw reconstruction inputs.
+
 The complete ROM organization and structure names were cross-checked against
 [`nviewer` revision
 `700432e9bf368caebbe3150e86e987e246c851a8`](https://github.com/DSLL32/nviewer/tree/700432e9bf368caebbe3150e86e987e246c851a8).
