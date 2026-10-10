@@ -4,9 +4,9 @@ typedef struct { Node *cur; unsigned short head; unsigned short count; char p8[2
 typedef struct { char pad[0xF0]; List list; char p10C[0x132 - 0x10C]; short h132; } Obj;
 typedef struct { char pad[0xC008]; unsigned short limit; } Pool;
 extern Pool *D_80114680;
-extern Node *func_8007DA5C(unsigned short);
-extern unsigned short func_8007DE3C(unsigned short *);
-extern unsigned short func_8007DBE0(unsigned short *);
+extern Node *Steps_InitStep_Free(unsigned short);
+extern unsigned short Steps_GetNextStepId(unsigned short *);
+extern unsigned short Steps_InitStepPool(unsigned short *);
 
 void func_80080920(Obj *o) {
     List *l = &o->list;
@@ -28,14 +28,14 @@ void func_80080920(Obj *o) {
             pi = 0;
             pn = 0;
         } else {
-            pi = func_8007DA5C(key)->next;
-            pn = func_8007DA5C(pi);
+            pi = Steps_InitStep_Free(key)->next;
+            pn = Steps_InitStep_Free(pi);
             ni = pn->next;
-            l->count -= func_8007DE3C(&pn->prev);
+            l->count -= Steps_GetNextStepId(&pn->prev);
         }
     } else {
         pi = cur->next;
-        pn = func_8007DA5C(pi);
+        pn = Steps_InitStep_Free(pi);
         ni = pn->next;
         cur->w8 = 0;
     }
@@ -44,12 +44,12 @@ void func_80080920(Obj *o) {
     l->h16 = 0;
     l->h18 = 0;
     while (ni != 0) {
-        n = func_8007DA5C(ni);
+        n = Steps_InitStep_Free(ni);
         if (n->type == 2) {
             key = ni;
             ni = n->next;
             t = n;
-            n = func_8007DA5C(ni);
+            n = Steps_InitStep_Free(ni);
             pn->next = ni;
             n->prev = pi;
             if (t->e == pi) {
@@ -57,7 +57,7 @@ void func_80080920(Obj *o) {
             } else {
                 t->c = 0;
             }
-            l->count -= func_8007DBE0(&key);
+            l->count -= Steps_InitStepPool(&key);
         }
         pi = ni;
         pn = n;
@@ -67,10 +67,10 @@ void func_80080920(Obj *o) {
     if (l->count > lim) {
         Node *w;
 
-        w = func_8007DA5C(l->head);
+        w = Steps_InitStep_Free(l->head);
         for (k = 1; k < lim; k++) {
-            w = func_8007DA5C(w->prev);
+            w = Steps_InitStep_Free(w->prev);
         }
-        l->count -= func_8007DBE0(&w->prev);
+        l->count -= Steps_InitStepPool(&w->prev);
     }
 }

@@ -1,10 +1,10 @@
 #include "types.h"
 
-extern void func_8007DBE0(void *state);
+extern void Steps_InitStepPool(void *state);
 
 void func_8007E988(void *object) {
     *(s16 *)((u8 *)object + 0x132) = 0;
-    func_8007DBE0((u8 *)object + 0xF4);
+    Steps_InitStepPool((u8 *)object + 0xF4);
     *(s16 *)((u8 *)object + 0xF6) = 0;
     *(s32 *)((u8 *)object + 0xF0) = 0;
     *(s16 *)((u8 *)object + 0xFA) = 0;

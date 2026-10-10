@@ -12,9 +12,9 @@ typedef struct PoolRecord8007DE3C {
 } PoolRecord8007DE3C;
 
 extern PoolRecord8007DE3C *D_80114680;
-extern s32 func_8007DBE0(u16 *state);
+extern s32 Steps_InitStepPool(u16 *state);
 
-u16 func_8007DE3C(u16 *state) {
+u16 Steps_GetNextStepId(u16 *state) {
     PoolRecord8007DE3C *record;
     PoolRecord8007DE3C *next;
     u16 saved_link;
@@ -76,7 +76,7 @@ selected_link:
                         saved_link = record->link_e;
                         record->link_e = 0;
                     }
-                    count = func_8007DBE0(state);
+                    count = Steps_InitStepPool(state);
                     *state = saved_link;
                     index = saved_link;
                     if (index != 0) {

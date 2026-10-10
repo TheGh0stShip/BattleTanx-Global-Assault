@@ -3,7 +3,7 @@
 #ifndef NULL
 #define NULL ((void *)0)
 #endif
-u16 func_8007DA8C(void *arg0) {
+u16 Steps_CopyObstacleRef(void *arg0) {
     u8 temp_v1;
 
     if (arg0 != NULL) {

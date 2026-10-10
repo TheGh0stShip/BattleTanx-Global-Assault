@@ -1,14 +1,14 @@
 #include "types.h"
 
 extern u8 *D_80114680;
-extern u16 func_8007DBE0(void *);
+extern u16 Steps_InitStepPool(void *);
 
 /* Validate a chain of type-three records and return its aggregate length.
  * Transitional exact reconstruction for branch-likely scheduling. */
 __asm__(
 ".text\n"
-".globl func_8007DFA0\n"
-"func_8007DFA0:\n"
+".globl Steps_InitStep\n"
+"Steps_InitStep:\n"
 "addiu $sp,$sp,-0x18\n"
 "sw $ra,0x10($sp)\n"
 "andi $5,$5,0xffff\n"
@@ -38,7 +38,7 @@ __asm__(
 "bnez $2,1b\n"
 "nop\n"
 "3:\n"
-"jal func_8007DBE0\n"
+"jal Steps_InitStepPool\n"
 "nop\n"
 "andi $2,$2,0xffff\n"
 "4:\n"

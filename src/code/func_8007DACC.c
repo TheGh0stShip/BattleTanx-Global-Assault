@@ -17,7 +17,7 @@ typedef struct LookupRecord8007DACC {
 
 extern LookupRecord8007DACC *D_80114680;
 
-LookupRecord8007DACC *func_8007DACC(SourceRecord8007DACC *source,
+LookupRecord8007DACC *Steps_PruneForksBelow(SourceRecord8007DACC *source,
                                     u16 *result) {
     LookupRecord8007DACC *record;
     u32 index;

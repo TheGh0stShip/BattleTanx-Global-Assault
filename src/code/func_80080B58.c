@@ -1,7 +1,7 @@
 #include "types.h"
 
-extern void *func_8007DA5C(u16);
-extern u16 func_8007DA8C(void *);
+extern void *Steps_InitStep_Free(u16);
+extern u16 Steps_CopyObstacleRef(void *);
 
 /* Follow the linked object chain and report whether it contains target_id.
  * Transitional exact reconstruction: the KMC compiler will not reproduce the
@@ -18,7 +18,7 @@ __asm__(
 "andi $17,$5,0xffff\n"
 "andi $16,$2,0xffff\n"
 "1:\n"
-"jal func_8007DA5C\n"
+"jal Steps_InitStep_Free\n"
 "addu $4,$16,$0\n"
 "beql $2,$0,2f\n"
 "addu $2,$0,$0\n"
@@ -27,7 +27,7 @@ __asm__(
 "j 2f\n"
 "addiu $2,$0,1\n"
 "3:\n"
-"jal func_8007DA8C\n"
+"jal Steps_CopyObstacleRef\n"
 "addu $4,$2,$0\n"
 "j 1b\n"
 "andi $16,$2,0xffff\n"

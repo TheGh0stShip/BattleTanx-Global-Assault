@@ -13,7 +13,7 @@ typedef struct PoolRecord8007E024 {
 
 extern PoolRecord8007E024 *D_80114680;
 
-u16 func_8007E024(u16 value, u16 *state, u16 new_index) {
+u16 Steps_StepPtrFromId(u16 value, u16 *state, u16 new_index) {
     PoolRecord8007E024 *record;
     PoolRecord8007E024 *old_record;
     PoolRecord8007E024 *pool;

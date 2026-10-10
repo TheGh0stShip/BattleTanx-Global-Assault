@@ -480,14 +480,14 @@ def normalize_race_map_entry(text: str) -> str:
 
 
 def schedule_resource_copy_prologue(text: str) -> str:
-    """Reproduce the retail scheduler order for ``func_8007E118``.
+    """Reproduce the retail scheduler order for ``Steps_FreeBranch``.
 
     The generated body is otherwise exact.  KMC GCC gives the frame setup
     priority over the entry byte load and leaves the destination save in the
     branch delay slot; the retail object schedules the independent load first,
     saves ``s0`` before assigning it, and uses the delay slot for ``ra``.
     """
-    if "func_8007E118:" not in text:
+    if "Steps_FreeBranch:" not in text:
         return text
     before = (
         "\tsubu\t$sp,$sp,24\n"
@@ -512,7 +512,7 @@ def schedule_resource_copy_prologue(text: str) -> str:
     fires = text.count(before)
     if fires != 1:
         raise RuntimeError(
-            f"func_8007E118 prologue reorder fired {fires} times (expected 1)"
+            f"Steps_FreeBranch prologue reorder fired {fires} times (expected 1)"
         )
     return text.replace(before, after, 1)
 
@@ -1353,8 +1353,8 @@ def shape_path_waypoint_side_registers(text: str) -> str:
             f"func_8007F59C id allocation fired {fires} times (expected 1)"
         )
     text = text.replace(before, after, 1)
-    before = "\tjal\tfunc_8007DA5C\n\tmove\t$5,$16\n"
-    after = "\tjal\tfunc_8007DA5C\n\tmove\t$20,$5\n"
+    before = "\tjal\tSteps_InitStep_Free\n\tmove\t$5,$16\n"
+    after = "\tjal\tSteps_InitStep_Free\n\tmove\t$20,$5\n"
     fires = text.count(before)
     if fires != 1:
         raise RuntimeError(
@@ -2470,7 +2470,7 @@ def schedule_pool_type4_removal(text: str) -> str:
     before = (
         ".L7:\n"
         "\t.set\tnoreorder\n"
-        "\tjal\tfunc_8007DB84\n"
+        "\tjal\tSteps_SpliceIn\n"
         "\tsw\t$0,240($16)\n"
         "\t.set\tnoreorder\n"
         "\tlhu\t$2,246($16)\n"
@@ -2480,7 +2480,7 @@ def schedule_pool_type4_removal(text: str) -> str:
         ".L7:\n"
         "\tsw\t$0,240($16)\n"
         "\t.set\tnoreorder\n"
-        "\tjal\tfunc_8007DB84\n"
+        "\tjal\tSteps_SpliceIn\n"
         "\tsh\t$0,244($16)\n"
         "\t.set\tnoreorder\n"
         "\tlhu\t$2,246($16)\n"

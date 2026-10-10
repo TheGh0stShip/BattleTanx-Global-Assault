@@ -27,9 +27,9 @@ typedef struct ObjectState8007E7A8 {
     u16 field42;
 } ObjectState8007E7A8;
 
-extern PoolRecord8007E7A8 *func_8007DA5C(u16 index);
-extern void func_8007DB84(u16 index);
-extern u16 func_8007DBE0(u16 *state);
+extern PoolRecord8007E7A8 *Steps_InitStep_Free(u16 index);
+extern void Steps_SpliceIn(u16 index);
+extern u16 Steps_InitStepPool(u16 *state);
 
 void func_8007E7A8(u8 *object) {
     register u8 *object_base __asm__("$16") = object;
@@ -49,7 +49,7 @@ void func_8007E7A8(u8 *object) {
     }
 
     *(u16 *)(object_base + 0x132) = 0;
-    record = func_8007DA5C(head);
+    record = Steps_InitStep_Free(head);
     x = record->x;
     __asm__ volatile("" : "=f"(x) : "0"(x));
     link = record->link_16;
@@ -66,7 +66,7 @@ void func_8007E7A8(u8 *object) {
         *(u16 *)(object_base + 0xF4) = 0;
         *(u16 *)(object_base + 0xF6) -= 1;
     } else {
-        next = func_8007DA5C(next_index);
+        next = Steps_InitStep_Free(next_index);
         switch (next->type) {
             case 3:
                 next->field02 = 0;
@@ -75,16 +75,16 @@ void func_8007E7A8(u8 *object) {
                 break;
             case 4:
                 *(u32 *)(object_base + 0xF0) = 0;
-                func_8007DB84(next_index);
+                Steps_SpliceIn(next_index);
                 *(u16 *)(object_base + 0xF4) = 0;
                 *(u16 *)(object_base + 0xF6) -= 2;
                 break;
             default:
-                removed = func_8007DBE0(&record->link_16);
+                removed = Steps_InitStepPool(&record->link_16);
                 state->head = 0;
                 state->count -= removed;
                 break;
         }
     }
-    func_8007DB84(head);
+    Steps_SpliceIn(head);
 }

@@ -21,7 +21,7 @@ typedef struct Pool8007D998 {
     u16 fieldC00A;
 } Pool8007D998;
 
-void func_8007D998(Pool8007D998 *pool) {
+void Steps_NewStep(Pool8007D998 *pool) {
     register u32 offset __asm__("$2");
     register u16 index __asm__("$5");
     register u8 state __asm__("$6");

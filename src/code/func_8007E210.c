@@ -1,6 +1,6 @@
 #include "types.h"
 
-void *func_8007DA5C(u16, void *);
+void *Steps_InitStep_Free(u16, void *);
 
 void *func_8007E210(void *arg0, void *arg1) {
     register void *base __asm__("$16") = arg0;
@@ -13,6 +13,6 @@ loop:
     if (*(u8 *)arg1 == target_type) {
         return arg1 + 4;
     }
-    arg1 = func_8007DA5C(*(u16 *)(arg1 + 2), arg1);
+    arg1 = Steps_InitStep_Free(*(u16 *)(arg1 + 2), arg1);
     goto loop;
 }

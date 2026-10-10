@@ -3,7 +3,7 @@
 
 extern u8 *D_80114680;
 
-void func_8007DB84(s32 arg0) {
+void Steps_SpliceIn(s32 arg0) {
     register u8 *node __asm__("$5");
 
     __asm__ volatile(

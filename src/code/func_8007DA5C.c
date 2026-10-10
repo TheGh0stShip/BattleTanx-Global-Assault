@@ -2,7 +2,7 @@
 
 extern u8 *D_80114680;
 
-void *func_8007DA5C(u16 index) {
+void *Steps_InitStep_Free(u16 index) {
     void *result;
 
     if (index != 0) {

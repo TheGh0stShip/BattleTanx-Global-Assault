@@ -9,9 +9,9 @@ typedef struct { char pad0[0xF0]; Path path; char padFC[0xC]; int mode; } Entity
 typedef struct { u8 type; char pad1[0x13]; u8 subtype; char pad15; u16 link; } Waypoint;
 
 extern char *D_80114680;
-Waypoint *func_8007DA5C(int, u16);
+Waypoint *Steps_InitStep_Free(int, u16);
 u16 func_8007ED68(Entity *, int, int);
-u16 func_8007D884(Node **, int);
+u16 Steps_InitStep_Leg(Node **, int);
 void func_80080110(Entity *, Node *);
 void func_80080818(Entity *, int);
 float func_8007F774(Entity *, Node *);
@@ -28,7 +28,7 @@ int func_8007F59C(Entity *entity) {
     float key;
 
     if (id == 0 || *(int *)(D_80114680 + 0xC000) == 0) goto out;
-    waypoint = func_8007DA5C(id, current);
+    waypoint = Steps_InitStep_Free(id, current);
     switch (waypoint->type) {
     case 2:
         id = func_8007ED68(entity, id, entity->mode);
@@ -46,7 +46,7 @@ int func_8007F59C(Entity *entity) {
         out:
             return 0;
         case 0:
-            id = func_8007D884(&node, 2);
+            id = Steps_InitStep_Leg(&node, 2);
             waypoint->link = id;
             node->id = current;
             path->count++;
@@ -55,7 +55,7 @@ int func_8007F59C(Entity *entity) {
             func_8007F128(entity);
             return 1;
         case 3:
-            waypoint->link = func_8007D884(&node, 4);
+            waypoint->link = Steps_InitStep_Leg(&node, 4);
             node->id = current;
             path->count++;
             key = func_8007F774(entity, node);

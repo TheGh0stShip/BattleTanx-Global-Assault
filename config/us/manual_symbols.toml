@@ -1388,3 +1388,10 @@ vram = 0x80079C5C
 size = 0x5C
 type = "func"
 reason = "Function boundary established by the byte-exact graphics-task unit."
+
+[[symbol]]
+name = "Steps_InitStepPool"
+vram = 0x8007DBE0
+size = 0x174
+type = "func"
+reason = "Original symbol recovered from the stale class-0x0c debug record at section-2 offset 0x4C0; the complete offset set anchors uniquely at 0x8007D720."

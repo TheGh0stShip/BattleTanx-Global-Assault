@@ -25,7 +25,7 @@ typedef struct Pool8007D884 {
 extern Pool8007D884 *D_80114680;
 extern void func_8007D470(void *state);
 
-u16 func_8007D884(PoolRecord8007D884 **output, u32 mode) {
+u16 Steps_InitStep_Leg(PoolRecord8007D884 **output, u32 mode) {
     Pool8007D884 *pool = D_80114680;
     PoolRecord8007D884 *record = pool->free_list;
     u16 index;

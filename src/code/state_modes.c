@@ -32,14 +32,14 @@ typedef struct {
 
 extern void func_8007D470(SmallState* state);
 
-void func_8007D720(ModeState* state) {
+void Steps_GetNextLegPtr(ModeState* state) {
     state->mode = 1;
     state->field_2 = 0;
     state->field_4 = 0.0f;
     *(u16*)&state->field_8 = 0;
 }
 
-void func_8007D738(ModeTwoState* state) {
+void Steps_FreeStep(ModeTwoState* state) {
     state->mode = 2;
     state->field_2 = 0;
     state->field_4 = 0.0f;
@@ -50,7 +50,7 @@ void func_8007D738(ModeTwoState* state) {
     state->field_12 = 0;
 }
 
-void func_8007D760(ModeState* state) {
+void Steps_PruneFork(ModeState* state) {
     f32 zero = 0.0f;
 
     state->mode = 3;
@@ -62,7 +62,7 @@ void func_8007D760(ModeState* state) {
     state->field_16 = 0;
 }
 
-void func_8007D7AC(ModeState* state) {
+void Steps_CropLinearBranch(ModeState* state) {
     state->mode = 4;
     state->field_2 = 0;
     state->field_4 = 0.0f;

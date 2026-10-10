@@ -8,7 +8,7 @@ typedef struct {
     u8 flag, padC075; u16 count; int last;
 } World;
 
-extern void func_8007D998(World *);
+extern void Steps_NewStep(World *);
 
 static inline void reset(Stack *stack) {
     u16 i;
@@ -24,7 +24,7 @@ static inline void reset(Stack *stack) {
 }
 
 void func_8008A764(World *world, int start) {
-    func_8007D998(world);
+    Steps_NewStep(world);
     reset(&world->first);
     reset(&world->second);
     world->current = 0;

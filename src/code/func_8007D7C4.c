@@ -14,7 +14,7 @@ typedef struct State8007D7C4 {
 
 extern void func_8007D470(void *state);
 
-void func_8007D7C4(State8007D7C4 *state, u32 mode) {
+void Steps_InitStep_Fork(State8007D7C4 *state, u32 mode) {
     switch (mode) {
         case 0:
             break;

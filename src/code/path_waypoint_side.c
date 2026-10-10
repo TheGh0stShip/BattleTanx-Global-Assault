@@ -5,11 +5,11 @@ typedef struct { float x, y; } Pt;
 typedef struct { char p0[0xC]; u16 right; u16 left; } Wp;
 typedef struct { char p0[0xA]; u16 cur; char pc[0x16 - 0xC]; u16 prev; unsigned int side; char p1c[0x28 - 0x1C]; Pt goal; } Path;
 typedef struct { char p0[0xF0]; Path path; } Ent;
-Wp *func_8007DA5C(int);
+Wp *Steps_InitStep_Free(int);
 void func_80080818(Ent *, int);
 u16 func_800808B4(Ent *, int);
 unsigned int func_8009D914(void);
-void func_8007E118(Wp *, Pt *);
+void Steps_FreeBranch(Wp *, Pt *);
 void func_8007D5B0(Pt *, float, Pt *, Pt *);
 #define ABS(x) ((x) > 0.0f ? (x) : -(x))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
@@ -18,7 +18,7 @@ void func_8007D5B0(Pt *, float, Pt *, Pt *);
 
 void func_8007F128(Ent *e) {
     u16 prev = e->path.prev;
-    Wp *w = func_8007DA5C(prev);
+    Wp *w = Steps_InitStep_Free(prev);
     Path *p = &e->path;
     u16 id;
 
@@ -39,7 +39,7 @@ void func_8007F128(Ent *e) {
         p->side = 0;
         return;
     }
-    w = func_8007DA5C(id);
+    w = Steps_InitStep_Free(id);
     if (w->left != 0) {
         p->side = 1;
     } else if (w->right != 0) {
@@ -51,7 +51,7 @@ void func_8007F128(Ent *e) {
             c = !((r >> 2) & 1);
         } else {
             Pt l, rt, pt;
-            func_8007E118(w, &pt);
+            Steps_FreeBranch(w, &pt);
             func_8007D5B0(&pt, 0.0f, &l, &rt);
             c = DIST(p->goal.x - l.x, p->goal.y - l.y) < DIST(p->goal.x - rt.x, p->goal.y - rt.y);
         }

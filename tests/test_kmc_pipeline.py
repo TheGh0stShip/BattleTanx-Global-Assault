@@ -134,7 +134,7 @@ class KmcPipelineTests(unittest.TestCase):
 
     def test_resource_copy_prologue_reorders_once(self) -> None:
         source = (
-            "func_8007E118:\n"
+            "Steps_FreeBranch:\n"
             "\tsubu\t$sp,$sp,24\n"
             "\tsw\t$31,20($sp)\n"
             "\tsw\t$16,16($sp)\n"
@@ -159,7 +159,7 @@ class KmcPipelineTests(unittest.TestCase):
 
     def test_resource_copy_prologue_requires_one_fire(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
-            MODULE.normalize_v3("func_8007E118:\n\tnop\n")
+            MODULE.normalize_v3("Steps_FreeBranch:\n\tnop\n")
 
     def test_owner_search_prologue_reorders_once(self) -> None:
         source = (
@@ -482,7 +482,7 @@ class KmcPipelineTests(unittest.TestCase):
             "func_8007E7A8:\n"
             ".L7:\n"
             "\t.set\tnoreorder\n"
-            "\tjal\tfunc_8007DB84\n"
+            "\tjal\tSteps_SpliceIn\n"
             "\tsw\t$0,240($16)\n"
             "\t.set\tnoreorder\n"
             "\tlhu\t$2,246($16)\n"
@@ -492,7 +492,7 @@ class KmcPipelineTests(unittest.TestCase):
         self.assertIn(
             "\tsw\t$0,240($16)\n"
             "\t.set\tnoreorder\n"
-            "\tjal\tfunc_8007DB84\n"
+            "\tjal\tSteps_SpliceIn\n"
             "\tsh\t$0,244($16)\n"
             "\t.set\tnoreorder\n"
             "\tlhu\t$2,246($16)\n",
@@ -827,11 +827,11 @@ class KmcPipelineTests(unittest.TestCase):
             "func_8007F59C:\n"
             "\tlhu\t$20,250($18)\n\t#nop\n"
             "\tandi\t$16,$20,0xffff\n"
-            "\tjal\tfunc_8007DA5C\n\tmove\t$5,$16\n"
+            "\tjal\tSteps_InitStep_Free\n\tmove\t$5,$16\n"
         )
         normalized = MODULE.shape_path_waypoint_side_registers(source)
         self.assertIn("\tlhu\t$5,250($18)\n", normalized)
-        self.assertIn("\tjal\tfunc_8007DA5C\n\tmove\t$20,$5\n", normalized)
+        self.assertIn("\tjal\tSteps_InitStep_Free\n\tmove\t$20,$5\n", normalized)
 
     def test_waypoint_stack_reset_addresses_require_two_fires(self) -> None:
         source = (

@@ -23,8 +23,8 @@ typedef struct ObjectState8007E8C8 {
 } ObjectState8007E8C8;
 
 extern Pool8007E8C8 *D_80114680;
-extern PoolRecord8007E8C8 *func_8007DA5C(u16 index);
-extern void func_8007DB84(u16 index);
+extern PoolRecord8007E8C8 *Steps_InitStep_Free(u16 index);
+extern void Steps_SpliceIn(u16 index);
 
 s32 func_8007E8C8(u8 *object) {
     ObjectState8007E8C8 *state;
@@ -42,11 +42,11 @@ s32 func_8007E8C8(u8 *object) {
     }
 
     do {
-        record = func_8007DA5C(state->link_e);
+        record = Steps_InitStep_Free(state->link_e);
         next_index = record->field02;
-        func_8007DB84(state->link_e);
+        Steps_SpliceIn(state->link_e);
         state->link_e = next_index;
-        record = func_8007DA5C(next_index);
+        record = Steps_InitStep_Free(next_index);
         if (record != 0) {
             record->link_16 = 0;
         }
