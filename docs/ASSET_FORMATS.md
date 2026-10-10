@@ -191,6 +191,46 @@ as address/size records. Its addresses form a contiguous chain through the
 cartridge resource region, providing an independent boundary check for every
 listed bank.
 
+### World resource pools
+
+Every world pool-reference record indexes one of three uncompressed cartridge
+pools used by the two world loaders. The loader-established boundaries are:
+
+| Pool | ROM range | Unique referenced chunks | Referenced bytes | Unreferenced bytes |
+| --- | --- | ---: | ---: | ---: |
+| Texture | `0x102C70–0x2F8070` | 736 | 1,930,032 | 123,088 |
+| State/display list | `0x2F8070–0x3013F0` | 409 | 33,664 | 4,096 |
+| Geometry | `0x3013F0–0x3F6EE8` | 4,638 | 903,424 | 102,904 |
+
+The byte counts above use the union of referenced ranges. A few records
+overlap, so summing record sizes directly would overcount them. The inventory
+preserves every exact `(offset, size)` pair and reference count, while also
+recording the merged coverage and every gap. This accounts for the entire
+3,097,208-byte pool region without incorrectly classifying alignment, unused
+resources, or unknown records as part of a neighbouring asset.
+
+Generate metadata only:
+
+```sh
+python3 tools/inventory_world_pools.py \
+  --output /tmp/btga-world-pools.json
+```
+
+For local inspection, the optional extraction mode writes each referenced raw
+chunk, each unreferenced gap, and a byte-exact `pool.bin` reconstruction under
+the ignored extraction tree:
+
+```sh
+python3 tools/inventory_world_pools.py \
+  --output /tmp/btga-world-pools.json \
+  --extract-dir assets/extracted/us/world-pools
+```
+
+The complete pool files and SHA-256 hashes make the extraction lossless even
+while the geometry, display-list, and texture subformats are still being
+named. Extracted files remain ROM-derived build artifacts and must not be
+committed.
+
 The complete ROM organization and structure names were cross-checked against
 [`nviewer` revision
 `700432e9bf368caebbe3150e86e987e246c851a8`](https://github.com/DSLL32/nviewer/tree/700432e9bf368caebbe3150e86e987e246c851a8).
