@@ -144,9 +144,8 @@ for spec in \
     main_80095E7C_to_80096294:0x418 \
     main_8009660C_to_800966D4:0xc8 \
     main_800967F0_to_80096810:0x20 \
-    main_80096A54_to_800973E0:0x98c \
+    main_80096BDC_to_800973E0:0x804 \
     main_80097508_to_80097560:0x58 \
-    main_80097660_to_80097DF8:0x798 \
     main_80097EE4_to_800985A0:0x6bc \
     main_800988E8_to_80098CC8:0x3e0 \
     main_80098F24_to_800991CC:0x2a8 \
@@ -972,7 +971,13 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             object_defaults mode_owner mode_transition object_disable \
             object_predicates object_direction object_action \
             80094880 80094FBC 80095C50 80096294 800966D4 80096810 \
-            800973E0 80097560 80097DF8 800985A0 80098CC8 800991CC \
+            font_glyph_draw 800973E0 80097560 \
+            func_80097660 func_800976AC func_80097794 func_800977DC \
+            func_80097844 func_8009790C func_800979A0 func_800979F4 \
+            func_80097A6C func_80097B20 func_80097B44 func_80097B68 \
+            func_80097BA4 func_80097BC4 func_80097C1C func_80097C84 \
+            func_80097CB8 func_80097CC8 music_stream_queue \
+            80097DF8 800985A0 80098CC8 800991CC \
             func_80099464 800998E8 80099FE8 player_order_shuffle 8009A6F8 \
             8009AE38 8009B434 8009C098 session_queries progress_level_advance \
             random_integer vector2 vector2_scale vector2_motion game_queue \
@@ -3397,6 +3402,21 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/camera_view_select.c.o .text 0x9c --alignment 4
 for spec in \
+    font_glyph_draw:0x188 \
+    func_80097660:0x4c func_800976AC:0xe8 func_80097794:0x48 \
+    func_800977DC:0x68 func_80097844:0xc8 func_8009790C:0x94 \
+    func_800979A0:0x54 func_800979F4:0x78 func_80097A6C:0xb4 \
+    func_80097B20:0x24 func_80097B44:0x24 func_80097B68:0x3c \
+    func_80097BA4:0x20 func_80097BC4:0x58 func_80097C1C:0x68 \
+    func_80097C84:0x34 func_80097CB8:0x10 func_80097CC8:0x4c \
+    music_stream_queue:0xe4
+do
+    unit="${spec%%:*}"
+    size="${spec##*:}"
+    python3 tools/trim_elf32_section.py \
+        "build/us/src/code/${unit}.c.o" .text "${size}" --alignment 4
+done
+for spec in \
     80094880:0x6c0:0xd0 \
     80094FBC:0xb94:0x40 \
     80095C50:0x22c:0x18 \
@@ -4072,11 +4092,30 @@ if false; then
     build/us/src/code/800966D4.c.o \
     build/us/asm/us/main_800967F0_to_80096810.s.o \
     build/us/src/code/80096810.c.o \
-    build/us/asm/us/main_80096A54_to_800973E0.s.o \
+    build/us/src/code/font_glyph_draw.c.o \
+    build/us/asm/us/main_80096BDC_to_800973E0.s.o \
     build/us/src/code/800973E0.c.o \
     build/us/asm/us/main_80097508_to_80097560.s.o \
     build/us/src/code/80097560.c.o \
-    build/us/asm/us/main_80097660_to_80097DF8.s.o \
+    build/us/src/code/func_80097660.c.o \
+    build/us/src/code/func_800976AC.c.o \
+    build/us/src/code/func_80097794.c.o \
+    build/us/src/code/func_800977DC.c.o \
+    build/us/src/code/func_80097844.c.o \
+    build/us/src/code/func_8009790C.c.o \
+    build/us/src/code/func_800979A0.c.o \
+    build/us/src/code/func_800979F4.c.o \
+    build/us/src/code/func_80097A6C.c.o \
+    build/us/src/code/func_80097B20.c.o \
+    build/us/src/code/func_80097B44.c.o \
+    build/us/src/code/func_80097B68.c.o \
+    build/us/src/code/func_80097BA4.c.o \
+    build/us/src/code/func_80097BC4.c.o \
+    build/us/src/code/func_80097C1C.c.o \
+    build/us/src/code/func_80097C84.c.o \
+    build/us/src/code/func_80097CB8.c.o \
+    build/us/src/code/func_80097CC8.c.o \
+    build/us/src/code/music_stream_queue.c.o \
     build/us/src/code/80097DF8.c.o \
     build/us/asm/us/main_80097EE4_to_800985A0.s.o \
     build/us/src/code/800985A0.c.o \
