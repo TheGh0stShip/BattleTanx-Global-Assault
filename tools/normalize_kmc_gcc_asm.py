@@ -592,71 +592,6 @@ def schedule_vector_angle_prologue(text: str) -> str:
     return text.replace(nan_branch, "\tbc1t\t.L2\n" + early_ra, 1)
 
 
-def shape_selection_state_dispatch(text: str) -> str:
-    """Reproduce the compact retail dispatch in ``func_8009ACDC``.
-
-    GCC lowers the three recognized states into an equivalent inverted branch
-    tree with two extra local jumps.  Replace only that label-gated tree with
-    the retail ordering; the scan, register allocation, and return values come
-    directly from the C source.
-    """
-    if "func_8009ACDC:" not in text:
-        return text
-    before = (
-        "\tbne\t$3,$11,.L8\n"
-        "\tsltu\t$2,$3,3\n"
-        "\t.set\tnoreorder\n"
-        "\t.set\tnoreorder\n"
-        "\tj\t.L9\n"
-        "\tli\t$2,0x00000001\t\t# 1\n"
-        "\t.set\tnoreorder\n"
-        ".L8:\n #APP\n #NO_APP\n"
-        "\tbeq\t$2,$0,.L10\n"
-        "\tnop\n"
-        "\t.set\tnoreorder\n"
-        "\tbnel\t$3,$10,.L17\n"
-        "\taddu\t$8,$8,1\n"
-        "\t.set\tnoreorder\n"
-        "\t.set\tnoreorder\n"
-        "\tj\t.L18\n"
-        "\tmove\t$2,$0\n"
-        "\t.set\tnoreorder\n"
-        ".L10:\n\t.set\tnoreorder\n"
-        "\tbnel\t$3,$9,.L7\n"
-        "\taddu\t$8,$8,1\n"
-        "\t.set\tnoreorder\n"
-        "\t.set\tnoreorder\n"
-        "\tj\t.L9\n"
-        "\tli\t$2,0x00000002\t\t# 2\n"
-        "\t.set\tnoreorder\n"
-        ".L7:\n"
-    )
-    after = (
-        "\tbeq\t$3,$11,.Lkmc_one_8009ACDC\n"
-        "\tsltu\t$2,$3,3\n"
-        "\tbeq\t$2,$0,.Lkmc_ge_8009ACDC\n"
-        "\tnop\n"
-        "\tbeq\t$3,$10,.L9\n"
-        "\tmove\t$2,$0\n"
-        "\tj\t.L17\n"
-        "\taddu\t$8,$8,1\n"
-        ".Lkmc_ge_8009ACDC:\n"
-        "\tbeq\t$3,$9,.L9\n"
-        "\tli\t$2,0x00000002\t\t# 2\n"
-        "\tj\t.L17\n"
-        "\taddu\t$8,$8,1\n"
-        ".Lkmc_one_8009ACDC:\n"
-        "\tj\t.L9\n"
-        "\tli\t$2,0x00000001\t\t# 1\n"
-    )
-    fires = text.count(before)
-    if fires != 1:
-        raise RuntimeError(
-            f"func_8009ACDC state-dispatch rewrite fired {fires} times (expected 1)"
-        )
-    return text.replace(before, after, 1)
-
-
 def shape_snapshot_record_address(text: str) -> str:
     """Reproduce the retail address tree in ``func_80079FF0``.
 
@@ -2480,27 +2415,6 @@ def shape_value_decay_clamp(text: str) -> str:
     return text.replace(before, after, 1)
 
 
-def preserve_mask_value_magnitude_copy(text: str) -> str:
-    """Use func_80098454's retained magnitude copy for the negative arm."""
-    if "func_80098454:" not in text:
-        return text
-
-    before = (
-        "\tbgez\t$4,.L10\n"
-        "\tmove\t$2,$4\n"
-        "\t.set\tnoreorder\n"
-        "\tsubu\t$2,$0,$4\n"
-        ".L10:\n"
-    )
-    after = before.replace("\tsubu\t$2,$0,$4\n", "\tsubu\t$2,$0,$2\n")
-    fires = text.count(before)
-    if fires != 1:
-        raise RuntimeError(
-            f"func_80098454 magnitude-copy rewrite fired {fires} times (expected 1)"
-        )
-    return text.replace(before, after, 1)
-
-
 def schedule_pool_type4_removal(text: str) -> str:
     """Reproduce func_8007E7A8's state-clear/call schedule."""
     if "func_8007E7A8:" not in text:
@@ -2837,8 +2751,6 @@ def normalize_v3(source: str) -> str:
         text = select_region_early_exit_likely(text)
     if os.environ.get("V3_VECTOR_ANGLE_PROLOGUE", "1") == "1":
         text = schedule_vector_angle_prologue(text)
-    if os.environ.get("V3_SELECTION_STATE_DISPATCH", "1") == "1":
-        text = shape_selection_state_dispatch(text)
     if os.environ.get("V3_SNAPSHOT_RECORD_ADDRESS", "1") == "1":
         text = shape_snapshot_record_address(text)
     if os.environ.get("V3_LARGE_SEARCH_PROLOGUE", "1") == "1":
@@ -2927,8 +2839,6 @@ def normalize_v3(source: str) -> str:
         text = allocate_flag_dispatch_output_to_a3(text)
     if os.environ.get("V3_VALUE_DECAY_CLAMP", "1") == "1":
         text = shape_value_decay_clamp(text)
-    if os.environ.get("V3_MASK_VALUE_MAGNITUDE", "1") == "1":
-        text = preserve_mask_value_magnitude_copy(text)
     if os.environ.get("V3_POOL_TYPE4_REMOVAL", "1") == "1":
         text = schedule_pool_type4_removal(text)
     if os.environ.get("V3_OBJECT_DISTANCE_PROBE", "1") == "1":

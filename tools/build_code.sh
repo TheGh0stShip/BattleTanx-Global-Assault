@@ -140,19 +140,16 @@ python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800859E4_to_8009C284.s.o .text 0xee9c --alignment 4
 for spec in \
     main_80095F08_to_80096250:0x348 \
-    main_80096BDC_to_800973E0:0x804 \
+    main_80096BDC_to_80096F48:0x36c \
+    main_8009700C_to_800973E0:0x3d4 \
     main_8009755C_to_80097560:0x4 \
     main_80097FB4_to_8009813C:0x188 \
-    main_80098454_to_80098534:0xe0 \
     main_8009859C_to_800985A0:0x4 \
     main_800988E8_to_80098AFC:0x214 \
-    main_80098BC8_to_80098BF8:0x30 \
     main_80099160_to_800991CC:0x6c \
     main_80099824_to_80099830:0xc \
-    main_8009ACDC_to_8009AD7C:0xa0 \
-    main_8009B0F0_to_8009B434:0x344 \
-    main_8009B62C_to_8009C098:0xa6c \
-    main_8009C284_to_8009C31C:0x98
+    main_8009B0F0_to_8009B35C:0x26c \
+    main_8009B694_to_8009C098:0xa04
 do
     unit="${spec%%:*}"
     size="${spec##*:}"
@@ -979,7 +976,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             80097DF8 func_80097EE4 func_8009813C func_80098180 func_80098190 \
             func_800981E0 func_80098250 func_80098334 func_8009836C \
             func_80098430 func_80098534 800985A0 \
-            func_80098AFC func_80098B2C func_80098B40 func_80098B58 \
+            func_80098AFC func_80098B2C func_80098B40 func_80098B58 func_80098BC8 \
             func_80098BF8 80098CC8 \
             func_80098F24 func_80098FBC func_80099028 func_80099080 \
             func_800992E0 func_800993B0 func_800996C4 func_80099758 \
@@ -987,7 +984,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             func_80099F74 func_8009A650 func_8009A6F0 func_8009AD7C \
             800991CC \
             func_80099464 800998E8 80099FE8 player_order_shuffle 8009A6F8 \
-            8009AE38 8009B434 8009C098 session_queries progress_level_advance \
+            8009AE38 player_state_modes 8009B434 func_8009B62C 8009C098 session_queries progress_level_advance \
             random_integer vector2 vector2_scale vector2_motion game_queue \
             matrix_basic matrix_state \
             matrix_transform vector2_rotate matrix_vector matrix_multiply lzari_decode \
@@ -3190,6 +3187,12 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/session_queries.c.o .text 0x98 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_80098BC8.c.o .text 0x30 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/player_state_modes.c.o .text 0xd8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_8009B62C.c.o .text 0x68 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/random_integer.c.o .text 0x4c --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/vector2.c.o .text 0x7c --alignment 4
@@ -4123,7 +4126,9 @@ if false; then
     build/us/src/code/func_800967F0.c.o \
     build/us/src/code/80096810.c.o \
     build/us/src/code/font_glyph_draw.c.o \
-    build/us/asm/us/main_80096BDC_to_800973E0.s.o \
+    build/us/asm/us/main_80096BDC_to_80096F48.s.o \
+    build/us/src/code/func_80096F48.c.o \
+    build/us/asm/us/main_8009700C_to_800973E0.s.o \
     build/us/src/code/800973E0.c.o \
     build/us/src/code/func_80097508.c.o \
     build/us/src/code/func_80097530.c.o \
@@ -4159,7 +4164,7 @@ if false; then
     build/us/src/code/func_80098334.c.o \
     build/us/src/code/func_8009836C.c.o \
     build/us/src/code/func_80098430.c.o \
-    build/us/asm/us/main_80098454_to_80098534.s.o \
+    build/us/src/code/func_80098454.c.o \
     build/us/src/code/func_80098534.c.o \
     build/us/asm/us/main_8009859C_to_800985A0.s.o \
     build/us/src/code/800985A0.c.o \
@@ -4168,7 +4173,7 @@ if false; then
     build/us/src/code/func_80098B2C.c.o \
     build/us/src/code/func_80098B40.c.o \
     build/us/src/code/func_80098B58.c.o \
-    build/us/asm/us/main_80098BC8_to_80098BF8.s.o \
+    build/us/src/code/func_80098BC8.c.o \
     build/us/src/code/func_80098BF8.c.o \
     build/us/src/code/80098CC8.c.o \
     build/us/src/code/func_80098F24.c.o \
@@ -4194,12 +4199,14 @@ if false; then
     build/us/src/code/func_8009A650.c.o \
     build/us/src/code/func_8009A6F0.c.o \
     build/us/src/code/8009A6F8.c.o \
-    build/us/asm/us/main_8009ACDC_to_8009AD7C.s.o \
+    build/us/src/code/func_8009ACDC.c.o \
     build/us/src/code/func_8009AD7C.c.o \
     build/us/src/code/8009AE38.c.o \
-    build/us/asm/us/main_8009B0F0_to_8009B434.s.o \
+    build/us/asm/us/main_8009B0F0_to_8009B35C.s.o \
+    build/us/src/code/player_state_modes.c.o \
     build/us/src/code/8009B434.c.o \
-    build/us/asm/us/main_8009B62C_to_8009C098.s.o \
+    build/us/src/code/func_8009B62C.c.o \
+    build/us/asm/us/main_8009B694_to_8009C098.s.o \
     build/us/src/code/8009C098.c.o \
     build/us/src/code/session_queries.c.o \
     build/us/src/code/progress_level_advance.c.o \

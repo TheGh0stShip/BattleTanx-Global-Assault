@@ -29,13 +29,10 @@ f32 func_80098454(u8 *data, u32 *masks, u8 index) {
 
 check_magnitude:
     {
-    register f32 output __asm__("$f0");
+    f32 output;
 
     threshold = D_80072470;
-    magnitude = value;
-    if (magnitude < 0) {
-        magnitude = -magnitude;
-    }
+    magnitude = __builtin_abs(value);
     output = 0.0f;
     if (threshold < magnitude) {
         output = value;

@@ -164,3 +164,13 @@ align_800C6918	0x800C6918	0x8
 align_800CB10C	0x800CB10C	0x4
 align_800CD96C	0x800CD96C	0x4
 align_800CDBDC	0x800CDBDC	0x4
+# Verified object-tail padding outside Claude's active early-rodata lane.
+# 0x800ACE6C is the unused final word before the next aligned gameplay unit;
+# the libmus and libultra gaps are zero-filled section alignment. The final
+# two words are documented stale string tails between compiler-runtime objects.
+align_800ACE6C	0x800ACE6C	0x4
+align_800B06D8	0x800B06D8	0x8
+align_800FF814	0x800FF814	0xC
+align_8010CF98	0x8010CF98	0x8
+align_80113E0C	0x80113E0C	0x4
+align_8011446C	0x8011446C	0x4
