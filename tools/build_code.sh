@@ -5120,6 +5120,12 @@ controller_slots_scan 0x2C
 debris_piece_draw 0x44
 debris_scatter_spawn 0x4
 func_800C0C38 0x4
+func_8007D5B0 0x8
+func_80082004 0xC
+func_80086190 0x4C
+func_800867C4 0x38
+func_80087798 0x4
+func_800879F8 0x4
 gameplay_definition_data 0x99
 hud_transition 0x4
 lightning_arc_update 0x54

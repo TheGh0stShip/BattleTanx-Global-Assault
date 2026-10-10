@@ -3771,6 +3771,8 @@ def normalize_v3(source: str) -> str:
         text = reproduce_font_number_divide_hazards(text)
     if os.environ.get("V3_SPATIAL_SOUND_SENTINEL_SCHEDULE", "1") == "1":
         text = schedule_spatial_sound_sentinel(text)
+    if os.environ.get("V3_PACKED_HEADING_PROLOGUE", "1") == "1":
+        text = schedule_packed_heading_prologue(text)
     return text
 
 
@@ -3896,6 +3898,63 @@ def schedule_spatial_sound_sentinel(text: str) -> str:
     if fires != 1:
         raise RuntimeError(
             f"func_80097FB4 sentinel schedule fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
+def schedule_packed_heading_prologue(text: str) -> str:
+    """Reproduce the independent-load schedule in ``func_8007D5B0``.
+
+    The source produces exactly the retail operations, but GCC's final
+    scheduler delays the frame setup, record load, and fifth-argument copy.
+    Reorder only this complete function-local window and require one fire.
+    """
+    if "func_8007D5B0:" not in text:
+        return text
+    before = (
+        "\tl.s\t$f0,$LF_lis0\n"
+        "\tmtc1\t$5,$f4\n"
+        "\t#nop\n"
+        "\tadd.s\t$f2,$f4,$f0\n"
+        "\t.section\t.rodata\n"
+        "\t.align\t2\n"
+        "$LF_lis1:\n"
+        "\t.word\t0x4F000000\n"
+        "\t.text\n"
+        "\tl.s\t$f0,$LF_lis1\n"
+        "\tsubu\t$sp,$sp,32\n"
+        "\tsw\t$31,24($sp)\n"
+        "\tc.le.s\t$f0,$f2\n"
+        "\tlhu\t$3,4($4)\n"
+        "\tlbu\t$5,6($4)\n"
+        "\t.set\tnoreorder\n"
+        "\tbc1t\t.L2\n"
+        "\tmove\t$8,$6\n"
+    )
+    after = (
+        "\tl.s\t$f0,$LF_lis0\n"
+        "\tmtc1\t$5,$f4\n"
+        "\t#nop\n"
+        "\tsubu\t$sp,$sp,32\n"
+        "\tadd.s\t$f2,$f4,$f0\n"
+        "\t.section\t.rodata\n"
+        "\t.align\t2\n"
+        "$LF_lis1:\n"
+        "\t.word\t0x4F000000\n"
+        "\t.text\n"
+        "\tl.s\t$f0,$LF_lis1\n"
+        "\tlhu\t$3,4($4)\n"
+        "\tmove\t$8,$6\n"
+        "\tc.le.s\t$f0,$f2\n"
+        "\tlbu\t$5,6($4)\n"
+        "\t.set\tnoreorder\n"
+        "\tbc1t\t.L2\n"
+        "\tsw\t$31,24($sp)\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_8007D5B0 packed-heading schedule fired {fires} times (expected 1)"
         )
     return text.replace(before, after, 1)
 

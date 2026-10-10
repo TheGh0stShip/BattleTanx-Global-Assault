@@ -1,48 +1,18 @@
+/* RODATA_VRAM 0x80071608 */
 #include "types.h"
 
-extern f32 D_80071608;
-extern f32 func_8009D4B0(u16);
+typedef struct {
+    u16 angle;
+    char pad2[2];
+    f32 rate;
+    f32 amplitude;
+    f32 offset;
+} WaveSample;
 
-/* Apply a packed angular offset and evaluate the resulting wave sample.
- * Transitional exact reconstruction for FPU branch scheduling. */
-__asm__(
-".text\n"
-".globl func_800879F8\n"
-"func_800879F8:\n"
-"addiu $sp,$sp,-0x18\n"
-"sw $16,0x10($sp)\n"
-"addu $16,$4,$0\n"
-"sw $ra,0x14($sp)\n"
-"lwc1 $f0,4($16)\n"
-"mtc1 $5,$f4\n"
-"mul.s $f2,$f4,$f0\n"
-"lui $1,%hi(D_80071608)\n"
-"lwc1 $f0,%lo(D_80071608)($1)\n"
-"c.le.s $f0,$f2\n"
-"nop\n"
-"bc1tl 1f\n"
-"sub.s $f0,$f2,$f0\n"
-"trunc.w.s $f0,$f2\n"
-"mfc1 $5,$f0\n"
-"j 2f\n"
-"nop\n"
-"1:\n"
-"trunc.w.s $f2,$f0\n"
-"mfc1 $5,$f2\n"
-"lui $2,0x8000\n"
-"or $5,$5,$2\n"
-"2:\n"
-"lhu $4,0($16)\n"
-"addu $4,$4,$5\n"
-"jal func_8009D4B0\n"
-"andi $4,$4,0xffff\n"
-"lwc1 $f2,8($16)\n"
-"mul.s $f2,$f2,$f0\n"
-"lwc1 $f0,0xc($16)\n"
-"add.s $f0,$f0,$f2\n"
-"lw $ra,0x14($sp)\n"
-"lw $16,0x10($sp)\n"
-"addiu $sp,$sp,0x18\n"
-"jr $ra\n"
-"nop\n"
-);
+f32 func_8009D4B0(u16 angle);
+
+f32 func_800879F8(WaveSample *sample, f32 phase) {
+    u32 step = phase * sample->rate;
+
+    return sample->offset + sample->amplitude * func_8009D4B0(sample->angle + step);
+}

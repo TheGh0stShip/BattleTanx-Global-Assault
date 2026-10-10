@@ -1,4 +1,5 @@
 # unit	vram	text_size	status
+func_8007D5B0	0x8007D5B0	0x78	normalizer-assisted
 font_number_draw	0x80096BDC	0x238	normalizer-assisted
 spatial_sound_play	0x80097FB4	0x188	normalizer-assisted
 path_sequence_init	0x80082D98	0x184	normalizer-assisted

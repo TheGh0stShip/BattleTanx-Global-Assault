@@ -13,13 +13,8 @@ func_800C21AC	0x800C21AC	0x6C	selected
 func_800C2218	0x800C2218	0x6C	selected
 func_8009F444	0x8009F444	0x70	selected
 func_80089610	0x80089610	0x74	selected
-func_8007D5B0	0x8007D5B0	0x78	selected
-func_80086190	0x80086190	0x78	selected
-func_800867C4	0x800867C4	0x7C	selected
 func_8009E948	0x8009E948	0x80	selected
 func_8007DFA0	0x8007DFA0	0x84	selected
 func_8008AD80	0x8008AD80	0x84	selected
-func_800879F8	0x800879F8	0x88	selected
 func_80083028	0x80083028	0x8C	selected
-func_80087798	0x80087798	0x8C	selected
 func_80086BEC	0x80086BEC	0x90	selected

@@ -12,6 +12,38 @@ SPEC.loader.exec_module(MODULE)
 
 
 class KmcPipelineTests(unittest.TestCase):
+    def test_packed_heading_prologue_reorders_exact_window(self) -> None:
+        source = (
+            "func_8007D5B0:\n"
+            "\tl.s\t$f0,$LF_lis0\n\tmtc1\t$5,$f4\n\t#nop\n"
+            "\tadd.s\t$f2,$f4,$f0\n\t.section\t.rodata\n"
+            "\t.align\t2\n$LF_lis1:\n\t.word\t0x4F000000\n"
+            "\t.text\n\tl.s\t$f0,$LF_lis1\n\tsubu\t$sp,$sp,32\n"
+            "\tsw\t$31,24($sp)\n\tc.le.s\t$f0,$f2\n"
+            "\tlhu\t$3,4($4)\n\tlbu\t$5,6($4)\n"
+            "\t.set\tnoreorder\n\tbc1t\t.L2\n\tmove\t$8,$6\n"
+        )
+        normalized = MODULE.schedule_packed_heading_prologue(source)
+        self.assertIn(
+            "\tmtc1\t$5,$f4\n\t#nop\n\tsubu\t$sp,$sp,32\n"
+            "\tadd.s\t$f2,$f4,$f0\n",
+            normalized,
+        )
+        self.assertIn(
+            "\tlhu\t$3,4($4)\n\tmove\t$8,$6\n"
+            "\tc.le.s\t$f0,$f2\n\tlbu\t$5,6($4)\n",
+            normalized,
+        )
+        self.assertIn("\tbc1t\t.L2\n\tsw\t$31,24($sp)\n", normalized)
+
+    def test_packed_heading_prologue_is_function_gated(self) -> None:
+        source = "func_8007D5B0_other:\n\tnop\n"
+        self.assertEqual(source, MODULE.schedule_packed_heading_prologue(source))
+
+    def test_packed_heading_prologue_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.schedule_packed_heading_prologue("func_8007D5B0:\n\tnop\n")
+
     def test_spatial_sound_sentinel_moves_after_constant_load(self) -> None:
         before = (
             "func_80097FB4:\n"
