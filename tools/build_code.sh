@@ -1037,6 +1037,8 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             scheduler_context scheduler_state scheduler_events \
             scheduler_queue scheduler_misc object_range object_timing object_setters \
             object_init func_800A16F8 800A1BE0 task_message_broadcast \
+            func_800A8E3C 800A9080 func_800A977C func_800A98B8 func_800A9B64 \
+            func_800A9C24 func_800A9CCC 800A9F10 \
             func_800A2E5C 800A2FBC 800A3758 \
             effect_sprite_key_draw effect_sprite_ring_draw 800A477C \
             800A5BD8 800A61A0 camera_collision_resolve 800A6588 \
@@ -3218,6 +3220,22 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/object_init.c.o .text 0x30 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800A8E3C.c.o .text 0x48 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A9080.c.o .text 0x5e0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800A977C.c.o .text 0x80 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800A98B8.c.o .text 0x70 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800A9B64.c.o .text 0x84 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800A9C24.c.o .text 0xa8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800A9CCC.c.o .text 0x84 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A9F10.c.o .text 0x148 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/func_800A16F8.c.o .text 0xa4 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800A1BE0.c.o .text 0x574 --alignment 4
@@ -3916,7 +3934,8 @@ if false; then
     build/us/src/code/task_message_broadcast.c.o \
     build/us/asm/us/main_800A22CC_to_800A2B74.s.o \
     build/us/src/code/object_range.c.o \
-    build/us/asm/us/main_800A2B9C_to_800A2DFC.s.o \
+    build/us/src/code/func_800A2B9C.c.o \
+    build/us/asm/us/main_800A2C6C_to_800A2DFC.s.o \
     build/us/src/code/scheduler_misc.c.o \
     build/us/src/code/func_800A2E5C.c.o \
     build/us/asm/us/main_800A2EEC_to_800A2EF0.s.o \
@@ -3953,15 +3972,32 @@ if false; then
     build/us/src/code/800A89B0.c.o \
     build/us/src/code/camera_view_select.c.o \
     build/us/src/code/object_reset.c.o \
-    build/us/asm/us/main_800A8B38_to_800A9054.s.o \
+    build/us/asm/us/main_800A8B38_to_800A8D54.s.o \
+    build/us/src/code/func_800A8D54.c.o \
+    build/us/src/code/func_800A8E3C.c.o \
+    build/us/src/code/func_800A8E84.c.o \
+    build/us/src/code/func_800A8F34.c.o \
     build/us/src/code/object_flags.c.o \
-    build/us/asm/us/main_800A9080_to_800A974C.s.o \
+    build/us/src/code/800A9080.c.o \
+    build/us/src/code/func_800A9660.c.o \
+    build/us/src/code/func_800A96B8.c.o \
     build/us/src/code/object_limit.c.o \
-    build/us/asm/us/main_800A977C_to_800A9BF0.s.o \
+    build/us/src/code/func_800A977C.c.o \
+    build/us/src/code/func_800A97FC.c.o \
+    build/us/src/code/func_800A98B8.c.o \
+    build/us/asm/us/main_800A9928_to_800A9A44.s.o \
+    build/us/src/code/func_800A9A44.c.o \
+    build/us/asm/us/main_800A9A98_to_800A9B64.s.o \
+    build/us/src/code/func_800A9B64.c.o \
+    build/us/asm/us/main_800A9BE8_to_800A9BF0.s.o \
     build/us/src/code/object_table_color.c.o \
-    build/us/asm/us/main_800A9C24_to_800A9D50.s.o \
+    build/us/src/code/func_800A9C24.c.o \
+    build/us/src/code/func_800A9CCC.c.o \
     build/us/src/code/object_table_reset.c.o \
-    build/us/asm/us/main_800A9D78_to_800AA598.s.o \
+    build/us/asm/us/main_800A9D78_to_800A9EC0.s.o \
+    build/us/asm/us/main_800A9EC0_to_800A9F10.s.o \
+    build/us/src/code/800A9F10.c.o \
+    build/us/asm/us/main_800AA058_to_800AA598.s.o \
     build/us/src/code/object_table_lookup.c.o \
     build/us/asm/us/main_800AA5C4_to_800B0444.s.o \
     build/us/src/code/gameplay_stub.c.o \
