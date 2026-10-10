@@ -3625,7 +3625,8 @@ if false; then
     build/us/src/code/player_color.c.o \
     build/us/asm/us/main_800B06D8_to_800B5F30.s.o \
     build/us/src/code/turn_adjust.c.o \
-    build/us/asm/us/main_800B5F70_to_800B6934.s.o \
+    build/us/src/code/mover_collision_response.c.o \
+    build/us/asm/us/main_800B66E0_to_800B6934.s.o \
     build/us/src/code/func_800B6934.c.o \
     build/us/asm/us/main_800B69F4_to_800B99AC.s.o \
     build/us/src/code/display_registry.c.o \
