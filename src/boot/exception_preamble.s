@@ -17,6 +17,8 @@ __bootExceptionPreamble:
     jr      $k0
      nop
 
+.globl D_80078CF4
+D_80078CF4:
 __bootExceptionPreamble_general:
     nop
     nop

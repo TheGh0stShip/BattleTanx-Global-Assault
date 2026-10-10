@@ -232,7 +232,6 @@ func_800B5D1C	0x800B5D1C	0x8C	matched
 func_800830F8	0x800830F8	0x90	matched
 func_8009EFD4	0x8009EFD4	0x90	matched
 func_800A2E5C	0x800A2E5C	0x90	matched
-func_800B02D4	0x800B02D4	0x90	matched
-func_800B0364	0x800B0364	0x90	matched
+bounds_pair	0x800B02D4	0x120	matched
 func_800B9E24	0x800B9E24	0x90	matched
 func_800B9EB4	0x800B9EB4	0x90	matched

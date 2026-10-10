@@ -6,6 +6,31 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class LibultraAssemblySourceTests(unittest.TestCase):
+    def test_boot_exception_monitor_uses_readable_source_units(self):
+        units = {
+            "exception_preamble": "__bootExceptionPreamble",
+            "exception_handler": "__bootException",
+            "exception_vector_install": "func_8007919C",
+            "exception_context_save": "func_80079260",
+        }
+        splat = (ROOT / "config/us/splat.yaml").read_text()
+        build = (ROOT / "tools/build_code.sh").read_text()
+
+        for unit, entry in units.items():
+            source = (ROOT / f"src/boot/{unit}.s").read_text()
+            self.assertIn(entry, source)
+            self.assertNotIn(".incbin", source)
+            self.assertNotIn("GLOBAL_ASM", source)
+            self.assertIn(f"hasm, boot/{unit}]", splat)
+            self.assertIn(f"boot/{unit}.s.o", build)
+
+        handler = (ROOT / "src/boot/exception_handler.s").read_text()
+        self.assertIn(".word   D_80079208", handler)
+        self.assertIn("bgezal  $zero, func_8007919C", handler)
+        context = (ROOT / "src/boot/exception_context_save.s").read_text()
+        self.assertIn("SAVE_CP0 $31, 0x210", context)
+        self.assertIn("SAVE_ODD_FPR $f31, 0x310", context)
+
     def test_exception_handler_uses_authentic_source_unit(self):
         source = (ROOT / "src/libultra/exceptasm.s").read_text()
         self.assertIn("LEAF(__osException)", source)

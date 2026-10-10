@@ -123,6 +123,7 @@ race_type_name_lookup	0x80073DE8	0x40
 race_player_set_layout	0x80073E28	0x40
 race_mode_icon_get	0x80073E68	0x40
 race_player_set_mode_icon	0x80073EA8	0x3C
+race_bar_update	0x80073EEC	0x4
 race_slot_set_digit	0x80073F30	0x20
 controls_bindings_save	0x80073F70	0x28
 controls_bindings_load	0x80073F98	0x9C

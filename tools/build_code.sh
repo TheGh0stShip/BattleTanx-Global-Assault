@@ -29,6 +29,7 @@ for boot_exception_source in asm/us/main_8007*.s; do
     sed -i \
         -e 's/__osExceptionPreamble/__bootExceptionPreamble/g' \
         -e 's/__osException/__bootException/g' \
+        -e 's/\.L80078CF4/D_80078CF4/g' \
         "$boot_exception_source"
 done
 
@@ -136,19 +137,43 @@ python3 tools/trim_elf32_section.py \
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800859E4_to_8009C284.s.o asm/us/main_800859E4_to_8009C284.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800859E4_to_8009C284.s.o .text 0x168a0 --alignment 4
+    build/us/asm/us/main_800859E4_to_8009C284.s.o .text 0xee9c --alignment 4
+for spec in \
+    main_80094F40_to_80094FBC:0x7c \
+    main_80095B50_to_80095C50:0x100 \
+    main_80095E7C_to_80096294:0x418 \
+    main_8009660C_to_800966D4:0xc8 \
+    main_800967F0_to_80096810:0x20 \
+    main_80096A54_to_800973E0:0x98c \
+    main_80097508_to_80097560:0x58 \
+    main_80097660_to_80097DF8:0x798 \
+    main_80097EE4_to_800985A0:0x6bc \
+    main_800988E8_to_80098CC8:0x3e0 \
+    main_80098F24_to_800991CC:0x2a8 \
+    main_800992E0_to_80099464:0x184 \
+    main_800996C4_to_800998E8:0x224 \
+    main_80099F74_to_80099FE8:0x74 \
+    main_8009A650_to_8009A6F8:0xa8 \
+    main_8009ACDC_to_8009AE38:0x15c \
+    main_8009B0F0_to_8009B434:0x344 \
+    main_8009B62C_to_8009C098:0xa6c \
+    main_8009C284_to_8009C31C:0x98
+do
+    unit="${spec%%:*}"
+    size="${spec##*:}"
+    "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+        -o "build/us/asm/us/${unit}.s.o" "asm/us/${unit}.s"
+    python3 tools/trim_elf32_section.py \
+        "build/us/asm/us/${unit}.s.o" .text "${size}" --alignment 4
+done
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8009C31C_to_8009D144.s.o asm/us/main_8009C31C_to_8009D144.s
+    -o build/us/asm/us/main_8009C524_to_8009D144.s.o asm/us/main_8009C524_to_8009D144.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8009C31C_to_8009D144.s.o .text 0xe28 --alignment 4
+    build/us/asm/us/main_8009C524_to_8009D144.s.o .text 0xc20 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8009D168_to_8009D578.s.o asm/us/main_8009D168_to_8009D578.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_8009D168_to_8009D578.s.o .text 0x410 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_8009D5B4_to_8009D6DC.s.o asm/us/main_8009D5B4_to_8009D6DC.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_8009D5B4_to_8009D6DC.s.o .text 0x128 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_8009D6F8_to_8009D72C.s.o asm/us/main_8009D6F8_to_8009D72C.s
 python3 tools/trim_elf32_section.py \
@@ -294,9 +319,9 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/data/main_800C6918_textbin.s.o .text 0x8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C98E8_to_800CA1A8.s.o asm/us/main_800C98E8_to_800CA1A8.s
+    -o build/us/asm/us/main_800C9A3C_to_800CA1A8.s.o asm/us/main_800C9A3C_to_800CA1A8.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C98E8_to_800CA1A8.s.o .text 0x8c0 --alignment 4
+    build/us/asm/us/main_800C9A3C_to_800CA1A8.s.o .text 0x76c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800CA620_to_800CAA0C.s.o asm/us/main_800CA620_to_800CAA0C.s
 python3 tools/trim_elf32_section.py \
@@ -946,7 +971,10 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             collision_fields object_query pair_queue \
             object_defaults mode_owner mode_transition object_disable \
             object_predicates object_direction object_action \
-            session_queries \
+            80094880 80094FBC 80095C50 80096294 800966D4 80096810 \
+            800973E0 80097560 80097DF8 800985A0 80098CC8 800991CC \
+            func_80099464 800998E8 80099FE8 player_order_shuffle 8009A6F8 \
+            8009AE38 8009B434 8009C098 session_queries progress_level_advance \
             random_integer vector2 vector2_scale vector2_motion game_queue \
             matrix_basic matrix_state \
             matrix_transform vector2_rotate matrix_vector matrix_multiply lzari_decode \
@@ -972,7 +1000,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             spotter_update spotter_frame_setup func_800A702C \
             player_perspective_update 800A7794 800A8690 800A89B0 \
             camera_view_select object_reset object_flags object_limit \
-            800B87A0 grid_node_height grid_height_query model_player_color \
+            800B87A0 grid_node_height grid_height_query model_player_color angle_table_lookup bounds_pair \
             object_table_color object_table_reset object_table_lookup \
             gameplay_stub turn_adjust hud_state hud_tree_update hud_modes hud_stub \
             race_assets_init race_mode_query race_hud_layout race_marker_project race_map_draw race_state_init controller_menu_state \
@@ -1017,7 +1045,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             race_player_message \
             race_player_pair_set \
             race_display_value_set \
-            race_player_reset \
+            race_player_reset race_bar_update \
             race_timer_queries \
             race_popup_show \
             race_flag_queries \
@@ -2358,6 +2386,10 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/race_player_panel.c.o .text 0x11c --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_bar_update.c.o .text 0x154 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/race_bar_update.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/race_slot_clear.c.o .text 0x24 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/race_event_push.c.o .text 0x118 --alignment 4
@@ -3364,12 +3396,53 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/800A89B0.c.o .text 0xc8 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/camera_view_select.c.o .text 0x9c --alignment 4
+for spec in \
+    80094880:0x6c0:0xd0 \
+    80094FBC:0xb94:0x40 \
+    80095C50:0x22c:0x18 \
+    80096294:0x378:0x1c \
+    800966D4:0x11c:0 \
+    80096810:0x244:0x188 \
+    800973E0:0x128:0 \
+    80097560:0x100:0 \
+    80097DF8:0xec:0 \
+    800985A0:0x348:0 \
+    80098CC8:0x25c:0 \
+    800991CC:0x114:0 \
+    func_80099464:0x260:0 \
+    800998E8:0x68c:0 \
+    80099FE8:0x4e0:0x8 \
+    player_order_shuffle:0x188:0 \
+    8009A6F8:0x5e4:0x38 \
+    8009AE38:0x2b8:0x8 \
+    8009B434:0x1f8:0 \
+    8009C098:0x1ec:0x8
+do
+    unit="${spec%%:*}"
+    rest="${spec#*:}"
+    text_size="${rest%%:*}"
+    rodata_size="${rest##*:}"
+    python3 tools/trim_elf32_section.py \
+        "build/us/src/code/${unit}.c.o" .text "${text_size}" --alignment 4
+    if [ "${rodata_size}" != 0 ]; then
+        python3 tools/trim_elf32_section.py \
+            "build/us/src/code/${unit}.c.o" .rodata "${rodata_size}" --alignment 4
+    fi
+done
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/progress_level_advance.c.o .text 0x208 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800B87A0.c.o .text 0xd0 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/grid_node_height.c.o .text 0x6c --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/grid_height_query.c.o .text 0x224 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/angle_table_lookup.c.o .text 0x128 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/angle_table_lookup.c.o .rodata 0x18 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/bounds_pair.c.o .text 0x120 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/model_player_color.c.o .text 0xdc --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3548,6 +3621,27 @@ for boot_unit in entry host_break rmon_panic_stub; do
     "${tool_prefix}objcopy" --set-section-alignment .text=4 \
         "build/us/asm/us/boot/${boot_unit}.s.o"
 done
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/boot/exception_context_save.s.o \
+    src/boot/exception_context_save.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/boot/exception_vector_install.s.o \
+    src/boot/exception_vector_install.s
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+    -o build/us/asm/us/boot/exception_handler.s.o \
+    src/boot/exception_handler.s
+"${tool_prefix}objcopy" --set-section-alignment .text=4 \
+    build/us/asm/us/boot/exception_context_save.s.o
+"${tool_prefix}objcopy" --set-section-alignment .text=4 \
+    build/us/asm/us/boot/exception_vector_install.s.o
+"${tool_prefix}objcopy" --set-section-alignment .text=4 \
+    build/us/asm/us/boot/exception_handler.s.o
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/boot/exception_context_save.s.o .text 0x304 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/boot/exception_vector_install.s.o .text 0xC4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/boot/exception_handler.s.o .text 0x350 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/boot/entry.s.o .text 0x38 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3967,12 +4061,51 @@ if false; then
     build/us/asm/us/main_80084CC8_to_800859A8.s.o \
     build/us/src/code/object_action.c.o \
     build/us/asm/us/main_800859E4_to_8009C284.s.o \
+    build/us/src/code/80094880.c.o \
+    build/us/asm/us/main_80094F40_to_80094FBC.s.o \
+    build/us/src/code/80094FBC.c.o \
+    build/us/asm/us/main_80095B50_to_80095C50.s.o \
+    build/us/src/code/80095C50.c.o \
+    build/us/asm/us/main_80095E7C_to_80096294.s.o \
+    build/us/src/code/80096294.c.o \
+    build/us/asm/us/main_8009660C_to_800966D4.s.o \
+    build/us/src/code/800966D4.c.o \
+    build/us/asm/us/main_800967F0_to_80096810.s.o \
+    build/us/src/code/80096810.c.o \
+    build/us/asm/us/main_80096A54_to_800973E0.s.o \
+    build/us/src/code/800973E0.c.o \
+    build/us/asm/us/main_80097508_to_80097560.s.o \
+    build/us/src/code/80097560.c.o \
+    build/us/asm/us/main_80097660_to_80097DF8.s.o \
+    build/us/src/code/80097DF8.c.o \
+    build/us/asm/us/main_80097EE4_to_800985A0.s.o \
+    build/us/src/code/800985A0.c.o \
+    build/us/asm/us/main_800988E8_to_80098CC8.s.o \
+    build/us/src/code/80098CC8.c.o \
+    build/us/asm/us/main_80098F24_to_800991CC.s.o \
+    build/us/src/code/800991CC.c.o \
+    build/us/asm/us/main_800992E0_to_80099464.s.o \
+    build/us/src/code/func_80099464.c.o \
+    build/us/asm/us/main_800996C4_to_800998E8.s.o \
+    build/us/src/code/800998E8.c.o \
+    build/us/asm/us/main_80099F74_to_80099FE8.s.o \
+    build/us/src/code/80099FE8.c.o \
+    build/us/src/code/player_order_shuffle.c.o \
+    build/us/asm/us/main_8009A650_to_8009A6F8.s.o \
+    build/us/src/code/8009A6F8.c.o \
+    build/us/asm/us/main_8009ACDC_to_8009AE38.s.o \
+    build/us/src/code/8009AE38.c.o \
+    build/us/asm/us/main_8009B0F0_to_8009B434.s.o \
+    build/us/src/code/8009B434.c.o \
+    build/us/asm/us/main_8009B62C_to_8009C098.s.o \
+    build/us/src/code/8009C098.c.o \
     build/us/src/code/session_queries.c.o \
-    build/us/asm/us/main_8009C31C_to_8009D144.s.o \
+    build/us/src/code/progress_level_advance.c.o \
+    build/us/asm/us/main_8009C524_to_8009D144.s.o \
     build/us/src/code/mode_range.c.o \
     build/us/asm/us/main_8009D168_to_8009D578.s.o \
     build/us/src/code/angle_fold.c.o \
-    build/us/asm/us/main_8009D5B4_to_8009D6DC.s.o \
+    build/us/src/code/angle_table_lookup.c.o \
     build/us/src/code/angle_subtract.c.o \
     build/us/asm/us/main_8009D6F8_to_8009D72C.s.o \
     build/us/src/code/angle_between.c.o \
@@ -4111,7 +4244,7 @@ if false; then
     build/us/src/code/800AF364.c.o \
     build/us/asm/us/main_800AF43C_to_800B0268.s.o \
     build/us/src/code/func_800B0268.c.o \
-    build/us/asm/us/main_800B02D4_to_800B03F4.s.o \
+    build/us/src/code/bounds_pair.c.o \
     build/us/src/code/func_800B03F4.c.o \
     build/us/src/code/gameplay_stub.c.o \
     build/us/src/code/func_800B044C.c.o \
@@ -4300,7 +4433,8 @@ if false; then
     build/us/src/code/race_mode_icon_get.c.o \
     build/us/src/code/race_player_set_mode_icon.c.o \
     build/us/src/code/race_display_value_set.c.o \
-    build/us/asm/us/main_800C98E8_to_800CA1A8.s.o \
+    build/us/src/code/race_bar_update.c.o \
+    build/us/asm/us/main_800C9A3C_to_800CA1A8.s.o \
     build/us/src/code/race_player_reset.c.o \
     build/us/src/code/race_lap_times_clamp.c.o \
     build/us/src/code/race_timer_queries.c.o \
