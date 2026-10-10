@@ -1,0 +1,48 @@
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+
+from inventory_script_assets import inventory_scripts, parse_script  # noqa: E402
+from pack_script_assets import rebuild_script  # noqa: E402
+
+
+class ScriptAssetInventoryTests(unittest.TestCase):
+    def test_minimal_script(self):
+        # Scene 1, setting 2, one stream: type 10, wait 3 ticks, end.
+        data = bytes((1, 2, 0, 1, 8, 10, 1, 0, 3, 0))
+        parsed = parse_script(data)
+        self.assertEqual(parsed["stream_count"], 1)
+        self.assertEqual(parsed["streams"][0]["type"], 10)
+        self.assertEqual(parsed["streams"][0]["command_count"], 3)
+
+    def test_rebuilds_split_script(self):
+        data = bytes((1, 2, 0, 1, 8, 10, 1, 0, 3, 0))
+        parsed = parse_script(data)
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            root.joinpath("header.bin").write_bytes(data[:4])
+            root.joinpath("stream_000.bin").write_bytes(data[4:])
+            self.assertEqual(rebuild_script(root, parsed), data)
+
+    def test_current_rom_scripts(self):
+        rom_path = ROOT / "baseroms/us/baserom.z64"
+        if not rom_path.exists():
+            self.skipTest("base ROM is unavailable")
+        report = inventory_scripts(
+            rom_path.read_bytes(), ROOT / "src/code/campaign_mission_config.c"
+        )
+        self.assertEqual(report["script_count"], 17)
+        self.assertEqual(report["stream_count"], 249)
+        self.assertEqual(report["command_count"], 144298)
+        self.assertEqual(report["opcode_counts"]["8"], 249)
+        self.assertEqual(report["opcode_counts"]["0"], 249)
+        self.assertEqual(report["opcode_counts"]["47"], 16)
+
+
+if __name__ == "__main__":
+    unittest.main()

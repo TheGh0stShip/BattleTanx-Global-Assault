@@ -52,6 +52,45 @@ proves there is no remaining anonymous hole in the ROM map; it does not claim
 that opaque stale-build bytes or every script command have semantic source
 representations yet.
 
+## Scripts and cutscenes
+
+The 17 raw script assets begin with a four-byte header: scene type, scene
+setting, and a big-endian 16-bit stream count. The loader initially DMA-copies
+a 64-byte prefix to select the scene, but the stream table itself begins at
+offset four. Each stream is a sequence of variable-size commands terminated by
+opcode zero.
+
+`tools/inventory_script_assets.py` implements the exact size rules from the
+matching command decoder at `0x800D12B0`, including mode-dependent coordinate
+widths, null-terminated opcode-21 strings, and the type-dependent forms of
+opcodes 9–11:
+
+```sh
+python3 tools/inventory_script_assets.py \
+  --output /tmp/btga-scripts.json \
+  --extract-dir assets/extracted/us/scripts
+```
+
+The parser consumes every byte of all 17 files: 249 streams and 144,298
+commands, with exactly one type command and one terminator per stream. The JSON
+retains each command's original offset and size; split output keeps the
+four-byte header and every complete stream as raw, editable components.
+
+Rebuild and retail-gate the split files with:
+
+```sh
+python3 tools/pack_script_assets.py \
+  /tmp/btga-scripts.json \
+  assets/extracted/us/scripts \
+  /tmp/btga-rebuilt-scripts \
+  --require-original
+```
+
+The packer reparses every rebuilt stream before writing it. An untouched split
+reproduces all 504,697 bytes and all 17 retail SHA-256 hashes. Opcode field
+names beyond those established by the matching decoder remain future semantic
+work; command boundaries and reconstruction do not depend on guessed names.
+
 The effect-definition bank at `0x80114F10–0x80116580` accounts for 5,744 of
 those bytes. It is kept as heterogeneous 32-bit record words until the matched
 effect interpreter establishes every variant's field layout. Words containing
