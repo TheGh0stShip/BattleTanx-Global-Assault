@@ -1,0 +1,17 @@
+/* Switch and numeric constants used by func_80090DCC. */
+#define TARGET(address) extern char D_##address[]
+TARGET(80091364); TARGET(8009173C); TARGET(80090E1C);
+TARGET(8009145C); TARGET(800913E0); TARGET(80091558);
+
+const void *const jtbl_80071E58[] = {
+    D_80091364, D_8009173C, D_80090E1C,
+    D_8009145C, D_800913E0, D_80091558,
+};
+
+const float D_80071E70[] = {
+    512.0f, 3.0f, 2147483648.0f, 2.5f, 2147483648.0f, 37.25f, 0.005f,
+    512.0f, 3.0f, 2147483648.0f, 2.5f, 2147483648.0f, 37.25f, 0.005f,
+    13.0f, 18.0f, 0.7f, 500.0f, 1456.0f, 2147483648.0f,
+    512.0f, 2147483648.0f, 512.0f, 2147483648.0f,
+    512.0f, 2147483648.0f, 512.0f, 2147483648.0f,
+};

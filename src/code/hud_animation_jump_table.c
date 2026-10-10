@@ -1,0 +1,9 @@
+/* Symbolic switch table used by func_800B74B4. */
+#define TARGET(address) extern char D_##address[]
+TARGET(800B86D8); TARGET(800B86E0); TARGET(800B8700); TARGET(800B8788);
+TARGET(800B8720); TARGET(800B8754);
+
+const void *const jtbl_80073158[] = {
+    D_800B86D8, D_800B86E0, D_800B8700, D_800B8788, D_800B8720,
+    D_800B8788, D_800B8788, D_800B8788, D_800B8754,
+};

@@ -60,7 +60,6 @@ align_8007530C	0x8007530C	0x4
 align_80075488	0x80075488	0x8
 align_8007583C	0x8007583C	0x4
 align_80075884	0x80075884	0xC
-align_80075A0C	0x80075A0C	0x4
 align_80075A2C	0x80075A2C	0x4
 align_80075C34	0x80075C34	0xC
 align_80075C58	0x80075C58	0x8
@@ -181,6 +180,13 @@ align_80088C64	0x80088C64	0xC
 align_8008960C	0x8008960C	0x4
 align_80089F38	0x80089F38	0x8
 align_8008AD7C	0x8008AD7C	0x4
+# func_80078C68 ends at 0x80078CD8. The next word is alignment fill, followed
+# by the first two words of a MIPS .reginfo record: the plausible GPR and CPR
+# masks 0x001C4D4F/0x409AF000. Nothing references this truncated linker
+# metadata, and the exception preamble occupies where the rest of the
+# 24-byte Elf32_RegInfo record would have landed.
+align_80078CD8	0x80078CD8	0x4
+mips_reginfo_prefix_80078CDC	0x80078CDC	0x8
 # Verified compiler/object tail padding in the remaining gameplay text region.
 # Boundary audits found no entry points or references; the non-zero runs are
 # stale string fragments retained while the following object was aligned.

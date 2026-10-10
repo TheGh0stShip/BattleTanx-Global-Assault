@@ -40,7 +40,7 @@ while IFS=$'\t' read -r typed_unit address size; do
                 "s/^(glabel|dlabel|endlabel|enddlabel) ${typed_symbol}$/\\1 __retail_${typed_symbol}/" \
                 "$asm_source"
         done
-    done < <(grep -oE 'D_[0-9A-Fa-f]{8}' "src/code/${typed_unit}.c" | sort -u)
+    done < <(grep -oE '(D|jtbl)_[0-9A-Fa-f]{8}' "src/code/${typed_unit}.c" | sort -u)
 done < config/us/typed_rodata_units.tsv
 
 for boot_exception_source in asm/us/main_8007*.s; do
@@ -4736,6 +4736,8 @@ if false; then
     build/us/src/code/race_bar_scale_constants.c.o \
     build/us/src/code/race_bar_ratio_constants.c.o \
     build/us/src/code/lightning_segment_constants.c.o \
+    build/us/src/code/effect_transform_template.c.o \
+    build/us/src/code/results_format_constants.c.o \
     build/us/src/code/effect_draw.c.o \
     build/us/src/code/effect_code_table.c.o \
     build/us/src/code/effect_code_parse.c.o \

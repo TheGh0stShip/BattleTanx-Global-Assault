@@ -32,6 +32,7 @@ def compare_unit(repo: Path, out: Path, unit: str, address: int, size: int) -> s
     raw = out / f"{unit}.raw.s"
     normalized = out / f"{unit}.s"
     obj = out / f"{unit}.o"
+    linked = out / f"{unit}.elf"
     blob = out / f"{unit}.bin"
     commands = (
         [str(repo / ".toolchain/kmc-gcc-2.7.2/gcc"),
@@ -47,9 +48,20 @@ def compare_unit(repo: Path, out: Path, unit: str, address: int, size: int) -> s
     env = os.environ.copy()
     library = repo / ".toolchain/mips-binutils/usr/lib/x86_64-linux-gnu"
     env["LD_LIBRARY_PATH"] = str(library) + (":" + env["LD_LIBRARY_PATH"] if env.get("LD_LIBRARY_PATH") else "")
+    linker_script = out / f"{unit}.ld"
+    linker_script.write_text(
+        f"INCLUDE {repo / 'build/us/symbols.ld'}\n"
+        f"SECTIONS {{ . = 0x{address:X}; .rodata : {{ *(.rodata) }} }}\n"
+    )
+    subprocess.run(
+        [str(repo / ".toolchain/mips-binutils/usr/bin/mips-linux-gnu-ld"),
+         "-EB", "-m", "elf32btsmip", "-T", str(linker_script),
+         "-o", str(linked), str(obj)],
+        cwd=repo, env=env, check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+    )
     subprocess.run(
         [str(repo / ".toolchain/mips-binutils/usr/bin/mips-linux-gnu-objcopy"),
-         "-O", "binary", "--only-section=.rodata", str(obj), str(blob)],
+         "-O", "binary", "--only-section=.rodata", str(linked), str(blob)],
         cwd=repo, env=env, check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
     )
     emitted = blob.read_bytes()
