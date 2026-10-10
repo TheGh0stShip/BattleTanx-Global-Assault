@@ -476,7 +476,7 @@ segments:
       - [0x31280, c, code/scheduler_context]
       - [0x31290, c, code/func_800A1290]
       - [0x3134C, c, code/scheduler_state]
-      - [0x31384, c, code/func_800A1384]
+      - [0x31384, asm, main_800A1384_to_800A140C]
       - [0x3140C, c, code/func_800A140C]
       - [0x315F0, c, code/func_800A15F0]
       - [0x316F8, c, code/func_800A16F8]

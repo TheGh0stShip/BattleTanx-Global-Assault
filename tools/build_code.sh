@@ -1036,7 +1036,9 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             matrix_transform vector2_rotate matrix_vector matrix_multiply lzari_decode \
             scheduler_context scheduler_state scheduler_events \
             scheduler_queue scheduler_misc object_range object_timing object_setters \
-            object_init effect_sprite_key_draw effect_sprite_ring_draw 800A477C \
+            object_init func_800A16F8 800A1BE0 task_message_broadcast \
+            func_800A2E5C 800A2FBC 800A3758 \
+            effect_sprite_key_draw effect_sprite_ring_draw 800A477C \
             800A5BD8 800A61A0 camera_collision_resolve 800A6588 \
             spotter_update spotter_frame_setup func_800A702C \
             player_perspective_update 800A7794 800A8690 800A89B0 \
@@ -3216,6 +3218,22 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/object_init.c.o .text 0x30 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800A16F8.c.o .text 0xa4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A1BE0.c.o .text 0x574 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/task_message_broadcast.c.o .text 0x178 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800A2E5C.c.o .text 0x90 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A2FBC.c.o .text 0x5a4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A2FBC.c.o .rodata 0x18 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A3758.c.o .text 0x940 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A3758.c.o .rodata 0x28 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/effect_sprite_key_draw.c.o .text 0x1fc --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/effect_sprite_key_draw.c.o .rodata 0x8 --alignment 4
@@ -3878,20 +3896,35 @@ if false; then
     build/us/src/code/func_8009F8A0.c.o \
     build/us/asm/us/main_8009FCCC_to_8009FF1C.s.o \
     build/us/src/code/vector2_rotate.c.o \
-    build/us/asm/us/main_8009FFB8_to_800A1280.s.o \
+    build/us/asm/us/main_8009FFB8_to_800A0750.s.o \
+    build/us/src/code/lzari_decode.c.o \
+    build/us/asm/us/main_800A1144_to_800A1150.s.o \
+    build/us/src/code/func_800A1150.c.o \
     build/us/src/code/scheduler_context.c.o \
     build/us/src/code/func_800A1290.c.o \
     build/us/src/code/scheduler_state.c.o \
-    build/us/asm/us/main_800A1384_to_800A179C.s.o \
+    build/us/asm/us/main_800A1384_to_800A140C.s.o \
+    build/us/src/code/func_800A140C.c.o \
+    build/us/src/code/func_800A15F0.c.o \
+    build/us/src/code/func_800A16F8.c.o \
     build/us/src/code/scheduler_events.c.o \
-    build/us/asm/us/main_800A18D0_to_800A1A28.s.o \
+    build/us/src/code/func_800A18D0.c.o \
+    build/us/src/code/func_800A19DC.c.o \
     build/us/src/code/scheduler_queue.c.o \
     build/us/src/code/func_800A1B44.c.o \
-    build/us/asm/us/main_800A1BE0_to_800A2B74.s.o \
+    build/us/src/code/800A1BE0.c.o \
+    build/us/src/code/task_message_broadcast.c.o \
+    build/us/asm/us/main_800A22CC_to_800A2B74.s.o \
     build/us/src/code/object_range.c.o \
     build/us/asm/us/main_800A2B9C_to_800A2DFC.s.o \
     build/us/src/code/scheduler_misc.c.o \
-    build/us/asm/us/main_800A2E5C_to_800A4098.s.o \
+    build/us/src/code/func_800A2E5C.c.o \
+    build/us/asm/us/main_800A2EEC_to_800A2EF0.s.o \
+    build/us/src/code/func_800A2EF0.c.o \
+    build/us/src/code/func_800A2F0C.c.o \
+    build/us/src/code/800A2FBC.c.o \
+    build/us/asm/us/main_800A3560_to_800A3758.s.o \
+    build/us/src/code/800A3758.c.o \
     build/us/src/code/object_timing.c.o \
     build/us/src/code/effect_sprite_key_draw.c.o \
     build/us/src/code/effect_sprite_ring_draw.c.o \
