@@ -24,6 +24,69 @@ CAMPAIGN_RANGE = re.compile(
     r"0xB0([0-9A-Fa-f]{6}), 0x00000000 \}"
 )
 
+STALE_SONG_DUPLICATES = (
+    (0xC0000, 18),
+    (0xD0000, 10),
+    (0xD8000, 15),
+    (0xE0000, 21),
+    (0xF0000, 7),
+    (0xF8000, 6),
+)
+
+
+def stale_build_regions(rom: bytes) -> list[dict]:
+    """Split stale linker material around six exact live libmus songs."""
+
+    files = {item["index"]: item for item in read_file_table(rom)}
+    regions = [
+        {
+            "kind": "stale_padding",
+            "name": "stale_zero_prefix",
+            "start": 0xB8230,
+            "end": 0xB8400,
+        },
+        {
+            "kind": "stale_debug_symbols",
+            "name": "stale_debug_symbols",
+            "start": 0xB8400,
+            "end": 0xC0000,
+        },
+    ]
+    cursor = 0xC0000
+    for duplicate_number, (start, file_index) in enumerate(STALE_SONG_DUPLICATES):
+        source = files[file_index]
+        end = start + source["size"]
+        if cursor < start:
+            regions.append(
+                {
+                    "kind": "stale_build_material",
+                    "name": f"stale_build_material_{duplicate_number:02d}",
+                    "start": cursor,
+                    "end": start,
+                }
+            )
+        regions.append(
+            {
+                "kind": "stale_song_duplicate",
+                "name": f"stale_song_duplicate_{duplicate_number:02d}",
+                "start": start,
+                "end": end,
+                "duplicate_of_file": file_index,
+                "duplicate_of_start": source["start"],
+            }
+        )
+        cursor = end
+    if cursor < 0x100000:
+        regions.append(
+            {
+                "kind": "stale_build_material",
+                "name": "stale_build_material_06",
+                "start": cursor,
+                "end": 0x100000,
+            }
+        )
+    return regions
+
 
 def script_ranges(path: Path) -> list[dict]:
     ranges = [
@@ -56,12 +119,6 @@ def declared_regions(rom: bytes, boundaries: Path, campaign: Path) -> list[dict]
             "end": 0xB8230,
         },
         {
-            "kind": "stale_build_material",
-            "name": "stale_build_material",
-            "start": 0xB8230,
-            "end": 0x100000,
-        },
-        {
             "kind": "leftover",
             "name": "btx1_world_leftover",
             "start": 0x100000,
@@ -75,6 +132,7 @@ def declared_regions(rom: bytes, boundaries: Path, campaign: Path) -> list[dict]
         {"kind": "geometry_pool", "name": "geometry_pool", "start": 0x3013F0, "end": 0x3F6EE8},
         {"kind": "world", "name": "common_world", "start": 0x3F6EE8, "end": 0x3F9B5C},
     ]
+    regions.extend(stale_build_regions(rom))
     regions.extend(
         {
             "kind": "world",
@@ -142,6 +200,11 @@ def inventory_layout(rom: bytes, boundaries: Path, campaign: Path) -> dict:
             if len(payload) < 64:
                 raise ValueError(f"{region['name']} is shorter than its loader header")
             region["scene_type"] = payload[0]
+        elif region["kind"] == "stale_song_duplicate":
+            source_start = region["duplicate_of_start"]
+            source = rom[source_start : source_start + len(payload)]
+            if payload != source:
+                raise ValueError(f"{region['name']} no longer matches its live libmus song")
 
     counts = Counter(item["kind"] for item in complete)
     sizes = Counter()

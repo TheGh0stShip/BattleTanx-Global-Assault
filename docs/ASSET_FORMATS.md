@@ -33,7 +33,10 @@ python3 tools/inventory_rom_layout.py --output /tmp/btga-rom-layout.json
 | Header and IPL3 | 2 | 4,096 |
 | Loaded main image | 1 | 749,104 |
 | Loaded segment-1 tail | 1 | 1,024 |
-| Stale build material | 1 | 294,352 |
+| Stale debug symbol/type table | 1 | 31,744 |
+| Stale zero prefix | 1 | 464 |
+| Unresolved stale build material | 6 | 125,850 |
+| Exact duplicate libmus songs in stale region | 6 | 136,294 |
 | Leftover BattleTanx world | 1 | 8,296 |
 | Raw 0x400-byte buffers | 3 | 3,072 |
 | Texture/state/geometry pools | 3 | 3,097,208 |
@@ -51,6 +54,18 @@ terminal padding. Each region includes its retail range and SHA-256 hash. This
 proves there is no remaining anonymous hole in the ROM map; it does not claim
 that opaque stale-build bytes or every script command have semantic source
 representations yet.
+
+The region formerly treated as one 294,352-byte stale blob contains exact
+copies of six live libmus songs at `0xC0000`, `0xD0000`, `0xD8000`, `0xE0000`,
+`0xF0000`, and `0xF8000`. They match live files 18, 10, 15, 21, 7, and 6 for
+all 136,294 bytes. The ROM-layout gate checks those byte equalities and now
+The preceding `0xB8400–0xC0000` range is a compact debug-name/type table with
+1,305 length-prefixed records and 664 unique identifiers. It retains internal
+names including `Steps_PruneFork`, `Obstacles_InitObstacleRef`, N64 SDK types,
+COFF `.fake`/`.eos` markers, and libmus enums. Generate its lossless name
+inventory with `tools/inventory_stale_debug.py`. A 464-byte zero prefix is
+reported separately. After these classifications, only the six intervening
+ranges (125,850 bytes) remain unresolved stale material.
 
 ## Scripts and cutscenes
 

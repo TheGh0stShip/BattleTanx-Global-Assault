@@ -20,6 +20,7 @@ from inventory_libmus_assets import inventory as inventory_libmus
 from inventory_lzari_assets import ROM_SHA1, inventory_known, inventory_ranges
 from inventory_rom_layout import inventory_layout
 from inventory_script_assets import build_script, inventory_scripts
+from inventory_stale_debug import inventory_debug_names
 from inventory_world_display_lists import inventory_display_lists
 from inventory_world_geometry import inventory_geometry
 from inventory_world_pools import inventory_pools, world_ranges
@@ -42,6 +43,9 @@ EXPECTED = {
     "script_commands": 144_298,
     "libmus_files": 26,
     "libmus_bytes": 2_289_292,
+    "stale_song_duplicate_bytes": 136_294,
+    "stale_debug_bytes": 31_744,
+    "unresolved_stale_bytes": 125_850,
 }
 
 
@@ -118,7 +122,23 @@ def verify_corpus(rom: bytes, root: Path) -> dict:
     require(audio["stored_bytes"], EXPECTED["libmus_bytes"], "libmus stored bytes")
 
     layout = inventory_layout(rom, boundaries, campaign)
+    debug_names = inventory_debug_names(rom)
     require(sum(layout["bytes"].values()), len(rom), "complete ROM accounting")
+    require(
+        layout["bytes"]["stale_debug_symbols"],
+        EXPECTED["stale_debug_bytes"],
+        "stale debug-symbol bytes",
+    )
+    require(
+        layout["bytes"]["stale_song_duplicate"],
+        EXPECTED["stale_song_duplicate_bytes"],
+        "source-backed stale song bytes",
+    )
+    require(
+        layout["bytes"]["stale_build_material"],
+        EXPECTED["unresolved_stale_bytes"],
+        "unresolved stale bytes",
+    )
 
     return {
         "format": "BattleTanx Global Assault verified asset corpus v1",
@@ -150,6 +170,14 @@ def verify_corpus(rom: bytes, root: Path) -> dict:
             "effects": audio["sfx"]["effect_bank"]["effect_count"],
             "music_waves": audio["music"]["pointer_bank"]["wave_count"],
             "songs": audio["music"]["song_count"],
+        },
+        "stale_region": {
+            "exact_song_duplicates": layout["counts"]["stale_song_duplicate"],
+            "source_backed_bytes": layout["bytes"]["stale_song_duplicate"],
+            "debug_symbol_bytes": layout["bytes"]["stale_debug_symbols"],
+            "debug_name_records": debug_names["record_count"],
+            "unique_debug_names": debug_names["unique_name_count"],
+            "unresolved_bytes": layout["bytes"]["stale_build_material"],
         },
     }
 
