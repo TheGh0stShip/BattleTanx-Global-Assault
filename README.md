@@ -28,11 +28,11 @@ make check
 ## Current status
 
 - ROM identity and the unusual `0x80071000` load address are verified.
-- A GPL-compatible catalogue contains 1,749 supported function boundaries after correcting false splits and aggregations, with provenance.
+- A GPL-compatible catalogue contains 1,798 supported function boundaries after correcting false splits and aggregations, with provenance.
 - Reproducible splat extraction and repository safety gates are in place.
 - The header, IPL3, and known first-MiB code region reconstruct byte-for-byte.
-- 1,492 of 1,749 catalogue functions (85.3%) are reconstructed in production C and pass the byte-exact gate. By catalogue function-body bytes, 419,896 of 630,284 bytes (66.6%) are reconstructed.
-- Source-owned initialized and read-only data accounts for 57,580 of 118,820 bytes (48.5%) in the loaded executable image, including source-built RSP boot and F3DEX FIFO 2.07 programs.
+- 1,579 of 1,798 catalogue functions (87.8%) are reconstructed in production C and pass the byte-exact gate. By catalogue function-body bytes, 451,688 of 630,280 bytes (71.7%) are reconstructed.
+- Source-owned initialized and read-only data accounts for 58,640 of 118,824 bytes (49.4%) in the loaded executable image, including source-built RSP boot and F3DEX FIFO 2.07 programs.
 - The matching LZARI codec and audited ROM tables identify 271 compressed streams: 75 game-world bundles, 195 images, and one leftover BattleTanx world. Their 1,174,975 stored bytes expand to 2,886,765 bytes and canonically re-encode to every retail byte. `tools/inventory_lzari_assets.py` inventories them, `tools/extract_lzari_images.py` converts all six observed N64 texture layouts into local PNG previews, and `tools/extract_lzari_worlds.py` emits validated fixed-record world manifests without committing ROM-derived data.
 - The complete 26-file libmus store is independently validated without extracting copyrighted payloads: 76 SFX waves, 93 effects, 231 music waves, and 21 songs occupying 2,289,292 ROM bytes. `tools/inventory_libmus_assets.py` checks every bank, sample, stream, and song reference and can emit a metadata-only JSON manifest.
 - Normalizer-assisted units require narrowly gated, documented rules with exact fire counts; they are identified separately from pure source matches in [the normalizer-assisted record](docs/NORMALIZER_ASSISTED.md).
