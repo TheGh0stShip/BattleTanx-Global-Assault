@@ -1,6 +1,9 @@
 # BattleTanx: Global Assault decompilation
 <p><center>[Current Decomp Tracker - https://decomp.dev/TheGh0stShip/BattleTanx-Global-Assault]</center><p></p>
 
+**FOUND EASTER-EGG STRINGS**
+Found that 80072694 contains developer-credits easter-egg strings like “Murray likes fries” and “Congratulations” stored as rodata literals. Hello Murray!
+
 This is a work-in-progress matching decompilation of **BattleTanx: Global Assault** for Nintendo 64 (USA Rev 0). Its immediate goal is a byte-identical ROM reconstruction from readable C and locally extracted assets. That recovered source will then become the foundation for the **VitaTanxGA** PS Vita port, following the source/tooling and hardware-validation workflow used by [VitaKart64](https://github.com/TheGh0stShip/VitaKart64).
 
 No ROM or ROM-derived assets are included. Supply your own legally obtained dump.
