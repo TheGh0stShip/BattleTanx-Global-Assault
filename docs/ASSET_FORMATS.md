@@ -16,7 +16,7 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,820 bytes: the 749,104-byte loaded
 image minus 630,284 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 59,940 bytes, or 50.446%.
+`.data` and `.rodata` currently account for 61,672 bytes, or 51.904%.
 
 The effect-definition bank at `0x80114F10–0x80116580` accounts for 5,744 of
 those bytes. It is kept as heterogeneous 32-bit record words until the matched
@@ -94,6 +94,11 @@ The main-menu scene graph at `0x80118054–0x8011854C` is reconstructed as 318
 big-endian 32-bit tokens. It combines packed front-end commands, coordinates,
 floating-point fields, callback addresses, and links among graph records. Its
 address-valued fields remain N64 ILP32 tokens rather than native host pointers.
+
+Gameplay and camera defaults at `0x80121CC0–0x80122384` preserve the initialized
+HUD/audio/loader state, fourteen front-end record pointers, script-particle
+tables, and two fifteen-record camera-preset banks. Float fields retain their
+retail bit patterns and address fields remain explicit N64 tokens.
 
 ## LZARI bundles
 

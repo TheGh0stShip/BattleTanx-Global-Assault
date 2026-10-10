@@ -787,6 +787,7 @@ image_asset_descriptors 0x1570
 frontend_runtime_defaults 0x1E4
 main_menu_scene_graph 0x4F8
 cheat_code_data 0x2c0
+gameplay_camera_data 0x6C4
 campaign_mission_text 0xCF0
 campaign_mission_config 0x990
 mission_selection_data 0xC0
