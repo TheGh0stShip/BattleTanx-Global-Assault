@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
-from inventory_script_assets import inventory_scripts, parse_script  # noqa: E402
+from inventory_script_assets import build_script, inventory_scripts, parse_script  # noqa: E402
 from pack_script_assets import rebuild_script  # noqa: E402
 
 
@@ -28,6 +28,18 @@ class ScriptAssetInventoryTests(unittest.TestCase):
             root.joinpath("header.bin").write_bytes(data[:4])
             root.joinpath("stream_000.bin").write_bytes(data[4:])
             self.assertEqual(rebuild_script(root, parsed), data)
+
+    def test_json_script_rebuilds_exactly(self):
+        data = bytes((1, 2, 0, 1, 8, 10, 1, 0, 3, 0))
+        self.assertEqual(build_script(parse_script(data)), data)
+
+    def test_json_text_command_is_editable(self):
+        data = bytes((1, 2, 0, 1, 8, 10, 21)) + b"OLD\0\0"
+        parsed = parse_script(data)
+        parsed["streams"][0]["commands"][1]["text"] = "NEW TEXT"
+        rebuilt = build_script(parsed)
+        self.assertIn(b"NEW TEXT\0", rebuilt)
+        self.assertEqual(parse_script(rebuilt)["streams"][0]["commands"][1]["text"], "NEW TEXT")
 
     def test_current_rom_scripts(self):
         rom_path = ROOT / "baseroms/us/baserom.z64"

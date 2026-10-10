@@ -30,6 +30,7 @@ DEFINITION_SCHEMAS = {
     4: tuple((f"model_index_{i}", 2 + i * 2, "H") for i in range(5))
     + (("selection_from_model", 12, "B"),),
     5: tuple((f"model_index_{i}", 2 + i * 2, "H") for i in range(3)),
+    6: (("row", 1, "B"), ("column", 2, "B")),
     7: (("mode", 1, "B"), ("value", 2, "B")),
     8: (("first_offset", 4, "i"), ("second_offset", 8, "i")),
     10: tuple((f"model_index_{i}", 2 + i * 2, "H") for i in range(3))
@@ -75,10 +76,16 @@ DEFINITION_SCHEMAS = {
         ("parameter_1", 14, "H"),
     )
     + tuple((f"segment_offset_{i}", 16 + i * 4, "i") for i in range(6)),
+    27: (("enabled", 1, "B"),),
     28: tuple((f"model_index_{i}", 2 + i * 2, "H") for i in range(3)),
     29: (("model_index", 2, "H"),),
     30: (("mode", 1, "B"),)
     + tuple((f"bound_{i}", 2 + i * 2, "h") for i in range(6)),
+    31: (
+        ("team", 1, "B"),
+        ("actor_model_index", 2, "H"),
+        ("structure_definition_offset", 4, "i"),
+    ),
     32: (("variant", 1, "B"),)
     + tuple((f"model_index_{i}", 2 + i * 2, "H") for i in range(7)),
     34: (("model_index", 2, "H"),),
@@ -88,6 +95,12 @@ DEFINITION_SCHEMAS = {
         ("collision_mode", 6, "B"),
     ),
     36: (("model_index", 2, "H"), ("model_index_1", 4, "H")),
+    37: tuple(
+        (f"colour_{colour}_{channel}", 1 + colour * 3 + channel_index, "B")
+        for colour in range(7)
+        for channel_index, channel in enumerate(("r", "g", "b"))
+    ),
+    38: (("red", 1, "B"), ("green", 2, "B"), ("blue", 3, "B")),
     39: (("condition", 1, "B"), ("flag", 2, "H"), ("target_offset", 4, "I")),
     40: (("model_index", 2, "H"),),
     42: (("model_index", 2, "H"),),
@@ -98,6 +111,59 @@ DEFINITION_SCHEMAS = {
     ),
     44: (("model_index", 2, "H"),),
     45: (("flag", 1, "B"), ("player", 2, "B")),
+}
+
+# The dispatcher's default arm returns without reading these records. Kind 41
+# does invoke its placement handler, but that handler does not inspect the
+# definition payload. Preserve all of their bytes without inventing layouts.
+IGNORED_DEFINITION_KINDS = {9, 25, 33}
+PAYLOAD_UNUSED_DEFINITION_KINDS = {41}
+
+DEFINITION_HANDLERS = {
+    0: "inline_model_create",
+    1: "inline_model_collision_create",
+    2: "inline_model_barrier_create",
+    3: "func_800DD3A0",
+    4: "func_800E2308",
+    5: "func_800E1540",
+    6: "func_800B03F4",
+    7: "func_800D8C60",
+    8: "func_800E56D0",
+    9: "none",
+    10: "func_800ED320",
+    11: "inline_model_collision_create",
+    12: "func_800E2AEC",
+    13: "func_800DE930",
+    14: "inline_model_collision_create",
+    15: "func_800EAC30",
+    16: "func_800E9B50",
+    17: "inline_effect_endpoint_create",
+    20: "func_800E6E5C",
+    21: "func_800E9E80",
+    22: "inline_model_collision_create",
+    23: "__dummy",
+    24: "func_800ED990",
+    25: "none",
+    26: "func_800EF770",
+    27: "func_800F1B30",
+    28: "func_800F2BC0",
+    29: "func_800F33C0",
+    30: "inline_bounds_or_collision_create",
+    31: "func_800E80F4",
+    32: "func_800F5298",
+    33: "none",
+    34: "inline_model_create",
+    35: "inline_coloured_model_create",
+    36: "func_800F7C30",
+    37: "func_800B05F4",
+    38: "func_800B06A8",
+    39: "conditional_definition",
+    40: "func_800F7EC0",
+    41: "func_800F85F0",
+    42: "inline_collision_create",
+    43: "inline_model_collision_create",
+    44: "inline_model_create",
+    45: "func_800D7DE0",
 }
 
 
@@ -214,6 +280,12 @@ def parse_world(data: bytes) -> dict:
         fields = _decode_definition_fields(payload[0], payload)
         if fields:
             definition["fields"] = fields
+        if payload[0] in DEFINITION_HANDLERS:
+            definition["handler"] = DEFINITION_HANDLERS[payload[0]]
+        if payload[0] in IGNORED_DEFINITION_KINDS:
+            definition["dispatch"] = "ignored"
+        elif payload[0] in PAYLOAD_UNUSED_DEFINITION_KINDS:
+            definition["dispatch"] = "payload_unused"
         if payload[0] == 39:
             definition.update(
                 {

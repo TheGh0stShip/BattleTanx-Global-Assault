@@ -9,7 +9,7 @@ def sample_world():
         struct.pack(">I", 1),
         struct.pack(">HH6h", 1, 0, -1, -2, -3, 4, 5, 6),
         struct.pack(">hhhHI", 10, 20, 30, 0x4000, 0),
-        b"\x25\x01\x02\x03",
+        b"\x2E\x01\x02\x03",
         struct.pack(">BBH6h", 1, 0, 0, -7, -8, -9, 10, 11, 12),
         struct.pack(">BBH", 1, 0, 0),
         struct.pack(">6i", 100, 8, 200, 16, -1, -1),
@@ -35,6 +35,23 @@ class BtgaWorldTests(unittest.TestCase):
         rebuilt = build_world(world)
         self.assertEqual(rebuilt[offsets[3] : offsets[4]], b"\0\0\x56\x78")
 
+    def test_unused_definition_is_explicitly_classified(self):
+        data = bytearray(sample_world())
+        offsets = struct.unpack_from(">8I", data)
+        data[offsets[3] : offsets[4]] = b"\x09\xAA\xBB\xCC"
+        definition = parse_world(bytes(data))["definitions"][0]
+        self.assertEqual(definition["dispatch"], "ignored")
+        self.assertEqual(definition["handler"], "none")
+        self.assertNotIn("fields", definition)
+
+    def test_payload_unused_handler_is_distinct_from_ignored_kind(self):
+        data = bytearray(sample_world())
+        offsets = struct.unpack_from(">8I", data)
+        data[offsets[3] : offsets[4]] = b"\x29\xAA\xBB\xCC"
+        definition = parse_world(bytes(data))["definitions"][0]
+        self.assertEqual(definition["dispatch"], "payload_unused")
+        self.assertEqual(definition["handler"], "func_800F85F0")
+
     def test_parses_every_fixed_record_family(self):
         world = parse_world(sample_world())
         self.assertEqual(world["groups"][0]["min_z"], -3)
@@ -46,9 +63,9 @@ class BtgaWorldTests(unittest.TestCase):
             {
                 "offset": 0,
                 "size": 4,
-                "kind": 0x25,
+                "kind": 0x2E,
                 "placement_references": 1,
-                "raw_hex": "25010203",
+                "raw_hex": "2e010203",
             },
         )
         self.assertEqual(world["models"][0]["max_y"], 11)

@@ -105,6 +105,7 @@ def parse_script(data: bytes) -> dict:
             else:
                 size = command_size(data, offset, stream_type)
             command = {"offset": offset, "opcode": opcode, "size": size}
+            command["raw_hex"] = data[offset : offset + size].hex()
             if opcode == 21:
                 command["text"] = data[offset + 1 : offset + size - 1].decode(
                     "ascii", errors="backslashreplace"
@@ -134,6 +135,33 @@ def parse_script(data: bytes) -> dict:
         "opcode_counts": {str(key): value for key, value in sorted(opcode_totals.items())},
         "streams": streams,
     }
+
+
+def build_script(script: dict) -> bytes:
+    """Rebuild one script from the lossless JSON returned by ``parse_script``."""
+
+    streams = script["streams"]
+    if len(streams) != script["stream_count"]:
+        raise ValueError("script stream count disagrees with stream list")
+    rebuilt = bytearray(
+        (script["scene_type"], script["scene_setting"])
+    ) + len(streams).to_bytes(2, "big")
+    for expected_index, stream in enumerate(streams):
+        if stream["index"] != expected_index:
+            raise ValueError("script stream indices are not contiguous")
+        for command in stream["commands"]:
+            payload = bytes.fromhex(command["raw_hex"])
+            if command["opcode"] == 21 and "text" in command:
+                payload = bytes((21,)) + command["text"].encode("ascii") + b"\0"
+            if not payload or payload[0] != command["opcode"]:
+                raise ValueError("script command payload disagrees with opcode")
+            rebuilt.extend(payload)
+        if not stream["commands"] or stream["commands"][-1]["opcode"] != 0:
+            raise ValueError(f"script stream {expected_index} has no terminator")
+    # Reparse the result to enforce the loader-derived command sizes and exact
+    # stream count, including any edited variable-length text command.
+    parse_script(bytes(rebuilt))
+    return bytes(rebuilt)
 
 
 def inventory_scripts(rom: bytes, campaign: Path) -> dict:

@@ -19,7 +19,7 @@ from btga_world import build_world, parse_world
 from inventory_libmus_assets import inventory as inventory_libmus
 from inventory_lzari_assets import ROM_SHA1, inventory_known, inventory_ranges
 from inventory_rom_layout import inventory_layout
-from inventory_script_assets import inventory_scripts
+from inventory_script_assets import build_script, inventory_scripts
 from inventory_world_display_lists import inventory_display_lists
 from inventory_world_geometry import inventory_geometry
 from inventory_world_pools import inventory_pools, world_ranges
@@ -107,6 +107,11 @@ def verify_corpus(rom: bytes, root: Path) -> dict:
     require(scripts["script_count"], EXPECTED["scripts"], "script count")
     require(scripts["stream_count"], EXPECTED["script_streams"], "script stream count")
     require(scripts["command_count"], EXPECTED["script_commands"], "script command count")
+    for script in scripts["scripts"]:
+        rebuilt = build_script(script)
+        original = rom[script["rom_start"] : script["rom_end"]]
+        if rebuilt != original:
+            raise ValueError(f"structured script does not rebuild exactly: {script['name']}")
 
     audio = inventory_libmus(rom)
     require(audio["file_count"], EXPECTED["libmus_files"], "libmus file count")

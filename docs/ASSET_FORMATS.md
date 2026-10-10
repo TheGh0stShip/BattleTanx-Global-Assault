@@ -73,8 +73,17 @@ python3 tools/inventory_script_assets.py \
 
 The parser consumes every byte of all 17 files: 249 streams and 144,298
 commands, with exactly one type command and one terminator per stream. The JSON
-retains each command's original offset and size; split output keeps the
-four-byte header and every complete stream as raw, editable components.
+retains each command's original offset, size, and lossless `raw_hex`; opcode-21
+text is directly editable. Split output also keeps the four-byte header and
+every complete stream as raw components.
+
+Rebuild one script directly from its JSON representation with:
+
+```sh
+python3 tools/pack_script_json.py script.json rebuilt-script.bin
+```
+
+`make verify-assets` performs this JSON round trip for all 17 retail scripts.
 
 Rebuild and retail-gate the split files with:
 
@@ -273,12 +282,16 @@ python3 tools/pack_world_json.py \
 ```
 
 The matching creation handlers currently establish editable field overlays
-for 34 object-definition kinds. They cover 4,404 of the 5,372 reachable spans
-(36,540 of 42,300 span bytes). Kinds 6, 9, 25, 27, 31, 33, 37, 38, and 41
-remain raw-only pending equally strong layout evidence. Typed edits are written
-back over the preserved span, so unknown trailing bytes are neither discarded
-nor guessed. One unused 20-byte kind-3 record precedes the reachable records in
-`level_world_053`; it is retained explicitly as `definition_prefix_hex`.
+for 39 object-definition kinds. They cover 5,232 of the 5,372 reachable spans
+(41,080 of 42,300 span bytes). The dispatcher's default arm ignores kinds 9,
+25, and 33; kind 41 invokes its placement handler without reading its payload.
+Their 140 spans remain raw and are labelled `dispatch: ignored` or
+`dispatch: payload_unused` rather than assigned invented fields. Each known
+kind also records its matching handler symbol or inline operation. Typed edits
+are written back over the preserved span, so unknown
+trailing bytes are neither discarded nor guessed. One unused 20-byte kind-3
+record precedes the reachable records in `level_world_053`; it is retained
+explicitly as `definition_prefix_hex`.
 
 The world loader's two 17-command render-state replacement tables are also
 reconstructed as typed initialized data at `0x80116710`. These are the exact
