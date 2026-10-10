@@ -21,7 +21,7 @@ for asm_source in asm/us/*.s; do
     sed -i 's/beql       \$s2, \$a1, \.\?L80099664/.word      0x52454D41/' \
         "$asm_source"
     sed -i -E \
-        's/^(dlabel|enddlabel) (osViClock|__osShutdown|__OSGlobalIntMask|__osRcpImTable|osClockRate|D_80126F80|rspbootTextStart|gspF3DEX_fifoDataStart|osViModeMpalLan1|osViModeNtscLan1|osViModePalLan1|xlitob_data_0000|xlitob_data_0014)$/\1 __retail_\2/' \
+        's/^(glabel|dlabel|endlabel|enddlabel) (osViClock|__osShutdown|__OSGlobalIntMask|__osRcpImTable|osClockRate|D_80126F80|rspbootTextStart|gspF3DEX_fifoDataStart|n_aspMainTextStart|osViModeMpalLan1|osViModeNtscLan1|osViModePalLan1|xlitob_data_0000|xlitob_data_0014|n_alGlobals|alGlobals|__osContinitialized|__osHwIntTable|__osPiAccessQueueEnabled|D_80126EC0|alGlobals_80126ED0|__osThreadTail|__osRunQueue|__osActiveQueue|__osRunningThread|__osFaultedThread|__osTimerList|vi_data_0000|__osViCurr|__osViNext)$/\1 __retail_\2/' \
         "$asm_source"
 done
 
@@ -745,6 +745,8 @@ mkdir -p build/us/rsp
 # main image, so the CPU linker carries them as initialized data.
 .toolchain/armips/armips \
     -strequ CODE_FILE build/us/rsp/rspboot.bin rsp/rspboot.s
+.toolchain/armips/armips \
+    -strequ CODE_FILE build/us/rsp/n_aspMain.text.bin rsp/n_aspMain.s
 make -s -C .toolchain/f3dex2 \
     ARMIPS="$root_dir/.toolchain/armips/armips" \
     BUILD_DIR="$root_dir/build/us/rsp/f3dex2" F3DEX2_2.07
@@ -752,10 +754,12 @@ echo "4cef7741852f0e20007636ef194545d6  build/us/rsp/rspboot.bin" \
     | md5sum --check --status
 echo "1523b8e38a9eae698b48909a0c0c0279  build/us/rsp/f3dex2/F3DEX2_2.07/F3DEX2_2.07.code" \
     | md5sum --check --status
+echo "9a2c951186b958b5dae6abf3deb48884  build/us/rsp/n_aspMain.text.bin" \
+    | md5sum --check --status
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 \
     -o build/us/src/code/rsp_microcode_text.c.o src/code/rsp_microcode_text.s
 python3 tools/trim_elf32_section.py \
-    build/us/src/code/rsp_microcode_text.c.o .data 0x1460 --alignment 4
+    build/us/src/code/rsp_microcode_text.c.o .data 0x20C0 --alignment 4
 
 # Initialized-only gameplay units use the retail KMC pipeline too. Keep them in
 # one manifest-like loop so adding recovered data does not duplicate build logic.
@@ -848,6 +852,10 @@ pause_menu_layout 0x480
 race_widget_layout 0x640
 race_state_vars 0x3C
 controller_menu_state_data 0x68
+memory_region_table 0x48
+graphics_task_state 0xC
+display_state_ptr 0x4
+gfx_pool_state 0x4
 EOF
 # libmus was assembled with reorder enabled, so preserve KMC's raw assembly and
 # its assembler-scheduled delay slots instead of applying the gameplay normalizer.
@@ -937,7 +945,12 @@ while read -r unit text_size; do
                 "build/us/src/code/n_audio/${unit}.c.o" .rodata 0x10 --alignment 16 ;;
         80101320_n_reverb)
             python3 tools/trim_elf32_section.py \
-                "build/us/src/code/n_audio/${unit}.c.o" .rodata 0x40 --alignment 16 ;;
+                "build/us/src/code/n_audio/${unit}.c.o" .rodata 0x40 --alignment 16
+            python3 tools/trim_elf32_section.py \
+                "build/us/src/code/n_audio/${unit}.c.o" .data 0x10 --alignment 4 ;;
+        80101D10_n_alinit)
+            python3 tools/trim_elf32_section.py \
+                "build/us/src/code/n_audio/${unit}.c.o" .data 0x10 --alignment 4 ;;
         80102350_n_synthesizer)
             python3 tools/trim_elf32_section.py \
                 "build/us/src/code/n_audio/${unit}.c.o" .rodata 0x20 --alignment 16 ;;
@@ -1932,6 +1945,36 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/func_8008E6E0.c.o .rodata 0x3C --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/func_8009D1CC.c.o .rodata 0x30 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/controller_layout_data.c.o .rodata 0xE0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_8009D4B0.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_8009D960.c.o .rodata 0x1C --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_8009EA70.c.o .rodata 0x20 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_8009EC0C.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_8009F334.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_8009F8A0.c.o .rodata 0xC --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800A9A98.c.o .rodata 0x19 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800ABE6C.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800B6934.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800BFDA4.c.o .rodata 0xC --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800BFE4C.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/hud_list_layout_data.c.o .rodata 0x268 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/matrix_basic.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/random_dispatch_tables.c.o .rodata 0x31C --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/early_hw.c.o .text 0x164 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3314,6 +3357,10 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/display_commands.c.o .text 0x44 --alignment 4
 mkdir -p build/us/src/libultra
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 \
+    -o build/us/src/libultra/os_exception_data.c.o src/libultra/os_exception_data.s
+python3 tools/trim_elf32_section.py \
+    build/us/src/libultra/os_exception_data.c.o .data 0x20 --alignment 4
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Xcpluscomm \
     -Isrc/libultra -o build/us/src/libultra/vitbl.c.o src/libultra/vitbl.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
@@ -3341,6 +3388,8 @@ python3 tools/insert_elf32_section_bytes.py \
     -o build/us/src/libultra/os_ai_set_frequency.c.o src/libultra/os_ai_set_frequency.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_ai_set_next_buffer.c.o src/libultra/os_ai_set_next_buffer.c
+python3 tools/trim_elf32_section.py \
+    build/us/src/libultra/os_ai_set_next_buffer.c.o .data 0x10 --alignment 4
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_cart_rom_init.c.o src/libultra/os_cart_rom_init.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
@@ -3349,6 +3398,8 @@ python3 tools/insert_elf32_section_bytes.py \
     -o build/us/src/libultra/os_cont_read_data.c.o src/libultra/os_cont_read_data.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_controller.c.o src/libultra/os_controller.c
+python3 tools/trim_elf32_section.py \
+    build/us/src/libultra/os_controller.c.o .data 0x10 --alignment 4
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
     -o build/us/src/libultra/os_epi_raw_read_io.c.o src/libultra/os_epi_raw_read_io.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
@@ -3377,10 +3428,14 @@ python3 tools/insert_elf32_section_bytes.py \
     -o build/us/src/libultra/os_sp_raw_start_dma.c.o src/libultra/os_sp_raw_start_dma.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
     -o build/us/src/libultra/os_dequeue_thread.c.o src/libultra/os_dequeue_thread.c
+python3 tools/trim_elf32_section.py \
+    build/us/src/libultra/os_dequeue_thread.c.o .data 0x20 --alignment 4
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
     -o build/us/src/libultra/os_vi_black.c.o src/libultra/os_vi_black.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
     -o build/us/src/libultra/os_vi_init.c.o src/libultra/os_vi_init.c
+python3 tools/trim_elf32_section.py \
+    build/us/src/libultra/os_vi_init.c.o .data 0x70 --alignment 4
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
     -o build/us/src/libultra/os_vi_get_current_framebuffer.c.o src/libultra/os_vi_get_current_framebuffer.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
@@ -3389,6 +3444,8 @@ python3 tools/insert_elf32_section_bytes.py \
     -o build/us/src/libultra/os_vi_manager.c.o src/libultra/os_vi_manager.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
     -o build/us/src/libultra/os_timer.c.o src/libultra/os_timer.c
+python3 tools/trim_elf32_section.py \
+    build/us/src/libultra/os_timer.c.o .data 0x10 --alignment 4
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
     -o build/us/src/libultra/os_vi_set_event.c.o src/libultra/os_vi_set_event.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
@@ -3423,6 +3480,8 @@ python3 tools/insert_elf32_section_bytes.py \
     -o build/us/src/libultra/os_set_global_int_mask.c.o src/libultra/os_set_global_int_mask.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude -Isrc/libultra \
     -o build/us/src/libultra/os_si_access_queue.c.o src/libultra/os_si_access_queue.c
+python3 tools/trim_elf32_section.py \
+    build/us/src/libultra/os_si_access_queue.c.o .data 0x10 --alignment 4
 .toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/al_save_param.c.o src/libultra/al_save_param.c
 python3 tools/trim_elf32_section.py \
@@ -3515,6 +3574,8 @@ python3 tools/trim_elf32_section.py \
     -o build/us/src/libultra/os_pi_get_cmd_queue.c.o src/libultra/os_pi_get_cmd_queue.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_pi_access.c.o src/libultra/os_pi_access.c
+python3 tools/trim_elf32_section.py \
+    build/us/src/libultra/os_pi_access.c.o .data 0x10 --alignment 4
 .toolchain/ido5.3/cc -c -O1 -mips3 -32 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/ll.c.o src/libultra/ll.c
 python3 tools/set_elf32_mips_o32.py build/us/src/libultra/ll.c.o
@@ -3537,6 +3598,8 @@ python3 tools/trim_elf32_section.py \
     -o build/us/src/libultra/os_si_raw_write_io.c.o src/libultra/os_si_raw_write_io.c
 .toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/al_main.c.o src/libultra/al_main.c
+python3 tools/trim_elf32_section.py \
+    build/us/src/libultra/al_main.c.o .data 0x10 --alignment 4
 .toolchain/ido5.3/cc -c -O2 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/sprintf.c.o src/libultra/sprintf.c
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \

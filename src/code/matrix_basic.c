@@ -10,7 +10,6 @@ typedef struct {
     f32 z;
 } Vec3f;
 
-extern f32 D_80072640;
 
 void func_8009EEE0(Matrix4f* matrix) {
     s32 row;
@@ -21,7 +20,7 @@ void func_8009EEE0(Matrix4f* matrix) {
             if (row != column) {
                 matrix->m[row][column] = 0.0f;
             } else {
-                matrix->m[row][column] = D_80072640;
+                matrix->m[row][column] = 1.0f;
             }
         }
     }

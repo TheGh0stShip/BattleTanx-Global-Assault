@@ -85,6 +85,27 @@ Global Assault's 16-entry command dispatch table is title-specific and was
 independently verified against the retail ROM rather than copied from that
 reference.
 
+The title-specific N_audio RSP instruction program at
+`0x800FA210–0x800FAE70` is a new symbolic reverse-engineering in
+`rsp/n_aspMain.s`. All 789 instructions, 80 control-flow labels, and the
+12-byte unreachable object pad assemble with the repository's pinned armips
+to the exact `0xC60` retail bytes. No extracted binary or word-array
+transcription is used. Handler names were inferred from the opcode order in
+[`mupen64plus-rsp-hle`](https://github.com/mupen64plus/mupen64plus-rsp-hle/tree/8a7a472)
+and checked against the dispatcher conventions in the CC0 SM64 audio source;
+neither reference supplied this microcode's instruction source.
+
+The initialized libultra objects at `0x80126B40–0x80126B60` and
+`0x80126E30–0x80126F80` follow the 2.0I definitions in
+[`decompals/ultralib`](https://github.com/decompals/ultralib/tree/e24c836796df4bf520ff8b11a5c9d2cea3a66cbd).
+They include the hardware-interrupt table, PI/SI access flags, thread sentinel
+and queues, timer list, VI contexts, and small audio/controller globals. The
+definitions were retyped into this repository's independently matching units;
+all owning text remains byte-identical and every initialized byte and pointer
+relocation is compared at its retail address. The adjacent N_audio globals at
+`0x80126B20–0x80126B40` use the MIT-licensed Mario Golf 64 reconstruction at
+revision `5014056b8ac5c26178e299bbdaede70c0d318910` as a declaration reference.
+
 The libmus command dispatch, effect presets, scheduler callbacks, and initial
 audio state at `0x80126590–0x80126890` follow the MIT-licensed N64 Sound Tools
 3.14 sources retained by the

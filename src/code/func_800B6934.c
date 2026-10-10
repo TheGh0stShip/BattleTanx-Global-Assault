@@ -13,21 +13,19 @@ typedef struct {
     f32 value;
 } ValueStateB6934;
 
-extern f32 D_800730F0;
-extern f32 D_800730F4;
 extern f32 D_80219488;
 
 u16 func_800B6934(ValueStateB6934 *state) {
-    f32 scaled = state->value * D_800730F0;
+    f32 scaled = state->value * 2e+01f;
     s32 result;
     register s32 output asm("$2");
     register f32 step asm("$f0");
     register f32 value asm("$f4");
 
-    if (!(D_800730F4 <= scaled)) {
+    if (!(2.1474836e+09f <= scaled)) {
         result = (s32)scaled;
     } else {
-        result = (s32)(scaled - D_800730F4) | 0x80000000;
+        result = (s32)(scaled - 2.1474836e+09f) | 0x80000000;
     }
     output = result;
     value = state->value;

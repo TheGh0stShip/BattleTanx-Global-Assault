@@ -27,18 +27,18 @@ class DecompReportTests(unittest.TestCase):
         self.assertEqual(measures["matched_functions"], 1720)
         self.assertEqual(measures["total_code"], "632160")
         self.assertEqual(measures["matched_code"], "493040")
-        self.assertEqual(measures["total_data"], "116944")
-        self.assertEqual(measures["matched_data"], "104012")
+        self.assertEqual(measures["total_data"], "116849")
+        self.assertEqual(measures["matched_data"], "109361")
         self.assertEqual([item["name"] for item in report["categories"]], ["Code", "Data"])
         data = report["categories"][1]["measures"]
-        self.assertAlmostEqual(data["matched_data_percent"], 104012 * 100 / 116944)
+        self.assertAlmostEqual(data["matched_data_percent"], 109361 * 100 / 116849)
         unmatched = [
             unit for unit in report["units"]
             if unit["name"].startswith("data/unmatched_")
         ]
-        self.assertEqual(len(unmatched), 199)
+        self.assertEqual(len(unmatched), 206)
         self.assertEqual(
-            sum(int(unit["sections"][0]["size"]) for unit in unmatched), 12932
+            sum(int(unit["sections"][0]["size"]) for unit in unmatched), 7488
         )
         self.assertTrue(
             all("virtual_address" in unit["sections"][0]["metadata"] for unit in unmatched)
@@ -56,13 +56,18 @@ class DecompReportTests(unittest.TestCase):
         ranges = REPORT.load_owned_data(
             [ROOT / "config/us/unit_rodata.tsv", ROOT / "config/us/unit_data.tsv"]
         )
-        self.assertEqual(sum(item["size"] for item in ranges), 104012)
+        self.assertEqual(sum(item["size"] for item in ranges), 109361)
         self.assertTrue(
             all(
                 left["end"] <= right["address"]
                 for left, right in zip(ranges, ranges[1:])
             )
         )
+
+    def test_alignment_fill_is_excluded_from_data_progress(self):
+        exclusions = REPORT.load_data_exclusions(ROOT / "config/us/data_exclusions.tsv")
+        self.assertEqual(len(exclusions), 14)
+        self.assertEqual(sum(item["size"] for item in exclusions), 95)
 
     def test_report_is_json_serializable_with_string_u64_fields(self):
         report = REPORT.build_report(
@@ -80,8 +85,9 @@ class DecompReportTests(unittest.TestCase):
         self.assertEqual(
             REPORT.MAIN_IMAGE_END
             - REPORT.MAIN_IMAGE_START
-            - 632160,
-            116944,
+            - 632160
+            - 95,
+            116849,
         )
 
     def test_late_gameplay_functions_are_not_reported_as_data(self):

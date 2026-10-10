@@ -5,7 +5,6 @@ typedef struct {
     s32 value;
 } WeightedValueABE6C;
 
-extern f32 D_80072E7C;
 extern WeightedValueABE6C D_80237180[][3][100];
 
 s32 func_800ABE6C(s32 *output, s32 table_index) {
@@ -18,7 +17,7 @@ s32 func_800ABE6C(s32 *output, s32 table_index) {
     for (group = 0; group < 3; group++) {
         item = 0;
         do {
-            if (D_80237180[table_index][group][item].weight == D_80072E7C) {
+            if (D_80237180[table_index][group][item].weight == 1e+08f) {
                 goto next_item;
             }
             value = D_80237180[table_index][group][item].value;

@@ -2,10 +2,6 @@
 #include "types.h"
 
 extern s32 player_bss_0048;
-extern f64 D_800725C0;
-extern f32 D_800725C8;
-extern f64 D_800725D0;
-extern f32 D_800725D8;
 
 f32 func_8009D960(void) {
     s32 first_seed;
@@ -19,16 +15,16 @@ f32 func_8009D960(void) {
     first_value = (f64)first_seed;
     player_bss_0048 = first_seed;
     if (first_seed < 0) {
-        first_value += D_800725C0;
+        first_value += 4294967296.0;
     }
 
-    first_result = (f32)first_value / D_800725C8;
+    first_result = (f32)first_value / 4.2949673e+09f;
     second_seed = (first_seed * 0x10DCD) + 1;
     second_value = (f64)second_seed;
     player_bss_0048 = second_seed;
     if (second_seed < 0) {
-        second_value += D_800725D0;
+        second_value += 4294967296.0;
     }
-    second_result = (f32)second_value / D_800725C8;
-    return (first_result + second_result) * D_800725D8;
+    second_result = (f32)second_value / 4.2949673e+09f;
+    return (first_result + second_result) * 0.5f;
 }

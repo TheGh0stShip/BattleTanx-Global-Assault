@@ -15,14 +15,12 @@ typedef struct Func800BFE4CArg {
     Func800BFE4COuter *outer;
 } Func800BFE4CArg;
 
-extern f32 D_800732AC;
-extern f32 D_800732B0;
 
 s32 func_800BFE4C(s32 unused, Func800BFE4CArg *arg) {
     Func800BFE4CInner *inner = arg->outer->inner;
 
-    if (inner->value < D_800732AC) {
-        inner->value += D_800732B0;
+    if (inner->value < 5.0f) {
+        inner->value += 1.0f;
         return 0;
     }
     inner->value = 0.0f;

@@ -5,7 +5,8 @@ typedef struct OSMesgQueue {
     u8 opaque[0x18];
 } OSMesgQueue;
 
-extern s32 __osPiAccessQueueEnabled;
+/* libultra 2.0I io/piacs.c: initialized flag owned by this translation unit. */
+u32 __osPiAccessQueueEnabled = 0;
 extern OSMesgQueue D_803B0448;
 extern OSMesg D_803B0440[1];
 

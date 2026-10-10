@@ -1,6 +1,7 @@
+/* Data reconstruction: decompals/ultralib e24c836796df4bf520ff8b11a5c9d2cea3a66cbd src/io/siacs.c: u32 __osSiAccessQueueEnabled = 0; */
 #include "ultra.h"
 
-extern s32 D_80126EC0;
+u32 D_80126EC0 = 0; /* __osSiAccessQueueEnabled */
 extern OSMesg D_803B04F0;
 extern OSMesgQueue D_803B04F8;
 extern s32 osSendMesg(OSMesgQueue *mq, OSMesg msg, s32 flag);

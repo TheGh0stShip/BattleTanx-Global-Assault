@@ -4,9 +4,6 @@ typedef struct {
     f32 m[4][4];
 } Matrix4f;
 
-extern f32 D_80072654;
-extern f32 D_80072658;
-extern f32 D_8007265C;
 extern f32 func_8009D4B0(u16 angle);
 extern f32 func_8009D510(u16 angle);
 
@@ -27,7 +24,7 @@ void func_8009F8A0(Matrix4f *input, Matrix4f *output, u16 angle) {
         s32 init_column;
 
         init_row = 0;
-        one = D_80072654;
+        one = 1.0f;
         row_base = &rotation.m[0][0];
         diagonal = row_base;
         while (init_row < 4) {
@@ -91,7 +88,7 @@ void func_8009FA04(Matrix4f *input, Matrix4f *output, u16 angle) {
         s32 init_column;
 
         init_row = 0;
-        one = D_80072658;
+        one = 1.0f;
         row_base = &rotation.m[0][0];
         diagonal = row_base;
         while (init_row < 4) {
@@ -155,7 +152,7 @@ void func_8009FB68(Matrix4f *input, Matrix4f *output, u16 angle) {
         s32 init_column;
 
         init_row = 0;
-        one = D_8007265C;
+        one = 1.0f;
         row_base = &rotation.m[0][0];
         diagonal = row_base;
         while (init_row < 4) {

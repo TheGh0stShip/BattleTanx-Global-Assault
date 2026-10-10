@@ -1,3 +1,4 @@
+/* Data reconstruction: n_audio n_reverb.c _n_loadOutputBuffer statics (val/lastval/blob), as in monde-lointain/mariogolf64 5014056 src/libnaudio/n_reverb.c:243-245 (MIT); unused by the code, emitted as .data */
 /* RODATA_VRAM 0x800777A0: this unit's switch table and literal pool are linked at their retail address. */
 #include "n_audio_private.h"
 #include "n_abi.h"
@@ -137,6 +138,9 @@ Acmd *_n_loadOutputBuffer(ALFx *r, ALDelay *d, s32 buff, Acmd *p)
     f32 fincount, fratio, delta;
     s32 ramalign = 0, length;
     s32 incount = FIXED_SAMPLE;
+    static f32 val = 0.0;
+    static f32 lastval = -10.0;
+    static f32 blob = 0;
 
     if (d->rs) {
         length = d->output - d->input;

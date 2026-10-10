@@ -1,3 +1,4 @@
+/* Data reconstruction: decompals/ultralib e24c836796df4bf520ff8b11a5c9d2cea3a66cbd src/io/controller.c: s32 __osContinitialized = FALSE; */
 /* IDOFLAGS: -O1 -mips2
    LDSYM __osContPifRam=0x803ADD20 LDSYM __osContLastCmd=0x803ADD60 LDSYM __osMaxControllers=0x803ADD61
    LDSYM __osEepromTimerQ=0x803ADD88 LDSYM __osEepromTimerMsg=0x803ADDA0 LDSYM osClockRate=0x80126E50
@@ -8,7 +9,7 @@
 
 extern u64 D_80126E50;
 #define osClockRate D_80126E50
-extern s32 __osContinitialized;
+s32 __osContinitialized = 0;
 extern OSMesgQueue __osEepromTimerQ;
 extern OSMesg __osEepromTimerMsg;
 extern OSTime osGetTime(void);

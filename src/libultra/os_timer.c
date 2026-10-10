@@ -1,3 +1,4 @@
+/* Data reconstruction: decompals/ultralib e24c836796df4bf520ff8b11a5c9d2cea3a66cbd src/os/timerintr.c: OSTimer* __osTimerList = &__osBaseTimer; */
 #include "ultra.h"
 
 typedef union {
@@ -11,7 +12,8 @@ u32 D_803B0578;
 u32 D_803B057C;
 u32 D_803B0580;
 
-extern OSTimer *__osTimerList;
+extern OSTimer D_803B0550; /* __osBaseTimer, this unit's bss: LDSYM D_803B0550=0x803B0550 */
+OSTimer *__osTimerList = &D_803B0550;
 extern u32 osGetCount(void);
 extern void __osSetCompare(u32 value);
 extern void __osSetTimerIntr(OSTime time);

@@ -6,7 +6,6 @@ typedef struct {
     f32 z;
 } Vec3f;
 
-extern f32 D_8007264C;
 
 void func_8009F334(f32 *matrix, Vec3f *input, Vec3f *output) {
     f32 scale;
@@ -20,7 +19,7 @@ void func_8009F334(f32 *matrix, Vec3f *input, Vec3f *output) {
     output->y = input->x * matrix[2] + input->z * matrix[6] +
                 input->y * matrix[10] + matrix[14];
 
-    scale = D_8007264C /
+    scale = 1.0f /
             (input->x * matrix[3] + input->z * matrix[7] +
              input->y * matrix[11] + matrix[15]);
     output_x = output->x * scale;

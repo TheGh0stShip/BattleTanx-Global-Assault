@@ -1,21 +1,22 @@
+/* Data reconstruction: decompals/ultralib e24c836796df4bf520ff8b11a5c9d2cea3a66cbd src/io/aisetnextbuf.c: static u8 hdwrBugFlag = FALSE; (function-local) */
 /* IDOFLAGS: -O1 -mips2 */
 #include "ultra.h"
 
 extern s32 __osAiDeviceBusy(void);
 extern u32 osVirtualToPhysical(void *addr);
-extern u8 aisetnextbuf_data_0000;
 
 s32 osAiSetNextBuffer(void *bufPtr, u32 size)
 {
+    static u8 hdwrBugFlag = 0;
     char *bptr = bufPtr;
 
-    if (aisetnextbuf_data_0000 != 0)
+    if (hdwrBugFlag != 0)
         bptr -= 0x2000;
 
     if ((((u32)bufPtr + size) & 0x3FFF) == 0x2000)
-        aisetnextbuf_data_0000 = 1;
+        hdwrBugFlag = 1;
     else
-        aisetnextbuf_data_0000 = 0;
+        hdwrBugFlag = 0;
 
     if (__osAiDeviceBusy())
         return -1;

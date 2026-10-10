@@ -133,6 +133,40 @@ def load_owned_data(paths: list[Path]) -> list[dict]:
     return ranges
 
 
+def load_data_exclusions(path: Path) -> list[dict]:
+    ranges = []
+    if not path.exists():
+        return ranges
+    for line_number, line in enumerate(path.read_text().splitlines(), 1):
+        if not line or line.startswith("#"):
+            continue
+        try:
+            name, address_text, size_text = line.split("\t")
+            address = int(address_text, 0)
+            size = int(size_text, 0)
+        except (ValueError, TypeError) as error:
+            raise ValueError(f"{path}:{line_number}: invalid exclusion row") from error
+        if size <= 0:
+            raise ValueError(f"{path}:{line_number}: exclusion size must be positive")
+        ranges.append(
+            {
+                "unit": name,
+                "address": address,
+                "end": address + size,
+                "size": size,
+                "section": ".padding",
+                "source": path,
+            }
+        )
+    ranges.sort(key=lambda item: item["address"])
+    for previous, current in zip(ranges, ranges[1:]):
+        if current["address"] < previous["end"]:
+            raise ValueError(
+                f"data exclusions overlap: {previous['unit']} and {current['unit']}"
+            )
+    return ranges
+
+
 def load_functions(path: Path) -> list[dict]:
     document = tomllib.loads(path.read_text())
     functions = []
@@ -272,9 +306,10 @@ def build_report(
         config_dir = functions_path.parent
         data_paths = [config_dir / "unit_rodata.tsv", config_dir / "unit_data.tsv"]
     owned_data = load_owned_data(data_paths)
+    excluded_data = load_data_exclusions(functions_path.parent / "data_exclusions.tsv")
     tracked_vram_start = ROM_VRAM_DELTA + MAIN_IMAGE_START
     tracked_vram_end = ROM_VRAM_DELTA + MAIN_IMAGE_END
-    for item in owned_data:
+    for item in owned_data + excluded_data:
         if not (
             tracked_vram_start <= item["address"]
             and item["end"] <= tracked_vram_end
@@ -283,10 +318,12 @@ def build_report(
                 f"owned data range is outside the loaded main image: {item['unit']}"
             )
     matched_data = sum(item["size"] for item in owned_data)
+    excluded_size = sum(item["size"] for item in excluded_data)
     total_data = (
         MAIN_IMAGE_END
         - MAIN_IMAGE_START
         - sum(item["size"] for item in all_functions)
+        - excluded_size
     )
     if matched_data > total_data:
         raise ValueError("source-owned data exceeds total non-function ROM bytes")
@@ -315,7 +352,7 @@ def build_report(
         )
 
     unmatched_ranges = uncovered_data_ranges(
-        all_functions, owned_data, tracked_vram_start, tracked_vram_end
+        all_functions, owned_data + excluded_data, tracked_vram_start, tracked_vram_end
     )
     unmatched_data = sum(item["size"] for item in unmatched_ranges)
     if unmatched_data != total_data - matched_data:

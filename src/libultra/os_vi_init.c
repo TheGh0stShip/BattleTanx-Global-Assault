@@ -1,3 +1,4 @@
+/* Data reconstruction: decompals/ultralib e24c836796df4bf520ff8b11a5c9d2cea3a66cbd src/io/vi.c: __OSViContext vi[2] = {0}; __osViCurr = &vi[0]; __osViNext = &vi[1]; */
 #include "ultra.h"
 
 typedef struct {
@@ -14,9 +15,9 @@ typedef struct {
     u8 unused[0x20];
 } OSViContext;
 
-extern OSViContext vi_data_0000[2];
-extern OSViContext *__osViCurr;
-extern OSViContext *__osViNext;
+OSViContext vi_data_0000[2] = { 0 }; /* vi[2] */
+OSViContext *__osViCurr = &vi_data_0000[0];
+OSViContext *__osViNext = &vi_data_0000[1];
 extern OSViMode osViModePalLan1;
 extern OSViMode osViModeMpalLan1;
 extern OSViMode osViModeNtscLan1;

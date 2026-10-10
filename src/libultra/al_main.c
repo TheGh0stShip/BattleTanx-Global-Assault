@@ -1,3 +1,4 @@
+/* Data reconstruction: decompals/ultralib e24c836796df4bf520ff8b11a5c9d2cea3a66cbd src/audio/sl.c: ALGlobals *alGlobals=0; */
 #include "types.h"
 
 typedef struct ALLink {
@@ -5,7 +6,7 @@ typedef struct ALLink {
     struct ALLink* previous;
 } ALLink;
 
-extern void* alGlobals_80126ED0;
+void* alGlobals_80126ED0 = 0; /* ALGlobals *alGlobals */
 extern void alSynDelete_80110750(void* globals);
 extern void alSynNew(void* globals);
 

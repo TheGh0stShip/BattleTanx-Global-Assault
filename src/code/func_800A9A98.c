@@ -14,7 +14,6 @@ typedef struct {
     u32 counter;
 } CounterStateA9A98;
 
-extern u8 D_80072D64[];
 extern s32 func_8009D144(CounterStateA9A98 *state);
 extern void func_800CA620(u8 player, void *message, s32 id);
 
@@ -29,7 +28,7 @@ void func_800A9A98(CounterStateA9A98 *state, u32 amount) {
         state->counter += amount;
         new_group = state->counter / 10000U;
         if (new_group != old_group) {
-            func_800CA620(state->player, D_80072D64, 0x2D);
+            func_800CA620(state->player, (u8 *)"EXTRA TANK BUCKS AWARDED", 0x2D);
             difference = new_group - old_group;
             bonus = difference * 5;
             state->stats->score += bonus * 2;

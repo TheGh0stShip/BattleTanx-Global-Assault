@@ -1,7 +1,11 @@
 # unit	data_vram	data_size
 # Source units whose initialized data must be linked and spliced at retail addresses.
 hud_flip_state	0x80114700	0x10
-rsp_microcode_text	0x800F8DB0	0x1460
+rsp_microcode_text	0x800F8DB0	0x20C0
+memory_region_table	0x801144A0	0x48
+graphics_task_state	0x801144F0	0xC
+display_state_ptr	0x80114500	0x4
+gfx_pool_state	0x80114510	0x4
 angle_sine_table	0x80114870	0x410
 render_state_presets	0x80114520	0x150
 renderer_global_tables	0x80114670	0x90
@@ -82,10 +86,21 @@ libmus/audio_runtime_data	0x801262E0	0x5B0
 n_audio/800FFB30_n_drvrnew	0x80126890	0x190
 n_audio/80100050_n_env	0x80126A20	0x100
 libultra/al_drvrnew	0x80126B60	0x190
+n_audio/80101320_n_reverb	0x80126B20	0x10
+n_audio/80101D10_n_alinit	0x80126B30	0x10
+libultra/os_ai_set_next_buffer	0x80126B40	0x10
+libultra/os_controller	0x80126B50	0x10
 libultra/al_env	0x80126CF0	0x140
+libultra/os_exception_data	0x80126E30	0x20
 libultra/os_initialize	0x80126E50	0x20
 libultra/os_pi_manager	0x80126E70	0x30
+libultra/os_pi_access	0x80126EA0	0x10
 libultra/sched	0x80126EB0	0x10
+libultra/os_si_access_queue	0x80126EC0	0x10
+libultra/al_main	0x80126ED0	0x10
+libultra/os_dequeue_thread	0x80126EE0	0x20
+libultra/os_timer	0x80126F00	0x10
+libultra/os_vi_init	0x80126F10	0x70
 libultra/os_vi_manager	0x80126F80	0x20
 libultra/vitbl	0x80126FA0	0xE10
 libultra/xprintf	0x80127DB0	0x50

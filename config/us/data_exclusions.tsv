@@ -1,0 +1,19 @@
+# name	vram	size
+# Inter-object alignment fill is part of the loaded image but is neither an
+# authored data object nor executable code. Some bytes retain stale fragments
+# from neighboring strings because the original toolchain aligned the next
+# input section without clearing the gap.
+align_8007253C	0x8007253C	0x4
+align_800725BC	0x800725BC	0x4
+align_80072634	0x80072634	0xC
+align_80072694	0x80072694	0xC
+align_800729BC	0x800729BC	0x4
+align_80072A1C	0x80072A1C	0x4
+align_80072AEC	0x80072AEC	0x4
+align_80072D7D	0x80072D7D	0x3
+align_80072D94	0x80072D94	0xC
+align_80072DBC	0x80072DBC	0x4
+align_800730C4	0x800730C4	0xC
+align_8007311C	0x8007311C	0x4
+align_8007313C	0x8007313C	0x4
+align_800732B4	0x800732B4	0xC

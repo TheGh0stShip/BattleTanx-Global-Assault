@@ -1,13 +1,5 @@
 #include "types.h"
 
-extern f32 D_8007260C;
-extern f32 D_80072610;
-extern f32 D_80072614;
-extern f32 D_80072618;
-extern f32 D_8007261C;
-extern f32 D_80072620;
-extern f32 D_80072624;
-extern f32 D_80072628;
 
 f32 func_8009EA70(f32 *a, f32 *b) {
     f32 x = a[0] - b[0];
@@ -26,12 +18,12 @@ f32 func_8009EA70(f32 *a, f32 *b) {
         y = -y;
     }
     if (y < x) {
-        y = x + y * D_8007260C / D_80072610;
+        y = x + y * 3.0f / 8.0f;
     } else {
-        y = y + x * D_80072614 / D_80072618;
+        y = y + x * 3.0f / 8.0f;
     }
     if (y < z) {
-        return z + y * D_80072624 / D_80072628;
+        return z + y * 3.0f / 8.0f;
     }
-    return y + z * D_8007261C / D_80072620;
+    return y + z * 3.0f / 8.0f;
 }
