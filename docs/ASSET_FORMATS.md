@@ -34,8 +34,8 @@ python3 tools/inventory_rom_layout.py --output /tmp/btga-rom-layout.json
 | Loaded main image | 1 | 749,104 |
 | Loaded segment-1 tail | 1 | 1,024 |
 | Stale debug symbol/type table | 1 | 31,744 |
-| Stale zero prefix | 1 | 464 |
-| Unresolved stale build material | 6 | 125,850 |
+| Exact duplicate texture-pool ranges | 6 | 123,912 |
+| Stale zero padding | 7 | 2,402 |
 | Exact duplicate libmus songs in stale region | 6 | 136,294 |
 | Leftover BattleTanx world | 1 | 8,296 |
 | Raw 0x400-byte buffers | 3 | 3,072 |
@@ -63,9 +63,13 @@ The preceding `0xB8400–0xC0000` range is a compact debug-name/type table with
 1,305 length-prefixed records and 664 unique identifiers. It retains internal
 names including `Steps_PruneFork`, `Obstacles_InitObstacleRef`, N64 SDK types,
 COFF `.fake`/`.eos` markers, and libmus enums. Generate its lossless name
-inventory with `tools/inventory_stale_debug.py`. A 464-byte zero prefix is
-reported separately. After these classifications, only the six intervening
-ranges (125,850 bytes) remain unresolved stale material.
+inventory with `tools/inventory_stale_debug.py`.
+
+The six ranges after the stale songs are exact copies of live texture-pool
+bytes located `0x40000` later in the ROM. They account for another 123,912
+bytes. The six song/pool separators and the initial prefix are uniformly zero
+(2,402 bytes total). Consequently every byte in the former stale-build region
+is now classified and equality-gated; none remains unresolved.
 
 ## Scripts and cutscenes
 

@@ -45,7 +45,8 @@ EXPECTED = {
     "libmus_bytes": 2_289_292,
     "stale_song_duplicate_bytes": 136_294,
     "stale_debug_bytes": 31_744,
-    "unresolved_stale_bytes": 125_850,
+    "stale_pool_duplicate_bytes": 123_912,
+    "unresolved_stale_bytes": 0,
 }
 
 
@@ -135,7 +136,12 @@ def verify_corpus(rom: bytes, root: Path) -> dict:
         "source-backed stale song bytes",
     )
     require(
-        layout["bytes"]["stale_build_material"],
+        layout["bytes"]["stale_pool_duplicate"],
+        EXPECTED["stale_pool_duplicate_bytes"],
+        "source-backed stale pool bytes",
+    )
+    require(
+        layout["bytes"].get("stale_build_material", 0),
         EXPECTED["unresolved_stale_bytes"],
         "unresolved stale bytes",
     )
@@ -174,10 +180,12 @@ def verify_corpus(rom: bytes, root: Path) -> dict:
         "stale_region": {
             "exact_song_duplicates": layout["counts"]["stale_song_duplicate"],
             "source_backed_bytes": layout["bytes"]["stale_song_duplicate"],
+            "exact_pool_duplicates": layout["counts"]["stale_pool_duplicate"],
+            "pool_duplicate_bytes": layout["bytes"]["stale_pool_duplicate"],
             "debug_symbol_bytes": layout["bytes"]["stale_debug_symbols"],
             "debug_name_records": debug_names["record_count"],
             "unique_debug_names": debug_names["unique_name_count"],
-            "unresolved_bytes": layout["bytes"]["stale_build_material"],
+            "unresolved_bytes": layout["bytes"].get("stale_build_material", 0),
         },
     }
 

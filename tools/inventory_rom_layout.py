@@ -33,6 +33,15 @@ STALE_SONG_DUPLICATES = (
     (0xF8000, 6),
 )
 
+STALE_POOL_DUPLICATES = (
+    (0xC8A00, 0xD0000, 0x108A00),
+    (0xD5600, 0xD8000, 0x115600),
+    (0xDE400, 0xE0000, 0x11E400),
+    (0xE9E00, 0xF0000, 0x129E00),
+    (0xF29F8, 0xF8000, 0x1329F8),
+    (0xF9000, 0x100000, 0x139000),
+)
+
 
 def stale_build_regions(rom: bytes) -> list[dict]:
     """Split stale linker material around six exact live libmus songs."""
@@ -52,20 +61,11 @@ def stale_build_regions(rom: bytes) -> list[dict]:
             "end": 0xC0000,
         },
     ]
-    cursor = 0xC0000
+    duplicates = []
     for duplicate_number, (start, file_index) in enumerate(STALE_SONG_DUPLICATES):
         source = files[file_index]
         end = start + source["size"]
-        if cursor < start:
-            regions.append(
-                {
-                    "kind": "stale_build_material",
-                    "name": f"stale_build_material_{duplicate_number:02d}",
-                    "start": cursor,
-                    "end": start,
-                }
-            )
-        regions.append(
+        duplicates.append(
             {
                 "kind": "stale_song_duplicate",
                 "name": f"stale_song_duplicate_{duplicate_number:02d}",
@@ -75,16 +75,35 @@ def stale_build_regions(rom: bytes) -> list[dict]:
                 "duplicate_of_start": source["start"],
             }
         )
-        cursor = end
-    if cursor < 0x100000:
-        regions.append(
+    for duplicate_number, (start, end, source_start) in enumerate(STALE_POOL_DUPLICATES):
+        duplicates.append(
             {
-                "kind": "stale_build_material",
-                "name": "stale_build_material_06",
-                "start": cursor,
-                "end": 0x100000,
+                "kind": "stale_pool_duplicate",
+                "name": f"stale_pool_duplicate_{duplicate_number:02d}",
+                "start": start,
+                "end": end,
+                "duplicate_of_start": source_start,
             }
         )
+
+    cursor = 0xC0000
+    for region in sorted(duplicates, key=lambda item: item["start"]):
+        start = region["start"]
+        if cursor < start:
+            if any(rom[cursor:start]):
+                raise ValueError(f"nonzero stale separator at 0x{cursor:X}-0x{start:X}")
+            regions.append(
+                {
+                    "kind": "stale_padding",
+                    "name": f"stale_zero_separator_{len(regions) - 2:02d}",
+                    "start": cursor,
+                    "end": start,
+                }
+            )
+        regions.append(region)
+        cursor = region["end"]
+    if cursor != 0x100000:
+        raise ValueError(f"stale duplicate map ends at 0x{cursor:X}")
     return regions
 
 
@@ -200,7 +219,7 @@ def inventory_layout(rom: bytes, boundaries: Path, campaign: Path) -> dict:
             if len(payload) < 64:
                 raise ValueError(f"{region['name']} is shorter than its loader header")
             region["scene_type"] = payload[0]
-        elif region["kind"] == "stale_song_duplicate":
+        elif region["kind"] in ("stale_song_duplicate", "stale_pool_duplicate"):
             source_start = region["duplicate_of_start"]
             source = rom[source_start : source_start + len(payload)]
             if payload != source:

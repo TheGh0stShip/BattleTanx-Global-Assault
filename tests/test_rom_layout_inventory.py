@@ -32,11 +32,13 @@ class RomLayoutInventoryTests(unittest.TestCase):
         self.assertEqual(report["bytes"]["alignment_padding"], 962)
         self.assertEqual(report["counts"]["stale_song_duplicate"], 6)
         self.assertEqual(report["bytes"]["stale_song_duplicate"], 136294)
+        self.assertEqual(report["counts"]["stale_pool_duplicate"], 6)
+        self.assertEqual(report["bytes"]["stale_pool_duplicate"], 123912)
         self.assertEqual(report["counts"]["stale_debug_symbols"], 1)
         self.assertEqual(report["bytes"]["stale_debug_symbols"], 31744)
-        self.assertEqual(report["bytes"]["stale_padding"], 464)
-        self.assertEqual(report["counts"]["stale_build_material"], 6)
-        self.assertEqual(report["bytes"]["stale_build_material"], 125850)
+        self.assertEqual(report["counts"]["stale_padding"], 7)
+        self.assertEqual(report["bytes"]["stale_padding"], 2402)
+        self.assertNotIn("stale_build_material", report["counts"])
         self.assertEqual(
             sorted(
                 item["scene_type"]
