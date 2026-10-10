@@ -525,7 +525,7 @@ segments:
       - [0x38690, c, code/800A8690]
       - [0x387BC, asm, main_800A87BC_to_800A89B0]
       - [0x389B0, c, code/800A89B0]
-      - [0x38A78, asm, main_800A8A78_to_800A8B14]
+      - [0x38A78, c, code/camera_view_select]
       - [0x38B14, c, code/object_reset]
       - [0x38B38, asm, main_800A8B38_to_800A8D54]
       - [0x38D54, c, code/func_800A8D54]

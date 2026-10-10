@@ -224,7 +224,7 @@ python3 tools/trim_elf32_section.py \
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800A72C0_to_800A8B14.s.o asm/us/main_800A72C0_to_800A8B14.s
 python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800A72C0_to_800A8B14.s.o .text 0x1854 --alignment 4
+    build/us/asm/us/main_800A72C0_to_800A8B14.s.o .text 0x17b8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800A8B38_to_800A9054.s.o asm/us/main_800A8B38_to_800A9054.s
 python3 tools/trim_elf32_section.py \
@@ -1036,7 +1036,12 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             matrix_transform vector2_rotate matrix_vector matrix_multiply lzari_decode \
             scheduler_context scheduler_state scheduler_events \
             scheduler_queue scheduler_misc object_range object_timing object_setters \
-            object_init object_reset object_flags object_limit \
+            object_init effect_sprite_key_draw effect_sprite_ring_draw 800A477C \
+            800A5BD8 800A61A0 camera_collision_resolve 800A6588 \
+            spotter_update spotter_frame_setup func_800A702C \
+            player_perspective_update 800A7794 800A8690 800A89B0 \
+            camera_view_select object_reset object_flags object_limit \
+            800B87A0 grid_node_height grid_height_query model_player_color \
             object_table_color object_table_reset object_table_lookup \
             gameplay_stub turn_adjust hud_state hud_tree_update hud_modes hud_stub \
             race_assets_init race_mode_query race_hud_layout race_marker_project race_map_draw race_state_init controller_menu_state \
@@ -3211,6 +3216,60 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/object_init.c.o .text 0x30 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_sprite_key_draw.c.o .text 0x1fc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_sprite_key_draw.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_sprite_ring_draw.c.o .text 0x1a0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/effect_sprite_ring_draw.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A477C.c.o .text 0x10dc --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A477C.c.o .rodata 0x80 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A5BD8.c.o .text 0x508 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A5BD8.c.o .rodata 0x40 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A61A0.c.o .text 0x180 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A61A0.c.o .rodata 0x4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/camera_collision_resolve.c.o .text 0x268 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/camera_collision_resolve.c.o .rodata 0x28 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A6588.c.o .text 0x534 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A6588.c.o .rodata 0x2c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spotter_update.c.o .text 0x3b0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spotter_update.c.o .rodata 0x8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/spotter_frame_setup.c.o .text 0x5c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800A702C.c.o .text 0x64 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/player_perspective_update.c.o .text 0x130 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A7794.c.o .text 0x14 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A8690.c.o .text 0x12c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800A89B0.c.o .text 0xc8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/camera_view_select.c.o .text 0x9c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800B87A0.c.o .text 0xd0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/grid_node_height.c.o .text 0x6c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/grid_height_query.c.o .text 0x224 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/model_player_color.c.o .text 0xdc --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/object_reset.c.o .text 0x24 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/object_flags.c.o .text 0x2c --alignment 4
@@ -3834,11 +3893,32 @@ if false; then
     build/us/src/code/scheduler_misc.c.o \
     build/us/asm/us/main_800A2E5C_to_800A4098.s.o \
     build/us/src/code/object_timing.c.o \
-    build/us/asm/us/main_800A40CC_to_800A6ABC.s.o \
+    build/us/src/code/effect_sprite_key_draw.c.o \
+    build/us/src/code/effect_sprite_ring_draw.c.o \
+    build/us/asm/us/main_800A4468_to_800A477C.s.o \
+    build/us/src/code/800A477C.c.o \
+    build/us/asm/us/main_800A5858_to_800A5BD8.s.o \
+    build/us/src/code/800A5BD8.c.o \
+    build/us/src/code/func_800A60E0.c.o \
+    build/us/asm/us/main_800A619C_to_800A61A0.s.o \
+    build/us/src/code/800A61A0.c.o \
+    build/us/src/code/camera_collision_resolve.c.o \
+    build/us/src/code/800A6588.c.o \
     build/us/src/code/object_setters.c.o \
-    build/us/asm/us/main_800A6B7C_to_800A7290.s.o \
+    build/us/src/code/func_800A6B7C.c.o \
+    build/us/src/code/spotter_update.c.o \
+    build/us/src/code/spotter_frame_setup.c.o \
+    build/us/src/code/func_800A702C.c.o \
+    build/us/asm/us/main_800A7090_to_800A7290.s.o \
     build/us/src/code/object_init.c.o \
-    build/us/asm/us/main_800A72C0_to_800A8B14.s.o \
+    build/us/asm/us/main_800A72C0_to_800A7664.s.o \
+    build/us/src/code/player_perspective_update.c.o \
+    build/us/src/code/800A7794.c.o \
+    build/us/asm/us/main_800A77A8_to_800A8690.s.o \
+    build/us/src/code/800A8690.c.o \
+    build/us/asm/us/main_800A87BC_to_800A89B0.s.o \
+    build/us/src/code/800A89B0.c.o \
+    build/us/src/code/camera_view_select.c.o \
     build/us/src/code/object_reset.c.o \
     build/us/asm/us/main_800A8B38_to_800A9054.s.o \
     build/us/src/code/object_flags.c.o \
@@ -3859,11 +3939,17 @@ if false; then
     build/us/src/code/mover_collision_response.c.o \
     build/us/asm/us/main_800B66E0_to_800B6934.s.o \
     build/us/src/code/func_800B6934.c.o \
-    build/us/asm/us/main_800B69F4_to_800B99AC.s.o \
+    build/us/asm/us/main_800B69F4_to_800B87A0.s.o \
+    build/us/src/code/800B87A0.c.o \
+    build/us/src/code/grid_node_height.c.o \
+    build/us/asm/us/main_800B88DC_to_800B93A4.s.o \
+    build/us/src/code/grid_height_query.c.o \
+    build/us/asm/us/main_800B95C8_to_800B99AC.s.o \
     build/us/src/code/display_registry.c.o \
     build/us/asm/us/main_800B99F8_to_800B9A4C.s.o \
     build/us/src/code/display_color.c.o \
-    build/us/asm/us/main_800B9AB0_to_800B9C68.s.o \
+    build/us/src/code/model_player_color.c.o \
+    build/us/asm/us/main_800B9B8C_to_800B9C68.s.o \
     build/us/src/code/display_commands.c.o \
     build/us/asm/us/main_800B9CAC_to_800B9D4C.s.o \
     build/us/src/code/table_lookup.c.o \
