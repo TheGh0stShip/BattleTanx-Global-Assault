@@ -56,21 +56,21 @@ class DecompReportTests(unittest.TestCase):
         measures = report["measures"]
         self.assertEqual(report["version"], 2)
         self.assertEqual(measures["total_functions"], 1879)
-        self.assertEqual(measures["matched_functions"], 1747)
+        self.assertEqual(measures["matched_functions"], 1773)
         self.assertEqual(measures["total_code"], "632132")
-        self.assertEqual(measures["matched_code"], "500056")
-        self.assertEqual(measures["total_data"], "115837")
-        self.assertEqual(measures["matched_data"], "111769")
+        self.assertEqual(measures["matched_code"], "509416")
+        self.assertEqual(measures["total_data"], "115745")
+        self.assertEqual(measures["matched_data"], "112221")
         self.assertEqual([item["name"] for item in report["categories"]], ["Code", "Data"])
         data = report["categories"][1]["measures"]
-        self.assertAlmostEqual(data["matched_data_percent"], 111769 * 100 / 115837)
+        self.assertAlmostEqual(data["matched_data_percent"], 112221 * 100 / 115745)
         unmatched = [
             unit for unit in report["units"]
             if unit["name"].startswith("data/unmatched_")
         ]
-        self.assertEqual(len(unmatched), 81)
+        self.assertEqual(len(unmatched), 65)
         self.assertEqual(
-            sum(int(unit["sections"][0]["size"]) for unit in unmatched), 4068
+            sum(int(unit["sections"][0]["size"]) for unit in unmatched), 3524
         )
         self.assertTrue(
             all("virtual_address" in unit["sections"][0]["metadata"] for unit in unmatched)
@@ -88,7 +88,7 @@ class DecompReportTests(unittest.TestCase):
         ranges = REPORT.load_owned_data(
             [ROOT / "config/us/unit_rodata.tsv", ROOT / "config/us/unit_data.tsv"]
         )
-        self.assertEqual(sum(item["size"] for item in ranges), 111769)
+        self.assertEqual(sum(item["size"] for item in ranges), 112221)
         self.assertTrue(
             all(
                 left["end"] <= right["address"]
@@ -98,8 +98,8 @@ class DecompReportTests(unittest.TestCase):
 
     def test_alignment_fill_is_excluded_from_data_progress(self):
         exclusions = REPORT.load_data_exclusions(ROOT / "config/us/data_exclusions.tsv")
-        self.assertEqual(len(exclusions), 151)
-        self.assertEqual(sum(item["size"] for item in exclusions), 1135)
+        self.assertEqual(len(exclusions), 167)
+        self.assertEqual(sum(item["size"] for item in exclusions), 1227)
 
     def test_report_is_json_serializable_with_string_u64_fields(self):
         report = REPORT.build_report(
@@ -118,8 +118,8 @@ class DecompReportTests(unittest.TestCase):
             REPORT.MAIN_IMAGE_END
             - REPORT.MAIN_IMAGE_START
             - 632132
-            - 1135,
-            115837,
+            - 1227,
+            115745,
         )
 
     def test_late_gameplay_functions_are_not_reported_as_data(self):

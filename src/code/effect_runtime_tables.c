@@ -23,11 +23,21 @@ u32 gEffectScaleBitPatterns[54] = {
     0x3F4CCCCD, 0x3F4CCCCD, 0x3F800000, 0x3F333333, 0x3F800000, 0x3F800000,
 };
 
-/* 32-bit N64 code-address tokens, never native host pointers. */
-u32 gEffectUpdateHandlerTokens[13] = {
-    0x80072C7C, 0x80072C70, 0x80072C5C, 0x80072C48, 0x80072C34, 0x80072C20,
-    0x80072C0C, 0x80072BFC, 0x80072BE8, 0x80072BD4, 0x80072BC0, 0x80072BB0,
-    0x80072BA0,
+/* Mission-status messages selected by func_800A9B64. */
+const char *gEffectStatusMessages[13] = {
+    "DATA RECOVERED",
+    "ENEMY TAKEN",
+    "30 SECONDS REMAIN",
+    "10 SECONDS REMAIN",
+    "QUEEN LORD SECURE",
+    "QUEEN LORD RESCUED",
+    "QUEEN LORD CAPTURED",
+    "FRIENDLY FIRE",
+    "PRISONER RESCUED",
+    "BASE UNDER ATTACK",
+    "CONVOY UNDER ATTACK",
+    "RETURN TO BASE",
+    "PRISONER SECURE",
 };
 
 u32 gEffectTypeIds[16] = {

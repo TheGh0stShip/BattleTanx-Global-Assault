@@ -28,6 +28,7 @@ contact_side_test	0x800B739C	0x118	normalizer-assisted
 curve_mode	0x80079AFC	0xFC	normalizer-assisted
 func_800A1384	0x800A1384	0x88	normalizer-assisted
 grid_collision_push	0x800B2488	0x408	normalizer-assisted
+tank_contact_scan	0x80090C4C	0x180	normalizer-assisted
 text_character_map	0x80099160	0x6C	normalizer-assisted
 grid_overlap_query	0x800B33FC	0x108	normalizer-assisted
 runtime_fields_init	0x80088B6C	0xF8	normalizer-assisted

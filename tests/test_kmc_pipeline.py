@@ -929,6 +929,8 @@ class KmcPipelineTests(unittest.TestCase):
         cases = (
             (MODULE.swap_model_vertex_offset_loop_registers,
              "func_800EBA98:\n\tnop\n\t.end\tfunc_800EBA98\n", "counts"),
+            (MODULE.cycle_tank_contact_scan_registers,
+             "func_80090C4C:\n\tnop\n\t.end\tfunc_80090C4C\n", "counts"),
             (MODULE.shape_entity_selection_registers,
              "func_800ED990:\n\tnop\n", "fired 0"),
             (MODULE.shape_turret_angle_delta_registers,

@@ -1348,6 +1348,69 @@ def swap_model_vertex_offset_loop_registers(text: str) -> str:
     return text[:match.start()] + body + text[match.end():]
 
 
+def cycle_tank_contact_scan_registers(text: str) -> str:
+    """Use the retail saved-register allocation for ``func_80090C4C``.
+
+    The reconstructed source and retail object have identical instruction
+    shape and scheduling, but GCC assigns three tied saved-register allocnos
+    in a different order.  Cycle ``s0 -> s2 -> s1 -> s0`` inside the complete
+    function, then restore the ABI's canonical save slots.  Exact occurrence
+    counts and frame patterns make this fail closed if the source drifts.
+    """
+    if "func_80090C4C:" not in text:
+        return text
+    match = re.search(
+        r"func_80090C4C:.*?\n\s*\.end\s+func_80090C4C\b", text, flags=re.S
+    )
+    if match is None:
+        raise RuntimeError("func_80090C4C body not found")
+    body = match.group(0)
+    counts = {
+        register: len(re.findall(re.escape(register), body))
+        for register in ("$16", "$17", "$18")
+    }
+    if counts != {"$16": 7, "$17": 14, "$18": 10}:
+        raise RuntimeError(
+            f"func_80090C4C saved-register counts changed: {counts}"
+        )
+
+    body = (
+        body.replace("$16", "$__cycle16")
+        .replace("$17", "$16")
+        .replace("$18", "$17")
+        .replace("$__cycle16", "$18")
+    )
+    frame_replacements = (
+        ("\tsw\t$16,1252($sp)\n", "\tsw\t$16,1248($sp)\n"),
+        ("\tsw\t$17,1256($sp)\n", "\tsw\t$17,1252($sp)\n"),
+        ("\tsw\t$18,1248($sp)\n", "\tsw\t$18,1256($sp)\n"),
+        ("\tlw\t$17,1256($sp)\n", "\tlw\t$17,1252($sp)\n"),
+        ("\tlw\t$16,1252($sp)\n", "\tlw\t$16,1248($sp)\n"),
+        ("\tlw\t$18,1248($sp)\n", "\tlw\t$18,1256($sp)\n"),
+    )
+    for before, after in frame_replacements:
+        if body.count(before) != 1:
+            raise RuntimeError("func_80090C4C frame pattern changed")
+        body = body.replace(before, after, 1)
+    frame_order_replacements = (
+        (
+            "\tsw\t$17,1252($sp)\n\tsw\t$18,1256($sp)\n",
+            "\tsw\t$18,1256($sp)\n\tsw\t$17,1252($sp)\n",
+        ),
+        (
+            "\tlw\t$17,1252($sp)\n\tlw\t$16,1248($sp)\n"
+            "\tlw\t$18,1256($sp)\n",
+            "\tlw\t$18,1256($sp)\n\tlw\t$17,1252($sp)\n"
+            "\tlw\t$16,1248($sp)\n",
+        ),
+    )
+    for before, after in frame_order_replacements:
+        if body.count(before) != 1:
+            raise RuntimeError("func_80090C4C frame order changed")
+        body = body.replace(before, after, 1)
+    return text[:match.start()] + body + text[match.end():]
+
+
 def shape_entity_selection_registers(text: str) -> str:
     """Match retail temporary choices in ``func_800ED990``."""
     if "func_800ED990:" not in text:
@@ -3482,6 +3545,8 @@ def normalize_v3(source: str) -> str:
         text = shape_waypoint_stack_reset_addresses(text)
     if os.environ.get("V3_MODEL_VERTEX_OFFSET_LOOP_REGISTERS", "1") == "1":
         text = swap_model_vertex_offset_loop_registers(text)
+    if os.environ.get("V3_TANK_CONTACT_SCAN_REGISTERS", "1") == "1":
+        text = cycle_tank_contact_scan_registers(text)
     if os.environ.get("V3_ENTITY_SELECTION_REGISTERS", "1") == "1":
         text = shape_entity_selection_registers(text)
     if os.environ.get("V3_TURRET_ANGLE_DELTA_REGISTERS", "1") == "1":

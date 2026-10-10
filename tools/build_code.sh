@@ -140,7 +140,7 @@ python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800859E4_to_8009C284.s.o .text 0xee9c --alignment 4
 for spec in \
     main_80095F08_to_80096250:0x348 \
-    main_80096BDC_to_80096F48:0x36c \
+    main_80096BDC_to_80096E14:0x238 \
     main_8009700C_to_800973E0:0x3d4 \
     main_8009755C_to_80097560:0x4 \
     main_80097FB4_to_8009813C:0x188 \
@@ -241,10 +241,6 @@ python3 tools/trim_elf32_section.py \
     -o build/us/asm/us/main_800A72C0_to_800A8B14.s.o asm/us/main_800A72C0_to_800A8B14.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800A72C0_to_800A8B14.s.o .text 0x17b8 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800A8B38_to_800A9054.s.o asm/us/main_800A8B38_to_800A9054.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800A8B38_to_800A9054.s.o .text 0x51c --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800A9080_to_800A974C.s.o asm/us/main_800A9080_to_800A974C.s
 python3 tools/trim_elf32_section.py \
@@ -965,7 +961,8 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             80094880 func_80094F40 func_80094F78 80094FBC \
             func_80095B50 func_80095B68 func_80095B90 func_80095BE4 80095C50 \
             func_80095E7C func_80096250 80096294 func_8009660C 800966D4 \
-            func_800967F0 80096810 font_glyph_draw 800973E0 \
+            tank_contact_scan func_800967F0 80096810 \
+            font_glyph_draw font_hex_draw 800973E0 \
             func_80097508 func_80097530 80097560 \
             func_80097660 func_800976AC func_80097794 func_800977DC \
             func_80097844 func_8009790C func_800979A0 func_800979F4 \
@@ -1002,13 +999,13 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             800AAAE0 800AB4DC 800AC0F4 func_800ACE70 func_800ACEB4 \
             func_800ACEFC 800AD14C 800AE710 800AF364 func_800B0268 func_800B03F4 \
             func_800A8E3C 800A9080 func_800A977C func_800A98B8 func_800A9B64 \
-            func_800A9C24 func_800A9CCC 800A9F10 \
+            func_800A9C24 func_800A9CCC light_display_list_build 800A9F10 \
             func_800A2E5C 800A2FBC 800A3758 \
             effect_sprite_key_draw effect_sprite_ring_draw 800A477C \
             800A5BD8 800A61A0 camera_collision_resolve 800A6588 \
             spotter_update spotter_frame_setup func_800A702C \
             player_perspective_update 800A7794 800A8690 800A89B0 \
-            camera_view_select object_reset object_flags object_limit \
+            camera_view_select camera_mode_update object_reset object_flags object_limit \
             800B87A0 grid_node_height grid_height_query model_player_color angle_table_lookup bounds_pair \
             object_table_color object_table_reset object_table_lookup \
             gameplay_stub turn_adjust hud_state hud_tree_update hud_modes hud_stub \
@@ -3415,8 +3412,14 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/800A89B0.c.o .text 0xc8 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/camera_view_select.c.o .text 0x9c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/camera_mode_update.c.o .text 0x21c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/camera_mode_update.c.o .rodata 0x3c --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/light_display_list_build.c.o .text 0x148 --alignment 4
 for spec in \
-    font_glyph_draw:0x188 \
+    font_glyph_draw:0x188 font_hex_draw:0x134 \
     func_80094F40:0x38 func_80094F78:0x44 \
     func_80095B50:0x18 func_80095B68:0x28 func_80095B90:0x54 \
     func_80095BE4:0x6c func_80095E7C:0x8c func_80096250:0x44 \
@@ -4129,7 +4132,8 @@ if false; then
     build/us/src/code/func_800967F0.c.o \
     build/us/src/code/80096810.c.o \
     build/us/src/code/font_glyph_draw.c.o \
-    build/us/asm/us/main_80096BDC_to_80096F48.s.o \
+    build/us/asm/us/main_80096BDC_to_80096E14.s.o \
+    build/us/src/code/font_hex_draw.c.o \
     build/us/src/code/func_80096F48.c.o \
     build/us/asm/us/main_8009700C_to_800973E0.s.o \
     build/us/src/code/800973E0.c.o \
@@ -4305,7 +4309,7 @@ if false; then
     build/us/src/code/800A89B0.c.o \
     build/us/src/code/camera_view_select.c.o \
     build/us/src/code/object_reset.c.o \
-    build/us/asm/us/main_800A8B38_to_800A8D54.s.o \
+    build/us/src/code/camera_mode_update.c.o \
     build/us/src/code/func_800A8D54.c.o \
     build/us/src/code/func_800A8E3C.c.o \
     build/us/src/code/func_800A8E84.c.o \
@@ -4327,7 +4331,7 @@ if false; then
     build/us/src/code/func_800A9C24.c.o \
     build/us/src/code/func_800A9CCC.c.o \
     build/us/src/code/object_table_reset.c.o \
-    build/us/asm/us/main_800A9D78_to_800A9EC0.s.o \
+    build/us/src/code/light_display_list_build.c.o \
     build/us/asm/us/main_800A9EC0_to_800A9F10.s.o \
     build/us/src/code/800A9F10.c.o \
     build/us/asm/us/main_800AA058_to_800AA598.s.o \
@@ -5113,6 +5117,7 @@ shockwave_ring_draw 0xC
 shockwave_ring_spawn 0x4
 splash_damage_falloff 0xC
 static_prop_draw 0x44
+effect_runtime_tables 0xEC
 RODATA_UNITS
 
 find build/us/asm build/us/src -type f -name '*.o' -print0 \

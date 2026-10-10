@@ -1,4 +1,10 @@
 # name	vram	size
+align_80071068	0x80071068	0x8
+align_800710D8	0x800710D8	0x8
+align_8007114C	0x8007114C	0x4
+align_800712EC	0x800712EC	0x4
+align_800715BC	0x800715BC	0x4
+align_8007248C	0x8007248C	0x4
 # Inter-object alignment fill is part of the loaded image but is neither an
 # authored data object nor executable code. Some bytes retain stale fragments
 # from neighboring strings because the original toolchain aligned the next
@@ -10,6 +16,7 @@ align_80072694	0x80072694	0xC
 align_800729BC	0x800729BC	0x4
 align_80072A1C	0x80072A1C	0x4
 align_80072AEC	0x80072AEC	0x4
+align_80072B98	0x80072B98	0x8
 align_80072D7D	0x80072D7D	0x3
 align_80072D94	0x80072D94	0xC
 align_80072DBC	0x80072DBC	0x4
@@ -18,7 +25,10 @@ align_8007311C	0x8007311C	0x4
 align_8007313C	0x8007313C	0x4
 align_800732B4	0x800732B4	0xC
 align_8007368C	0x8007368C	0x4
+align_80073804	0x80073804	0x4
+align_80073AC4	0x80073AC4	0x4
 align_80073CEC	0x80073CEC	0x4
+align_80073D04	0x80073D04	0x4
 align_80073EFC	0x80073EFC	0x4
 align_80073F2C	0x80073F2C	0x4
 align_800740DC	0x800740DC	0x4
