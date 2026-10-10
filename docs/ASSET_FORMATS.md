@@ -18,6 +18,40 @@ The current denominator is therefore 118,820 bytes: the 749,104-byte loaded
 image minus 630,284 non-overlapping catalogued function bytes. Source-owned
 `.data` and `.rodata` currently account for 84,480 bytes, or 71.099%.
 
+## Complete cartridge map
+
+`tools/inventory_rom_layout.py` accounts for every byte of the 8 MiB retail
+cartridge using the matching loader tables and independently validated stream
+boundaries:
+
+```sh
+python3 tools/inventory_rom_layout.py --output /tmp/btga-rom-layout.json
+```
+
+| Category | Regions | Bytes |
+| --- | ---: | ---: |
+| Header and IPL3 | 2 | 4,096 |
+| Loaded main image | 1 | 749,104 |
+| Loaded segment-1 tail | 1 | 1,024 |
+| Stale build material | 1 | 294,352 |
+| Leftover BattleTanx world | 1 | 8,296 |
+| Raw 0x400-byte buffers | 3 | 3,072 |
+| Texture/state/geometry pools | 3 | 3,097,208 |
+| Global Assault worlds | 75 | 493,165 |
+| Compressed images | 195 | 673,514 |
+| Raw image auxiliaries | 4 | 1,968 |
+| Scripts and cutscenes | 17 | 504,697 |
+| libmus files | 26 | 2,289,292 |
+| Zero alignment regions | 233 | 962 |
+| Terminal `0xFF` padding | 1 | 267,858 |
+
+The inventory rejects overlaps, any unexplained nonzero byte, an alignment
+gap larger than 15 bytes, a malformed script header extent, or non-`0xFF`
+terminal padding. Each region includes its retail range and SHA-256 hash. This
+proves there is no remaining anonymous hole in the ROM map; it does not claim
+that opaque stale-build bytes or every script command have semantic source
+representations yet.
+
 The effect-definition bank at `0x80114F10–0x80116580` accounts for 5,744 of
 those bytes. It is kept as heterogeneous 32-bit record words until the matched
 effect interpreter establishes every variant's field layout. Words containing
