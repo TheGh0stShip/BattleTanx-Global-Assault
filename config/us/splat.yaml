@@ -656,7 +656,7 @@ segments:
       - [0x4DAF8, c, code/800BDAF8]
       - [0x4EE0C, c, code/800BEE0C]
       - [0x4F000, c, code/hud_tree_remove]
-      - [0x4F130, c, code/func_800BF130]
+      - [0x4F130, asm, main_800BF130_to_800BF1A4]
       - [0x4F1A4, c, code/func_800BF1A4]
       - [0x4F204, c, code/hud_tree_update]
       - [0x4F3EC, c, code/func_800BF3EC]

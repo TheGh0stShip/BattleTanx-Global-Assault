@@ -1045,6 +1045,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             contact_side_test vector_angle_from_xy func_800B9E24 func_800B9EB4 \
             800B9FD4 world_resource_aggregate world_loader \
             world_bundle_resource_aggregate common_model_loader 800BBDC0 \
+            800BD93C 800BDAF8 800BEE0C func_800BF798 \
             800AAAE0 800AB4DC 800AC0F4 func_800ACE70 func_800ACEB4 \
             func_800ACEFC 800AD14C 800AE710 800AF364 func_800B0268 func_800B03F4 \
             func_800A8E3C 800A9080 func_800A977C func_800A98B8 func_800A9B64 \
@@ -3310,6 +3311,16 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800BBDC0.c.o .rodata 0x70 --alignment 4
 python3 tools/trim_elf32_section.py \
+    build/us/src/code/800BD93C.c.o .text 0xf4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800BDAF8.c.o .text 0x1314 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800BDAF8.c.o .rodata 0x88 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/800BEE0C.c.o .text 0x1f4 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/func_800BF798.c.o .text 0x74 --alignment 4
+python3 tools/trim_elf32_section.py \
     build/us/src/code/800AAAE0.c.o .text 0x134 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800AAAE0.c.o .rodata 0x4 --alignment 4
@@ -4210,7 +4221,19 @@ if false; then
     build/us/src/code/800BBDC0.c.o \
     build/us/src/code/entry_scan.c.o \
     build/us/src/code/entry_flags.c.o \
-    build/us/asm/us/main_800BD93C_to_800BFD40.s.o \
+    build/us/src/code/800BD93C.c.o \
+    build/us/src/code/func_800BDA30.c.o \
+    build/us/src/code/800BDAF8.c.o \
+    build/us/src/code/800BEE0C.c.o \
+    build/us/src/code/hud_tree_remove.c.o \
+    build/us/asm/us/main_800BF130_to_800BF1A4.s.o \
+    build/us/src/code/func_800BF1A4.c.o \
+    build/us/src/code/hud_tree_update.c.o \
+    build/us/src/code/func_800BF3EC.c.o \
+    build/us/src/code/hud_tree_draw.c.o \
+    build/us/src/code/func_800BF798.c.o \
+    build/us/src/code/hud_frame.c.o \
+    build/us/src/code/func_800BFCA4.c.o \
     build/us/src/code/hud_state.c.o \
     build/us/asm/us/main_800BFDA4_to_800C03F0.s.o \
     build/us/src/code/hud_root_callback.c.o \
