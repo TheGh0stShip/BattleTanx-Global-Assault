@@ -3541,6 +3541,19 @@ python3 tools/trim_elf32_section.py \
 mkdir -p build/us/src/libultra build/us/asm/us/libultra
 tools/bootstrap_ultralib.sh
 mkdir -p build/us/asm/us/boot
+for boot_unit in entry host_break rmon_panic_stub; do
+    "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
+        -o "build/us/asm/us/boot/${boot_unit}.s.o" \
+        "src/boot/${boot_unit}.s"
+    "${tool_prefix}objcopy" --set-section-alignment .text=4 \
+        "build/us/asm/us/boot/${boot_unit}.s.o"
+done
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/boot/entry.s.o .text 0x38 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/boot/host_break.s.o .text 0xB8 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/asm/us/boot/rmon_panic_stub.s.o .text 0x8 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/boot/exception_preamble.s.o \
     src/boot/exception_preamble.s
@@ -4536,7 +4549,7 @@ if false; then
     build/us/src/code/model_pickup_create.c.o \
     build/us/src/code/model_mode_objective_message.c.o \
     build/us/src/code/mission_event_forward.c.o \
-    build/us/asm/us/main_800E9E78_to_800E9E80.s.o \
+    build/us/asm/us/boot/rmon_panic_stub.s.o \
     build/us/src/code/mission_props_spawn.c.o \
     build/us/src/code/mission_targets_query.c.o \
     build/us/asm/us/main_800EA224_to_800EA714.s.o \

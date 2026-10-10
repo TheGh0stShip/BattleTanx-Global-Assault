@@ -37,14 +37,15 @@ segments:
     start: 0x1000
     vram: 0x80071000
     subsegments:
-      - [0x1000, asm, main_80071000_to_80077C40]
+      - [0x1000, hasm, boot/entry]
+      - [0x1038, asm, main_80071038_to_80077C40]
       - [0x7C40, c, code/early_hw]
       - [0x7DA4, c, code/early_memory_read]
       - [0x7FD0, c, code/func_80077FD0]
       - [0x8048, c, code/early_memory_write]
       - [0x8200, c, code/early_remote_copy]
       - [0x8274, c, code/early_memory_dispatch]
-      - [0x8830, asm, main_80078830_to_800788E8]
+      - [0x8830, hasm, boot/host_break]
       - [0x88E8, c, code/func_800788E8]
       - [0x8908, c, code/early_commands]
       - [0x8ADC, c, code/early_remote_transfer]
@@ -1022,7 +1023,7 @@ segments:
       - [0x79B50, c, code/model_pickup_create]
       - [0x79CAC, c, code/model_mode_objective_message]
       - [0x79E4C, c, code/mission_event_forward]
-      - [0x79E78, asm, main_800E9E78_to_800E9E80]
+      - [0x79E78, hasm, boot/rmon_panic_stub]
       - [0x79E80, c, code/mission_props_spawn]
       - [0x7A14C, c, code/mission_targets_query]
       - [0x7A224, asm, main_800EA224_to_800EA714]
