@@ -44,6 +44,10 @@ the N_audio ABI constants and the Sound Tools 3.14 command/effect tables. Its
 first `0x2B0` bytes are the RSP DMEM image; the remaining `0x300` bytes are
 libmus CPU-side initialized data.
 
+The RSP boot image at `0x800F8DB0` and F3DEX FIFO 2.07 instruction image at
+`0x800F8E80` are regenerated from pinned CC0 assembly sources. Their exact
+sizes are `0xD0` bytes including boot padding and `0x1390` bytes respectively.
+
 ## Compiler scope
 
 The exact SDK object matches prove that the linked library code is compatible

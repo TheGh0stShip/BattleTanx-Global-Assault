@@ -1,5 +1,6 @@
 # unit	data_vram	data_size
-# C units whose initialized data must be linked and spliced at retail addresses.
+# Source units whose initialized data must be linked and spliced at retail addresses.
+rsp_microcode_text	0x800F8DB0	0x1460
 angle_sine_table	0x80114870	0x410
 render_state_presets	0x80114520	0x150
 renderer_global_tables	0x80114670	0x90

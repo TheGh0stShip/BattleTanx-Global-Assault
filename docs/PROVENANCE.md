@@ -50,10 +50,17 @@ IDO 5.3 evaluates the table to the exact 0x80 retail bytes at `0x80077A00`.
 The initialized RSP DMEM layout for F3DEX FIFO 2.07 follows the matching,
 documented CC0 disassembly in
 [`Mr-Wiseguy/f3dex2`](https://github.com/Mr-Wiseguy/f3dex2/tree/bd31393fd02b89e024b043c8c50c9a5a10143fb6).
-The upstream 2.07 configuration independently assembles to the same 0x420-byte
+The pinned upstream 2.07 configuration independently assembles to the same
+`0x1390`-byte instruction image found at `0x800F8E80` and the same `0x420`-byte
 data image found at `0x80125EC0`; `src/code/f3dex2_fifo_data.c` preserves its
 named matrices, render state, light buffers, dispatch tables, clipping state,
 and overlay metadata without embedding an extracted binary.
+
+The standard `0xCC`-byte RSP boot program at `0x800F8DB0`, including its
+four-byte link pad, is reconstructed from the CC0
+[`n64decomp/sm64` RSP source](https://github.com/n64decomp/sm64/blob/9921382a68bb0c865e5e45eb594d9c64db59b1af/rsp/rspboot.s).
+The build downloads only checksum-pinned source archives and regenerates both
+RSP instruction images; no extracted microcode binary is stored in Git.
 
 The adjacent `0x801262E0–0x80126590` initialized DMEM image is the N_audio
 RSP ABI data layout. Its vector constants and 256-entry resampling table were

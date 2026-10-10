@@ -21,7 +21,7 @@ for asm_source in asm/us/*.s; do
     sed -i 's/beql       \$s2, \$a1, \.\?L80099664/.word      0x52454D41/' \
         "$asm_source"
     sed -i -E \
-        's/^dlabel (osViClock|__osShutdown|__OSGlobalIntMask|__osRcpImTable|osClockRate|D_80126F80|gspF3DEX_fifoDataStart|osViModeMpalLan1|osViModeNtscLan1|osViModePalLan1|xlitob_data_0000|xlitob_data_0014)$/dlabel __retail_\1/' \
+        's/^(dlabel|enddlabel) (osViClock|__osShutdown|__OSGlobalIntMask|__osRcpImTable|osClockRate|D_80126F80|rspbootTextStart|gspF3DEX_fifoDataStart|osViModeMpalLan1|osViModeNtscLan1|osViModePalLan1|xlitob_data_0000|xlitob_data_0014)$/\1 __retail_\2/' \
         "$asm_source"
 done
 
@@ -734,8 +734,29 @@ done < <(find asm/us -type f -name '*.s' -print0)
 
 tools/bootstrap_ido.sh
 tools/bootstrap_kmc_gcc.sh
+tools/bootstrap_armips.sh
+tools/bootstrap_f3dex2.sh
 mkdir -p build/us/src/code
 mkdir -p build/us/src/code/libmus
+mkdir -p build/us/rsp
+
+# Rebuild the standard boot microcode and this title's exact F3DEX FIFO 2.07
+# instruction image from source. They are RSP programs stored inside the loaded
+# main image, so the CPU linker carries them as initialized data.
+.toolchain/armips/armips \
+    -strequ CODE_FILE build/us/rsp/rspboot.bin rsp/rspboot.s
+make -s -C .toolchain/f3dex2 \
+    ARMIPS="$root_dir/.toolchain/armips/armips" \
+    BUILD_DIR="$root_dir/build/us/rsp/f3dex2" F3DEX2_2.07
+echo "4cef7741852f0e20007636ef194545d6  build/us/rsp/rspboot.bin" \
+    | md5sum --check --status
+echo "1523b8e38a9eae698b48909a0c0c0279  build/us/rsp/f3dex2/F3DEX2_2.07/F3DEX2_2.07.code" \
+    | md5sum --check --status
+"${tool_prefix}as" -EB -march=vr4300 -mabi=32 \
+    -o build/us/src/code/rsp_microcode_text.c.o src/code/rsp_microcode_text.s
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/rsp_microcode_text.c.o .data 0x1460 --alignment 4
+
 # Initialized-only gameplay units use the retail KMC pipeline too. Keep them in
 # one manifest-like loop so adding recovered data does not duplicate build logic.
 while read -r unit data_size; do

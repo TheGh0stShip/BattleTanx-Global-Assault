@@ -23,7 +23,7 @@ make verify-code
 make check
 ```
 
-`make setup` creates a local Python environment, verifies the dump, and copies it to the ignored canonical path. `make split` disassembles the known first-MiB code region with splat. `make verify-code` assembles and links that region and requires it to match ROM offsets `0x000000-0x101000` byte-for-byte. If GNU MIPS binutils are not installed system-wide, the build downloads the Ubuntu package into the ignored `.toolchain/` directory without requiring root. Generated assembly is intentionally ignored; reviewed C and project metadata are the source of truth.
+`make setup` creates a local Python environment, verifies the dump, and copies it to the ignored canonical path. `make split` disassembles the known first-MiB code region with splat. `make verify-code` assembles and links that region and requires it to match ROM offsets `0x000000-0x101000` byte-for-byte. If GNU MIPS binutils or armips are not installed locally, the build installs checksum-pinned copies under the ignored `.toolchain/` directory without requiring root; building armips requires CMake and a C++ compiler. Generated assembly is intentionally ignored; reviewed C, RSP assembly, and project metadata are the source of truth.
 
 ## Current status
 
@@ -31,7 +31,8 @@ make check
 - A GPL-compatible catalogue contains 1,748 supported function boundaries after correcting false splits and aggregations, with provenance.
 - Reproducible splat extraction and repository safety gates are in place.
 - The header, IPL3, and known first-MiB code region reconstruct byte-for-byte.
-- 1,461 of 1,748 catalogue functions (83.6%) are reconstructed in production C and pass the byte-exact gate. By catalogue function-body bytes, 404,476 of 630,284 bytes (64.2%) are reconstructed.
+- 1,463 of 1,748 catalogue functions (83.7%) are reconstructed in production C and pass the byte-exact gate. By catalogue function-body bytes, 406,056 of 630,284 bytes (64.4%) are reconstructed.
+- Source-owned initialized and read-only data accounts for 57,200 of 118,820 bytes (48.1%) in the loaded executable image, including source-built RSP boot and F3DEX FIFO 2.07 programs.
 - The matching LZARI codec and audited ROM tables identify 271 compressed streams: 75 game-world bundles, 195 images, and one leftover BattleTanx world. Their 1,174,975 stored bytes expand to 2,886,765 bytes and canonically re-encode to every retail byte. `tools/inventory_lzari_assets.py` inventories them, `tools/extract_lzari_images.py` converts all six observed N64 texture layouts into local PNG previews, and `tools/extract_lzari_worlds.py` emits validated fixed-record world manifests without committing ROM-derived data.
 - Normalizer-assisted units require narrowly gated, documented rules with exact fire counts; they are identified separately from pure source matches in [the normalizer-assisted record](docs/NORMALIZER_ASSISTED.md).
 - CI publishes Code and Data categories in the objdiff v2 `us_report` artifact. Data progress counts only source-owned bytes already proven identical; merely locating or extracting an opaque asset does not count as a match.

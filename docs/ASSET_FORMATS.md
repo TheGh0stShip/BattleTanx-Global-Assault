@@ -16,7 +16,7 @@ denominator would conflate asset extraction with linked program-data matching.
 
 The current denominator is therefore 118,820 bytes: the 749,104-byte loaded
 image minus 630,284 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 51,984 bytes, or 43.750%.
+`.data` and `.rodata` currently account for 57,200 bytes, or 48.140%.
 
 The effect-definition bank at `0x80114F10–0x80116580` accounts for 5,744 of
 those bytes. It is kept as heterogeneous 32-bit record words until the matched
@@ -56,6 +56,12 @@ the initialized model-cache state. Nintendo's source-backed F3DEX FIFO 2.07
 DMEM image occupies `0x80125EC0–0x801262E0`; its matrices, render state, light
 buffers, dispatch tables, clipping state, and overlay metadata are kept in a
 separate unit from the game-owned model data.
+
+The source-built RSP boot and F3DEX FIFO 2.07 instruction images occupy
+`0x800F8DB0–0x800FA210`. Although these bytes execute on the RSP, decomp.dev
+accounts for them as Data because they are not R4300 CPU functions. Their
+assembly sources and instruction-set architecture remain distinct from the
+game's big-endian MIPS III/o32 CPU code.
 
 Audio runtime data at `0x801262E0–0x80126890` contains the N_audio RSP command
 dispatch addresses, vector constants and resampling coefficients, followed by
