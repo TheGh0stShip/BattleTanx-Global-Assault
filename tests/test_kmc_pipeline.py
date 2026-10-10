@@ -12,6 +12,29 @@ SPEC.loader.exec_module(MODULE)
 
 
 class KmcPipelineTests(unittest.TestCase):
+    def test_grid_collision_midpoint_load_fills_load_delay(self) -> None:
+        source = (
+            "func_800B2488:\n"
+            "\tsubu\t$3,$3,$2\n"
+            "\tsra\t$3,$3,1\n"
+            "\tlh\t$2,28($18)\n"
+            "\tmtc1\t$3,$f0\n"
+        )
+        normalized = MODULE.schedule_grid_collision_midpoint_load(source)
+        self.assertIn(
+            "\tsubu\t$3,$3,$2\n"
+            "\tlh\t$2,28($18)\n"
+            "\tsra\t$3,$3,1\n"
+            "\tmtc1\t$3,$f0\n",
+            normalized,
+        )
+
+    def test_grid_collision_midpoint_load_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.schedule_grid_collision_midpoint_load(
+                "func_800B2488:\n\tnop\n"
+            )
+
     def test_angle_step_update_requires_both_patterns(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
             MODULE.shape_angle_step_update("func_8009D75C:\n\tnop\n")

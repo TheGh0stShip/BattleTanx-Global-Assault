@@ -1,48 +1,45 @@
-#include "types.h"
+/* SPAN 0x800C12B4 */
+/* RODATA_VRAM 0x80073748 */
+typedef unsigned char u8;
 
-extern void *jtbl_80073748[];
 extern void *func_800BD880(void);
-extern void func_800BD8B8(void *);
+extern void func_800BD8B8(void *current, void *target);
 
-/* Resolve and submit the current parser-side record.
- * Transitional exact reconstruction retaining the original jump table. */
-__asm__(
-".text\n"
-".globl func_800C123C\n"
-"func_800C123C:\n"
-"addiu $sp,$sp,-0x18\n"
-"sw $ra,0x10($sp)\n"
-"jal func_800BD880\n"
-"nop\n"
-"addu $4,$2,$0\n"
-"lw $2,8($4)\n"
-"lbu $2,0($2)\n"
-"addiu $3,$2,-0x2e\n"
-"sltiu $2,$3,0x2d\n"
-"beqz $2,4f\n"
-"addu $5,$0,$0\n"
-"sll $2,$3,2\n"
-"lui $1,%hi(jtbl_80073748)\n"
-"addu $1,$1,$2\n"
-"lw $2,%lo(jtbl_80073748)($1)\n"
-"jr $2\n"
-"nop\n"
-"1:\n"
-"j 4f\n"
-"addiu $5,$4,-0x80\n"
-"2:\n"
-"j 4f\n"
-"addiu $5,$4,-0xb0\n"
-"3:\n"
-"addiu $5,$4,-0xa0\n"
-"4:\n"
-"beqz $5,5f\n"
-"nop\n"
-"jal func_800BD8B8\n"
-"nop\n"
-"5:\n"
-"lw $ra,0x10($sp)\n"
-"addiu $sp,$sp,0x18\n"
-"jr $ra\n"
-"nop\n"
-);
+void func_800C123C(void) {
+    u8 *record = func_800BD880();
+    u8 *selected = 0;
+
+    switch (**(u8 **)(record + 8)) {
+    case 'E':
+        selected = record - 0x80;
+        break;
+    case 'P':
+    case 'Q':
+    case 'R':
+    case 'S':
+    case 'T':
+    case 'V':
+    case 'W':
+    case 'X':
+    case 'Y':
+    case 'Z':
+        selected = record - 0xB0;
+        break;
+    case '.':
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+        selected = record - 0xA0;
+        break;
+    }
+    if (selected != 0) {
+        func_800BD8B8(record, selected);
+    }
+}

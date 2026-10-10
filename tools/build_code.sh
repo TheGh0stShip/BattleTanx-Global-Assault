@@ -286,10 +286,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800BFE94_to_800BFEA0.s.o .text 0xc --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800C11B8_to_800C12B4.s.o asm/us/main_800C11B8_to_800C12B4.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800C11B8_to_800C12B4.s.o .text 0xfc --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800C6914_to_800C6918.s.o asm/us/main_800C6914_to_800C6918.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800C6914_to_800C6918.s.o .text 0x4 --alignment 4
@@ -4115,7 +4111,7 @@ if false; then
     build/us/src/code/800B1DA8.c.o \
     build/us/src/code/func_800B22F8.c.o \
     build/us/src/code/800B2364.c.o \
-    build/us/asm/us/main_800B2488_to_800B2890.s.o \
+    build/us/src/code/grid_collision_push.c.o \
     build/us/src/code/800B2890.c.o \
     build/us/asm/us/main_800B3018_to_800B3368.s.o \
     build/us/src/code/800B3368.c.o \
@@ -4202,7 +4198,8 @@ if false; then
     build/us/src/code/hud_secondary.c.o \
     build/us/src/code/hud_callbacks.c.o \
     build/us/src/code/hud_primary_modes.c.o \
-    build/us/asm/us/main_800C11B8_to_800C12B4.s.o \
+    build/us/src/code/func_800C11B8.c.o \
+    build/us/src/code/func_800C123C.c.o \
     build/us/src/code/hud_key_nav.c.o \
     build/us/src/code/func_800C13BC.c.o \
     build/us/src/code/menu_countdown.c.o \

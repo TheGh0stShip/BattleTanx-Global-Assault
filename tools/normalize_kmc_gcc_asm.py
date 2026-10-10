@@ -2776,6 +2776,38 @@ def shape_angle_step_update(text: str) -> str:
     return text.replace(tail_before, tail_after, 1)
 
 
+def schedule_grid_collision_midpoint_load(text: str) -> str:
+    """Reproduce the retail scheduler's independent midpoint-load order.
+
+    In ``func_800B2488`` the reconstructed source and retail object have the
+    same dependency graph.  KMC GCC selects the arithmetic shift before the
+    independent second halfword load, while retail schedules that load first
+    so the shift occupies its load-delay slot.  Restrict the complete four-
+    instruction pattern to this function and require exactly one occurrence.
+    """
+    if "func_800B2488:" not in text:
+        return text
+    before = (
+        "\tsubu\t$3,$3,$2\n"
+        "\tsra\t$3,$3,1\n"
+        "\tlh\t$2,28($18)\n"
+        "\tmtc1\t$3,$f0\n"
+    )
+    after = (
+        "\tsubu\t$3,$3,$2\n"
+        "\tlh\t$2,28($18)\n"
+        "\tsra\t$3,$3,1\n"
+        "\tmtc1\t$3,$f0\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            "func_800B2488 midpoint load schedule fired "
+            f"{fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -2909,6 +2941,8 @@ def normalize_v3(source: str) -> str:
         text = preserve_search_record_index_copy(text)
     if os.environ.get("V3_ANGLE_STEP_UPDATE", "1") == "1":
         text = shape_angle_step_update(text)
+    if os.environ.get("V3_GRID_COLLISION_MIDPOINT_LOAD", "1") == "1":
+        text = schedule_grid_collision_midpoint_load(text)
     return text
 
 

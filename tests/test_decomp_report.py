@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import re
 import tempfile
 import tomllib
 import unittest
@@ -16,6 +17,37 @@ SPEC.loader.exec_module(REPORT)
 
 
 class DecompReportTests(unittest.TestCase):
+    def test_readme_progress_matches_report(self):
+        report = REPORT.build_report(
+            ROOT / "config/us/recomp_function_boundaries.toml",
+            ROOT / "config/us/splat.yaml",
+        )
+        measures = report["measures"]
+        readme = (ROOT / "README.md").read_text()
+        function_status = re.search(
+            r"([\d,]+) of ([\d,]+) catalogue functions .*?"
+            r"([\d,]+) of ([\d,]+) bytes",
+            readme,
+        )
+        data_status = re.search(
+            r"data accounts for ([\d,]+) of ([\d,]+) bytes", readme
+        )
+        self.assertIsNotNone(function_status)
+        self.assertIsNotNone(data_status)
+        self.assertEqual(
+            tuple(int(value.replace(",", "")) for value in function_status.groups()),
+            (
+                measures["matched_functions"],
+                measures["total_functions"],
+                int(measures["matched_code"]),
+                int(measures["total_code"]),
+            ),
+        )
+        self.assertEqual(
+            tuple(int(value.replace(",", "")) for value in data_status.groups()),
+            (int(measures["matched_data"]), int(measures["total_data"])),
+        )
+
     def test_current_production_layout(self):
         report = REPORT.build_report(
             ROOT / "config/us/recomp_function_boundaries.toml",
@@ -24,21 +56,21 @@ class DecompReportTests(unittest.TestCase):
         measures = report["measures"]
         self.assertEqual(report["version"], 2)
         self.assertEqual(measures["total_functions"], 1879)
-        self.assertEqual(measures["matched_functions"], 1743)
+        self.assertEqual(measures["matched_functions"], 1746)
         self.assertEqual(measures["total_code"], "632132")
-        self.assertEqual(measures["matched_code"], "497008")
+        self.assertEqual(measures["matched_code"], "498292")
         self.assertEqual(measures["total_data"], "115837")
-        self.assertEqual(measures["matched_data"], "111401")
+        self.assertEqual(measures["matched_data"], "111765")
         self.assertEqual([item["name"] for item in report["categories"]], ["Code", "Data"])
         data = report["categories"][1]["measures"]
-        self.assertAlmostEqual(data["matched_data_percent"], 111401 * 100 / 115837)
+        self.assertAlmostEqual(data["matched_data_percent"], 111765 * 100 / 115837)
         unmatched = [
             unit for unit in report["units"]
             if unit["name"].startswith("data/unmatched_")
         ]
-        self.assertEqual(len(unmatched), 81)
+        self.assertEqual(len(unmatched), 80)
         self.assertEqual(
-            sum(int(unit["sections"][0]["size"]) for unit in unmatched), 4436
+            sum(int(unit["sections"][0]["size"]) for unit in unmatched), 4072
         )
         self.assertTrue(
             all("virtual_address" in unit["sections"][0]["metadata"] for unit in unmatched)
@@ -56,7 +88,7 @@ class DecompReportTests(unittest.TestCase):
         ranges = REPORT.load_owned_data(
             [ROOT / "config/us/unit_rodata.tsv", ROOT / "config/us/unit_data.tsv"]
         )
-        self.assertEqual(sum(item["size"] for item in ranges), 111401)
+        self.assertEqual(sum(item["size"] for item in ranges), 111765)
         self.assertTrue(
             all(
                 left["end"] <= right["address"]

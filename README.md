@@ -31,16 +31,17 @@ make check
 ## Current status
 
 - ROM identity and the unusual `0x80071000` load address are verified.
-- A GPL-compatible catalogue contains 1,803 supported function boundaries after correcting false splits and aggregations, with provenance.
+- A GPL-compatible catalogue contains 1,879 supported function boundaries after correcting false splits and aggregations, with provenance.
 - Reproducible splat extraction and repository safety gates are in place.
 - The header, IPL3, and known first-MiB code region reconstruct byte-for-byte.
-- 1,625 of 1,803 catalogue functions (90.1%) are reconstructed in production C and pass the byte-exact gate. By catalogue function-body bytes, 476,380 of 630,284 bytes (75.6%) are reconstructed.
-- Source-owned initialized and read-only data accounts for 84,800 of 118,820 bytes (71.4%) in the loaded executable image, including source-built RSP boot and F3DEX FIFO 2.07 programs.
+- 1,746 of 1,879 catalogue functions (92.9%) are reconstructed in production C and pass the byte-exact gate. By catalogue function-body bytes, 498,292 of 632,132 bytes (78.8%) are reconstructed.
+- Source-owned initialized and read-only data accounts for 111,765 of 115,837 bytes (96.5%) in the loaded executable image, including source-built RSP boot, F3DEX FIFO 2.07, and n_audio microcode programs.
 - The matching LZARI codec and audited ROM tables identify 271 compressed streams: 75 game-world bundles, 195 images, and one leftover BattleTanx world. Their 1,174,975 stored bytes expand to 2,886,765 bytes and canonically re-encode to every retail byte. `tools/inventory_lzari_assets.py` inventories them, `tools/extract_lzari_images.py` converts all six observed N64 texture layouts into local PNG previews, and `tools/extract_lzari_worlds.py` emits validated fixed-record world manifests without committing ROM-derived data.
+- The complete loading path is reconstructed in matching C: individual asset DMA/loading, the eight-function LZARI decoder, both world loaders, relocation walkers, and the compressed-bank directory. `make verify-assets` independently parses and losslessly rebuilds every known resource family while accounting for all 8 MiB of the retail ROM.
 - The complete 26-file libmus store is independently validated and can be losslessly split/rebuilt locally: 76 SFX waves, 93 effects, 231 music waves, and 21 songs occupying 2,289,292 indexed ROM bytes plus 66 alignment bytes. All 307 non-overlapping ADPCM waves are independently replaceable and inspection-decodable; `tools/pack_libmus_assets.py` reconstructs both large wave banks and the complete store without opaque fallback slices.
 - Normalizer-assisted units require narrowly gated, documented rules with exact fire counts; they are identified separately from pure source matches in [the normalizer-assisted record](docs/NORMALIZER_ASSISTED.md).
 - CI publishes Code and Data categories in the objdiff v2 `us_report` artifact. Data progress counts only source-owned bytes already proven identical; merely locating or extracting an opaque asset does not count as a match.
-- Matching C reconstruction, compiler identification, linker layout, asset format mapping, and ROM rebuild are not complete.
+- Matching C reconstruction and semantic naming of the remaining opaque object payload fields are not complete. The known program image and complete asset corpus already have independent byte-exact reconstruction gates.
 - The Vita port has not begun; N64 source recovery comes first.
 
 See the [architecture and portability contract](docs/ARCHITECTURE.md), [library fingerprints](docs/LIBRARIES.md), and [research provenance](docs/PROVENANCE.md).

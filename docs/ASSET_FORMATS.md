@@ -14,9 +14,10 @@ and terminal ROM padding. Those excluded regions still need documented formats
 and exact reconstruction for the project, but adding their bytes to the Data
 denominator would conflate asset extraction with linked program-data matching.
 
-The current denominator is therefore 118,820 bytes: the 749,104-byte loaded
-image minus 630,284 non-overlapping catalogued function bytes. Source-owned
-`.data` and `.rodata` currently account for 84,480 bytes, or 71.099%.
+The current denominator is therefore 115,837 bytes: the 749,104-byte loaded
+image minus 632,132 non-overlapping catalogued function bytes and 1,135 bytes
+of independently audited object/alignment padding. Source-owned `.data` and
+`.rodata` currently account for 111,765 bytes, or 96.485%.
 
 ## Complete cartridge map
 
