@@ -527,3 +527,17 @@ after reconstruction. This is a lossless encoded-wave source pipeline;
 editing/re-encoding decoded PCM and semantically rebuilding pointer banks or
 songs remain future work. Extracted files and decoded WAV inspection artifacts
 must stay untracked.
+
+Decode one stored wave for listening or waveform inspection by supplying an
+explicit WAV rate (the PTR/WBK format does not encode an authoritative rate):
+
+```sh
+python3 tools/decode_libmus_wave.py \
+  --rom baseroms/us/baserom.z64 --bank sfx --index 0 \
+  --sample-rate 22050 --output /tmp/btga-sfx-000.wav
+```
+
+The decoder implements the N64 ABI1 ADPCM recurrence, preserves stored
+infinite-loop metadata in a RIFF `smpl` chunk, and does not resample or apply
+song/effect pitch. All 307 retail waves pass strict frame, predictor, book and
+loop validation.

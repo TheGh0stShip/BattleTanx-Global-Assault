@@ -209,9 +209,11 @@ def parse_pointer_bank(data: bytes, sample_data: bytes, name: str) -> dict:
 
         waves.append({
             "index": index,
+            "descriptor_offset": wave_offset,
             "sample_offset": sample_offset,
             "sample_size": sample_size,
             "type": "adpcm" if wave_type == 0 else "raw16",
+            "book_offset": book_offset,
             "base_note": data[basenotes + index],
             "detune_cents": struct.unpack_from(">b", data, detunes + index * 4)[0],
             "loop": loop,

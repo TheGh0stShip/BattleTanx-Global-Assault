@@ -28,6 +28,14 @@ references are range-checked directly against the verified ROM. The unlicensed
 `nviewer` project was used only to cross-check format facts; none of its parser
 or renderer source is incorporated.
 
+The inspection-only N64 ADPCM decoder in `tools/decode_libmus_wave.py` follows
+the ABI1 recurrence and adversarial oracle vectors from the MIT-licensed
+[`slfx77/neversoft-multitool`](https://github.com/slfx77/neversoft-multitool/tree/3c9028e0178deb9060190362d1c47039a32846e2/src/NeversoftMultitool/Core/Formats/Audio)
+implementation. Global Assault's 307 PTR/WBK waves are parsed and validated
+independently against this project's verified ROM; the decoder never infers a
+playback rate absent from the serialized bank. The required upstream license
+text is retained in [`THIRD_PARTY_LICENSES.md`](THIRD_PARTY_LICENSES.md).
+
 The matching asset encoder in `tools/lzari.py` is a Python port of Okumura's
 freely redistributable 1989 [`LZARI.C`](https://github.com/e-n-f/lzss/blob/f370a64a7ce5e4c54cfe122ca441671c3faccc24/LZARI.C).
 The retail variant changes the native `unsigned long` size field to a
