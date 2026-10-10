@@ -3476,6 +3476,136 @@ def schedule_grid_collision_midpoint_load(text: str) -> str:
     return text.replace(before, after, 1)
 
 
+def shape_mission_actor_spawn(text: str) -> str:
+    """Reproduce the retail allocation and final schedule in func_800E9990."""
+    if "func_800E9990:" not in text:
+        return text
+    match = re.search(
+        r"func_800E9990:.*?\n\s*\.end\s+func_800E9990\b", text, flags=re.S
+    )
+    if match is None:
+        raise RuntimeError("func_800E9990 body not found")
+    body = match.group(0)
+
+    patterns = (
+        (
+            "\tsw\t$fp,112($sp)\n\tlhu\t$fp,158($sp)\n"
+            "\tsw\t$22,104($sp)\n\tlbu\t$22,163($sp)\n",
+            "\tsw\t$22,104($sp)\n\tlhu\t$22,158($sp)\n"
+            "\tsw\t$fp,112($sp)\n\tlbu\t$fp,163($sp)\n",
+            "parameter allocation",
+        ),
+        (
+            "\tsw\t$fp,40($sp)\n\tsw\t$22,48($sp)\n",
+            "\tsw\t$22,40($sp)\n\tsw\t$fp,48($sp)\n",
+            "stack arguments",
+        ),
+        (
+            "\tsb\t$22,28($19)\n\tlbu\t$8,167($sp)\n\t#nop\n"
+            "\tsb\t$8,10($19)\n\tlw\t$3,D_802194A0\n"
+            "\tmtc1\t$16,$f0\n\tcvt.s.w\t$f0,$f0\n\ts.s\t$f0,24($19)\n"
+            "\tmtc1\t$17,$f0\n\tcvt.s.w\t$f0,$f0\n\ts.s\t$f0,20($19)\n"
+            "\tmtc1\t$18,$f0\n\tcvt.s.w\t$f0,$f0\n"
+            "\tsh\t$2,12($19)\n\tli\t$2,0x0000000e\t\t# 14\n"
+            "\tsh\t$fp,30($19)\n\ts.s\t$f0,16($19)\n"
+            "\t.set\tnoreorder\n\tbne\t$3,$2,.L1\n\tsw\t$0,32($19)\n"
+            "\t.set\tnoreorder\n\tlbu\t$2,167($sp)\n\t#nop\n"
+            "\tbne\t$2,$0,.L1\n\tnop\n",
+            "\tsh\t$2,12($19)\n\tlbu\t$8,167($sp)\n"
+            "\tmtc1\t$18,$f0\n\tcvt.s.w\t$f0,$f0\n\ts.s\t$f0,16($19)\n"
+            "\tmtc1\t$16,$f0\n\tcvt.s.w\t$f0,$f0\n\ts.s\t$f0,24($19)\n"
+            "\tmtc1\t$17,$f0\n\tcvt.s.w\t$f0,$f0\n"
+            "\tsh\t$22,30($19)\n\ts.s\t$f0,20($19)\n"
+            "\tsb\t$fp,28($19)\n\tsw\t$0,32($19)\n\tsb\t$8,10($19)\n"
+            "\tlw\t$3,D_802194A0\n\tli\t$2,0x0000000e\t\t# 14\n"
+            "\t.set\tnoreorder\n\tbne\t$3,$2,.L1\n\tnop\n"
+            "\t.set\tnoreorder\n\tlbu\t$2,10($19)\n\t#nop\n"
+            "\tbne\t$2,$0,.L1\n\tnop\n",
+            "post-call schedule",
+        ),
+    )
+    for before, after, name in patterns:
+        fires = body.count(before)
+        if fires != 1:
+            raise RuntimeError(
+                f"func_800E9990 {name} fired {fires} times (expected 1)"
+            )
+        body = body.replace(before, after, 1)
+    return text[:match.start()] + body + text[match.end():]
+
+
+def shape_matrix_scale_curve(text: str) -> str:
+    """Reproduce func_8009277C's tied FP allocation and final schedule.
+
+    The C emits the retail control flow, stack frame, operations, and size.
+    Three values live across the conditional join and GCC assigns the tied
+    allocnos in a different FP-register cycle.  The final independent matrix
+    field stores also receive a different scheduler tie break.  Keep every
+    rewrite inside this function and require each complete pattern once.
+    """
+    if "func_8009277C:" not in text:
+        return text
+    match = re.search(
+        r"func_8009277C:.*?\n\s*\.end\s+func_8009277C\b", text, flags=re.S
+    )
+    if match is None:
+        raise RuntimeError("func_8009277C body not found")
+    body = match.group(0)
+
+    patterns = (
+        (
+            "\tl.s\t$f4,$LF_lis5\n\t#nop\n\tmov.s\t$f6,$f4\n"
+            "\t.set\tnoreorder\n\tj\t.L4\n\tadd.s\t$f8,$f2,$f4\n",
+            "\tl.s\t$f6,$LF_lis5\n\t#nop\n\tmov.s\t$f8,$f6\n"
+            "\t.set\tnoreorder\n\tj\t.L4\n\tadd.s\t$f4,$f2,$f6\n",
+            "upper curve allocation",
+        ),
+        (
+            "\tl.s\t$f8,$LF_lis9\n\t#nop\n\tsub.s\t$f0,$f8,$f0\n"
+            "\t.section\t.rodata\n\t.align\t2\n$LF_lis10:\n\t.word\t0x3F666666\n\t.text\n"
+            "\tl.s\t$f2,$LF_lis10\n\t#nop\n\tmul.s\t$f0,$f0,$f2\n"
+            "\t.section\t.rodata\n\t.align\t2\n$LF_lis11:\n\t.word\t0x3DCCCCCD\n\t.text\n"
+            "\tl.s\t$f6,$LF_lis11\n\t.set\tnoreorder\n\tj\t.L4\n"
+            "\tadd.s\t$f4,$f0,$f6\n",
+            "\tl.s\t$f4,$LF_lis9\n\t#nop\n\tsub.s\t$f0,$f4,$f0\n"
+            "\t.section\t.rodata\n\t.align\t2\n$LF_lis10:\n\t.word\t0x3F666666\n\t.text\n"
+            "\tl.s\t$f2,$LF_lis10\n\t#nop\n\tmul.s\t$f0,$f0,$f2\n"
+            "\t.section\t.rodata\n\t.align\t2\n$LF_lis11:\n\t.word\t0x3DCCCCCD\n\t.text\n"
+            "\tl.s\t$f6,$LF_lis11\n\t.set\tnoreorder\n\tj\t.L4\n"
+            "\tadd.s\t$f8,$f0,$f6\n",
+            "middle curve allocation",
+        ),
+        (
+            "\tmul.s\t$f0,$f0,$f4\n\taddu\t$4,$sp,16\n\tmove\t$5,$17\n"
+            "\tmove\t$6,$16\n\ts.s\t$f4,16($sp)\n\ts.s\t$f6,36($sp)\n"
+            "\ts.s\t$f8,56($sp)\n",
+            "\tmul.s\t$f0,$f0,$f8\n\taddu\t$4,$sp,16\n\tmove\t$5,$17\n"
+            "\tmove\t$6,$16\n\ts.s\t$f8,16($sp)\n\ts.s\t$f6,36($sp)\n"
+            "\ts.s\t$f4,56($sp)\n",
+            "joined curve allocation",
+        ),
+        (
+            "\tl.s\t$f0,52($17)\n\tmove\t$6,$17\n\tsw\t$0,92($sp)\n"
+            "\tadd.s\t$f0,$f0,$f20\n\tsw\t$0,108($sp)\n\tsw\t$0,124($sp)\n"
+            "\ts.s\t$f22,140($sp)\n\ts.s\t$f0,132($sp)\n\tl.s\t$f0,56($6)\n"
+            "\taddu\t$7,$sp,144\n\ts.s\t$f0,136($sp)\n",
+            "\tl.s\t$f0,52($17)\n\tadd.s\t$f0,$f0,$f20\n\tmove\t$6,$17\n"
+            "\ts.s\t$f0,132($sp)\n\tl.s\t$f0,56($6)\n\taddu\t$7,$sp,144\n"
+            "\tsw\t$0,92($sp)\n\tsw\t$0,108($sp)\n\tsw\t$0,124($sp)\n"
+            "\ts.s\t$f22,140($sp)\n\ts.s\t$f0,136($sp)\n",
+            "translation schedule",
+        ),
+    )
+    for before, after, name in patterns:
+        fires = body.count(before)
+        if fires != 1:
+            raise RuntimeError(
+                f"func_8009277C {name} fired {fires} times (expected 1)"
+            )
+        body = body.replace(before, after, 1)
+    return text[:match.start()] + body + text[match.end():]
+
+
 def normalize_v3(source: str) -> str:
     import os
     if os.environ.get("V3_CONTROLS_CONFIG", "1") == "1":
@@ -3631,7 +3761,143 @@ def normalize_v3(source: str) -> str:
         text = shape_angle_step_update(text)
     if os.environ.get("V3_GRID_COLLISION_MIDPOINT_LOAD", "1") == "1":
         text = schedule_grid_collision_midpoint_load(text)
+    if os.environ.get("V3_MISSION_ACTOR_SPAWN", "1") == "1":
+        text = shape_mission_actor_spawn(text)
+    if os.environ.get("V3_MATRIX_SCALE_CURVE", "1") == "1":
+        text = shape_matrix_scale_curve(text)
+    if os.environ.get("V3_PATH_SEQUENCE_FINAL_CALL", "1") == "1":
+        text = schedule_path_sequence_final_call(text)
+    if os.environ.get("V3_FONT_NUMBER_DIVIDE_HAZARDS", "1") == "1":
+        text = reproduce_font_number_divide_hazards(text)
+    if os.environ.get("V3_SPATIAL_SOUND_SENTINEL_SCHEDULE", "1") == "1":
+        text = schedule_spatial_sound_sentinel(text)
     return text
+
+
+def schedule_path_sequence_final_call(text: str) -> str:
+    """Match the retail final-call setup in ``func_80082D98``.
+
+    GCC schedules the independent object-pointer copy before the final count
+    increment.  Retail performs the increment and path-count load first, then
+    copies the object pointer into ``a0``.  Reorder only those existing five
+    instructions, gated by the function label and an exact one-fire pattern.
+    """
+    if "func_80082D98:" not in text:
+        return text
+    before = (
+        "\tlhu\t$2,374($16)\n"
+        "\tmove\t$4,$16\n"
+        "\taddu\t$2,$2,1\n"
+        "\tsh\t$2,374($16)\n"
+        "\tlhu\t$5,4($3)\n"
+    )
+    after = (
+        "\tlhu\t$2,374($16)\n"
+        "\taddu\t$2,$2,1\n"
+        "\tsh\t$2,374($16)\n"
+        "\tlhu\t$5,4($3)\n"
+        "\tmove\t$4,$16\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_80082D98 final-call schedule fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
+
+
+def reproduce_font_number_divide_hazards(text: str) -> str:
+    """Reproduce retail HI/LO hazard padding in ``func_80096BDC``.
+
+    The retail assembler emitted one nop between the division macro and a
+    noreorder branch with ``mult`` in its delay slot, and two nops between a
+    second division macro and an immediately following ``mult``. Restrict both
+    exact patterns to this function and require one fire apiece.
+    """
+    if "func_80096BDC:" not in text:
+        return text
+    match = re.search(
+        r"\nfunc_80096BDC:\n(.*?)\n\t\.end\tfunc_80096BDC\n", text, re.S
+    )
+    if match is None:
+        raise RuntimeError("func_80096BDC body not found for divide hazards")
+    body = match.group(1)
+
+    branch_pattern = re.compile(
+        r"(\n\tdiv\t\$2,\$5,\$6\n)"
+        r"(\t\.set\tnoreorder\n\tbeq\t\$2,\$0,(\.L\d+)\n\tmult\t\$6,\$4\n)"
+    )
+    body, branch_fires = branch_pattern.subn(r"\1\tnop\n\2", body)
+    if branch_fires != 1:
+        raise RuntimeError(
+            "func_80096BDC branch divide hazard fired "
+            f"{branch_fires} times (expected 1)"
+        )
+
+    multiply_pattern = re.compile(
+        r"(\n\tdiv\t\$2,\$5,\$6\n)(\tmult\t\$6,\$7\n)"
+    )
+    body, multiply_fires = multiply_pattern.subn(
+        r"\1\tnop\n\tnop\n\2", body
+    )
+    if multiply_fires != 1:
+        raise RuntimeError(
+            "func_80096BDC multiply divide hazard fired "
+            f"{multiply_fires} times (expected 1)"
+        )
+
+    return text[: match.start(1)] + body + text[match.end(1) :]
+
+
+def schedule_spatial_sound_sentinel(text: str) -> str:
+    """Place ``func_80097FB4``'s retained -1 after the empty-loop guard.
+
+    GCC emits the same eight instructions as retail but schedules the saved
+    sentinel before the independent guard and constant load. Reorder this
+    complete function-local window without adding or removing instructions.
+    """
+    if "func_80097FB4:" not in text:
+        return text
+    before = (
+        "\tsw\t$18,40($sp)\n"
+        "\tli\t$18,-1\t\t\t# 0xffffffff\n"
+        "\tsw\t$31,44($sp)\n"
+        "\t.set\tnoreorder\n"
+        "\tbeq\t$5,$0,.L3\n"
+        "\tsw\t$16,32($sp)\n"
+        "\t.set\tnoreorder\n"
+        "\tandi\t$6,$2,0x00ff\n"
+        "\t.section\t.rodata\n"
+        "\t.align\t3\n"
+        "$LF_lis0:\n"
+        "\t.word\t0x3FF00000\n"
+        "\t.word\t0x00000000\n"
+        "\t.text\n"
+        "\tl.d\t$f6,$LF_lis0\n"
+    )
+    after = (
+        "\tsw\t$31,44($sp)\n"
+        "\tsw\t$18,40($sp)\n"
+        "\t.set\tnoreorder\n"
+        "\tbeq\t$5,$0,.L3\n"
+        "\tsw\t$16,32($sp)\n"
+        "\t.set\tnoreorder\n"
+        "\tandi\t$6,$2,0x00ff\n"
+        "\t.section\t.rodata\n"
+        "\t.align\t3\n"
+        "$LF_lis0:\n"
+        "\t.word\t0x3FF00000\n"
+        "\t.word\t0x00000000\n"
+        "\t.text\n"
+        "\tl.d\t$f6,$LF_lis0\n"
+        "\tli\t$18,-1\t\t\t# 0xffffffff\n"
+    )
+    fires = text.count(before)
+    if fires != 1:
+        raise RuntimeError(
+            f"func_80097FB4 sentinel schedule fired {fires} times (expected 1)"
+        )
+    return text.replace(before, after, 1)
 
 
 def normalize_legacy(source: str) -> str:

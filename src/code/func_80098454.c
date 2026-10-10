@@ -1,8 +1,5 @@
 #include "types.h"
 
-extern f64 D_80072470;
-extern f32 D_80072478;
-extern f32 D_8007247C;
 
 f32 func_80098454(u8 *data, u32 *masks, u8 index) {
     u32 tag = masks[index];
@@ -31,7 +28,7 @@ check_magnitude:
     {
     f32 output;
 
-    threshold = D_80072470;
+    threshold = 6.0;
     magnitude = __builtin_abs(value);
     output = 0.0f;
     if (threshold < magnitude) {
@@ -51,10 +48,10 @@ read_flags:
     flags = *(u32 *)(data + 4);
     result = 0.0f;
     if (flags & tag) {
-        result = D_80072478;
+        result = 80.0f;
     }
     if (flags & masks[index + 1]) {
-        result -= D_8007247C;
+        result -= 80.0f;
     }
     return result;
 }

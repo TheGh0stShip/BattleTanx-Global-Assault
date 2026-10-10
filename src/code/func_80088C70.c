@@ -1,9 +1,8 @@
 #include "types.h"
 
-extern f32 D_800716B0;
 
 void func_80088C70(void *state) {
-    f32 initial = D_800716B0;
+    f32 initial = 32768.0f;
     f32 zero = 0.0f;
 
     *((u8 *)state + 0x18) = 0;

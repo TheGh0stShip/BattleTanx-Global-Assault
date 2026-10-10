@@ -17,12 +17,6 @@ typedef struct {
 } Object80086700;
 
 extern Entry80086700 D_80236A90[];
-extern f32 D_800714F0;
-extern f32 D_800714F4;
-extern f32 D_800714F8;
-extern f32 D_800714FC;
-extern f32 D_80071500;
-extern f32 D_80071504;
 
 extern void func_8008723C(Object80086700 *object, s32 arg1, s32 arg2, s32 arg3);
 
@@ -59,11 +53,11 @@ void func_80086700(Object80086700 *object) {
 
 found:
     data->mask = result_mask;
-    data->values[0] = D_800714F0;
-    data->values[1] = D_800714F4;
-    data->values[2] = D_800714F8;
-    data->values[3] = D_800714FC;
-    data->values[4] = D_80071500;
-    data->values[5] = D_80071504;
+    data->values[0] = 1000.0f;
+    data->values[1] = -1200.0f;
+    data->values[2] = 1400.0f;
+    data->values[3] = -2400.0f;
+    data->values[4] = 800.0f;
+    data->values[5] = -700.0f;
     func_8008723C(object, 0, 0, 0);
 }

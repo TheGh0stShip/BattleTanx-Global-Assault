@@ -1,7 +1,6 @@
 #include "types.h"
 
 extern u64 osGetTime(void);
-extern f32 D_80072480;
 extern u64 D_80219250;
 extern s32 D_8021945C;
 extern u64 D_80219478;
@@ -17,5 +16,5 @@ void func_80099F74(void) {
     D_80219480 = now;
     D_8021945C = 0;
     D_8021948C = 0x14;
-    D_80219488 = D_80072480;
+    D_80219488 = 1.0f;
 }

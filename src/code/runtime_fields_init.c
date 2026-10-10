@@ -51,7 +51,6 @@ typedef struct Object {
     u8 flags;
 } Object;
 
-extern f32 D_800716AC;
 extern s32 D_8021945C;
 extern s16 D_80397650;
 extern s32 func_800B49E0(Vec2 *, Vec2 *, s32, u8, s32, s32, QueryResult *);
@@ -59,7 +58,7 @@ extern s32 func_800B49E0(Vec2 *, Vec2 *, s32, u8, s32, s32, QueryResult *);
 void func_80088B6C(Object *object, Vec2 *position, s32 value, s8 mode) {
     QueryResult result;
     RuntimeFields *fields = (RuntimeFields *)&object->value_b4;
-    f32 scale = D_800716AC;
+    f32 scale = 64000.0f;
     s32 timer = D_8021945C + 0x12C;
     u8 flags = object->flags;
     u8 player = object->player;

@@ -1,10 +1,9 @@
 #include "types.h"
 
-extern f32 D_8007169C;
 extern s32 D_8021945C;
 
 void func_80088720(void *state) {
-    f32 initial = D_8007169C;
+    f32 initial = 64000.0f;
     s32 timer = D_8021945C;
     u8 flags = *((u8 *)state + 0x16C);
 

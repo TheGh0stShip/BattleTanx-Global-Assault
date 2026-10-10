@@ -4,6 +4,10 @@ s16 func_80096F48(void *context, u8 *text, u16 font, s16 x, s16 y,
                    f32 scale_x, f32 scale_y);
 s16 func_800973E0(u8 *text, u16 font, f32 scale);
 
+static inline s16 preserve_nibble(u32 value) {
+    return value;
+}
+
 s16 func_80096E14(void *context, s32 value, u16 font, s16 x, s16 y,
                    f32 scale_x, f32 scale_y, u16 align) {
     u8 text[20];
@@ -15,7 +19,7 @@ s16 func_80096E14(void *context, s32 value, u16 font, s16 x, s16 y,
     shift = 28;
     cursor = text;
     do {
-        digit = (value >> shift) & 0xF;
+        digit = preserve_nibble((value >> shift) & 0xF);
         *cursor = digit < 10 ? digit | '0' : digit + 'A' - 10;
         shift -= 4;
         cursor++;

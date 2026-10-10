@@ -11,9 +11,6 @@ typedef struct InfluenceRecord80097EE4 {
 
 extern u8 D_802194A5;
 extern InfluenceRecord80097EE4 D_802194B4[];
-extern f64 D_80072430;
-extern f64 D_80072438;
-extern f64 D_80072440;
 
 f32 func_80097EE4(f32 x, f32 y, u8 type) {
     register f32 strongest asm("$f4");
@@ -30,16 +27,16 @@ f32 func_80097EE4(f32 x, f32 y, u8 type) {
         if (D_802194B4[i].type == type) {
             dx = x - D_802194B4[i].x;
             dy = y - D_802194B4[i].y;
-            influence = (f32)(D_80072438 /
-                (((f64)((dx * dx) + (dy * dy)) * D_80072430) +
-                 D_80072438));
+            influence = (f32)(1.0 /
+                (((f64)((dx * dx) + (dy * dy)) * 2.0000000000000002e-07) +
+                 1.0));
             if (strongest < influence) {
                 strongest = influence;
             }
         }
     }
 
-    if (D_80072440 < (f64)strongest) {
+    if (0.2 < (f64)strongest) {
         return strongest;
     }
     return 0.0f;

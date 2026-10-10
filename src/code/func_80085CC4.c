@@ -1,7 +1,6 @@
 #include "types.h"
 #include "m2c_macros.h"
 
-extern f32 D_80071384;
 extern M2C_UNK func_800B88DC(void *, u16, void *);
 extern M2C_UNK func_80087EF0();
 extern s32 func_8008F3FC(u16, M2C_UNK, M2C_UNK, M2C_UNK);
@@ -12,7 +11,7 @@ void func_80085CC4(void *arg0, void *arg1) {
 
     M2C_FIELD(arg1, s32 *, 0) = 0;
     temp_v0 = M2C_FIELD(arg0, u16 *, 0x20);
-    temp_f0 = D_80071384;
+    temp_f0 = 1.0f;
     M2C_FIELD(arg1, s32 *, 0x10) = 0;
     M2C_FIELD(arg1, u16 *, 8) = temp_v0;
     M2C_FIELD(arg1, f32 *, 4) = temp_f0;

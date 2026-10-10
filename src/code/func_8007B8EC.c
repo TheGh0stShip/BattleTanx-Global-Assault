@@ -24,7 +24,6 @@ typedef struct { u8 pad[0x78]; Cam cam; } Obj;
 extern u8 D_802194A5;
 extern Node *D_8017CE60[][32];
 extern Obj D_80235F00[];
-extern f64 D_80071080;
 extern u32 *func_8007AD94(void);
 extern u32 *func_8007ADB0(void);
 extern void func_8007ACF8(void *);
@@ -99,7 +98,7 @@ s32 func_8007B8EC(s32 idx, u8 *a1, void **a2, u16 *a3) {
                     func_8009F288(&ctx->sub, it->pos, vec);
                     lift = it->lift;
                     if (lift != 0.0f) {
-                        if (((y = vec[1]) > 0.0f ? y : -y) > D_80071080) {
+                        if (((y = vec[1]) > 0.0f ? y : -y) > 4.0) {
                             s = (y + lift) / y;
                             vec[0] *= s;
                             vec[2] *= s;

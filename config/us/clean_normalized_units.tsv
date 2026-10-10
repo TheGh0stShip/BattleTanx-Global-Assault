@@ -1,4 +1,7 @@
 # unit	vram	text_size	status
+effect_trail_draw	0x800A3560	0x1F8	matched
+player_state_build	0x8009B0F0	0x26C	matched
+nearest_path_test	0x800ABF38	0x1BC	matched
 object_embedded_state_refresh	0x80082070	0x128	matched
 runtime_pool_init	0x8008A8C4	0x15C	matched
 path_goal_check	0x8007E2D4	0x378	matched

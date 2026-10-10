@@ -1,10 +1,9 @@
 #include "types.h"
 
-extern f32 D_800716A4;
 extern s32 D_8021945C;
 
 void func_80088ABC(void *object, void *owner, s32 value, u8 kind) {
-    f32 initial = D_800716A4;
+    f32 initial = 64000.0f;
     register s32 timer __asm__("$2");
     register u8 flags __asm__("$3");
     register s32 one __asm__("$2");

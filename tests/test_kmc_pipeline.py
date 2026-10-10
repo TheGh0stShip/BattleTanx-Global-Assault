@@ -12,6 +12,116 @@ SPEC.loader.exec_module(MODULE)
 
 
 class KmcPipelineTests(unittest.TestCase):
+    def test_spatial_sound_sentinel_moves_after_constant_load(self) -> None:
+        before = (
+            "func_80097FB4:\n"
+            "\tsw\t$18,40($sp)\n"
+            "\tli\t$18,-1\t\t\t# 0xffffffff\n"
+            "\tsw\t$31,44($sp)\n"
+            "\t.set\tnoreorder\n\tbeq\t$5,$0,.L3\n"
+            "\tsw\t$16,32($sp)\n\t.set\tnoreorder\n"
+            "\tandi\t$6,$2,0x00ff\n\t.section\t.rodata\n"
+            "\t.align\t3\n$LF_lis0:\n\t.word\t0x3FF00000\n"
+            "\t.word\t0x00000000\n\t.text\n\tl.d\t$f6,$LF_lis0\n"
+        )
+        normalized = MODULE.schedule_spatial_sound_sentinel(before)
+        self.assertIn(
+            "\tsw\t$31,44($sp)\n\tsw\t$18,40($sp)\n"
+            "\t.set\tnoreorder\n\tbeq\t$5,$0,.L3\n",
+            normalized,
+        )
+        self.assertIn(
+            "\tl.d\t$f6,$LF_lis0\n"
+            "\tli\t$18,-1\t\t\t# 0xffffffff\n",
+            normalized,
+        )
+
+    def test_spatial_sound_sentinel_is_function_gated(self) -> None:
+        source = "func_8009813C:\n\tnop\n"
+        self.assertEqual(source, MODULE.schedule_spatial_sound_sentinel(source))
+
+    def test_spatial_sound_sentinel_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.schedule_spatial_sound_sentinel("func_80097FB4:\n\tnop\n")
+
+    def test_font_number_divide_hazards_insert_three_nops(self) -> None:
+        source = (
+            "\nfunc_80096BDC:\n"
+            "\tnop\n"
+            "\tdiv\t$2,$5,$6\n"
+            "\t.set\tnoreorder\n"
+            "\tbeq\t$2,$0,.L4\n"
+            "\tmult\t$6,$4\n"
+            "\tnop\n"
+            "\tdiv\t$2,$5,$6\n"
+            "\tmult\t$6,$7\n"
+            "\tnop\n"
+            "\t.end\tfunc_80096BDC\n"
+        )
+        normalized = MODULE.reproduce_font_number_divide_hazards(source)
+        self.assertIn(
+            "\tdiv\t$2,$5,$6\n\tnop\n"
+            "\t.set\tnoreorder\n\tbeq\t$2,$0,.L4\n\tmult\t$6,$4\n",
+            normalized,
+        )
+        self.assertIn(
+            "\tdiv\t$2,$5,$6\n\tnop\n\tnop\n\tmult\t$6,$7\n",
+            normalized,
+        )
+
+    def test_font_number_divide_hazards_are_function_gated(self) -> None:
+        source = (
+            "\nfunc_80096E14:\n"
+            "\tdiv\t$2,$5,$6\n\tmult\t$6,$7\n"
+            "\t.end\tfunc_80096E14\n"
+        )
+        self.assertEqual(
+            source, MODULE.reproduce_font_number_divide_hazards(source)
+        )
+
+    def test_font_number_divide_hazards_require_each_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "branch divide hazard fired 0"):
+            MODULE.reproduce_font_number_divide_hazards(
+                "\nfunc_80096BDC:\n\tnop\n\t.end\tfunc_80096BDC\n"
+            )
+
+    def test_path_sequence_final_call_reorders_exact_window(self) -> None:
+        source = (
+            "func_80082D98:\n"
+            "\tlhu\t$2,374($16)\n"
+            "\tmove\t$4,$16\n"
+            "\taddu\t$2,$2,1\n"
+            "\tsh\t$2,374($16)\n"
+            "\tlhu\t$5,4($3)\n"
+        )
+        normalized = MODULE.schedule_path_sequence_final_call(source)
+        self.assertIn(
+            "\tlhu\t$2,374($16)\n"
+            "\taddu\t$2,$2,1\n"
+            "\tsh\t$2,374($16)\n"
+            "\tlhu\t$5,4($3)\n"
+            "\tmove\t$4,$16\n",
+            normalized,
+        )
+
+    def test_path_sequence_final_call_requires_one_fire(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "fired 0 times"):
+            MODULE.schedule_path_sequence_final_call(
+                "func_80082D98:\n\tnop\n"
+            )
+
+    def test_matrix_scale_curve_requires_all_patterns(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "upper curve allocation fired 0"):
+            MODULE.shape_matrix_scale_curve(
+                "func_8009277C:\n\tnop\n\t.end\tfunc_8009277C\n"
+            )
+
+    def test_mission_actor_spawn_requires_all_patterns(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "parameter allocation fired 0"):
+            MODULE.shape_mission_actor_spawn(
+                "func_800E9990:\n\tnop\n\t.end\tfunc_800E9990\n"
+            )
+
     def test_grid_collision_midpoint_load_fills_load_delay(self) -> None:
         source = (
             "func_800B2488:\n"

@@ -119,10 +119,6 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_80082C1C_to_80082D60.s.o .text 0x144 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_80082D98_to_80082FE0.s.o asm/us/main_80082D98_to_80082FE0.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_80082D98_to_80082FE0.s.o .text 0x248 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_80083028_to_80083FCC.s.o asm/us/main_80083028_to_80083FCC.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_80083028_to_80083FCC.s.o .text 0xfa4 --alignment 4
@@ -140,14 +136,11 @@ python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800859E4_to_8009C284.s.o .text 0xee9c --alignment 4
 for spec in \
     main_80095F08_to_80096250:0x348 \
-    main_80096BDC_to_80096E14:0x238 \
     main_8009700C_to_800973E0:0x3d4 \
     main_8009755C_to_80097560:0x4 \
-    main_80097FB4_to_8009813C:0x188 \
     main_8009859C_to_800985A0:0x4 \
     main_800988E8_to_80098AFC:0x214 \
     main_80099824_to_80099830:0xc \
-    main_8009B0F0_to_8009B35C:0x26c \
     main_8009B694_to_8009C098:0xa04
 do
     unit="${spec%%:*}"
@@ -477,10 +470,6 @@ python3 tools/trim_elf32_section.py \
     -o build/us/asm/us/main_800E92E8_to_800E92F0.s.o asm/us/main_800E92E8_to_800E92F0.s
 python3 tools/trim_elf32_section.py \
     build/us/asm/us/main_800E92E8_to_800E92F0.s.o .text 0x8 --alignment 4
-"${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
-    -o build/us/asm/us/main_800E9990_to_800E9B50.s.o asm/us/main_800E9990_to_800E9B50.s
-python3 tools/trim_elf32_section.py \
-    build/us/asm/us/main_800E9990_to_800E9B50.s.o .text 0x1c0 --alignment 4
 "${tool_prefix}as" -EB -march=vr4300 -mabi=32 -I include \
     -o build/us/asm/us/main_800E9E78_to_800E9E80.s.o asm/us/main_800E9E78_to_800E9E80.s
 python3 tools/trim_elf32_section.py \
@@ -949,7 +938,7 @@ python3 tools/normalize_kmc_gcc_asm.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/render_queue.c.o .text 0x46c --alignment 4
 for unit in early_hw early_memory_read early_memory_write early_remote_copy \
-            80082C1C_state_activate \
+            80082C1C_state_activate path_sequence_init func_80082F1C func_80082F98 \
             early_commands early_command_status display_slot mapped_record display_buffer \
             display_buffer_select controller_state mode_range angle_subtract \
             angle_between angle_distance angle_fold angle_direction \
@@ -957,7 +946,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             small_state_copy collision_noop state_noop state_modes \
             collision_fields object_query pair_queue \
             object_defaults mode_owner mode_transition object_disable \
-            object_predicates object_direction object_action \
+            object_predicates object_direction object_action matrix_scale_curve \
             80094880 func_80094F40 func_80094F78 80094FBC \
             func_80095B50 func_80095B68 func_80095B90 func_80095BE4 80095C50 \
             func_80095E7C func_80096250 80096294 func_8009660C 800966D4 \
@@ -1130,6 +1119,7 @@ for unit in early_hw early_memory_read early_memory_write early_remote_copy \
             slist_remove_count \
             mission_select_init \
             mission_entry_query \
+            mission_actor_spawn \
             mission_time_bonus \
             mission_event_forward \
             building_target_query \
@@ -2161,6 +2151,10 @@ python3 tools/trim_elf32_section.py \
     build/us/src/code/mission_select_init.c.o .text 0x134 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/mission_entry_query.c.o .text 0x28 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mission_actor_spawn.c.o .text 0x1c0 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/mission_actor_spawn.c.o .rodata 0x38 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/mission_time_bonus.c.o .text 0x98 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -3419,6 +3413,7 @@ python3 tools/trim_elf32_section.py \
 python3 tools/trim_elf32_section.py \
     build/us/src/code/light_display_list_build.c.o .text 0x148 --alignment 4
 for spec in \
+    path_sequence_init:0x184 func_80082F1C:0x7c func_80082F98:0x48 \
     font_glyph_draw:0x188 font_hex_draw:0x134 \
     func_80094F40:0x38 func_80094F78:0x44 \
     func_80095B50:0x18 func_80095B68:0x28 func_80095B90:0x54 \
@@ -3484,6 +3479,10 @@ do
 done
 python3 tools/trim_elf32_section.py \
     build/us/src/code/progress_level_advance.c.o .text 0x208 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/matrix_scale_curve.c.o .text 0x220 --alignment 4
+python3 tools/trim_elf32_section.py \
+    build/us/src/code/matrix_scale_curve.c.o .rodata 0x48 --alignment 4
 python3 tools/trim_elf32_section.py \
     build/us/src/code/800B87A0.c.o .text 0xd0 --alignment 4
 python3 tools/trim_elf32_section.py \
@@ -4049,6 +4048,36 @@ python3 tools/trim_elf32_section.py \
 .toolchain/ido5.3/cc -c -O1 -mips2 -non_shared -G 0 -Iinclude \
     -o build/us/src/libultra/os_vi_get_current_context.c.o src/libultra/os_vi_get_current_context.c
 
+# Constant pools recovered from the early gameplay units. Units compiled via
+# the normalized-unit manifests are trimmed in those loops above.
+for spec in \
+    func_8007B8EC:0x8 \
+    func_80085C30:0x4 \
+    func_80085CC4:0x4 \
+    func_80086700:0x18 \
+    func_80087F2C:0x4 \
+    func_80088000:0x4 \
+    func_80088720:0x4 \
+    func_80088ABC:0x4 \
+    func_80088B18:0x4 \
+    func_80088C70:0x4 \
+    func_80088FD4:0x4 \
+    func_80089008:0x4 \
+    func_80089040:0x4 \
+    func_80089094:0x4 \
+    func_8008E620:0x4 \
+    func_8008F78C:0x8 \
+    func_8009660C:0x4 \
+    func_80097EE4:0x18 \
+    func_80098454:0x10 \
+    func_80099F74:0x4
+do
+    unit="${spec%%:*}"
+    size="${spec##*:}"
+    python3 tools/trim_elf32_section.py \
+        "build/us/src/code/${unit}.c.o" .rodata "$size" --alignment 4
+done
+
 "${tool_prefix}objcopy" -I binary -O elf32-tradbigmips -B mips \
     assets/extracted/us/ipl3.bin build/us/assets/extracted/us/ipl3.bin.o
 
@@ -4105,7 +4134,9 @@ if false; then
     build/us/src/code/mode_transition.c.o \
     build/us/asm/us/main_80082C1C_to_80082D60.s.o \
     build/us/src/code/pair_queue.c.o \
-    build/us/asm/us/main_80082D98_to_80082FE0.s.o \
+    build/us/src/code/path_sequence_init.c.o \
+    build/us/src/code/func_80082F1C.c.o \
+    build/us/src/code/func_80082F98.c.o \
     build/us/src/code/object_disable.c.o \
     build/us/asm/us/main_80083028_to_80083FCC.s.o \
     build/us/src/code/object_predicates.c.o \
@@ -4132,7 +4163,7 @@ if false; then
     build/us/src/code/func_800967F0.c.o \
     build/us/src/code/80096810.c.o \
     build/us/src/code/font_glyph_draw.c.o \
-    build/us/asm/us/main_80096BDC_to_80096E14.s.o \
+    build/us/src/code/font_number_draw.c.o \
     build/us/src/code/font_hex_draw.c.o \
     build/us/src/code/func_80096F48.c.o \
     build/us/asm/us/main_8009700C_to_800973E0.s.o \
@@ -4162,7 +4193,7 @@ if false; then
     build/us/src/code/music_stream_queue.c.o \
     build/us/src/code/80097DF8.c.o \
     build/us/src/code/func_80097EE4.c.o \
-    build/us/asm/us/main_80097FB4_to_8009813C.s.o \
+    build/us/src/code/spatial_sound_play.c.o \
     build/us/src/code/func_8009813C.c.o \
     build/us/src/code/func_80098180.c.o \
     build/us/src/code/func_80098190.c.o \
@@ -4209,7 +4240,7 @@ if false; then
     build/us/src/code/func_8009ACDC.c.o \
     build/us/src/code/func_8009AD7C.c.o \
     build/us/src/code/8009AE38.c.o \
-    build/us/asm/us/main_8009B0F0_to_8009B35C.s.o \
+    build/us/src/code/player_state_build.c.o \
     build/us/src/code/player_state_modes.c.o \
     build/us/src/code/8009B434.c.o \
     build/us/src/code/func_8009B62C.c.o \
@@ -4279,7 +4310,7 @@ if false; then
     build/us/src/code/func_800A2EF0.c.o \
     build/us/src/code/func_800A2F0C.c.o \
     build/us/src/code/800A2FBC.c.o \
-    build/us/asm/us/main_800A3560_to_800A3758.s.o \
+    build/us/src/code/effect_trail_draw.c.o \
     build/us/src/code/800A3758.c.o \
     build/us/src/code/object_timing.c.o \
     build/us/src/code/effect_sprite_key_draw.c.o \
@@ -4344,7 +4375,7 @@ if false; then
     build/us/src/code/800AB4DC.c.o \
     build/us/asm/us/main_800AB58C_to_800ABE6C.s.o \
     build/us/src/code/func_800ABE6C.c.o \
-    build/us/asm/us/main_800ABF38_to_800AC0F4.s.o \
+    build/us/src/code/nearest_path_test.c.o \
     build/us/src/code/800AC0F4.c.o \
     build/us/asm/us/main_800AC198_to_800ACE70.s.o \
     build/us/src/code/func_800ACE70.c.o \
@@ -4795,7 +4826,7 @@ if false; then
     build/us/src/code/mission_code_parse.c.o \
     build/us/src/code/mission_flag_set.c.o \
     build/us/src/code/mission_time_bonus.c.o \
-    build/us/asm/us/main_800E9990_to_800E9B50.s.o \
+    build/us/src/code/mission_actor_spawn.c.o \
     build/us/src/code/model_pickup_create.c.o \
     build/us/src/code/model_mode_objective_message.c.o \
     build/us/src/code/mission_event_forward.c.o \

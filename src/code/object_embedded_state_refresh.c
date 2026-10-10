@@ -27,10 +27,6 @@ typedef struct Object82070 {
     EmbeddedState state;
 } Object82070;
 
-extern f32 D_80071228;
-extern f32 D_8007122C;
-extern f32 D_80071230;
-extern f32 D_80071234;
 
 u16 func_800B1898(s32, s16, s16, void *, s32, s32, s32, s32, s32,
                    s32, s32, s32, s32);
@@ -47,7 +43,7 @@ void func_80082070(Object82070 *object) {
         output->height = 0.0f;
         output->value = object->value_a;
     } else {
-        output->height = ((scale * D_80071228) / D_8007122C) + D_80071230;
+        output->height = ((scale * 600.0f) / 60.0f) + 100.0f;
         output->value = object->value_b;
     }
     output->x = object->x;
@@ -55,7 +51,7 @@ void func_80082070(Object82070 *object) {
     if (state->id == 0xFFFF) {
         state->id = func_800B1898(object->kind, (s16)state->x, (s16)state->z,
                                   0, -150, 150, -100,
-                                  (s16)(state->height + D_80071234), 0, 0,
+                                  (s16)(state->height + 100.0f), 0, 0,
                                   state->value, 0xF8000000, object->owner);
     }
 }

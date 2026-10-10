@@ -1,4 +1,7 @@
 # unit	vram	text_size	status
+font_number_draw	0x80096BDC	0x238	normalizer-assisted
+spatial_sound_play	0x80097FB4	0x188	normalizer-assisted
+path_sequence_init	0x80082D98	0x184	normalizer-assisted
 nearest_live_entity	0x80083230	0x1EC	normalizer-assisted
 path_waypoint_side_select	0x8007F59C	0x1D8	normalizer-assisted
 waypoint_stack_reset	0x8008A764	0x12C	normalizer-assisted
@@ -40,3 +43,4 @@ shell_update	0x800EC8E8	0x5D4	compiler-normalizer-assisted-no-cse-skip-blocks
 destroyed_object_update	0x800EA224	0x4F0	normalizer-assisted
 billboard_command_update	0x800EBDA0	0x1E0	normalizer-assisted
 ai_object_search_update	0x80084278	0x48C	normalizer-assisted
+matrix_scale_curve	0x8009277C	0x220	normalizer-assisted

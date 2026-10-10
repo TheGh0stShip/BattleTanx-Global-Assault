@@ -13,7 +13,6 @@ typedef struct {
     s32 type;
 } EffectSource9660C;
 
-extern f32 D_8007229C;
 extern u32 func_8009D914(void);
 extern void func_80097FB4(s32 effect, s32 x, s32 y, f32 scale, u8 kind);
 
@@ -23,8 +22,8 @@ void func_8009660C(EffectState9660C *state, f32 amount,
     s32 effect;
     u32 choice;
 
-    if (D_8007229C < amount) {
-        scale = (amount - D_8007229C) / D_8007229C;
+    if (0.4f < amount) {
+        scale = (amount - 0.4f) / 0.4f;
         if (source != 0 && source->type == 4) {
             func_80097FB4(0x23, state->x, state->y, scale, state->kind);
         } else {

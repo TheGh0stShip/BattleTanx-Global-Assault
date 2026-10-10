@@ -27,7 +27,6 @@ typedef struct State80087F2C {
     Vec2_80087F2C output;
 } State80087F2C;
 
-extern f32 D_80071664;
 extern volatile s16 D_80397650;
 extern void func_8009DAB0(Vec2_80087F2C *out, f32 distance, u16 angle);
 extern void func_8009E044(Vec2_80087F2C *position, Vec2_80087F2C *offset);
@@ -48,7 +47,7 @@ void func_80087F2C(State80087F2C *state) {
 
     scaled_distance = state->distance;
     position_x = state->position.x;
-    scaled_distance *= D_80071664;
+    scaled_distance *= 7.5f;
     position.x = position_x;
     position_y = state->position.y;
     position.y = position_y;
